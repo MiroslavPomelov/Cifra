@@ -22,6 +22,10 @@ namespace ConsoleApp1
                 {
                     _valueStringBuilder.Append(letter);
                 }
+                else if (letter == '.' || letter == ',')
+                {
+                    _valueStringBuilder.Append(',');
+                }
             }
 
             if (_valueStringBuilder.Length == 0)
