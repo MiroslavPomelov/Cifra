@@ -6,9 +6,7 @@
         {
             char[] _separators = new char[] { ' ', ',', '.' };
             string _UserValue;
-            float UserValue;
             bool word = true;
-            bool sentence = true;
 
             CheckIntegerValue("Введите что либо: ");
             LetterCount("Длинна слова:");
@@ -19,6 +17,7 @@
             {
                 Console.WriteLine(message);
                 _UserValue = Console.ReadLine().Replace(".", ",");
+                float UserValue;
 
                 if (float.TryParse(_UserValue, out UserValue))
                 {
@@ -42,11 +41,11 @@
                     Console.WriteLine();
                     Console.WriteLine($"{message} {_UserValue.Length}");
                 }
-                sentence = false;
             }
 
             void WordCount(string message)
             {
+                Console.WriteLine();
                 string[] words = _UserValue.ToString().Split(_separators, StringSplitOptions.RemoveEmptyEntries);
                 Console.WriteLine($"{message} {words.Length}");
             }
