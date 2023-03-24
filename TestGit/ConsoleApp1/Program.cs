@@ -7,11 +7,12 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             string _line;
+            float _value=0f;
             StringBuilder _valueStringBuilder = new StringBuilder();
 
             //ввод
             Console.Write("Vvedite znachenie: ");
-           _line = Console.ReadLine();
+            _line = Console.ReadLine();
 
             //обработка
             for (int i = 0; i < _line.Length; i++)
@@ -22,6 +23,18 @@ namespace ConsoleApp1
                     _valueStringBuilder.Append(letter);
                 }
             }
+
+            if (_valueStringBuilder.Length == 0)
+            {
+                Console.WriteLine("net chisla");
+            }
+            else
+            {
+                _value = float.Parse(_valueStringBuilder.ToString());
+            }
+
+            //вывод
+            Console.WriteLine("number = " +_value);
         }
     }
 }
