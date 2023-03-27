@@ -1,4 +1,5 @@
-﻿using System.IO.Enumeration;
+﻿using System.Globalization;
+using System.IO.Enumeration;
 
 namespace ConsoleApp1
 {
@@ -39,24 +40,47 @@ namespace ConsoleApp1
             string _fullPath = "";
             string _data = "";
 
-            _directory = Directory.GetCurrentDirectory();
-            _directory = new DirectoryInfo(_directory).Parent.Parent.Parent.FullName;
-            _fullPath=Path.Combine(_directory, _fileName);
-            _data=File.ReadAllText(_fullPath);
+            _data = ReadFile();
 
             while (true)
             {
+                PrintData();
                 string line = Console.ReadLine();
-                if (line=="exit")
+                if (line == "exit")
                 {
                     break;
                 }
-                _data+=line;
+                AppendData(line);
+                Console.Clear();
             }
-            File.WriteAllText(_fullPath, _data);
 
-            Console.WriteLine("DATA: \n" + _data);
+            WriteDataToFile();
             Console.ReadLine();
+
+            void AppendData(string data)
+            {
+                _data += "\n" + data;
+            }
+
+            string ReadFile()
+            {
+                _directory = Directory.GetCurrentDirectory();
+                _directory = new DirectoryInfo(_directory).Parent.Parent.Parent.FullName;
+                _fullPath = Path.Combine(_directory, _fileName);
+                return File.ReadAllText(_fullPath);
+            }
+
+            void PrintData()
+            {
+                Console.WriteLine("DATA: \n" + _data);
+                Console.WriteLine("===================");
+            }
+
+            void WriteDataToFile()
+            {
+                File.WriteAllText(_fullPath, _data);
+                Console.WriteLine("Файл сохранен");
+            }
         }
     }
 }
