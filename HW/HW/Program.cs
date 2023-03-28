@@ -1,4 +1,6 @@
-﻿namespace HW
+﻿using System.Runtime.CompilerServices;
+
+namespace HW
 {
     internal class Program
     {
@@ -23,29 +25,34 @@
 
                 if (line == "remove")
                 {
-                    Console.Write("Какую строку удаляем? (номер от нуля): ");
+                    Console.Write("Какую строку удаляем? (номер от нуля): \n");
                     int lineNumber = int.Parse(Console.ReadLine());
                     _data.RemoveAt(lineNumber);
                     continue;
                 }
-                if (line == "help" || line == "?")
-                {
-                    Console.WriteLine("Выберите команду:\n\"remove\"-удаление строки\n\"exit\"-выйти из программы");
-                    switch (line)
-                    {
-                        case "remove":
-                            Console.WriteLine("Какую строку удаляем? (номер от нуля): ");
-                            int lineNumber = int.Parse(Console.ReadLine());
-                            _data.RemoveAt(lineNumber);
-                            continue;
-                    }
-                }
 
                 AppendData(line);
                 Console.Clear();
+
+                if (line == "help" || line == "?")
+                {
+                    Console.WriteLine("Выберите команду:\n\"remove\"-удаление строки\n\"exit\"-выйти из программы");
+                   line = Console.ReadLine();
+                    switch (line)
+                    {
+                        case "remove":
+                            Console.WriteLine("Какую строку удаляем? (номер от нуля): \n");
+                            PrintData();
+                            int lineNumber = int.Parse(Console.ReadLine());
+                            _data.RemoveAt(lineNumber);
+                            continue;
+                        case "exit":
+                            break;
+                    }
+                }
+                WriteDataToFile();
             }
 
-            WriteDataToFile();
             Console.ReadLine();
 
 
@@ -76,6 +83,7 @@
                 File.WriteAllLines(_fullPath, _data); //Запись string-данных в файл по пути _fullPath
                 Console.WriteLine("Файл сохранен");
             }
+
         }
     }
 }
