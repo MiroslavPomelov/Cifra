@@ -25,23 +25,23 @@ namespace HW
 
                 if (line == "remove")
                 {
-                    Console.Write("Какую строку удаляем? (номер от нуля): \n");
+                    Console.Write("\nКакую строку удаляем? (номер от нуля): \n");
                     int lineNumber = int.Parse(Console.ReadLine());
                     _data.RemoveAt(lineNumber);
                     continue;
                 }
 
-                AppendData(line);
                 Console.Clear();
 
                 if (line == "help" || line == "?")
                 {
-                    Console.WriteLine("Выберите команду:\n\"remove\"-удаление строки\n\"exit\"-выйти из программы");
-                   line = Console.ReadLine();
+                    PrintData();
+                    Console.WriteLine("Выберите команду:\n\"remove\" - удаление строки\n\"exit\" - выйти из программы");
+                    line = Console.ReadLine();
                     switch (line)
                     {
                         case "remove":
-                            Console.WriteLine("Какую строку удаляем? (номер от нуля): \n");
+                            Console.WriteLine("\nКакую строку удаляем? (номер от нуля): \n");
                             PrintData();
                             int lineNumber = int.Parse(Console.ReadLine());
                             _data.RemoveAt(lineNumber);
@@ -50,13 +50,11 @@ namespace HW
                             break;
                     }
                 }
+                AppendData(line);
                 WriteDataToFile();
             }
 
             Console.ReadLine();
-
-
-
 
             void AppendData(string data)
             {
@@ -73,8 +71,13 @@ namespace HW
 
             void PrintData()
             {
+                int i = 0;
+
                 Console.WriteLine("DATA: ");
-                Console.WriteLine(string.Join(Environment.NewLine, _data));
+                foreach (string note in _data)
+                {
+                    Console.WriteLine($"{i++}. " + note);
+                }
                 Console.WriteLine("--------------------");
             }
 
@@ -83,7 +86,6 @@ namespace HW
                 File.WriteAllLines(_fullPath, _data); //Запись string-данных в файл по пути _fullPath
                 Console.WriteLine("Файл сохранен");
             }
-
         }
     }
 }
