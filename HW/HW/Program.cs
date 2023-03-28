@@ -38,16 +38,21 @@ namespace HW
                     PrintData();
                     Console.WriteLine("Выберите команду:\n\"remove\" - удаление строки\n\"exit\" - выйти из программы");
                     line = Console.ReadLine();
-                    switch (line)
+                    if (line == "remove")
                     {
-                        case "remove":
-                            Console.WriteLine("\nКакую строку удаляем? (номер от нуля): \n");
-                            PrintData();
-                            int lineNumber = int.Parse(Console.ReadLine());
-                            _data.RemoveAt(lineNumber);
-                            continue;
-                        case "exit":
-                            break;
+                        Console.WriteLine("\nКакую строку удаляем? (номер от нуля): \n");
+                        PrintData();
+                        int lineNumber = int.Parse(Console.ReadLine());
+                        _data.RemoveAt(lineNumber);
+                        continue;
+                    }
+                    if (line == "exit")
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Вы ввели неправильную команду");
                     }
                 }
                 AppendData(line);
