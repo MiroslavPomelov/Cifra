@@ -1,0 +1,11 @@
+ public static int Sum(int a, int b)
+        {
+            return a + b;
+        }
+
+        public static void PrintVar(string variable)
+        {
+            Console.WriteLine("=================");
+            Console.WriteLine("Variable: " + variable);
+            Console.WriteLine("=================");
+        }
