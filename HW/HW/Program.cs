@@ -27,7 +27,14 @@ namespace HW
                 {
                     Console.Write("\nКакую строку удаляем? (номер от нуля): \n");
                     int lineNumber = int.Parse(Console.ReadLine());
-                    _data.RemoveAt(lineNumber);
+                    try
+                    {
+                        _data.RemoveAt(lineNumber);
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Ошибка!\nПопробуйте еще раз:\n");
+                    }
                     continue;
                 }
 
@@ -43,7 +50,14 @@ namespace HW
                         Console.WriteLine("\nКакую строку удаляем? (номер от нуля): \n");
                         PrintData();
                         int lineNumber = int.Parse(Console.ReadLine());
-                        _data.RemoveAt(lineNumber);
+                        try
+                        {
+                            _data.RemoveAt(lineNumber);
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Ошибка!\nПопробуйте еще раз:\n");
+                        }
                         continue;
                     }
                     if (line == "exit")
@@ -54,6 +68,10 @@ namespace HW
                     {
                         Console.WriteLine("Вы ввели неправильную команду");
                     }
+                }
+                if (line == "exit")
+                {
+                    break;
                 }
                 AppendData(line);
                 WriteDataToFile();
