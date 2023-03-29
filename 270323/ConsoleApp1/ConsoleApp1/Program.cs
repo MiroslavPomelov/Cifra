@@ -35,6 +35,8 @@ namespace ConsoleApp1
 
             //Console.ReadLine();
 
+            const string SumCommand = "sum";
+
             bool _needExit = false;
             string _directory = "";
             string _fileName = "Data.txt";
@@ -42,7 +44,7 @@ namespace ConsoleApp1
             List<string> _data = new List<string>();
             string[] _commandList = new string[]
             {
-               "exit","remove","help","?","uppercase"
+               "exit","remove","help","?","uppercase",SumCommand
             };
 
             _data = ReadFile();
@@ -95,7 +97,20 @@ namespace ConsoleApp1
                     case "uppercase":
                         UppercaseLine();
                         break;
+                    case SumCommand:
+                        SymbolSum();
+                        break;
                 }
+            }
+
+            void SymbolSum()
+            {
+                int sum = 0;
+                foreach (var line in _data)
+                {
+                    sum += line.Length;
+                }
+                Console.WriteLine("Сумма символов: "+sum);
             }
 
             void UppercaseLine()
@@ -104,7 +119,7 @@ namespace ConsoleApp1
                 int lineNumber = int.Parse(Console.ReadLine());
                 try
                 {
-                    _data[lineNumber]=_data[lineNumber].ToUpper();
+                    _data[lineNumber] = _data[lineNumber].ToUpper();
                 }
                 catch
                 {
