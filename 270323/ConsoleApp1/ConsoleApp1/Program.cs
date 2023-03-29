@@ -40,6 +40,10 @@ namespace ConsoleApp1
             string _fileName = "Data.txt";
             string _fullPath = "";
             List<string> _data = new List<string>();
+            string[] _commandList = new string[]
+            {
+               "exit","remove","help","?","uppercase"
+            };
 
             _data = ReadFile();
 
@@ -82,12 +86,29 @@ namespace ConsoleApp1
                     case "exit":
                         _needExit = true;
                         break;
-                        case "help":
+                    case "help":
                         ShowHelp();
                         break;
                     case "remove":
                         RemoveLine();
                         break;
+                    case "uppercase":
+                        UppercaseLine();
+                        break;
+                }
+            }
+
+            void UppercaseLine()
+            {
+                Console.Write("\nКакую строку uppercase? (номер от нуля): \n");
+                int lineNumber = int.Parse(Console.ReadLine());
+                try
+                {
+                    _data[lineNumber]=_data[lineNumber].ToUpper();
+                }
+                catch
+                {
+                    Console.WriteLine("Ошибка! Не удалось удалить строку");
                 }
             }
 
@@ -114,7 +135,7 @@ namespace ConsoleApp1
             bool CheckCommands(string line)
             {
                 line = line.Trim().ToLower();
-                return line == "exit" || line == "?" || line == "help" || line == "remove";
+                return _commandList.Contains(line);
             }
 
             void AppendData(string data)
