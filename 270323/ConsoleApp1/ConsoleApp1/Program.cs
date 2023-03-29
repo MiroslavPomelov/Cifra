@@ -182,6 +182,7 @@ namespace ConsoleApp1
             {
                 File.WriteAllLines(_fullPath, _data); //Запись string-данных в файл по пути _fullPath
                 Console.WriteLine("Файл сохранен");
+                //u
             }
         }
     }
