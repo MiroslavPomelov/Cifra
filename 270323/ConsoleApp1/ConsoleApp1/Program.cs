@@ -35,50 +35,116 @@ namespace ConsoleApp1
 
             //Console.ReadLine();
 
+            bool _needExit = false;
             string _directory = "";
             string _fileName = "Data.txt";
             string _fullPath = "";
-            string _data = "";
+            List<string> _data = new List<string>();
 
             _data = ReadFile();
 
-            while (true)
+            while (_needExit == false)
             {
                 PrintData();
                 string line = Console.ReadLine();
-                if (line == "exit")
+
+                if (CheckCommands(line))
                 {
-                    break;
+                    ExecuteCommand(line);
                 }
-                AppendData(line);
-                Console.Clear();
+                else
+                {
+                    AppendData(line);
+                    WriteDataToFile();
+                }
             }
 
-            WriteDataToFile();
             Console.ReadLine();
+            //EXIT PROGRAM
+
+            void ExecuteCommand(string command)
+            {
+                //if (command == "exit")
+                //{
+                //    _needExit = true;
+                //}
+
+                //if (command == "remove")
+                //{
+                //    RemoveLine();
+                //}
+                //if (command == "help" || command == "?")
+                //{
+                //   ShowHelp();
+                //}
+                switch (command)
+                {
+                    case "exit":
+                        _needExit = true;
+                        break;
+                        case "help":
+                        ShowHelp();
+                        break;
+                    case "remove":
+                        RemoveLine();
+                        break;
+                }
+            }
+
+            void ShowHelp()
+            {
+                Console.Clear();
+                Console.WriteLine("Список команд:\n\"remove\" - удаление строки\n\"exit\" - выйти из программы");
+            }
+
+            void RemoveLine()
+            {
+                Console.Write("\nКакую строку удаляем? (номер от нуля): \n");
+                int lineNumber = int.Parse(Console.ReadLine());
+                try
+                {
+                    _data.RemoveAt(lineNumber);
+                }
+                catch
+                {
+                    Console.WriteLine("Ошибка! Не удалось удалить строку");
+                }
+            }
+
+            bool CheckCommands(string line)
+            {
+                line = line.Trim().ToLower();
+                return line == "exit" || line == "?" || line == "help" || line == "remove";
+            }
 
             void AppendData(string data)
             {
-                _data += "\n" + data;
+                _data.Add(data);
             }
 
-            string ReadFile()
+            List<string> ReadFile()
             {
-                _directory = Directory.GetCurrentDirectory();
-                _directory = new DirectoryInfo(_directory).Parent.Parent.Parent.FullName;
-                _fullPath = Path.Combine(_directory, _fileName);
-                return File.ReadAllText(_fullPath);
+                _directory = Directory.GetCurrentDirectory(); //Путь до exe-файла
+                _directory = new DirectoryInfo(_directory).Parent.Parent.Parent.FullName; //Перейти по каталогу на 3 уровня вверх и получить полный путь
+                _fullPath = Path.Combine(_directory, _fileName); //Комбинировать путь +папка или +файл
+                return File.ReadAllLines(_fullPath).ToList(); //Чтение файла и запись в string переменную
             }
 
             void PrintData()
             {
-                Console.WriteLine("DATA: \n" + _data);
-                Console.WriteLine("===================");
+                int i = 0;
+
+                Console.WriteLine("DATA: ");
+                foreach (string note in _data)
+                {
+                    Console.WriteLine($"{i++}. " + note);
+                }
+                Console.WriteLine("--------------------");
             }
 
             void WriteDataToFile()
             {
-                File.WriteAllText(_fullPath, _data);
+                File.WriteAllLines(_fullPath, _data); //Запись string-данных в файл по пути _fullPath
                 Console.WriteLine("Файл сохранен");
             }
         }
