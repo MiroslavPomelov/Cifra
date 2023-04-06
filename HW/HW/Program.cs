@@ -1,83 +1,157 @@
-﻿using System.Runtime.CompilerServices;
+using System.Globalization;
+using System.IO.Enumeration;
 
-namespace HW
+namespace ConsoleApp1
 {
     internal class Program
     {
         static void Main(string[] args)
         {
+
+            //try
+            //{
+            //    string line = Console.ReadLine();
+            //    int value = int.Parse(line);
+            //}
+            //catch (Exception exc)
+            //{
+            //    Console.WriteLine("Ошибка: " +exc.Message);
+            //}
+
+            //Console.ReadLine();
+            //string s = "Test variable";
+            //string s2 = "test2";
+            //Extention.PrintVar(s);
+            //Extention.PrintVar(s2);
+
+            //try
+            //{
+            //    int sum = Extention.Sum(5, 10);
+            //}
+            //catch (Exception exc)
+            //{
+            //    Console.WriteLine("Ошибка: " + exc.Message);
+            //}
+
+            //Console.ReadLine();
+
+            const string SumCommand = "sum";
+
+            bool _needExit = false;
             string _directory = "";
             string _fileName = "Data.txt";
             string _fullPath = "";
             List<string> _data = new List<string>();
+            string[] _commandList = new string[]
+            {
+               "exit","remove","help","?","uppercase",SumCommand
+            };
 
             _data = ReadFile();
 
-            while (true)
+            while (_needExit == false)
             {
                 PrintData();
                 string line = Console.ReadLine();
 
-                if (line == "exit")
+                if (CheckCommands(line))
                 {
-                    break;
+                    ExecuteCommand(line);
                 }
-
-                if (line == "remove")
+                else
                 {
-                    Console.Write("\nКакую строку удаляем? (номер от нуля): \n");
-                    int lineNumber = int.Parse(Console.ReadLine());
-                    try
-                    {
-                        _data.RemoveAt(lineNumber);
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Ошибка!\nПопробуйте еще раз:\n");
-                    }
-                    continue;
+                    AppendData(line);
+                    WriteDataToFile();
                 }
-
-                Console.Clear();
-
-                if (line == "help" || line == "?")
-                {
-                    PrintData();
-                    Console.WriteLine("Выберите команду:\n\"remove\" - удаление строки\n\"exit\" - выйти из программы");
-                    line = Console.ReadLine();
-                    if (line == "remove")
-                    {
-                        Console.WriteLine("\nКакую строку удаляем? (номер от нуля): \n");
-                        PrintData();
-                        int lineNumber = int.Parse(Console.ReadLine());
-                        try
-                        {
-                            _data.RemoveAt(lineNumber);
-                        }
-                        catch
-                        {
-                            Console.WriteLine("Ошибка!\nПопробуйте еще раз:\n");
-                        }
-                        continue;
-                    }
-                    if (line == "exit")
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Вы ввели неправильную команду");
-                    }
-                }
-                if (line == "exit")
-                {
-                    break;
-                }
-                AppendData(line);
-                WriteDataToFile();
             }
 
             Console.ReadLine();
+            //EXIT PROGRAM
+
+            void ExecuteCommand(string command)
+            {
+                //if (command == "exit")
+                //{
+                //    _needExit = true;
+                //}
+
+                //if (command == "remove")
+                //{
+                //    RemoveLine();
+                //}
+                //if (command == "help" || command == "?")
+                //{
+                //   ShowHelp();
+                //}
+                switch (command)
+                {
+                    case "exit":
+                        _needExit = true;
+                        break;
+                    case "help":
+                        ShowHelp();
+                        break;
+                    case "remove":
+                        RemoveLine();
+                        break;
+                    case "uppercase":
+                        UppercaseLine();
+                        break;
+                    case SumCommand:
+                        SymbolSum();
+                        break;
+                }
+            }
+
+            void SymbolSum()
+            {
+                int sum = 0;
+                foreach (var line in _data)
+                {
+                    sum += line.Length;
+                }
+                Console.WriteLine("Сумма символов: "+sum);
+            }
+
+            void UppercaseLine()
+            {
+                Console.Write("\nКакую строку uppercase? (номер от нуля): \n");
+                int lineNumber = int.Parse(Console.ReadLine());
+                try
+                {
+                    _data[lineNumber] = _data[lineNumber].ToUpper();
+                }
+                catch
+                {
+                    Console.WriteLine("Ошибка! Не удалось удалить строку");
+                }
+            }
+
+            void ShowHelp()
+            {
+                Console.Clear();
+                Console.WriteLine("Список команд:\n\"remove\" - удаление строки\n\"exit\" - выйти из программы");
+            }
+
+            void RemoveLine()
+            {
+                Console.Write("\nКакую строку удаляем? (номер от нуля): \n");
+                int lineNumber = int.Parse(Console.ReadLine());
+                try
+                {
+                    _data.RemoveAt(lineNumber);
+                }
+                catch
+                {
+                    Console.WriteLine("Ошибка! Не удалось удалить строку");
+                }
+            }
+
+            bool CheckCommands(string line)
+            {
+                line = line.Trim().ToLower();
+                return _commandList.Contains(line);
+            }
 
             void AppendData(string data)
             {
