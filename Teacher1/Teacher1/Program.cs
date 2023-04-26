@@ -185,27 +185,224 @@ namespace Teacher1
             //    Console.Write(item + " ");
             //}
 
-            Console.WriteLine(Factorial(5)); // - факториал из 5
-            Console.WriteLine(RecFact(5));
+            //Console.WriteLine(Factorial(5)); // - факториал из 5
+            //Console.WriteLine(RecFact(5));
 
-            long Factorial(int n)
+            //long Factorial(int n)
+            //{
+            //    long F = 1;
+            //    for (int i = 1; i <= n; i++)
+            //    {
+            //        F *= i;
+            //    }
+            //    return F;
+            //}
+
+            //long RecFact(int n)
+            //{
+            //    if (n==0 || n==1)
+            //    {
+            //        return 1;
+            //    }
+            //    return n * RecFact(n - 1);
+            //}
+
+
+            ////Найти  сумму цифр числа
+
+            //Console.WriteLine(Sum(37));
+
+            //double Sum(int n)
+            //{
+            //    if (n < 10)
+            //    {
+            //        return n;
+            //    }
+            //    else
+            //    {
+            //        return n % 10 + Sum(n / 10);
+            //    }
+            //}
+
+            //Найти кол во цифр ввведенного числа
+
+            //Console.WriteLine(Count(12));
+
+            //int Count(int n)
+            //{
+            //    if (n < 10)
+            //    {
+            //        return 1;
+            //    }
+            //    else
+            //    {
+            //        return 1 + Count(n / 10);
+            //    }
+            //}
+
+
+            //Пример локальной функции
+
+            //int Func(int a, int b, int c, int d, int e, int f)
+            //{
+            //    return (a*Fact(b)+c*Fact(b)) / (Fact(e)+Fact(f));
+
+            //    int Fact(int n)
+            //    {
+            //        if (n == 0 || n == 1)
+            //        {
+            //            return 1;
+            //        }
+            //        else
+            //        {
+            //            return n * Fact(n - 1);
+            //        }
+            //    }
+            //}
+
+            //Новая запись свич
+
+            //try
+            //{
+            //Console.Write("Введите номер дня недели: ");
+            //int n = int.Parse(Console.ReadLine());
+            //Console.WriteLine(DayWeek(n));
+            //Console.WriteLine(DayWeekNew(n));
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //}
+
+            //string DayWeek(int n)
+            //{
+            //    string result;
+            //    switch (n)
+            //    {
+            //        case 1: result = "Понедельник"; break;
+            //        case 2: result = "Вторник"; break;
+            //        case 3: result = "Среда"; break;
+            //        case 4: result = "Четверг"; break;
+            //        case 5: result = "Пятница"; break;
+            //        case 6: result = "Суббота"; break;
+            //        case 7: result = "Воскресенье"; break;
+            //        default: result = "Нет такого дня"; break;
+            //    }
+            //    return result;
+            //}
+
+            //string DayWeekNew(int n)
+            //{
+            //    string s;
+            //    return s = n switch
+            //    {
+            //        1 => "Понедельник",
+            //        2 => "Вторник",
+            //        3 => "Среда",
+            //        4 => "Четверг",
+            //        5 => "Пятница",
+            //        6 => "Суббота",
+            //        7 => "Воскресенье",
+            //        _ => "Нет такого дня"
+            //    };
+            //}
+
+            //13.1 
+
+            //    People man = new People();
+            //    man.name = "Виктор";
+            //    man.surname = "Перестукин";
+            //    Console.WriteLine(man.name + " " + man.surname);
+            //    People superMan = new People()
+            //    { name = "Артур", surname = "Худяков" };
+            //    Console.WriteLine(superMan.name + " " + superMan.surname);
+            //    People[] peoples = new People[5];
+            //    for (int i = 0; i < 5; i++)
+            //    {
+            //        peoples[i] = new People();
+            //        Console.Write($"Введите имя: {i + 1} ученика ");
+            //        peoples[i].name = Console.ReadLine();
+            //        Console.Write($"Введите фамилию: {i + 1} ученика ");
+            //        peoples[i].surname = Console.ReadLine();
+            //    }
+            //    foreach (People item in peoples)
+            //    {
+            //        Console.WriteLine(item.name + " " + item.surname);
+            //    }
+
+            //    //13.3
+
+            //    Cities[] cities = new Cities[5];
+            //    for (int i = 0; i < 5; i++)
+            //    {
+            //        cities[i] = new Cities();
+            //        Console.Write($"Введите название : {i + 1} города ");
+            //        cities[i].NameCity = Console.ReadLine();
+            //        Console.Write($"Введите название: {i + 1} страны ");
+            //        cities[i].Country = Console.ReadLine();
+            //    }
+            //    foreach (Cities item in cities)
+            //    {
+            //        if (item.Country == "Италия")
+            //        {
+            //            Console.WriteLine(item.NameCity + " " + item.Country);
+            //        }
+            //    }
+            //}
+
+            //struct People
+            //{
+            //    public string name;
+            //    public string surname;
+            //}
+
+            //struct Cities
+            //{
+            //    public string Country;
+            //    public string NameCity;
+            //}
+
+            PhoneBookDigital[] adressa = new PhoneBookDigital[5];
+            for (int i = 0; i < adressa.Length; i++)
             {
-                long F = 1;
-                for (int i = 1; i <= n; i++)
-                {
-                    F *= i;
-                }
-                return F;
+                adressa[i] = new PhoneBookDigital();
+                Console.Write($"Введите название : {i + 1} фамилии ");
+                adressa[i].surname = Console.ReadLine();
+                Console.Write($"Введите название: {i + 1} адреса ");
+                adressa[i].adress = Console.ReadLine();
+                Console.Write($"Введите название: {i + 1} телефона ");
+                adressa[i].phone = long.Parse(Console.ReadLine());
             }
-
-            long RecFact(int n)
+            foreach (PhoneBookDigital item in adressa)
             {
-                if (n==0 || n==1)
+                if (item.phone / 1000000 == 3)
                 {
-                    return 1;
+                    Console.WriteLine(item.surname + " " + item.adress + " " + item.phone);
                 }
-                return n * RecFact(n - 1);
             }
         }
     }
+
+    struct PhoneBookDigital
+    {
+        public string surname;
+        public string adress;
+        public long phone;
+
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
