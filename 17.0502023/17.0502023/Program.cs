@@ -195,38 +195,36 @@ using System.Text;
 //15.29
 
 string? res = null;
+int numberstroke = 0;
 using (StreamReader sr = new StreamReader("text.txt"))
 {
     string? line;
     while ((line = await sr.ReadLineAsync()) != null)
     {
-        res += line + '\n';
-        if (true)
+        numberstroke++;
+        if (numberstroke / 2 == 0)
         {
+            using (StreamWriter sw = new StreamWriter("new.txt", false))
+            {
+                await sw.WriteLineAsync(line);
+            }
 
         }
-        if (true)
+        if (numberstroke % 2 == 1)
         {
+            using (StreamWriter sw = new StreamWriter("new2.txt", true))
+            {
+                await sw.WriteLineAsync(line);
+            }
 
         }
     }
 }
 Console.WriteLine(res);
 
-using (StreamWriter sw = new StreamWriter("new.txt", false))
-{
-    await sw.WriteLineAsync(res);
-}
 
 //string? revStr = res.Reverse().ToString();//в обратном порядке
 
-using (StreamWriter sw = new StreamWriter("new.txt", true))
-{
-    await sw.WriteLineAsync(revStr);
-}
 
-using (StreamWriter sw = new StreamWriter("new2.txt", true))
-{
-    await sw.WriteLineAsync(revStr);
-}
+
 
