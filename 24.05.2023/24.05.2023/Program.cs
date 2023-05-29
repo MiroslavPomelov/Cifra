@@ -63,50 +63,52 @@ using System.IO.Compression;
 //    newInfo.Replace(distFile, resPath, true);
 //}
 
-DriveInfo[] drivers = DriveInfo.GetDrives();
-foreach (DriveInfo drive in drivers)
-{
-    Console.WriteLine(drive.Name);
-    Console.WriteLine(drive.DriveType);
-    if (drive.IsReady)
-    {
-        Console.WriteLine(drive.TotalSize);
-        Console.WriteLine(drive.TotalFreeSpace);
-        Console.WriteLine(drive.VolumeLabel);
-    }
-}
+//DriveInfo[] drivers = DriveInfo.GetDrives();
+//foreach (DriveInfo drive in drivers)
+//{
+//    Console.WriteLine(drive.Name);
+//    Console.WriteLine(drive.DriveType);
+//    if (drive.IsReady)
+//    {
+//        Console.WriteLine(drive.TotalSize);
+//        Console.WriteLine(drive.TotalFreeSpace);
+//        Console.WriteLine(drive.VolumeLabel);
+//    }
+//}
 
-string dirName = "C:\\";
-if (Directory.Exists(dirName))
-{
-    Console.WriteLine("Подкаталоги: ");
-    string[] dirs = Directory.GetDirectories(dirName);
-    foreach (string item in dirs)
-    {
-        Console.WriteLine(item);
-    }
-    Console.WriteLine("Файлы: ");
-    string[] files = Directory.GetFiles(dirName);
-    foreach (string item in files)
-    {
-        Console.WriteLine(item);
-    }
-}
+//string dirName = "C:\\";
+//if (Directory.Exists(dirName))
+//{
+//    Console.WriteLine("Подкаталоги: ");
+//    string[] dirs = Directory.GetDirectories(dirName);
+//    foreach (string item in dirs)
+//    {
+//        Console.WriteLine(item);
+//    }
+//    Console.WriteLine("Файлы: ");
+//    string[] files = Directory.GetFiles(dirName);
+//    foreach (string item in files)
+//    {
+//        Console.WriteLine(item);
+//    }
+//}
 
-var directory = new DirectoryInfo(dirName);
-if (directory.Exists)
-{
-    Console.WriteLine("Папки: ");
-    DirectoryInfo[] dirs = directory.GetDirectories();
-    foreach (DirectoryInfo item in dirs)
-    {
-        Console.WriteLine(item.FullName);
-    }
+//var directory = new DirectoryInfo(dirName);
+//if (directory.Exists)
+//{
+//    Console.WriteLine("Папки: ");
+//    DirectoryInfo[] dirs = directory.GetDirectories();
+//    foreach (DirectoryInfo item in dirs)
+//    {
+//        Console.WriteLine(item.FullName);
+//    }
 
-    Console.WriteLine("Files: ");
-    FileInfo[] files = directory.GetFiles();
-    foreach (FileInfo item in files)
-    {
-        Console.WriteLine(item.FullName);
-    }
-}
+//    Console.WriteLine("Files: ");
+//    FileInfo[] files = directory.GetFiles();
+//    foreach (FileInfo item in files)
+//    {
+//        Console.WriteLine(item.FullName);
+//    }
+//}
+
+// Есть папка с файлами в определеном каталоге. Создать прорамму тип что делать с папкой переместить копировать или удалить его. выбор из 3х
