@@ -1,20 +1,29 @@
-﻿//1
+﻿
+int[] arr = new int[100];
+string[] arr2 = new string[100];
 
-Console.WriteLine("Введите числа через запятую: ");
-string numbers = Console.ReadLine();
-numbers = numbers.Replace(" ", "");
-string[] arr = numbers.Split(',');
-int[] arr2 = new int[arr.Length];
-
-for (int i = 0; i < arr2.Length; i++)
+for (int i = 0; i < arr.Length; i++)
 {
-    arr2[i] = int.Parse(arr[i]);
+    arr[i] = i + 1;
+    arr2[i] = (i + 1).ToString();
+    if (arr[i] % 3 == 0 && arr[i] % 5 == 0)
+    {
+        arr2[i] = "FizzBuzz";
+    }
+    else
+    {
+        if (arr[i] % 3 == 0)
+        {
+            arr2[i] = "Fizz";
+        }
+        if (arr[i] % 5 == 0)
+        {
+            arr2[i] = "Buzz";
+        }
+    }
 }
-Console.WriteLine("Cумма: " + arr2.Sum());
 
-//2
-
-Console.WriteLine("Введите предложение: ");
-string sentence = Console.ReadLine();
-string[] array = sentence.Split(' ');
-Console.WriteLine("Количество слов: " + array.Length);
+foreach (string item in arr2)
+{
+    Console.WriteLine(item);
+}
