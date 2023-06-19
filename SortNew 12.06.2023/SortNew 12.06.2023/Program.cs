@@ -2,7 +2,7 @@
 
 using System.Reflection.Metadata.Ecma335;
 
-int[] array = new int[10];
+int[] array = new int[1000];
 Random Random = new Random();
 
 for (int i = 0; i < array.Length; i++)
@@ -11,7 +11,7 @@ for (int i = 0; i < array.Length; i++)
 }
 
 //array = PancakeSort(array);
-array = BogoSort(array);
+array = MergeSortMas(array);
 
 foreach (var item in array)
 {
@@ -76,10 +76,10 @@ int[] RandomPermulation(int[] mas)
 {
     Random random = new Random();
     int n = mas.Length;
-    while (n>1)
+    while (n > 1)
     {
         n--;
-        int i = random.Next(n+1);
+        int i = random.Next(n + 1);
         int temp = mas[i];
         mas[i] = mas[n];
         mas[n] = temp;
@@ -104,18 +104,73 @@ int[] BogoSort(int[] mas)
 int[] ShellSort(int[] mas)
 {
     int d = mas.Length / 2;
-    while (d>=1)
+    while (d >= 1)
     {
         for (int i = d; i < mas.Length; i++)
         {
             int j = i;
             while ((j >= d) && (mas[j - d] > mas[j]))
             {
-                Swap(ref mas[j], mas[j - d]);
-                j = j - d;
+                //Swap(ref mas[j], mas[j - d]);
+                //j = j - d;
             }
         }
         d = d / 2;
     }
     return mas;
+}
+
+// Сортировка Слиянием
+
+int[] MergeSort(int[] mas, int lowIndex, /*int middleIndex,*/ int highIndex)
+{
+    if (lowIndex < highIndex)
+    {
+        int middleIndex = (lowIndex + highIndex) / 2;
+        MergeSort(mas, lowIndex, middleIndex);
+        MergeSort(mas, middleIndex + 1, highIndex);
+        Merge(mas, lowIndex, middleIndex, highIndex);
+    }
+    return mas;
+}
+
+int[] MergeSortMas(int[] mas)
+{
+    return MergeSort(mas, 0, mas.Length - 1);
+}
+
+void Merge(int[] mas, int lowIndex, int middleIndex, int highIndex)
+{
+    int left = lowIndex;
+    int right = middleIndex + 1;
+    int[] tempMas = new int[highIndex - lowIndex + 1];
+    int index = 0;
+    while ((left <= middleIndex) && (right<=highIndex))
+    {
+        if (mas[left] <= mas[right])
+        {
+            tempMas[index] = mas[left];
+            left++;
+        }
+        else
+        {
+            tempMas[index] = mas[right];
+            right++;
+        }
+        index++;
+    }
+    for (int i = left; i <= middleIndex; i++)
+    {
+        tempMas[index] = mas[i];
+        index++;
+    }
+    for (int i = right; i <= highIndex; i++)
+    {
+        tempMas[index] = mas[i];
+        index++;
+    }
+    for (int i = 0; i < tempMas.Length; i++)
+    {
+        mas[lowIndex + i] = tempMas[i];
+    }
 }

@@ -33,6 +33,10 @@
             this.btStart = new System.Windows.Forms.Button();
             this.btReset = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.nudMinutes = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.nudMinutes)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.SuspendLayout();
             // 
             // lbSeconds
@@ -46,7 +50,7 @@
             // 
             // btStart
             // 
-            this.btStart.Location = new System.Drawing.Point(12, 91);
+            this.btStart.Location = new System.Drawing.Point(12, 179);
             this.btStart.Name = "btStart";
             this.btStart.Size = new System.Drawing.Size(112, 51);
             this.btStart.TabIndex = 1;
@@ -56,7 +60,7 @@
             // 
             // btReset
             // 
-            this.btReset.Location = new System.Drawing.Point(150, 91);
+            this.btReset.Location = new System.Drawing.Point(150, 179);
             this.btReset.Name = "btReset";
             this.btReset.Size = new System.Drawing.Size(117, 51);
             this.btReset.TabIndex = 2;
@@ -68,16 +72,34 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // nudMinutes
+            // 
+            this.nudMinutes.Location = new System.Drawing.Point(12, 133);
+            this.nudMinutes.Name = "nudMinutes";
+            this.nudMinutes.Size = new System.Drawing.Size(112, 23);
+            this.nudMinutes.TabIndex = 3;
+            // 
+            // numericUpDown2
+            // 
+            this.numericUpDown2.Location = new System.Drawing.Point(150, 133);
+            this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.Size = new System.Drawing.Size(117, 23);
+            this.numericUpDown2.TabIndex = 4;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(289, 164);
+            this.ClientSize = new System.Drawing.Size(289, 276);
+            this.Controls.Add(this.numericUpDown2);
+            this.Controls.Add(this.nudMinutes);
             this.Controls.Add(this.btReset);
             this.Controls.Add(this.btStart);
             this.Controls.Add(this.lbSeconds);
             this.Name = "Form1";
             this.Text = "Секундомер";
+            ((System.ComponentModel.ISupportInitialize)(this.nudMinutes)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -88,5 +110,7 @@
         private Button btStart;
         private Button btReset;
         private System.Windows.Forms.Timer timer1;
+        private NumericUpDown nudMinutes;
+        private NumericUpDown numericUpDown2;
     }
 }
