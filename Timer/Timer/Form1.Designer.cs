@@ -44,17 +44,17 @@
             // lb0
             // 
             lb0.AutoSize = true;
-            lb0.Font = new Font("Segoe UI", 30F, FontStyle.Regular, GraphicsUnit.Point);
-            lb0.Location = new Point(60, 51);
+            lb0.Font = new Font("Segoe UI", 32F, FontStyle.Regular, GraphicsUnit.Point);
+            lb0.Location = new Point(51, 29);
             lb0.Name = "lb0";
-            lb0.Size = new Size(56, 67);
+            lb0.Size = new Size(59, 72);
             lb0.TabIndex = 0;
             lb0.Text = "0";
             lb0.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // btStart
             // 
-            btStart.Location = new Point(43, 195);
+            btStart.Location = new Point(34, 172);
             btStart.Name = "btStart";
             btStart.Size = new Size(94, 59);
             btStart.TabIndex = 1;
@@ -64,7 +64,7 @@
             // 
             // btReset
             // 
-            btReset.Location = new Point(158, 195);
+            btReset.Location = new Point(149, 172);
             btReset.Name = "btReset";
             btReset.Size = new Size(94, 59);
             btReset.TabIndex = 2;
@@ -78,24 +78,26 @@
             // 
             // tbM
             // 
-            tbM.Location = new Point(60, 147);
+            tbM.Location = new Point(51, 124);
             tbM.Name = "tbM";
             tbM.Size = new Size(64, 27);
             tbM.TabIndex = 3;
             tbM.TextAlign = HorizontalAlignment.Center;
+            tbM.KeyPress += tbM_KeyPress;
             // 
             // tbS
             // 
-            tbS.Location = new Point(172, 147);
+            tbS.Location = new Point(163, 124);
             tbS.Name = "tbS";
             tbS.Size = new Size(68, 27);
             tbS.TabIndex = 4;
             tbS.TextAlign = HorizontalAlignment.Center;
+            tbS.KeyPress += tbS_KeyPress;
             // 
             // lanelm
             // 
             lanelm.AutoSize = true;
-            lanelm.Location = new Point(60, 124);
+            lanelm.Location = new Point(51, 101);
             lanelm.Name = "lanelm";
             lanelm.Size = new Size(64, 20);
             lanelm.TabIndex = 5;
@@ -104,7 +106,7 @@
             // labels
             // 
             labels.AutoSize = true;
-            labels.Location = new Point(172, 124);
+            labels.Location = new Point(163, 101);
             labels.Name = "labels";
             labels.Size = new Size(68, 20);
             labels.TabIndex = 6;
@@ -112,10 +114,10 @@
             // 
             // label1
             // 
-            label1.Font = new Font("Segoe UI", 30F, FontStyle.Regular, GraphicsUnit.Point);
-            label1.Location = new Point(122, 51);
+            label1.Font = new Font("Segoe UI", 32F, FontStyle.Regular, GraphicsUnit.Point);
+            label1.Location = new Point(125, 29);
             label1.Name = "label1";
-            label1.Size = new Size(35, 61);
+            label1.Size = new Size(32, 61);
             label1.TabIndex = 7;
             label1.Text = ":";
             label1.TextAlign = ContentAlignment.MiddleCenter;
@@ -123,19 +125,19 @@
             // lb2
             // 
             lb2.AutoSize = true;
-            lb2.Font = new Font("Segoe UI", 30F, FontStyle.Regular, GraphicsUnit.Point);
-            lb2.Location = new Point(169, 51);
+            lb2.Font = new Font("Segoe UI", 32F, FontStyle.Regular, GraphicsUnit.Point);
+            lb2.Location = new Point(163, 29);
             lb2.Name = "lb2";
-            lb2.Size = new Size(56, 67);
+            lb2.Size = new Size(59, 72);
             lb2.TabIndex = 8;
             lb2.Text = "0";
-            lb2.TextAlign = ContentAlignment.MiddleCenter;
+            lb2.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(314, 302);
+            ClientSize = new Size(289, 260);
             Controls.Add(lb2);
             Controls.Add(label1);
             Controls.Add(labels);
