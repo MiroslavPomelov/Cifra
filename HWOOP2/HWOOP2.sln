@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HWOOP2", "HWOOP2\HWOOP2.csproj", "{B9A8C560-4A5D-49B2-8766-211FB6DAFBEF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9A8C560-4A5D-49B2-8766-211FB6DAFBEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9A8C560-4A5D-49B2-8766-211FB6DAFBEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9A8C560-4A5D-49B2-8766-211FB6DAFBEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9A8C560-4A5D-49B2-8766-211FB6DAFBEF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6C69E8F8-60A0-4A3E-B506-E526D2604C35}
+	EndGlobalSection
+EndGlobal
