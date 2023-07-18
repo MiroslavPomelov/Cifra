@@ -40,5 +40,9 @@ namespace HWOOP3
         {
             Console.WriteLine($"Свободных мест: {SeatsFree()}");
         }
+        ~Train()
+        {
+
+        }
     }
 }
