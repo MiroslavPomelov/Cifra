@@ -10,18 +10,18 @@ namespace HWOOP4
 {
     internal class Massives
     {
-        private Array[] array, arrayresult;
+        private Arrays[] array, arrayresult;
 
         public Massives(int n)
         {
 
-            this.array = new Array[n];
+            this.array = new Arrays[n];
             for (int i = 0; i < n; i++)
             {
 
                 Console.Write($"Введите слова через пробел для {i + 1}го массива: ");
                 string elements = Console.ReadLine()!;
-                this.array[i] = new Array(elements, i);
+                this.array[i] = new Arrays(elements, i);
 
             }
         }
@@ -31,7 +31,7 @@ namespace HWOOP4
             return array.Length;
         }
 
-        public Array this[int i]
+        public Arrays this[int i]
         {
             get => array[i];
             set => array[i] = value;
@@ -56,14 +56,14 @@ namespace HWOOP4
         public void CouplingNewArray(int n)
         {
             Console.WriteLine("Новый массив: ");
-            this.arrayresult = new Array[n];
+            this.arrayresult = new Arrays[n];
             int elementsresult = array.Length;
             for (int i = 0; i < array.Length; i++)
             {
-                this.arrayresult[i] = new Array(i, elementsresult, n);
+                this.arrayresult[i] = new Arrays(i, elementsresult, n);
                 arrayresult[i] = array[i];
             }
-            foreach (Array arres in this.array)
+            foreach (Arrays arres in this.array)
             {
                 Console.WriteLine(arres.PrintNewArray());
             }
@@ -76,10 +76,30 @@ namespace HWOOP4
 
         public void Print()
         {
-            foreach (Array arr in array)
+            foreach (Arrays arr in array)
             {
                 Console.WriteLine(arr.Print());
             }
+        }
+
+        static void Union<T>(T[] a, T[] b, ref T[] c)
+        {
+            Arrays.Resize<T>(ref c, a.Length);
+            a.CopyTo(c, 0);
+            foreach (T item in b)
+            {
+                if (!Exist<T>(item, a))
+                {
+                    Arrays.Resize<T>(ref c, c.Length + 1);
+                    c[c.GetUpperBound(0)] = item;
+                }
+            }
+        }
+        static bool Exist<T>(T a, T[] b)
+        {
+            foreach (T item in b)
+                if (a.Equals(item)) return true;
+            return false;
         }
     }
 }

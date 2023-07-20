@@ -8,16 +8,16 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HWOOP4
 {
-    internal class Array
+    internal class Arrays
     {
         private string[] array, arrayresult;
 
-        public Array(string elements, int j)
+        public Arrays(string elements, int j)
         {
             this.array = elements.Split(' ');
         }
 
-        public Array(int i, int elementsresult, int n)
+        public Arrays(int i, int elementsresult, int n)
         {
             int e = elementsresult * n;
             this.arrayresult = new string[e];

@@ -21,10 +21,10 @@ namespace Points
                 for (int i = 1; i < OurPoints.Count; i++)
                 {
                     length += Math.Sqrt((OurPoints[i].X - OurPoints[i - 1].X) * (OurPoints[i].X - OurPoints[i - 1].X) + (OurPoints[i].Y - OurPoints[i - 1].Y) * (OurPoints[i].Y - OurPoints[i - 1].Y));
+                }
+                return length;
             }
-            return length;
         }
-    }
 
-}
+    }
 }
