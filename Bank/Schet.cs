@@ -16,6 +16,7 @@ namespace Bank
             Id = id;
             Summa = 0;
         }
+
         //public void Add(decimal s)
         //{
         //    Summa += s;
@@ -30,8 +31,6 @@ namespace Bank
         //    {
         //        Console.WriteLine("Операция не возможна!");
         //    }
-
-            
         //}
         public void Print() 
         {
