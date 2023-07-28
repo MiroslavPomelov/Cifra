@@ -74,7 +74,7 @@ namespace Peregruzka
 
         public static Time operator +(Time a, int hours)
         {
-            int h = a.hour + hours%24;
+            int h = a.hour + hours % 24;
             if (h >= 24)
             {
                 h -= 24;
