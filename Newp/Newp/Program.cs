@@ -247,7 +247,5 @@ namespace FileManager_Chyornyy
             Console.WriteLine(currentPage);
             tree = "";
         }
-
-
     }
 }
