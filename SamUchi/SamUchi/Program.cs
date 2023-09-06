@@ -1,6 +1,6 @@
 ﻿using SamUchi;
 
-Gun gun = new Gun(false);
+Gun gun = new Gun(true);
 
 while (true)
 {
