@@ -14,33 +14,6 @@ namespace HWOOP1
 
         public Time(int hours, int minutes, int seconds)
         {
-            //if (hours > 0 && hours <= 24)
-            //{
-            //    _hours = hours;
-            //}
-            //else
-            //{
-            //    throw new Exception("Неправильный формат часов!");
-            //}
-
-            //if (minutes > 0 && minutes <= 60)
-            //{
-            //    _minutes = minutes;
-            //}
-            //else
-            //{
-            //    throw new Exception("Неправильный формат минут!");
-            //}
-
-            //if (seconds > 0 && seconds <= 60)
-            //{
-            //    _seconds = seconds;
-            //}
-            //else
-            //{
-            //    throw new Exception("Неправильный формат секунд!");
-            //}
-
             setHours(hours);
             setMinutes(minutes);
             setSeconds(seconds);
