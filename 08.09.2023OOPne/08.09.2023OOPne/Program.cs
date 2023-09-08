@@ -1,47 +1,97 @@
-﻿namespace _08._09._2023OOPne
+﻿using System.ComponentModel.Design;
+
+namespace _08._09._2023OOPne
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            Person person = new Person();
 
-            person.Name = "Qwerty";
+            //AutoEngine autoEngine = new AutoEngine("Lada", 4.4, 8);
 
-            person.Age = int.Parse(Console.ReadLine());
+            People man = new People();
+
+            man[0].Name = "Qwerty";
 
         }
-    }
 
-    class Person
-    {
-        private string _name;
-        private int _age;
-        private int _phoneNimber;
-        private string _adress;
-
-        public string Name
+        class Person
         {
-            get { return _name; }
-            set { _name = value; }
+            public string Name { get; set; }
         }
 
-        public int Age
+        class People
         {
-            get { return _age; }
-            set
+            private Person[] data;
+
+            public People()
             {
-                if (value < 0 || value > 200)
+                data = new Person[0];
+            }
+
+            public Person this[int index]
+            {
+                get
                 {
-                    Console.WriteLine("Не может быть отрицательным или больше 200");
+                    return data[index];
                 }
-                else
+                set
                 {
-                    Console.WriteLine($"Current _age: {_age} reverse to {value}");
-                    _age = value;
+                    data[index] = value;
                 }
             }
         }
 
+        //class AutoEngine
+        //{
+            //public string _car { get; private set; }
+            //private double _tankVolume;
+            //private double _fuelConsumption;
+            //private double _currentFuelRemaining;
+
+            //public double FuelConsumptionRemaining
+            //{
+            //    get { return _fuelConsumption; }
+            //}
+
+
+            //public AutoEngine(string car, double volume, int fuelConsumption)
+            //{
+            //    _car = car;
+            //    _tankVolume = volume;
+            //    _fuelConsumption = fuelConsumption;
+            //}
+
+            //public void Refueling(int fuel)
+            //{
+            //    if (fuel + _currentFuelRemaining > _tankVolume)
+            //    {
+            //        throw new Exception();
+            //    }
+            //    _currentFuelRemaining += fuel;
+            //}
+
+            //public void FuelConsumption(double distance)
+            //{
+            //    if (_currentFuelRemaining - distance * _fuelConsumption / 100 => 0)
+            //    {
+            //        _currentFuelRemaining -= (distance * _fuelConsumption) / 100;
+            //    }
+            //    else 
+            //    {
+            //        Console.WriteLine("Вы доехали");
+            //    }
+
+            //}
+
+            //public void Print()
+            //{
+
+            //}
+        //}
     }
+
+
+
+
 }
