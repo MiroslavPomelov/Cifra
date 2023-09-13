@@ -1,0 +1,3 @@
+admin secret
+test 123456
+Miroslav Pomelov
