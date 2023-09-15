@@ -1,0 +1,63 @@
+create schema air; 
+
+CREATE table if not exists air.Airport (
+    id serial PRIMARY KEY,
+    name text,
+    city varchar(50),
+    country VARCHAR(50));
+
+
+create table  if not exists air.Airline(
+id serial primary key,
+name text,
+num int);
+
+create table if not exists air.Flight(
+id serial primary key,
+flight_number int,
+date_flight timestamp,
+dep_airport int references air.airport(id),
+arr_airport int references air.airport(id),
+id_airline int references air.airline(id),
+volume int);
+
+alter table air.Flight rename column flight_number to number_flight;
+
+insert into air.airport(name, city, country) values ('Внуково', 'Москва', 'RU');
+alter sequence air.airport_id_seq restart with 101;
+
+delete from air.airport
+where id=101
+
+alter sequence air.airport_id_seq restart with 2;
+
+alter table air.airport add constraint name_unique unique(name);
+
+
+select * from air.airport;
+
+
+
+insert into air.airline(name, num) values ('aeroflot', 1001), ('rossiya', 989);
+
+insert into air.Flight(number_flight, date_flight, dep_airport, arr_airport, id_airline, volume)
+values(1,'2023-09-15 10:00:00', 1, 2, 1, 180);
+
+insert into air.Flight(number_flight, date_flight, dep_airport, arr_airport, id_airline, volume)
+values(2,'2023-09-15 12:30:00', 2, 1, 1, 180);
+
+insert into air.Flight(number_flight, date_flight, dep_airport, arr_airport, id_airline, volume)
+values(3,'2023-09-16 10:00:00', 1, 2, 2, 180);
+
+insert into air.Flight(number_flight, date_flight, dep_airport, arr_airport, id_airline, volume)
+values(4,'2023-09-16 13:00:00', 2, 1, 2, 180);
+
+update air.flight 
+set volume = 200
+where id in (3,4);
+
+select * 
+from air.flight
+order by date_flight desc;
+
+delete from air.airport where id =1;
