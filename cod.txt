@@ -61,3 +61,31 @@ from air.flight
 order by date_flight desc;
 
 delete from air.airport where id =1;
+
+
+
+select dep_airport  from air.flight
+group by dep_airport 
+limit 3;
+
+
+--select, from, where, order by, group by, limit, join(left join, full koin, outer join, inner join), hawing
+--where -всегда кроме !!когда уже group by , если group by то использую hawing.
+--
+
+
+create table if not exists air.Pilot(
+id serial primary key,
+name_pilot text,
+birthdate date,
+number_flight int foreign key number_flight_passanger);
+
+create table if not exists air.Passenger(
+id serial primary key,
+name_passenger text,
+number_flight_passanger int);
+
+
+
+
+
