@@ -86,6 +86,72 @@ name_passenger text,
 number_flight_passanger int);
 
 
+---------------------cost - dased - оценка работы БД,--------- group by и * - не поддерживается
+
+select * from air.Flight f ;
+
+update air.Flight
+set number_flight = number_flight+100
+where id in (1, 3, 5, 9, 10);
+
+insert into air.Flight(number_flight, date_flight, dep_airport, arr_airport, id_airline, volume)
+values
+(5,'2023-09-15 10:00:00', 1, 2, 1, 220),
+(6,'2023-09-15 10:00:00', 2, 1, 1, 220),
+(7,'2023-09-15 10:00:00', 1, 2, 1, 300),
+(8,'2023-09-15 10:00:00', 2, 1, 1, 300),
+(9,'2023-09-15 10:00:00', 1, 2, 1, 320),
+(10,'2023-09-15 10:00:00', 2, 1, 1, 320);
+
+insert into air.Flight(number_flight, date_flight, dep_airport, arr_airport, id_airline, volume)
+values
+(11,'2023-09-18 10:00:00', 1, 2, 1, 500);
+
+
+select volume, count(*) from air.Flight f
+group by volume ;
+
+select distinct volume, id from air.flight;---уникальная комбинация
+
+
+select volume, sum(number_flight) from air.Flight f
+group by volume ;
+
+select volume, sum(number_flight)/2 as fix_number from air.Flight f
+group by volume ;
+
+select volume, sum(number_flight)/2 as fix_number from air.Flight f
+where id in (1,3,5,9,10)
+group by volume 
+having count(*)>1 ;
+
+
+select * from air.Flight as f ;
+select * from air.Airline as a ;
+select * from air.airport as a ;
+
+select f.id, f.number_flight , f.date_flight , f.volume ,
+a."name" ,a.num , 
+ar_1."name" , ar_1.city ,ar_1.country,
+ar_2."name" , ar_2.city ,ar_2.country  
+from air.Flight as f 
+join air.Airline as a 
+on f.id_airline  = a.id 
+join air.Airport as ar_1
+on f.dep_airport = ar_1.id
+join air.airport as ar_2
+on f.arr_airport = ar_2.id
+order by id desc;
+
+---- innerjoin - совмещает совпадения, пересечения
+-----left и right join -совмещает всю таблицу справа или слева и + втоая таблица
+----outer - все что не совпало
+---wal журнал
+
+----Транзакции
+---begin, savepoint, rollback to, commit
+
+
 
 
 
