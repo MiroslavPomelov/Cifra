@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polymorph20.09", "Polymorph20.09\Polymorph20.09.csproj", "{355128B7-0A0A-4FE2-93F4-B81486BDBC13}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolymorphPrakt20.09", "PolymorphPrakt20.09\PolymorphPrakt20.09.csproj", "{8B78A6E4-AA76-43D1-B24F-0305981A4482}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{355128B7-0A0A-4FE2-93F4-B81486BDBC13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{355128B7-0A0A-4FE2-93F4-B81486BDBC13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{355128B7-0A0A-4FE2-93F4-B81486BDBC13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{355128B7-0A0A-4FE2-93F4-B81486BDBC13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B78A6E4-AA76-43D1-B24F-0305981A4482}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B78A6E4-AA76-43D1-B24F-0305981A4482}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B78A6E4-AA76-43D1-B24F-0305981A4482}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B78A6E4-AA76-43D1-B24F-0305981A4482}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7221AD8F-8077-44D2-969C-40B8A985A4C0}
+	EndGlobalSection
+EndGlobal
