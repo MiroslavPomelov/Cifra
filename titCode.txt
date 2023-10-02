@@ -1,0 +1,40 @@
+select * from titanic_train_edit tte ;
+
+---case when bool then
+ ---      when bool then
+ ----      else bool
+  ---        end as название
+
+---between 1,3
+
+---where id in(,,,),       id in(select)
+
+
+select count(survived) AS AAA, sum(survived),  
+AS BBB
+FROM titanic_train_edit tte 
+;
+
+
+
+select distinct  count(pclass) as Clas, sum(survived) as Passanger  from titanic_train_edit tte 
+group by pclass ;
+
+
+
+select distinct pclass as Clas, count(survived) as Passangers, sum(survived) as surviveds,  sex  
+from titanic_train_edit tte 
+group by pclass, sex  
+order by sex desc ;
+
+select distinct parch as emb, count(survived) as Passangers, sum(survived) as surviveds, count(survived)/sum(survived)
+from titanic_train_edit tte 
+group by parch ;
+
+select parch
+from titanic_train_edit tte 
+group by parch 
+order by count(*) desc 
+limit 1;
+
+
