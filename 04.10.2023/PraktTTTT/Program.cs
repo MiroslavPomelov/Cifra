@@ -31,5 +31,8 @@ namespace PraktTTTT
 
     }
 
+    public abstract class Employee<T>
+    {
 
+    }
 }
