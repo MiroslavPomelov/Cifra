@@ -27,12 +27,10 @@ namespace PraktTTTT
         public override char Sex { get; set; }
         public override string Race { get; set; }
         public override Color EyeColor { get; set; }
-
-
     }
 
     public abstract class Employee<T>
     {
-
+        public abstract T Id { get; set; }
     }
 }
