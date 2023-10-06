@@ -99,6 +99,11 @@ namespace _06._10Prakt
             DataLists = new List<ITask>();
         }
 
+        public void Sorting()
+        {
+            DataLists.Sort();
+        }
+
         public void GetAllLists()
         {
             foreach (var item in DataLists)
