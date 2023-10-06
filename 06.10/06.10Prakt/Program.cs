@@ -34,7 +34,20 @@
         public Priority Priority { get; set; }
         public void Display()
         {
+            Console.WriteLine("");
+        }
+    }
 
+    class Event : ITask
+    {
+        public string Title { get; set; }
+        public DateTime DueDate { get; set; }
+        public Priority Priority { get; set; }
+        public string Location { get; set; }
+
+        public void Display()
+        {
+            Console.WriteLine("");
         }
     }
 }
