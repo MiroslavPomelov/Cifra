@@ -32,5 +32,7 @@ namespace PraktTTTT
     public abstract class Employee<T>
     {
         public abstract T Id { get; set; }
+
+
     }
 }
