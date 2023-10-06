@@ -38,7 +38,9 @@ namespace _06._10
     //    void Applause();
     //}
 
-    //Iloger logger = new FileLogger(); // Создание интерфейса класса
+    //Iloger logger = new FileLogger(); // Создание интерфейса класса - upcast 
+
+    // Upcast - приведение класса к интерфейсу
 
     public interface ILoger1
     {
