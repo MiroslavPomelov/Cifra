@@ -37,6 +37,23 @@ namespace jsonc
             //Person person = JsonSerializer.Deserialize<Person>(jsonData);
 
 
+            //2
+            //Surrealize
+            Product[] products = new Product[]
+            {
+                new Product("Banans", 2500, "Expensive"),
+                 new Product("Dan", 500, "Cheap"),
+                  new Product("WatterLemon", 400, "Norm")
+            };
+
+            string jsonData1 = JsonSerializer.Serialize(products, typeof(Product[]));
+            File.WriteAllText("Product.json", jsonData1 + "\n");
+
+            //Desurealize
+            string data = File.ReadAllText("product.json");
+            Product[] products1 = JsonSerializer.Deserialize<Product[]>(data);
+
+
             string jsonBanana = File.ReadAllText("product.json");
             Product product = JsonSerializer.Deserialize<Product>(jsonBanana);
             Console.WriteLine("{0}, {1}, {2}", product.Name, product.Price, product.Description);
@@ -60,7 +77,12 @@ namespace jsonc
             public int Price { get; set; }
             public string Description { get; set; }
 
-            public List<string> Fruits { get; set; } = new List<string>();
+            public Product(string name, int price, string description)
+            {
+                Name = name;
+                Price = price;
+                Description = description;
+            }
         }
     }
 }
