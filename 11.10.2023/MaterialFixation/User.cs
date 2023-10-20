@@ -33,7 +33,7 @@ namespace MaterialFixation
                 }
                 else
                 {
-                    File.WriteAllText(_userDataPath, usersData);
+                    File.WriteAllText(_userDataPath, usersData[i]);
                 }
             }
 
