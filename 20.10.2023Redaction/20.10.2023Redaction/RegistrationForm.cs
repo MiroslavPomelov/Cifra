@@ -27,7 +27,7 @@ namespace _20._10._2023Redaction
             string userLogin = UserLoginTB.Text;
             string userName = UserNameTB.Text;
             string userSurName = UserSurnameTB.Text;
-            string userMail= UserMailTB.Text;
+            string userMail = UserMailTB.Text;
             string userPassword = UserPasswordTB.Text;
             DateTime birthDay = UserBirthdayTB.Value;
 

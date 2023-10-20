@@ -18,7 +18,15 @@ namespace _20._10._2023Redaction
         {
             string filePath = Directory.GetCurrentDirectory() + "\\UserData.json";
             string jsonData = File.ReadAllText(filePath);
-            _users = JsonSerializer.Deserialize<List<User>>(jsonData) ?? new List<User>();
+
+            if (jsonData == string.Empty)
+            {
+                _users = new List<User>();
+            }
+            else
+            {
+                _users = JsonSerializer.Deserialize<List<User>>(jsonData);
+            }
 
             foreach (var user in _users)
             {
