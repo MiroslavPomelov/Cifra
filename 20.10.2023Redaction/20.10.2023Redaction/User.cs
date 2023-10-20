@@ -28,6 +28,8 @@ namespace _20._10._2023Redaction
             Email = email;
             Password = password;
             BirthDay = birthDay;
+            //isredector
+            //roll
         }
     }
 }
