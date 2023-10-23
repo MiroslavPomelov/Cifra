@@ -1,115 +1,26 @@
-create schema practice;
-
-create table if not exists practice.Tovars(
-product_id INT primary key  ,
-product_name VARCHAR(100),
-category_id INT,
-price Decimal not null); 
-
-insert into practice.tovars(product_id, product_name, category_id, price) values(201, 'Ноутбук Dell', 'Электроника', 1200.00);
-insert into practice.tovars(product_id, product_name, category_id, price) values(202, 'Смартфон Samsung', 'Электроника', 800.00);
-insert into practice.tovars(product_id, product_name, category_id, price) values(203, 'Книга "Война и мир"', 'Книги', 25.00);
-insert into practice.tovars(product_id, product_name, category_id, price) values(204, 'Шарф шерстяной', 'Одежда', 40.00);
-insert into practice.tovars(product_id, product_name, category_id, price) values(205, 'Телевизор LG', 'Электроника', 1500.00);
-insert into practice.tovars(product_id, product_name, category_id, price) values(206, 'Футболка с логотипом', 'Одежда', 15.00);
-insert into practice.tovars(product_id, product_name, category_id, price) values(207, 'Сковорода Tefal', 'Кухонные товары', 35.00);
-insert into practice.tovars(product_id, product_name, category_id, price) values(208, 'Спортивные кроссовки', 'Обувь', 90.00);
+select *
+from bookings b 
+join rooms r 
+on r.room_id = b.room_id 
+join  guests g 
+on g.guest_id = b.guest_id 
+where rtrim(ltrim(room_number, 'R-'), 'A-') ::int  > (select  max(rtrim(ltrim(room_number, 'R-'), 'A-') ::int)
+from bookings b 
+right join rooms r 
+on r.room_id = b.room_id 
+where b.booking_id is null);
 
 
-alter table practice.Tovars alter column category_id type text ;
-
-create table if not exists practice.Orders(
-order_id  INT primary key,
-customer_id int references practice.customers(customer_id),
-order_date timestamp not null,
-total_amount  float not null,
-delivery_status_id  Decimal,
-product_id int references practice.Tovars(product_id),
-quantity INT not null); 
 
 
-insert into practice.orders (order_id,customer_id,order_date,total_amount,delivery_status_id,product_id,quantity ) values(1, 101, '2023-01-15', 250.00,	'Ожидает доставки' ,201,2);
-insert into practice.orders (order_id,customer_id,order_date,total_amount,delivery_status_id,product_id,quantity ) values(2, 101, '2023-02-03', 150.00,	'Доставлено' ,203,	1);
-insert into practice.orders (order_id,customer_id,order_date,total_amount,delivery_status_id,product_id,quantity ) values(3, 103, '2023-03-20', 500.00,	'Ожидает доставки' ,202,3);
-insert into practice.orders (order_id,customer_id,order_date,total_amount,delivery_status_id,product_id,quantity ) values(4, 101, '2023-04-10', 75.00,	'Доставлено' ,204,	1);
-insert into practice.orders (order_id,customer_id,order_date,total_amount,delivery_status_id,product_id,quantity ) values(5, 104, '2023-05-08', 300.00,	'Доставлено' ,201,	1);
-insert into practice.orders (order_id,customer_id,order_date,total_amount,delivery_status_id,product_id,quantity ) values(6, 103, '2023-06-15', 100.00,	'Доставлено' ,206,	2);
-insert into practice.orders (order_id,customer_id,order_date,total_amount,delivery_status_id,product_id,quantity ) values(7, 102, '2023-07-22', 35.00,	'Ожидает доставки' ,207,1);
-insert into practice.orders (order_id,customer_id,order_date,total_amount,delivery_status_id,product_id,quantity ) values(8, 101, '2023-08-10', 180.00,	'Ожидает доставки' ,208,2);
+select  split_part(r.room_number, '-',2)::text
+from bookings b 
+right join rooms r 
+on r.room_id = b.room_id 
+where b.booking_id is null;
 
-alter table practice.Orders alter column delivery_status_id type text ;
-
-
-create table if not exists practice.customers(
-customer_id  INT primary key,
-first_name VARCHAR(50),
-last_name VARCHAR(50) not null,
-email  VARCHAR(100) not null,
-phone VARCHAR(20) not null); 
-
-insert into practice.customers(customer_id,first_name,last_name,email,phone) values(101, 'Иван', 'Петров', 'ivan@example.com', +1234567890);
-insert into practice.customers(customer_id,first_name,last_name,email,phone) values(102, 'Елена', 'Смирнова', 'elena@example.com', +9876543210);
-insert into practice.customers(customer_id,first_name,last_name,email,phone) values(103, 'Алексей', 'Иванов', 'alex@example.com', +5678901234);
-insert into practice.customers(customer_id,first_name,last_name,email,phone) values(104, 'Ольга', 'Козлова', 'olga@example.com', +2345678901);
-
-----------------------------
-
-select * from practice.customers
-where phone like '%0' or phone like '%5';
-
-select * from practice.orders o 
-where total_amount>200 or delivery_status_id = 'В пути';
-
-update practice.tovars 
-SET price=1200.00 WHERE product_id=201;
-update practice.tovars 
-SET price=800.00 WHERE product_id=202;
-update practice.tovars 
-SET price=25.00 WHERE product_id=203;
-update practice.tovars 
-SET price=40.00 WHERE product_id=204;
-update practice.tovars 
-SET price=1500.00 WHERE product_id=205;
-update practice.tovars 
-SET price=15.00 WHERE product_id=206;
-update practice.tovars 
-SET price=35.00 WHERE product_id=207;
-update practice.tovars 
-SET price=90.00 WHERE product_id=208;
-
-select * from practice.products p   
-where (category_id = 'Обувь' or category_id = 'Одежда') and price < 50;
-
-ALTER TABLE practice.tovars 
-RENAME TO products;
-
-select  * from practice.products p 
-where price < 30 or price > 1000;
-
-select * from practice.customers c 
-where first_name = 'Елена' or first_name = 'Ольга';
-
-select * from practice.products p 
-where price > 70 or product_name like '%шерст%';
-
-select * from practice.customers c 
-where first_name like 'С%' or first_name like 'И%';
-
-select * from practice.products p 
-where (price  < 25 or price  > 100) and category_id = 'Электроника';
-
-select * from practice.customers
-where phone like '1%' or phone like '9%';
-
-select * from practice.orders o 
-where total_amount > 100 or delivery_status_id = 'Доставлено';
-
-select * from practice.products p 
-where category_id ='Электроника';
-
-select * from practice.products p 
-where category_id = 'Одежда' or category_id = 'Обувь';
-
-select * from practice.orders o 
-where delivery_status_id = 'Доставлено' and total_amount >200;
-
+select  max(rtrim(ltrim(room_number, 'R-'), 'A-') ::int)
+from bookings b 
+right join rooms r 
+on r.room_id = b.room_id 
+where b.booking_id is null;
