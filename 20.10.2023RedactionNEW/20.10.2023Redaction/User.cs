@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-enum Role
+public enum Role
 {
     Admin,
     Author,
@@ -16,7 +16,7 @@ enum Role
 
 namespace _20._10._2023Redaction
 {
-    class User
+   public class User
     {
         public int Id { get; set; }
         public string UserName { get; set; }
@@ -30,7 +30,7 @@ namespace _20._10._2023Redaction
         public bool Reader { get; set; }
         public bool Isredactor { get; set; } = false;
         public Role Role { get; set; }
-        public List<string> ArticleList { get; set; }
+        public List<string> ArticleList { get; set; } = new List<string>();
 
         public User(string userName, string firstName, string secondName, string email, string password, DateTime birthDay, Role role)
         {

@@ -49,7 +49,7 @@ namespace _20._10._2023Redaction
                     adminPanel.Show();
                     break;
                 case Role.Author:
-                    AuthorPanel authorpanel = new AuthorPanel();
+                    AuthorPanel authorpanel = new AuthorPanel(currentUser);
                     authorpanel.Show();
                     break;
                 case Role.Reader:

@@ -150,6 +150,7 @@
             AddNewArticleBTN.TabIndex = 11;
             AddNewArticleBTN.Text = "Создать статью";
             AddNewArticleBTN.UseVisualStyleBackColor = true;
+            AddNewArticleBTN.Click += AddNewArticleBTN_Click;
             // 
             // ArticleNameTB
             // 
