@@ -30,6 +30,7 @@ namespace _20._10._2023Redaction
         public bool Reader { get; set; }
         public bool Isredactor { get; set; } = false;
         public Role Role { get; set; }
+        public List<string> ArticleList { get; set; }
 
         public User(string userName, string firstName, string secondName, string email, string password, DateTime birthDay, Role role)
         {
