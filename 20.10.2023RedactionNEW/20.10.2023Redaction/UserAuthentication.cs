@@ -1,41 +1,61 @@
-﻿using System;
+﻿using _20._10._2023Redaction.RoleOfUsers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace _20._10._2023Redaction
 {
     public class UserAuthentication
     {
-        public bool Authenticate { get; set; }
-        public void AuthenticateUser(string username, string password)
+        public void Autentificate(string userLogin, string userPassword)
         {
-            string filePath = Directory.GetCurrentDirectory() + "\\UserData.json";
-            string[] userData = File.ReadAllLines(filePath);
-            using (StreamReader reader = new StreamReader(filePath))
+            StreamReader reader = new StreamReader("UserData.json");
+            string jsonData = reader.ReadToEnd();
+            User[] users = JsonSerializer.Deserialize<User[]>(jsonData) ?? throw new Exception("нет данных");
+
+            reader.Close();
+
+            User? currentUser = null;
+
+            foreach (User user in users)
             {
-                for (int i = 0; i < userData.Length; i++)
+                if (user.UserName == userLogin && user.Password == userPassword)
                 {
-                    if (userData[i] == username || userData[i] == password)
-                    {
-                        Authenticate = true;
-                    }
+                    currentUser = user;
                 }
             }
+
+            if (currentUser == null)
+            {
+                MessageBox.Show("Пользователь не найден или пароль неверен");
+                return;
+            }
+
+            IsUserAuthenticated(currentUser);
         }
 
-        public bool IsUserAuthenticated()
+        private void IsUserAuthenticated(User currentUser)
         {
-            if (Authenticate)
+
+            switch (currentUser.Role)
             {
-                return true;
-            }
-            else
-            {
-                return false;
+                case Role.Admin:
+                    AdminPanel adminPanel = new AdminPanel();
+                    adminPanel.Show();
+                    break;
+                case Role.Author:
+                    AuthorPanel authorpanel = new AuthorPanel();
+                    authorpanel.Show();
+                    break;
+                case Role.Reader:
+                    ReaderPanel readerPanel = new ReaderPanel();
+                    readerPanel.Show();
+                    break;
             }
         }
     }

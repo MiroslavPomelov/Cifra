@@ -16,7 +16,10 @@ namespace _20._10._2023Redaction
 
         private void EnterBT_Click(object sender, EventArgs e)
         {
-            
+            UserAuthentication authentication = new UserAuthentication();
+            authentication.Autentificate(UserLoginTB.Text, UserPasswordTB.Text);
+
+            Hide();
         }
     }
 }

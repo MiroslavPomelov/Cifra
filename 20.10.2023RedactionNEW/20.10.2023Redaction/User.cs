@@ -6,6 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
+enum Role
+{
+    Admin,
+    Author,
+    Reader
+}
+
+
 namespace _20._10._2023Redaction
 {
     class User
@@ -20,9 +28,10 @@ namespace _20._10._2023Redaction
         public DateTime BirthDay { get; set; }
         public bool Author { get; set; }
         public bool Reader { get; set; }
-        public bool Isredactor { get; set; }
+        public bool Isredactor { get; set; } = false;
+        public Role Role { get; set; }
 
-        public User(string userName, string firstName, string secondName, string email, string password, DateTime birthDay, bool author, bool reader, bool isredactor)
+        public User(string userName, string firstName, string secondName, string email, string password, DateTime birthDay, Role role)
         {
 
             UserName = userName;
@@ -32,9 +41,7 @@ namespace _20._10._2023Redaction
             Password = password;
             BirthDay = birthDay;
             Isredactor = false;
-            Author = author;
-            Reader = reader;
-            Isredactor = isredactor;
+            Role = role;
         }
     }
 }
