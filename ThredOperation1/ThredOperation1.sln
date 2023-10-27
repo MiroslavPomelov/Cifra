@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThredOperation1", "ThredOperation1\ThredOperation1.csproj", "{E576A04A-EA2B-43CC-A59B-3F91D2308997}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreadDost", "ThreadDost\ThreadDost.csproj", "{6136AF07-B76C-4913-A425-2D3F7A729076}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{E576A04A-EA2B-43CC-A59B-3F91D2308997}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E576A04A-EA2B-43CC-A59B-3F91D2308997}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E576A04A-EA2B-43CC-A59B-3F91D2308997}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6136AF07-B76C-4913-A425-2D3F7A729076}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6136AF07-B76C-4913-A425-2D3F7A729076}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6136AF07-B76C-4913-A425-2D3F7A729076}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6136AF07-B76C-4913-A425-2D3F7A729076}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

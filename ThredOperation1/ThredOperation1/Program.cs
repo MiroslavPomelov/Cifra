@@ -54,6 +54,7 @@
             //Console.WriteLine(secondaryThread.IsAlive);
 
             // КОПИЯ:
+
             Thread secondaryThgread = new Thread(PrintNumbers);
             secondaryThgread.Name = "Вторичный поток";
             secondaryThgread.Start();
