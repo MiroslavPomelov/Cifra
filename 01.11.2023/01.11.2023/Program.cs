@@ -4,9 +4,9 @@
     {
         static void Main(string[] args)
         {
-            Thread firstThread = new Thread(new ParameterizedThreadStart(Printer)); // Сразу указывает делегат, параметры в потоке
-            Thread secondThread = new Thread(Printer);
-            Thread thirdThread = new Thread(message => { Console.WriteLine(message); });
+            Thread firstThread = new /*Thread*/(new ParameterizedThreadStart(Printer)); // Сразу указывает делегат, параметры в потоке
+            Thread secondThread = new /*Thread*/(Printer);
+            Thread thirdThread = new /*Thread*/(message => { Console.WriteLine(message); });
 
             firstThread.Start(("asda"));
             secondThread.Start("asda");
@@ -34,7 +34,7 @@
         //        Console.WriteLine(obj);
         //    }
 
-        public static void Printer(object obj)
+        public static void Printer(object? obj)
         {
             Console.WriteLine(obj);
         }
