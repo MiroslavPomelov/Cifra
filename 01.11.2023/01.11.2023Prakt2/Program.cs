@@ -6,7 +6,7 @@
 
         //public static Mutex mutex = new Mutex(); // По сути тот же монитор
 
-        public static Semaphore semaphore = new Semaphore();
+        public static Semaphore semaphore = new Semaphore(1, 2); //(количесвто потоков сейчас, всего потоков очередь). Лучше всего, более гибкий
         public static int data = 0;
 
         static void Main(string[] args)
@@ -24,27 +24,44 @@
         }
         public static void Dataencreaser()
         {
-            for (int i = 0; i < 100000; i++)
+
+            //for (int i = 0; i < 100000; i++)
+            //{
+            //lock(queue)
+            //  {
+            //      data++;
+            //  }
+
+            //Monitor.Enter(queue); // Аналог - lock
+
+            //try
+            //{
+            //    data++;
+            //}
+            //finally
+            //{
+            //    Monitor.Exit(queue);
+            //}
+
+            //mutex.WaitOne();
+            //data++;
+            //mutex.ReleaseMutex();
+
+            //}
+
+            semaphore.WaitOne();
+
+            try
             {
-                //lock(queue)
-                //  {
-                //      data++;
-                //  }
+                for (int i = 0; i < 10000; i++)
+                {
+                    data++;
+                }
+            }
+            finally
+            {
 
-                //Monitor.Enter(queue); // Аналог - lock
-
-                //try
-                //{
-                //    data++;
-                //}
-                //finally
-                //{
-                //    Monitor.Exit(queue);
-                //}
-
-                //mutex.WaitOne();
-                //data++;
-                //mutex.ReleaseMutex();
+                semaphore.Release();
             }
         }
     }
