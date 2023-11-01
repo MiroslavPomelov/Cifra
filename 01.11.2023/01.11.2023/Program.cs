@@ -4,37 +4,39 @@
     {
         static void Main(string[] args)
         {
-            Thread firstThread = new Thread(Printer);
+            Thread firstThread = new Thread(new ParameterizedThreadStart(Printer)); // Сразу указывает делегат, параметры в потоке
             Thread secondThread = new Thread(Printer);
-            Thread thirdThread = new Thread(Printer);
-            Thread fourthThread = new Thread(Printer);
+            Thread thirdThread = new Thread(message => { Console.WriteLine(message); });
 
-            firstThread.Start(15);
+            firstThread.Start(("asda"));
             secondThread.Start("asda");
-            thirdThread.Start(new Car("dodge","Mc",260));
-            fourthThread.Start(new int[] { 1, 2, 3 });
+            thirdThread.Start(("asda"));
 
         }
 
+        //public static void Printer(object obj)
+        //{
+
+        //    if (obj is int[])
+        //    {
+        //        foreach (int item in (int[])obj)
+        //        {
+        //            Console.WriteLine(item);
+        //        }
+        //    }
+        //    else if (obj is Car)
+        //    {
+        //        Car car = (Car)obj;
+        //        Console.WriteLine($"Название: {car.CarName}\nТип: {car.CarType}\nСкорость: {car.Speed}");
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine(obj);
+        //    }
+
         public static void Printer(object obj)
         {
-
-            if (obj is int[])
-            {
-                foreach (int item in (int[])obj)
-                {
-                    Console.WriteLine(item);
-                }
-            }
-            else if (obj is Car)
-            {
-                Car car = (Car)obj;
-                Console.WriteLine($"Название: {car.CarName}\nТип: {car.CarType}\nСкорость: {car.Speed}");
-            }
-            else
-            {
-                Console.WriteLine(obj);
-            }
+            Console.WriteLine(obj);
         }
     }
 
