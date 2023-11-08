@@ -4,6 +4,9 @@
     {
         static void Main(string[] args)
         {
+            Passenger me = new Passenger("Miroslav");
+            me.MarkOrder(new DateTime(2023, 10, 12));
+
 
         }
     }
@@ -11,9 +14,15 @@
     class Passenger
     {
         public Order PassengerOrder { get; set; }
+        public string PassengerName { get; set; }
         public void MarkOrder(DateTime time)
         {
             PassengerOrder = new Order(time);
+        }
+
+        public Passenger(string name)
+        {
+            PassengerName = name;
         }
     }
 
@@ -48,6 +57,7 @@
     class Cassier
     {
         private List<Train> _trainsList;
+        public Dictionary<Train, List<Passenger>> tickets = new Dictionary<Train, List<Passenger>>();
 
         public Cassier(List<Train> trainsList)
         {
@@ -72,6 +82,14 @@
             }
             Console.WriteLine("Поезд не найден");
             return null;
+        }
+
+        public void MakeTickets(Order order, Passenger currentPassenger)
+        {
+            Train currentTrain = FindTrain(order);
+            List<Passenger> tempList = tickets[currentTrain];
+            tempList.Add(currentPassenger);
+            tickets[currentTrain] = tempList;
         }
     }
 }
