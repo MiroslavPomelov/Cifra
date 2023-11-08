@@ -7,7 +7,8 @@
             Passenger me = new Passenger("Miroslav");
             me.MarkOrder(new DateTime(2023, 10, 12));
 
-
+            Cassier newCassier = new Cassier();
+            newCassier.MakeTickets(me.PassengerOrder, me);
         }
     }
 
@@ -57,9 +58,9 @@
     class Cassier
     {
         private List<Train> _trainsList;
-        public Dictionary<Train, List<Passenger>> tickets = new Dictionary<Train, List<Passenger>>();
+        private Dictionary<Train, List<Passenger>> _tickets = new Dictionary<Train, List<Passenger>>();
 
-        public Cassier(List<Train> trainsList)
+        public Cassier()
         {
             _trainsList = new List<Train>
             {
@@ -70,8 +71,7 @@
             };
         }
 
-
-        public Train FindTrain(Order order)
+        private Train FindTrain(Order order)
         {
             foreach (Train traint in _trainsList)
             {
@@ -87,9 +87,9 @@
         public void MakeTickets(Order order, Passenger currentPassenger)
         {
             Train currentTrain = FindTrain(order);
-            List<Passenger> tempList = tickets[currentTrain];
+            List<Passenger> tempList = _tickets[currentTrain];
             tempList.Add(currentPassenger);
-            tickets[currentTrain] = tempList;
+            _tickets[currentTrain] = tempList;
         }
     }
 }
