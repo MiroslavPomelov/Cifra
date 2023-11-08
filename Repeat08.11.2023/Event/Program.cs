@@ -22,6 +22,11 @@
         public static void ShowIfEvent(string message)
         {
             Console.WriteLine(message);
+            //race condition
+            //abstract
+            //interface
+            //async await и thread разница?
+            
         }
     }
 }
