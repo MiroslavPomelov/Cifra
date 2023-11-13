@@ -1,26 +1,99 @@
-select *
-from bookings b 
-join rooms r 
-on r.room_id = b.room_id 
-join  guests g 
-on g.guest_id = b.guest_id 
-where rtrim(ltrim(room_number, 'R-'), 'A-') ::int  > (select  max(rtrim(ltrim(room_number, 'R-'), 'A-') ::int)
-from bookings b 
-right join rooms r 
-on r.room_id = b.room_id 
-where b.booking_id is null);
+create table customer as
+select row_number() over(), t.*
+from
+(select archive_id , sender_name, document_date  from archives_2018 a 
+union
+select archive_id , sender_name, document_date from archives_2020 a2) as t ;
+
+select * from customer c ;
+--alter table customer add column archive_number int;
+
+update customer 
+set archive_number = "row_number" + archive_id;
+
+insert into customer ("row_number" , archive_id , sender_name, document_date )
+values (8, 6, 'test 2', '2023-11-14');
+
+create or replace function cto_ne_tuda_zakinet_tome_budet_ploxo.fill_archive_number()
+returns trigger as 
+$$
+begin 
+	new.archive_number = new."row_number" + new.archive_id;
+return new;
+end;
+$$
+language 'plpgsql';
+
+create or replace trigger before_insert_fill
+before insert  on customer
+for each row 
+execute procedure cto_ne_tuda_zakinet_tome_budet_ploxo.fill_archive_number();
+
+drop table customer ;
+--------------------------
+alter table customer add column archive_number_difference int;
+
+create or replace function cto_ne_tuda_zakinet_tome_budet_ploxo.fill_archive_number_difference()
+returns trigger as 
+$$
+begin 
+	new.archive_number_difference = new."row_number" - new.archive_id;
+return new;
+end;
+$$
+language 'plpgsql';
+
+create or replace trigger before_insert_difference_fill
+before insert  on customer
+for each row 
+execute procedure cto_ne_tuda_zakinet_tome_budet_ploxo.fill_archive_number_difference();
+
+insert into customer ("row_number" , archive_id , sender_name, document_date )
+values (9, 7, 'test 3', '2023-11-15');
+
+update customer 
+set archive_id = 8
+where "row_number" = 6 ;
+
+update customer 
+set archive_id = 9
+where "row_number" = 6 ;
 
 
 
+-----------------------------------
 
-select  split_part(r.room_number, '-',2)::text
-from bookings b 
-right join rooms r 
-on r.room_id = b.room_id 
-where b.booking_id is null;
+create table wal_customer (
+op varchar(5),
+"row_number" int,
+archives_id int,
+sender_name text,
+document_date date);
 
-select  max(rtrim(ltrim(room_number, 'R-'), 'A-') ::int)
-from bookings b 
-right join rooms r 
-on r.room_id = b.room_id 
-where b.booking_id is null;
+create or replace function fill_wal_journal()
+returns trigger as 
+$$
+begin 
+	IF (TG_OP = 'INSERT') then
+	insert into wal_customer values('+I', new."row_number", new.archive_id, new.sender_name, new.document_date);
+    return new;
+   elsif (TG_OP = 'DELETE') then
+   insert into wal_customer values('-D', old."row_number", old.archive_id, old.sender_name, old.document_date);
+  return old;
+ elsif (TG_OP = 'UPDATE') then
+ insert into wal_customer values('+U', new."row_number", new.archive_id, new.sender_name, new.document_date),
+('-U', old."row_number", old.archive_id, old.sender_name, old.document_date);
+ return new;
+end if;
+end;
+$$
+language 'plpgsql';
+
+create or replace trigger before_all_statment
+before update or insert or delete on customer
+for each row 
+execute procedure fill_wal_journal();
+
+
+insert into customer ("row_number" , archive_id , sender_name, document_date )
+values (20, 6, 'test 3', '2023-11-15');
