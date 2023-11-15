@@ -5,16 +5,33 @@ namespace Excel15._11._23
     {
         static void Main(string[] args)
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             ExcelPackage newBook = new ExcelPackage("newTable.xlsx"); //Создание книги
             ExcelWorksheet newWorksheet = newBook.Workbook.Worksheets["Мой лист"];  // Добавление листа
+
+            string findingValue = "Ячейка B5";
+
+            // Второй способ
+
+            for (int i = 1; i < newWorksheet.Rows.EndRow; i++)
+            {
+                for (int j = 1; j < newWorksheet.Columns.EndColumn; j++)
+                {
+                    if (newWorksheet.Cells[i, j].Text == findingValue)
+                    {
+                        Console.WriteLine($"Значение найдено на координатах {i}:{j}");
+                    }
+                }
+            }
+
+            //Первый способ - Найти ячейку
 
             int row = 0;
             int column = 0;
 
-            string findingValue = "Ячейка B5";
             foreach (ExcelRangeBase cell in newWorksheet.Cells)
             {
-                if (cell.Value == findingValue)
+                if (cell.Text == findingValue)
                 {
                     Console.WriteLine("Совпадение найдено!");
 
@@ -22,7 +39,7 @@ namespace Excel15._11._23
                     column = cell.Start.Column;
                 }
             }
-
+            Console.WriteLine($"Значение {findingValue} найдено в ячейке с координатами: {row}:{column}");
 
 
 
