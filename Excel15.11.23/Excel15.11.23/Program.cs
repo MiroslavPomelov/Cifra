@@ -6,19 +6,43 @@ namespace Excel15._11._23
         static void Main(string[] args)
         {
             ExcelPackage newBook = new ExcelPackage("newTable.xlsx"); //Создание книги
-            ExcelWorksheet newWorksheet = newBook.Workbook.Worksheets.Add("Мой лист"); // Добавление листа
+            ExcelWorksheet newWorksheet = newBook.Workbook.Worksheets["Мой лист"];  // Добавление листа
 
-            string[] arr = { "Ячейка 1", "Ячейка 2", "Ячейка 3", "Ячейка 4" };
+            int row = 0;
+            int column = 0;
 
-            for (int i = 0; i < arr.Length; i++) // Добавление
+            string findingValue = "Ячейка B5";
+            foreach (ExcelRangeBase cell in newWorksheet.Cells)
             {
-                newWorksheet.Cells[i + 1, 1].Value = arr[i]; // Строка, столбец
+                if (cell.Value == findingValue)
+                {
+                    Console.WriteLine("Совпадение найдено!");
+
+                    row = cell.Start.Row;
+                    column = cell.Start.Column;
+                }
             }
 
-            newWorksheet.Cells["B5"].Value = "Ячейка B5"; // Добавление
-            newWorksheet.Cells["A4"].Value = "Ячейка A4";
-            newWorksheet.Cells["C10"].Value = "Ячейка C10";
-            newWorksheet.Cells["F1"].Value = "Ячейка F1";
+
+
+
+
+            //string[] arr = { "Ячейка 1", "Ячейка 2", "Ячейка 3", "Ячейка 4" };
+
+            //for (int i = 0; i < arr.Length; i++) // Добавление
+            //{
+            //    newWorksheet.Cells[i + 1, 1].Value = arr[i]; // Строка, столбец
+            //}
+
+
+
+
+
+
+            //newWorksheet.Cells["B5"].Value = "Ячейка B5"; // Добавление
+            //newWorksheet.Cells["A4"].Value = "Ячейка A4";
+            //newWorksheet.Cells["C10"].Value = "Ячейка C10";
+            //newWorksheet.Cells["F1"].Value = "Ячейка F1";
 
             //newWorksheet.Cells["B5"].Value = null; // Удаление ячейки
 
