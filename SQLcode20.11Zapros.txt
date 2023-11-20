@@ -1,0 +1,159 @@
+-- Создание таблицы "Менедджеры"
+CREATE TABLE Managers (
+    manager_id SERIAL PRIMARY KEY,    -- Идентификатор менеджера
+    first_name VARCHAR(50),           -- Имя
+    last_name VARCHAR(50)           -- Фамилия
+);
+
+-- Создание таблицы "Отделы"
+CREATE TABLE Departments (
+    department_id SERIAL PRIMARY KEY,  -- Идентификатор отдела
+    department_name VARCHAR(100),     -- Название отдела
+    manager_id INT,                    -- Идентификатор менеджера отдела
+    FOREIGN KEY (manager_id) REFERENCES Managers(manager_id)
+);
+
+-- Создание таблицы "Сотрудники" с внешним ключом
+CREATE TABLE Employees (
+    employee_id SERIAL PRIMARY KEY,  -- Идентификатор сотрудника
+    first_name VARCHAR(50),         -- Имя
+    last_name VARCHAR(50),          -- Фамилия
+    department_id INT,              -- Идентификатор отдела (внешний ключ)
+    salary DECIMAL(10, 2),         -- Зарплата
+    FOREIGN KEY (department_id) REFERENCES Departments(department_id)
+);
+
+-- Создание таблицы "Заказы" с внешним ключом
+CREATE TABLE Orders (
+    order_id SERIAL PRIMARY KEY,      -- Идентификатор заказа
+    employee_id INT,                  -- Идентификатор сотрудника, оформившего заказ
+    order_date DATE,                  -- Дата заказа
+    total_amount DECIMAL(10, 2),      -- Сумма заказа
+    FOREIGN KEY (employee_id) REFERENCES Employees(employee_id)
+);
+
+
+-- Вставка данных в таблицу "Менеджеры" с более осмысленными именами
+INSERT INTO Managers (first_name, last_name)
+VALUES
+    ('Иван', 'Иванов'),
+    ('Анна', 'Петрова'),
+    ('Михаил', 'Сидоров'),
+    ('Екатерина', 'Иванова'),
+    ('Александр', 'Петров'),
+    ('Ольга', 'Смирнова'),
+    ('Дмитрий', 'Михайлов');
+
+   
+-- Вставка данных в таблицу "Отделы"
+INSERT INTO Departments (department_name, manager_id)
+VALUES
+    ('Продажи', 1),
+    ('Разработка', 2),
+    ('Маркетинг', 3),
+    ('Финансы', 4),
+    ('Служба поддержки', 5);
+
+-- Вставка данных в таблицу "Сотрудники"
+INSERT INTO Employees (first_name, last_name, department_id, salary)
+VALUES
+    ('Иван', 'Иванов', 1, 35000.00),
+    ('Петр', 'Петров', 1, 32000.00),
+    ('Анна', 'Сидорова', 2, 42000.00),
+    ('Мария', 'Смирнова', 2, 38000.00),
+    ('Дмитрий', 'Козлов', 3, 45000.00),
+    ('Елена', 'Павлова', 3, 41000.00),
+    ('Алексей', 'Морозов', 4, 52000.00),
+    ('Ольга', 'Николаева', 4, 48000.00),
+    ('Сергей', 'Захаров', 5, 36000.00),
+    ('Наталья', 'Кузнецова', 5, 33000.00);
+     
+-- Вставка данных в таблицу "Заказы"
+INSERT INTO Orders (employee_id, order_date, total_amount)
+VALUES
+    (1, '2023-09-01', 150.00),
+    (2, '2023-09-02', 200.00),
+    (3, '2023-09-03', 100.00),
+    (1, '2023-09-04', 250.00),
+    (2, '2023-09-05', 180.00),
+    (3, '2023-09-06', 220.00),
+    (4, '2023-09-07', 300.00),
+    (5, '2023-09-08', 120.00),
+    (6, '2023-09-09', 180.00),
+    (7, '2023-09-10', 250.00),
+    (8, '2023-09-11', 200.00),
+    (9, '2023-09-12', 150.00),
+    (10, '2023-09-13', 220.00),
+    (1, '2023-09-14', 280.00),
+    (2, '2023-09-15', 190.00),
+    (3, '2023-09-16', 210.00),
+    (4, '2023-09-17', 240.00),
+    (5, '2023-09-18', 170.00),
+    (6, '2023-09-19', 130.00),
+    (7, '2023-09-20', 270.00),
+    (8, '2023-09-21', 290.00),
+    (9, '2023-09-22', 180.00),
+    (10, '2023-09-23', 150.00),
+    (1, '2023-09-24', 220.00),
+    (2, '2023-09-25', 250.00),
+    (3, '2023-09-26', 300.00),
+    (4, '2023-09-27', 160.00),
+    (5, '2023-09-28', 190.00),
+    (6, '2023-09-29', 210.00),
+    (7, '2023-09-30', 280.00);
+   
+   ---------------------------------------
+   
+select first_name , last_name , department_id , salary 
+from departments d 
+join employees e 
+using (department_id) 
+where department_name = 'Продажи';
+
+select first_name , last_name , department_id , salary 
+from employees e 
+where department_id  = (select department_id  
+from departments d 
+where department_name = 'Продажи');
+
+select first_name, last_name e,
+(select sum(total_amount) as sums
+from orders o  
+where o.employee_id  = e.employee_id)
+from employees e ;
+
+select first_name, last_name e,
+(select avg(total_amount)::int as sums
+from orders o  
+where o.employee_id  = e.employee_id)
+from employees e 
+where department_id  = (select department_id  
+from departments d 
+where department_name = 'Продажи');
+
+select first_name, last_name e,
+(select avg(total_amount)::int as sums
+from orders o  )
+from employees e 
+where department_id  = (select department_id  
+from departments d 
+where department_name = 'Продажи');
+
+INSERT INTO Employees (first_name, last_name, department_id, salary)
+VALUES
+    ('фывыфвфыв', 'Ифывфывфыв', 1, 4324000.00);
+
+select first_name, last_name 
+from employees 
+where employee_id not in (select distinct employee_id
+from orders o);
+
+
+select first_name, last_name,salary,
+(select sum(total_amount) as summ
+from orders o  
+where o.employee_id  = e.employee_id)
+from employees e 
+where salary > 40000;
+
+
