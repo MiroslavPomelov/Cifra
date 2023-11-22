@@ -29,9 +29,6 @@
         private void InitializeComponent()
         {
             DataGridDGV = new DataGridView();
-            UserNames = new DataGridViewTextBoxColumn();
-            Surnames = new DataGridViewTextBoxColumn();
-            Ages = new DataGridViewTextBoxColumn();
             label1 = new Label();
             UserNameTb = new TextBox();
             UserSurnameTb = new TextBox();
@@ -43,6 +40,9 @@
             AddColumnBTN = new Button();
             ColumnNameTB = new TextBox();
             ColumnTextTB = new TextBox();
+            UserNames = new DataGridViewTextBoxColumn();
+            Surnames = new DataGridViewTextBoxColumn();
+            Ages = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)DataGridDGV).BeginInit();
             SuspendLayout();
             // 
@@ -57,24 +57,6 @@
             DataGridDGV.Size = new Size(501, 468);
             DataGridDGV.TabIndex = 0;
             DataGridDGV.KeyDown += DataGridDGV_KeyDown;
-            // 
-            // UserNames
-            // 
-            UserNames.HeaderText = "Имена пользователей";
-            UserNames.Name = "UserNames";
-            UserNames.ReadOnly = true;
-            // 
-            // Surnames
-            // 
-            Surnames.HeaderText = "Фамилии пользователей";
-            Surnames.Name = "Surnames";
-            Surnames.ReadOnly = true;
-            // 
-            // Ages
-            // 
-            Ages.HeaderText = "Возраст";
-            Ages.Name = "Ages";
-            Ages.ReadOnly = true;
             // 
             // label1
             // 
@@ -167,6 +149,21 @@
             ColumnTextTB.Size = new Size(174, 23);
             ColumnTextTB.TabIndex = 11;
             // 
+            // UserNames
+            // 
+            UserNames.HeaderText = "Имена пользователей";
+            UserNames.Name = "UserNames";
+            // 
+            // Surnames
+            // 
+            Surnames.HeaderText = "Фамилии пользователей";
+            Surnames.Name = "Surnames";
+            // 
+            // Ages
+            // 
+            Ages.HeaderText = "Возраст";
+            Ages.Name = "Ages";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -194,9 +191,6 @@
         #endregion
 
         private DataGridView DataGridDGV;
-        private DataGridViewTextBoxColumn UserNames;
-        private DataGridViewTextBoxColumn Surnames;
-        private DataGridViewTextBoxColumn Ages;
         private Label label1;
         private TextBox UserNameTb;
         private TextBox UserSurnameTb;
@@ -208,5 +202,8 @@
         private Button AddColumnBTN;
         private TextBox ColumnNameTB;
         private TextBox ColumnTextTB;
+        private DataGridViewTextBoxColumn UserNames;
+        private DataGridViewTextBoxColumn Surnames;
+        private DataGridViewTextBoxColumn Ages;
     }
 }

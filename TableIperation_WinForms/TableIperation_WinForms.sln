@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TableIperation_WinForms", "TableIperation_WinForms\TableIperation_WinForms.csproj", "{1D44995F-213B-4971-8AE6-5165758A62C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TableIperation_WinForms", "TableIperation_WinForms\TableIperation_WinForms.csproj", "{1D44995F-213B-4971-8AE6-5165758A62C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DGV_Practice_1", "DGV_Practice_1\DGV_Practice_1.csproj", "{4E66F2E5-F84C-4DD1-A320-FD60BAD8B0AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DGV_DataSource", "DGV_DataSource\DGV_DataSource.csproj", "{19FF55EF-975D-4887-8F8A-BD9A23C4D042}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DGW_Excel_Operations", "DGW_Excel_Operations\DGW_Excel_Operations.csproj", "{BDE69278-A26B-4446-A465-68963A9D23EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{1D44995F-213B-4971-8AE6-5165758A62C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D44995F-213B-4971-8AE6-5165758A62C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D44995F-213B-4971-8AE6-5165758A62C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E66F2E5-F84C-4DD1-A320-FD60BAD8B0AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E66F2E5-F84C-4DD1-A320-FD60BAD8B0AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E66F2E5-F84C-4DD1-A320-FD60BAD8B0AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E66F2E5-F84C-4DD1-A320-FD60BAD8B0AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19FF55EF-975D-4887-8F8A-BD9A23C4D042}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19FF55EF-975D-4887-8F8A-BD9A23C4D042}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19FF55EF-975D-4887-8F8A-BD9A23C4D042}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19FF55EF-975D-4887-8F8A-BD9A23C4D042}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDE69278-A26B-4446-A465-68963A9D23EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDE69278-A26B-4446-A465-68963A9D23EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDE69278-A26B-4446-A465-68963A9D23EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDE69278-A26B-4446-A465-68963A9D23EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
