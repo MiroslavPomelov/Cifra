@@ -27,7 +27,7 @@ namespace CSVPrakt
 
             Console.WriteLine("\nМаксимальное значение :" + people.Max(item => item.Price));
             Console.WriteLine("Минимальное значение :" + people.Min(item => item.Price));
-            Console.WriteLine("Минимальное значение :" + people.Average(item => item.Price));
+            Console.WriteLine("Среднее значение :" + people.Average(item => item.Price));
         }
     }
 }
