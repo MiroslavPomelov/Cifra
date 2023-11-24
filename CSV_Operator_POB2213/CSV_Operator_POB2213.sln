@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSV_Operator_POB2213", "CSV_Operator_POB2213\CSV_Operator_POB2213.csproj", "{E83ED901-4243-4F7A-901A-D62F6E521038}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSVPrakt", "CSVPrakt\CSVPrakt.csproj", "{CE35DFD5-A688-413C-A242-37922FD14201}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E83ED901-4243-4F7A-901A-D62F6E521038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E83ED901-4243-4F7A-901A-D62F6E521038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E83ED901-4243-4F7A-901A-D62F6E521038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E83ED901-4243-4F7A-901A-D62F6E521038}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE35DFD5-A688-413C-A242-37922FD14201}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE35DFD5-A688-413C-A242-37922FD14201}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE35DFD5-A688-413C-A242-37922FD14201}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE35DFD5-A688-413C-A242-37922FD14201}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {32CC26B4-FEC8-4A25-9112-D8DA8246E78F}
+	EndGlobalSection
+EndGlobal
