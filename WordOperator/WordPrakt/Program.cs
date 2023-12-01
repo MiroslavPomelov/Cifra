@@ -6,7 +6,7 @@ namespace WordPrakt
     {
         static void Main(string[] args)
         {
-          
+            
         }
     }
 }
