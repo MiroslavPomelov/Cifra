@@ -1,4 +1,6 @@
-﻿using OfficeOpenXml;
+﻿using Microsoft.Office.Interop.Word;
+using OfficeOpenXml;
+using Word = Microsoft.Office.Interop.Word;
 
 namespace Waybill_Formation_08._12._2023
 {
@@ -6,9 +8,9 @@ namespace Waybill_Formation_08._12._2023
     {
         static void Main(string[] args)
         {
-            string excelFilePath = Directory.GetCurrentDirectory() + "\\Inventar.xlsx";
+            //Word.Application wordApp = new Word.Application();
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            //ExcelWorker.Delete();
+            string excelFilePath = Directory.GetCurrentDirectory() + "\\Inventar.xlsx";
             ExcelWorker.NewTable(CSVWorker.CSVReader());
             ExcelWorker.GetData(excelFilePath);
         }
