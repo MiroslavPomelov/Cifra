@@ -20,7 +20,7 @@ namespace Waybill_Formation_08._12._2023
 
         public int CompareTo(DeliveyNote? deliveyNote)
         {
-            return this.Date.CompareTo(deliveyNote.Date);
+            return this.Date.CompareTo(deliveyNote!.Date);
         }
         public DeliveyNote()
         {
@@ -36,7 +36,5 @@ namespace Waybill_Formation_08._12._2023
             Name_buyer = name_buyer;
             Date = date;
         }
-
-        
     }
 }

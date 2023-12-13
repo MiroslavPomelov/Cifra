@@ -64,9 +64,6 @@ namespace Waybill_Formation_08._12._2023
                 int rows = currentSheet.Dimension.Rows;
                 int col = currentSheet.Dimension.Columns;
 
-                //string valA1 = firstWorksheet.Cells["A1"].Value.ToString();
-                //string valB1 = firstWorksheet.Cells[1, 2].Value.ToString();
-
                 for (int i = 1; i <= rows; i++)
                 {
                     goods.Add(new DeliveyNote()
@@ -104,7 +101,7 @@ namespace Waybill_Formation_08._12._2023
                 void AddValue<K, List>(Dictionary<K, List<DeliveyNote>> dict, K key, DeliveyNote val)
                 {
                     List<DeliveyNote> list;
-                    if (!dict.TryGetValue(key, out list))
+                    if (!dict.TryGetValue(key, out list!))
                         dict[key] = list = new List<DeliveyNote>();
                     list.Add(val);
                 }
@@ -131,7 +128,7 @@ namespace Waybill_Formation_08._12._2023
                         temp.Clear();
                         i--;
                     }
-                    if (i == item.Value.Count-1)
+                    if (i == item.Value.Count - 1)
                     {
                         WriteWaybill(temp);
                         temp.Clear();
@@ -157,6 +154,7 @@ namespace Waybill_Formation_08._12._2023
             }
 
             int currentIndex = 1;
+            decimal sum = 0;
             try
             {
                 foreach (var item in temp)
@@ -164,21 +162,13 @@ namespace Waybill_Formation_08._12._2023
                     decimal totalSum = 0;
                     foreach (var i in temp) totalSum += i.Price;
 
-                    ReplaceStub("номер", currentIndex.ToString(), wordDoc);
-                    ReplaceStub("дата", item.Date.ToString(), wordDoc);
-                    ReplaceStub("ФИО поставщика", item.Name_provider!.ToString(), wordDoc);
-                    ReplaceStub("ФИО покупателя", item.Name_buyer!.ToString(), wordDoc);
-                    ReplaceStub("Сумма итого", totalSum.ToString(), wordDoc);
-                    ReplaceStub("кол-во", temp.Count.ToString(), wordDoc);
-                    ReplaceStub("сумма итого", totalSum.ToString(), wordDoc);
-                    ReplaceStub("сумма итого", totalSum.ToString(), wordDoc);
 
                     //Добавляем параграф в конец документа
                     var Paragraph = wordApp.ActiveDocument.Paragraphs.Add();
                     //Получаем диапазон
-                    var tableRange = Paragraph.Range;
-                    //Добавляем таблицу в указаный диапазон
-                    wordApp.ActiveDocument.Tables.Add(tableRange, temp.Count, 5);
+                    //var tableRange = Paragraph.Range;
+                    ////Добавляем таблицу в указаный диапазон
+                    //wordApp.ActiveDocument.Tables.Add(tableRange, temp.Count, 5);
 
                     var table = wordApp.ActiveDocument.Tables[wordApp.ActiveDocument.Tables.Count];
                     table.set_Style("Сетка таблицы");
@@ -190,19 +180,34 @@ namespace Waybill_Formation_08._12._2023
                     table.ApplyStyleColumnBands = false;
 
                     table = wordDoc.Tables[1];
+                    int count = temp.Count + 1;
 
-                    foreach (Word.Row row in table.Rows)
+                    for (int i = 0; i < temp.Count; i++)
                     {
-                        foreach (Word.Cell cell in row.Cells)
-                        {
-                            cell.Range.Text = $"{currentIndex}, {item.Name}";
-                        }
+                        sum = temp[i].Price * temp[i].Quantity;
+                        table.Rows.Add();
+                        table.Cell(i + 2, 1).Range.Text = i + 1.ToString();
+                        table.Cell(i + 2, 2).Range.Text = temp[i].Name?.ToString();
+                        table.Cell(i + 2, 3).Range.Text = temp[i].Quantity.ToString();
+                        table.Cell(i + 2, 4).Range.Text = temp[i].Price.ToString();
+                        table.Cell(i + 2, 5).Range.Text = sum.ToString();
+                        totalSum += sum;
                     }
+
+                    ReplaceStub("номер", currentIndex.ToString(), wordDoc);
+                    ReplaceStub("дата", item.Date.ToString(), wordDoc);
+                    ReplaceStub("ФИО поставщика", item.Name_provider!.ToString(), wordDoc);
+                    ReplaceStub("ФИО покупателя", item.Name_buyer!.ToString(), wordDoc);
+                    ReplaceStub("Сумма итого", totalSum.ToString(), wordDoc);
+                    ReplaceStub("кол-во", temp.Count.ToString(), wordDoc);
+                    ReplaceStub("сумма итого", totalSum.ToString(), wordDoc);
+                    ReplaceStub("сумма итого", totalSum.ToString(), wordDoc);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
             }
             finally
             {
@@ -210,34 +215,6 @@ namespace Waybill_Formation_08._12._2023
                 wordApp.Quit();
                 currentIndex++;
             }
-
-
-            //OpenNewDoc(fileName);
-            //void OpenNewDoc(string fileName)
-            //{
-            //    Word.Document wordDoc = wordApp.Documents.Add(/*Directory.GetCurrentDirectory() + $"\\{fileName}"*/);
-            //    try
-            //    {
-            //        Word.Table table = wordDoc.Tables[0];
-
-            //        foreach (Word.Row row in table.Rows)
-            //        {
-            //            foreach (Word.Cell cell in row.Cells)
-            //            {
-            //                cell.Range.Text = $"New data:";
-            //            }
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Console.WriteLine(ex.Message);
-            //    }
-            //    finally
-            //    {
-            //        wordDoc.SaveAs($"{Directory.GetCurrentDirectory()}\\{fileName}");
-            //        wordApp.Quit();
-            //    }
-            //}
         }
     }
 
