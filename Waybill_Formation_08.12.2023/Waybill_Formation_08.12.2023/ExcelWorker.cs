@@ -139,6 +139,8 @@ namespace Waybill_Formation_08._12._2023
 
         public static void WriteWaybill(List<DeliveyNote> temp)
         {
+            Random random = new Random();
+            int randNumber = random.Next(123000, 128000);
             Word.Application wordApp = new Word.Application();
 
             string fileName = $"Накладная от {temp[0].Date.Day}.{temp[0].Date.Month}.{temp[0].Date.Year}. Поставщик - {temp[0].Name_buyer}.docx";
@@ -186,7 +188,7 @@ namespace Waybill_Formation_08._12._2023
                     {
                         sum = temp[i].Price * temp[i].Quantity;
                         table.Rows.Add();
-                        table.Cell(i + 2, 1).Range.Text = i + 1.ToString();
+                        table.Cell(i + 2, 1).Range.Text = (i+1).ToString();
                         table.Cell(i + 2, 2).Range.Text = temp[i].Name?.ToString();
                         table.Cell(i + 2, 3).Range.Text = temp[i].Quantity.ToString();
                         table.Cell(i + 2, 4).Range.Text = temp[i].Price.ToString();
@@ -194,7 +196,7 @@ namespace Waybill_Formation_08._12._2023
                         totalSum += sum;
                     }
 
-                    ReplaceStub("номер", currentIndex.ToString(), wordDoc);
+                    ReplaceStub("номер", randNumber.ToString(), wordDoc);
                     ReplaceStub("дата", item.Date.ToString(), wordDoc);
                     ReplaceStub("ФИО поставщика", item.Name_provider!.ToString(), wordDoc);
                     ReplaceStub("ФИО покупателя", item.Name_buyer!.ToString(), wordDoc);
@@ -202,6 +204,7 @@ namespace Waybill_Formation_08._12._2023
                     ReplaceStub("кол-во", temp.Count.ToString(), wordDoc);
                     ReplaceStub("сумма итого", totalSum.ToString(), wordDoc);
                     ReplaceStub("сумма итого", totalSum.ToString(), wordDoc);
+                    break;
                 }
             }
             catch (Exception ex)
