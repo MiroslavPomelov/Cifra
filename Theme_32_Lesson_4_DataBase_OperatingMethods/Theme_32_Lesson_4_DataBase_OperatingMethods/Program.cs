@@ -4,7 +4,7 @@ namespace Theme_32_Lesson_4_DataBase_OperatingMethods
 {
     internal class Program
     {
-        static /*async Task*/ async void Main(string[] args)
+        static /*async Task*/  void Main(string[] args)
         {
             List<Person> people = new List<Person>();
             //List<Person> people = new List<Person>()
