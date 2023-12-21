@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Theme_32_Lesson_4_Practice
 {
-    public class Titanic
+    public class Passenger
     {
         public int PassengerId { get; set; }
         public int Survived { get; set; }

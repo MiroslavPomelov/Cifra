@@ -6,15 +6,15 @@ namespace Theme_32_Lesson_4_DataBase_OperatingMethods
     {
         static /*async Task*/  void Main(string[] args)
         {
-            List<Person> people = new List<Person>();
-            //List<Person> people = new List<Person>()
-            //{
-            //   new Person(){Name = "Miroslav", Age = 24},
-            //   new Person(){Name = "Nikolay", Age = 28},
-            //   new Person(){Name = "Vasya", Age = 40},
-            //   new Person(){Name = "Klim", Age = 18},
-            //   new Person(){Name = "Alexander", Age = 33}
-            //};
+            //List<Person> people = new List<Person>();
+            List<Person> people = new List<Person>()
+            {
+               new Person(){Name = "Miroslav", Age = 24},
+               new Person(){Name = "Nikolay", Age = 28},
+               new Person(){Name = "Vasya", Age = 40},
+               new Person(){Name = "Klim", Age = 18},
+               new Person(){Name = "Alexander", Age = 33}
+            };
 
 
             using (PersonDBContext dBContext = new PersonDBContext())
@@ -31,11 +31,11 @@ namespace Theme_32_Lesson_4_DataBase_OperatingMethods
 
 
                 //READ
-                //people = dBContext.People.ToList();
-                //foreach (var person in people)
-                //{
-                //    Console.WriteLine($"{person.Id}, {person.Name}, {person.Age}");
-                //}
+                people = dBContext.People.ToList();
+                foreach (var person in people)
+                {
+                    Console.WriteLine($"{person.Id}, {person.Name}, {person.Age}");
+                }
 
 
                 //UPDATE

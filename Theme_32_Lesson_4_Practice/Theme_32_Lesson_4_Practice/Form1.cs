@@ -1,3 +1,5 @@
+using System;
+
 namespace Theme_32_Lesson_4_Practice
 {
     public partial class Form1 : Form
@@ -12,25 +14,78 @@ namespace Theme_32_Lesson_4_Practice
 
         private void ResultBTN_Click(object sender, EventArgs e)
         {
-            List<Titanic> titanicList = new List<Titanic>();
+            List<Passenger> temp = new List<Passenger>();
+            List<Passenger> survived = new List<Passenger>();
 
             using (TitanicDBContext dBContext = new TitanicDBContext())
             {
-                titanicList = dBContext.Titanics.ToList();
-                foreach (var person in titanicList)
+                temp = DataBaseWorker.Read();
+                if (SurvivedCB.Checked)
                 {
-                    if (SurvivedCB.Checked && person.Survived == 1)
+                    survived.Clear();
+                    foreach (var item in temp)
                     {
-                        TitanicDataDGV.DataSource = person;
+                        if (item.Survived == 1)
+                        {
+                            survived.Add(item);
+                        }
                     }
-                    //TitanicDataDGV.Rows.Add($"{person.PassengerId}, {person.Name}, {person.Age}");
+                    TitanicDataDGV.DataSource = survived;
+                }
+                if (AgeCb.Checked)
+                {
+                    survived.Clear();
+                    foreach (var item in temp)
+                    {
+                        if (item.Age > 17)
+                        {
+                            survived.Add(item);
+                        }
+                    }
+                    TitanicDataDGV.DataSource = survived;
+                }
+                if (ThirdClassCB.Checked)
+                {
+                    survived.Clear();
+                    foreach (var item in temp)
+                    {
+                        if (item.Pclass == 3)
+                        {
+                            survived.Add(item);
+                        }
+                    }
+                    TitanicDataDGV.DataSource = survived;
+                }
+                if (SurvivedCB.Checked && AgeCb.Checked)
+                {
+                    survived.Clear();
+                    foreach (var item in temp)
+                    {
+                        if (item.Survived == 1 && item.Age > 17)
+                        {
+                            survived.Add(item);
+                        }
+                    }
+                    TitanicDataDGV.DataSource = survived;
+                }
+                if (SurvivedCB.Checked && AgeCb.Checked && ThirdClassCB.Checked)
+                {
+                    survived.Clear();
+                    foreach (var item in temp)
+                    {
+                        if (item.Survived == 1 && item.Age > 17 && item.Pclass == 3)
+                        {
+                            survived.Add(item);
+                        }
+                    }
+                    TitanicDataDGV.DataSource = survived;
                 }
             }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            TitanicDataDGV.DataSource = DataBaseWorker.Read();
         }
     }
 }

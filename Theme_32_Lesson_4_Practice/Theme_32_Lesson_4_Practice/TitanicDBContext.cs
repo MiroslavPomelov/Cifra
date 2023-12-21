@@ -9,7 +9,7 @@ namespace Theme_32_Lesson_4_Practice
 {
     public class TitanicDBContext : DbContext
     {
-        public DbSet<Titanic> Titanics => Set<Titanic>();
+        public DbSet<Passenger> Passengers => Set<Passenger>();
 
         public TitanicDBContext() => Database.EnsureCreated();
 
