@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Theme_34_Lesson_1_ModelCreating", "Theme_34_Lesson_1_ModelCreating\Theme_34_Lesson_1_ModelCreating.csproj", "{DE4962C4-7C40-4552-B705-480CDC30BCDA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Theme_34_ModelCreating_Prakt", "Theme_34_ModelCreating_Prakt\Theme_34_ModelCreating_Prakt.csproj", "{8178BCAD-1E7E-4584-864A-F7D41D399652}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DE4962C4-7C40-4552-B705-480CDC30BCDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DE4962C4-7C40-4552-B705-480CDC30BCDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DE4962C4-7C40-4552-B705-480CDC30BCDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DE4962C4-7C40-4552-B705-480CDC30BCDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8178BCAD-1E7E-4584-864A-F7D41D399652}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8178BCAD-1E7E-4584-864A-F7D41D399652}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8178BCAD-1E7E-4584-864A-F7D41D399652}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8178BCAD-1E7E-4584-864A-F7D41D399652}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {B2CC3B35-8957-4D6E-AD53-E34E50A0C36E}
+		SolutionGuid = {E77F99A2-F862-48F9-AFFA-2D356DE729DE}
 	EndGlobalSection
 EndGlobal

@@ -28,3 +28,5 @@ userid INT REFERENCES users (userid) ,
 fruitid INT REFERENCES fruits (fruitid));
 
 SELECT * FROM userfruits;fruits
+
+SELECT * FROM users;

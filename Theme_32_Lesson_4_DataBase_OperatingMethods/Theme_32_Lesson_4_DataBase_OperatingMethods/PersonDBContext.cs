@@ -9,7 +9,7 @@ namespace Theme_32_Lesson_4_DataBase_OperatingMethods
 {
     public class PersonDBContext : DbContext
     {
-        public DbSet<Person> People => Set<Person>();
+        public DbSet<Person> People { get; set; } = null!;
 
         public PersonDBContext() => Database.EnsureCreated();
 
