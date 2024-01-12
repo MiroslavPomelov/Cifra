@@ -31,7 +31,7 @@
                                          select good;
 
             // Запрос на линк методах расширения
-            IEnumerable<string> extensionMethodResult = products.Where(good => good.Price < 1000.0).Select(good => good.Name);
+            IEnumerable<string> extensionMethodResult = products.Where(good => good.Price < 1000.0).Select(good => good.Name)!;
 
         }
     }
