@@ -20,9 +20,19 @@
             //    Console.WriteLine(item.Name);
             //}
 
-            IEnumerable<string> result = from good in products
+            // Отложенный линк запрос, выполняется при обращении к коллекции
+            //IEnumerable<string> result = from good in products
+            //                             where good.Price < 1000.0
+            //                             select good.Name;
+
+            // Запрос на линк
+            IEnumerable<Product> LinqResult = from good in products
                                          where good.Price < 1000.0
-                                         select good.Name;
+                                         select good;
+
+            // Запрос на линк методах расширения
+            IEnumerable<string> extensionMethodResult = products.Where(good => good.Price < 1000.0).Select(good => good.Name);
+
         }
     }
 }
