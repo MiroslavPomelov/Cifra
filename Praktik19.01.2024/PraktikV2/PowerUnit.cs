@@ -9,7 +9,7 @@ namespace PraktikV2
         
         public PowerUnit(string? name, int quantity, decimal? price) : base(name, quantity, price)
         {
-
+            Price = price/2;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Praktik19._01._2024;
+using System.Security.Cryptography.X509Certificates;
 
 namespace PraktikV2
 {
@@ -6,19 +7,31 @@ namespace PraktikV2
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Введите ваше имя и баланс и возраст:");
-            //string userName = Console.ReadLine();
-            //decimal userSum = decimal.Parse(Console.ReadLine());
-            //int userAge = int.Parse(Console.ReadLine());
+            Console.WriteLine("Введите ваше имя, баланс и возраст: ");
 
-            User newUser = new(Console.ReadLine(), decimal.Parse(Console.ReadLine()), int.Parse(Console.ReadLine()));
+            User newUser = new(Console.ReadLine(), decimal.Parse(Console.ReadLine()!), int.Parse(Console.ReadLine()!));
+            Good good = new Good();
+            CoolingSystem coolingSystem = new CoolingSystem();
 
-            //List<Good> goods = new List<Good>()
-            //{
-            //    new Videocard("GTX 2080", 6, 35000),
-            //    new CPU("Intel i7", 5, 15000),
-            //    new Motherboard("Acer asdas", 7, 5000)
-            //};
+            DateTime one = new DateTime(2025, 03, 8);
+
+            coolingSystem.GetDiscountOnCooling(newUser, coolingSystem);
+
+            List<Holiday> holidays = new List<Holiday>()
+            {
+                new Holiday("Рождество", new DateTime(2024, 01,7)),
+                new Holiday(" День Святого Валентина", new DateTime(2024, 02,14)),
+                new Holiday(" Международный женский день", new DateTime(2024, 03,8)),
+                new Holiday(" Пасха", new DateTime(2024, 04,16)),
+                new Holiday("День Победы", new DateTime(2024, 05,9)),
+                new Holiday(" День рождения магазина", new DateTime(2024, 06,1)),
+                new Holiday("Международный день дружбы", new DateTime(2024, 07,1)),
+                new Holiday(" День рождения ОС Linux", new DateTime(2024, 08,9)),
+                new Holiday(" День знаний", new DateTime(2024, 09,1)),
+                new Holiday(" Хэллоуин", new DateTime(2024, 10,31)),
+                new Holiday(" Черная пятница", new DateTime(2024, 11,29)),
+                new Holiday(" Новый год", new DateTime(2024,12,31))
+            };
 
             Dictionary<int, Good> goods = new Dictionary<int, Good>()
             {
@@ -26,68 +39,49 @@ namespace PraktikV2
                 [2] = new CPU("Intel i7", 5, 15000),
                 [3] = new Motherboard("Acer asdas", 7, 5000),
                 [4] = new PowerUnit("Cougar asdad", 4, 6000),
-                [5] = new CoolingSystem("DeepCool adcsa", 10, 4200)
+                [5] = new CoolingSystem("DeepCool adcsa", 10, 4200),
+                [6] = new Frame("DeepCool fjhjf", 3, 7000)
             };
-            int count = 1;
-            foreach (var item in goods)
-            {
-                Console.WriteLine($"Список товаров:\n{count}) {item.Value.Name} - {item.Value.Price} С учетом скидки: {}");
-                count++;
-            }
 
             int choice = 1;
-            while (choice != 0)
+            while (choice != 0 && newUser.Money > 0)
             {
+                GetGoods();
                 Console.WriteLine("Выберите номер товара для выхода нажмите 0:");
-                choice = int.Parse(Console.ReadLine());
-                decimal sum = 0;
+                choice = int.Parse(Console.ReadLine()!);
 
                 foreach (var item in goods)
                 {
-                    switch (choice)
-                    {
-                        case 1:
-                            newUser.Money -= goods[1].Price.Value;
-                            sum += goods[1].Price.Value;
-                            break;
-                        case 2:
-                            newUser.Money -= goods[2].Price.Value;
-                            sum += goods[2].Price.Value;
-                            break;
-                        case 3:
-                            newUser.Money -= goods[3].Price.Value;
-                            sum += goods[3].Price.Value;
-                            break;
-                            case 4:
-                            newUser.Money -= goods[4].Price.Value;
-                            sum += goods[4].Price.Value;
-                            break;
-                        case 5:
-                            newUser.Money -= goods[5].Price.Value;
-                            sum += goods[5].Price.Value;
-                            break;
-                    }
-                    if (newUser.Money > 0)
-                    {
-                        if (sum >= 10000)
-                        {
-                            sum -= item.Value.Price.Value * 0.05m;
-                        }
-                        if (sum >= 35000)
-                        {
-                            sum -= item.Value.Price.Value * 0.1m;
-                        }
+                    newUser.Money -= goods[choice].Price!.Value;
+                    newUser.TotalSum += goods[choice].Price!.Value;
+                    break;
+                }
+                Console.WriteLine($"Итого: {newUser.TotalSum}\nВаш баланс: {newUser.Money}");
+            }
 
+            void GetGoods()
+            {
+                Console.WriteLine();
+                foreach (var holiday in holidays)
+                {
+                    if (one == holiday.Date)
+                    {
+                        foreach (var item in goods)
+                        {
+                            good.Discount = 0.8m;
+                            //Console.WriteLine($"Список товаров:\n{item.Key}) {item.Value.Name} - {item.Value.Price} С учетом скидки: {item.Value.Price - ((item.Value.Price - (item.Value.Price * good.GetDiscount(newUser))) * 0.2m)}");
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("Выш баланс не позволяет");
-                        break;
+                        good.Discount = 1;
                     }
-                    break;
                 }
-
-                Console.WriteLine($"Итого: {sum}\nВаш баланс: {newUser.Money}");
+                foreach (var item in goods)
+                {
+                    
+                    Console.WriteLine($"Список товаров:\n{item.Key}) {item.Value.Name} - {item.Value.Price} С учетом скидки: {(item.Value.Price * good.GetDiscount(newUser))*(good.Discount)}");
+                }
             }
         }
     }
