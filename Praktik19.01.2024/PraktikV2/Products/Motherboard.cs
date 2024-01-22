@@ -1,5 +1,4 @@
-﻿
-namespace Praktik19._01._2024
+﻿namespace PraktikV2.Products
 {
     public class Motherboard : Good
     {

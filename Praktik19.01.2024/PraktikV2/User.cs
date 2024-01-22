@@ -1,6 +1,4 @@
-﻿
-
-namespace Praktik19._01._2024
+﻿namespace Praktik19._01._2024
 {
     public class User 
     {
