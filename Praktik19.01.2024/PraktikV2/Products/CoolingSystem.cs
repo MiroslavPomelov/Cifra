@@ -5,7 +5,7 @@ namespace PraktikV2.Products
 {
     public class CoolingSystem : Good
     {
-        public CoolingSystem(string? name, int quantity, decimal? price) : base(name, quantity, price)
+        public CoolingSystem(string? name, int quantity, decimal price) : base(name, quantity, price)
         {
             Price = price * Discount;
         }
@@ -28,9 +28,9 @@ namespace PraktikV2.Products
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public override decimal GetDiscount(User user)
+        public override void GetDiscount(User user)
         {
-            return base.GetDiscount(user);
+            base.GetDiscount(user);
         }
     }
 }

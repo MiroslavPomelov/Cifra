@@ -19,16 +19,37 @@ namespace PraktikV2.Products
 
         public virtual void GetDiscount(User user)
         {
-            //Добавить проверку даты
-
-            //Поменять местами
-            if (user.TotalSum > 10000)
+            List<DateTime> holidays = new List<DateTime>()
             {
-                Discount -= 0.05m;
+                new DateTime(2024, 01, 07), 
+                new DateTime(2024, 02, 14),
+                new DateTime(2024, 03, 08),
+                new DateTime(2024, 04, 18),
+                new DateTime(2024, 05, 09),
+                new DateTime(2024, 06, 01),
+                new DateTime(2024, 07, 30),
+                new DateTime(2024, 08, 09),
+                new DateTime(2024, 09, 01),
+                new DateTime(2024, 10, 31),
+                new DateTime(2024, 11, 24),
+                new DateTime(2024, 12, 31),
+            };
+
+            foreach (var holiday in holidays)
+            {
+                if (holidays.Contains(DateTime.Now.Date))
+                { 
+                   Discount = 0.8m; 
+                }
             }
+
             if (user.TotalSum > 50000)
             {
                 Discount -= 0.1m;
+            }
+            if (user.TotalSum > 10000)
+            {
+                Discount -= 0.05m;
             }
 
             Price *= Discount;

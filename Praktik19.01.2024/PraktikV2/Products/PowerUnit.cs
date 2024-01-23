@@ -6,7 +6,7 @@ namespace PraktikV2.Products
     public class PowerUnit : Good
     {
         public decimal Discount { get; set; }
-        public PowerUnit(string? name, int quantity, decimal? price) : base(name, quantity, price)
+        public PowerUnit(string? name, int quantity, decimal price) : base(name, quantity, price)
         {
             Discount = 0.5m;
             Price = price * Discount;
@@ -24,5 +24,9 @@ namespace PraktikV2.Products
         }
 
         //Переопределить базовый метод
+        public override void GetDiscount(User user)
+        {
+            base.GetDiscount(user);
+        }
     }
 }
