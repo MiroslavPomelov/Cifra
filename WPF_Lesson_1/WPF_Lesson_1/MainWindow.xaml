@@ -1,0 +1,27 @@
+﻿<Window x:Class="WPF_Lesson_1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_Lesson_1"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="338" Width="394">
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="55*"/>
+            <RowDefinition Height="87*"/>
+        </Grid.RowDefinitions>
+        <Label Content="Name" HorizontalAlignment="Left" Margin="10,26,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="NameTB" Margin="10,57,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="364" Background="#FF9C9C9C"/>
+        <Label Content="Surname" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="SurnameTB" Margin="10,111,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="364" Grid.RowSpan="2" Background="#FF9E9B9B"/>
+        <Label Content="Age" HorizontalAlignment="Left" Margin="10,9,0,0" VerticalAlignment="Top" Grid.Row="1"/>
+        <TextBox x:Name="AgeTB" Margin="10,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="364" Grid.Row="1" Background="#FF9A9797"/>
+        <Button x:Name="RegBTN" Content="Registration" HorizontalAlignment="Left" Margin="231,159,0,0" Grid.Row="1" VerticalAlignment="Top" Width="143" Click="RegBTN_Click" Background="#FF387522"/>
+        <Label Content="Password" HorizontalAlignment="Left" Margin="10,58,0,0" VerticalAlignment="Top" Grid.Row="1"/>
+        <TextBox x:Name="PasswordTB" TextWrapping="Wrap" VerticalAlignment="Center" Width="364" Grid.Row="1" Margin="10,0,0,0" Background="#FF9C9B9B"/>
+        <CheckBox x:Name="GeneratePassCB" Content="Генерация пароля" HorizontalAlignment="Left" Margin="10,128,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+
+
+    </Grid>
+</Window>
