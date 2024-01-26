@@ -5,12 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:XAML26._01._2024"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Background="White" WindowState="Normal" WindowStartupLocation="CenterScreen" ResizeMode="CanResize">
+        Title="MainWindow" Height="450" Width="900" Background="White" WindowState="Normal" WindowStartupLocation="CenterScreen" ResizeMode="CanResize">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Button Content="Конпка" 
+                Grid.Column="1" Grid.Row="2"
+                Name="BTN"
+                Width="200"
+                Height="50"
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                Background="BlanchedAlmond" Foreground="Black"
+                Visibility="Visible" IsEnabled="True" ToolTip="Просто кнопка"
+                FontFamily="Times New Roman" FontSize="18" FontWeight="Bold"/>
     </Grid>
 </Window>

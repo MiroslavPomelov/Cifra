@@ -5,6 +5,10 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XAML26.01.2024", "XAML26.01.2024\XAML26.01.2024.csproj", "{1D211F57-FA9C-47FF-9D2E-6D9D479E42FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XAML_Prakt", "XAML_Prakt\XAML_Prakt.csproj", "{504143A9-FB15-44F6-A5B1-947885815818}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XAML_Prakt2", "XAML_Prakt2\XAML_Prakt2.csproj", "{9F2ABDDE-8787-4FB4-89D5-0574BA0768B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{1D211F57-FA9C-47FF-9D2E-6D9D479E42FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D211F57-FA9C-47FF-9D2E-6D9D479E42FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D211F57-FA9C-47FF-9D2E-6D9D479E42FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{504143A9-FB15-44F6-A5B1-947885815818}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{504143A9-FB15-44F6-A5B1-947885815818}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{504143A9-FB15-44F6-A5B1-947885815818}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{504143A9-FB15-44F6-A5B1-947885815818}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F2ABDDE-8787-4FB4-89D5-0574BA0768B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F2ABDDE-8787-4FB4-89D5-0574BA0768B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F2ABDDE-8787-4FB4-89D5-0574BA0768B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F2ABDDE-8787-4FB4-89D5-0574BA0768B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
