@@ -1,0 +1,71 @@
+﻿<Window x:Class="XAML_Prakr3_Okna.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:XAML_Prakr3_Okna"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="600">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition  Width="20*"/>
+            <ColumnDefinition  Width="80*"/>
+            <ColumnDefinition  Width="20*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="80*"/>
+            <RowDefinition Height="20*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Button Content="Конпка 1" 
+                Grid.Column="0" Grid.Row="0"
+                Name="BTN1" Click="BTN1_Click"/>
+
+            <Button Content="Конпка 4" 
+                Grid.Column="0" Grid.Row="1"
+                Name="BTN4" Click="BTN1_Click"/>
+
+            <Button Content="Конпка 7" 
+                Grid.Column="0" Grid.Row="2"
+                Name="BTN7" Click="BTN1_Click"/>
+
+            <Button Content="Конпка 2" 
+                Grid.Column="1" Grid.Row="0"
+                Name="BTN2" Click="BTN1_Click"/>
+
+            <Button Content="Конпка 3" 
+                Grid.Column="2" Grid.Row="0"
+                Name="BTN3" Click="BTN1_Click"/>
+
+            <Button Content="Конпка 5" 
+                Grid.Column="1" Grid.Row="1"
+                Name="BTN5" Click="BTN1_Click"/>
+
+            <Button Content="Конпка 6" 
+                Grid.Column="2" Grid.Row="1"
+                Name="BTN6" Click="BTN1_Click"/>
+
+            <Button Content="Конпка 8" 
+                Grid.Column="1" Grid.Row="2"
+                Name="BTN8" Click="BTN1_Click"/>
+
+            <Button Content="Конпка 9" 
+                Grid.Column="2" Grid.Row="2"
+                Name="BTN9" Click="BTN1_Click"/>
+
+        </Grid>
+    </Grid>
+</Window>
