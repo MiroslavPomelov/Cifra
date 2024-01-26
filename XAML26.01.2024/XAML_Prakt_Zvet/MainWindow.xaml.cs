@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace XAML_Prakr3_Okna
+namespace XAML_Prakt_Zvet
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -24,25 +24,5 @@ namespace XAML_Prakr3_Okna
         {
             InitializeComponent();
         }
-
-        private void BTN1_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button btn)
-            {
-                //Button btn = (Button)sender;
-                MessageBox.Show(btn.Content.ToString());
-            }
-            else if (sender is TextBox)
-            {
-                //
-            }
-            else
-            {
-
-            }
-
-        }
-
-
     }
 }

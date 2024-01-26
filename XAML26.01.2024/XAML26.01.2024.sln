@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XAML_Prakt2", "XAML_Prakt2\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XAML_Prakr3_Okna", "XAML_Prakr3_Okna\XAML_Prakr3_Okna.csproj", "{00498A33-DF91-4DB5-9E49-44714FD8613F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XAML_Prakt_Zvet", "XAML_Prakt_Zvet\XAML_Prakt_Zvet.csproj", "{E680C8C4-D965-4FED-BFA9-471863FC3745}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{00498A33-DF91-4DB5-9E49-44714FD8613F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00498A33-DF91-4DB5-9E49-44714FD8613F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00498A33-DF91-4DB5-9E49-44714FD8613F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E680C8C4-D965-4FED-BFA9-471863FC3745}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E680C8C4-D965-4FED-BFA9-471863FC3745}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E680C8C4-D965-4FED-BFA9-471863FC3745}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E680C8C4-D965-4FED-BFA9-471863FC3745}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
