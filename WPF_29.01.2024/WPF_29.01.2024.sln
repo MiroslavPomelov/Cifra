@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_Prkat2", "WPF_Prkat2\WP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_29.01.2024_2", "WPF_29.01.2024_2\WPF_29.01.2024_2.csproj", "{DDF77890-C3C1-4364-BE5A-A45B5ACD938F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_PRakt_3", "WPF_PRakt_3\WPF_PRakt_3.csproj", "{DCC00930-1973-4A54-A566-CDF0DF245035}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_HW_29.01.2024", "WPF_HW_29.01.2024\WPF_HW_29.01.2024.csproj", "{62015FD7-82A2-4FE3-A734-5B43C97831ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{DDF77890-C3C1-4364-BE5A-A45B5ACD938F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDF77890-C3C1-4364-BE5A-A45B5ACD938F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDF77890-C3C1-4364-BE5A-A45B5ACD938F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCC00930-1973-4A54-A566-CDF0DF245035}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCC00930-1973-4A54-A566-CDF0DF245035}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCC00930-1973-4A54-A566-CDF0DF245035}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCC00930-1973-4A54-A566-CDF0DF245035}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62015FD7-82A2-4FE3-A734-5B43C97831ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62015FD7-82A2-4FE3-A734-5B43C97831ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62015FD7-82A2-4FE3-A734-5B43C97831ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62015FD7-82A2-4FE3-A734-5B43C97831ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

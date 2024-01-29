@@ -5,8 +5,73 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_29._01._2024_2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="400" Width="450">
 
+    <!--<Window.Resources>
+        --><!--Базовый стиль--><!--
+        <Style x:Key="BaseStyle" TargetType="Button">
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        
+        --><!--Стиль синей кнопки--><!--
+        <Style x:Key="BlueButtomStyle" TargetType="Button" BasedOn="{StaticResource BaseStyle}">
+            <Setter Property="Background" Value="Blue"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        --><!--Стиль красной кнопки--><!--
+        <Style x:Key="RedButtomStyle" TargetType="Button" BasedOn="{StaticResource BaseStyle}">
+            <Setter Property="Background" Value="Red"/>
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+    </Window.Resources>
+
+    <StackPanel>
+        <Button Content="Кнопка 1" Style="{StaticResource BlueButtomStyle}"/>
+        <Button Content="Кнопка 2"/>
+        <Button Content="Кнопка 3" Style="{StaticResource RedButtomStyle}"/>
+        <Button Content="Кнопка 4"/>
+        <Button Content="Кнопка 5" Style="{StaticResource BaseStyle}"/>
+        <Button Content="Кнопка 6" />
+        <Button Content="Кнопка 7" Style="{StaticResource BlueButtomStyle}"/>
+        <Button Content="Кнопка 8"/>
+        <Button Content="Кнопка 9" Style="{StaticResource RedButtomStyle}"/>
+        <Button Content="Кнопка 11"/>
+        <Button Content="Кнопка 12" Style="{StaticResource BaseStyle}"/>
+        <Button Content="Кнопка 13"/>
+        <Button Content="Кнопка 14"/>
+        <Button Content="Кнопка 15"/>
+        <Button Content="Кнопка 16"/>
+    </StackPanel>-->
+    
+    <!--ВЛОЖЕННОСТЬ ЭЛЕМЕНТОВ-->
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20*" />
+            <ColumnDefinition Width="60*"/>
+            <ColumnDefinition Width="20*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height ="20*"/>
+            <RowDefinition Height ="10*"/>
+            <RowDefinition Height ="20*"/>
+        </Grid.RowDefinitions>
+
+        <Button Grid.Column="1" Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width ="40*"/>
+                    <ColumnDefinition Width ="60*"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="C:\Users\C4PC2\Desktop\home-page-icon.png" Grid.Column="0" Margin="10"/>
+                <TextBlock Text="На главную" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" FontSize="20"/>
+                
+            </Grid>
+
+        </Button>
     </Grid>
 </Window>

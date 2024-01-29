@@ -1,0 +1,54 @@
+﻿<Window x:Class="WPF_HW_29._01._2024.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_HW_29._01._2024"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="800" Background="LightGray">
+
+    <Window.Resources>
+        <Style x:Key="BaseStyle" TargetType="Button">
+            <Setter Property="Margin" Value="20,10"/>
+            <Setter Property="Background" Value="LightBlue"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30*" />
+                <ColumnDefinition Width="80*"/>
+                <ColumnDefinition Width="30*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height ="*"/>
+                <RowDefinition Height ="3*"/>
+            <RowDefinition Height ="*"/>
+        </Grid.RowDefinitions>
+        
+
+
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            <Button Content="Кнопка 1" Style="{StaticResource BaseStyle}"/>
+            <Button Content="Кнопка 2" Style="{StaticResource BaseStyle}"/>
+            <Button Content="Кнопка 3" Style="{StaticResource BaseStyle}"/>
+            <Button Content="Кнопка 4" Style="{StaticResource BaseStyle}"/>
+            <Button Content="Кнопка 5" Style="{StaticResource BaseStyle}"/>
+            <Button Content="Кнопка 6" Style="{StaticResource BaseStyle}"/>
+            <Button Content="Кнопка 7" Style="{StaticResource BaseStyle}"/>
+            <Button Content="Кнопка 8" Style="{StaticResource BaseStyle}"/>
+        </StackPanel>
+
+        <Grid Grid.Column="1" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height ="*"/>
+                <RowDefinition Height ="*"/>
+            </Grid.RowDefinitions>
+        </Grid>
+        
+    </Grid>
+</Window>
