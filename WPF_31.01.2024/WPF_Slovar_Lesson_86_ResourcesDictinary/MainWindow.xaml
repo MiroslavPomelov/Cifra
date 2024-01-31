@@ -6,8 +6,10 @@
         xmlns:local="clr-namespace:WPF_Slovar_Lesson_86_ResourcesDictinary"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    
-    <Grid>
 
-    </Grid>
+    <StackPanel>
+        <Button Content="Кнопка" Style="{StaticResource BaseButtonStyle}"/>
+        <Button Content="Кнопка"/>
+        <Button Content="Кнопка"/>
+    </StackPanel>
 </Window>
