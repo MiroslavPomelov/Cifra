@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_Slovar_Lesson_86_ResourcesDictinary"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="400" Width="400">
 
     <StackPanel>
         <Button Content="Кнопка" Style="{StaticResource BaseButtonStyle}"/>
-        <Button Content="Кнопка"/>
-        <Button Content="Кнопка"/>
+        <Button Content="Кнопка" Style="{StaticResource HoverEffectButtonStyle}"/>
+        <Button Content="Кнопка" Style="{StaticResource PressedEffectButtonStyle}"/>
     </StackPanel>
 </Window>
