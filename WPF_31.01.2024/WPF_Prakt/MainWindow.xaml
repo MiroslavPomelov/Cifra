@@ -1,0 +1,54 @@
+﻿<Window x:Class="WPF_Prakt.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_Prakt"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="450">
+
+    <Window.Resources>
+        <Style x:Key="S" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="Green" CornerRadius="15" Width="140" Height="30">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="Кнопка"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseCaptured" Value="True">
+                                <Setter Property ="Background" Value="LightGreen">
+                                </Setter>
+                            </Trigger>
+
+                            <Trigger Property="IsMouseCaptured" Value="True">
+                                <Setter Property ="BorderThickness" Value="2">
+                                </Setter>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Margin" Value="10"/>
+
+
+
+        </Style>
+
+
+
+    </Window.Resources>
+
+    <StackPanel>
+        <Button Style="{StaticResource S}"/>
+        <Button Style="{StaticResource S}"/>
+        <Button Style="{StaticResource S}"/>
+        <Button Style="{StaticResource S}"/>
+        <Button Style="{StaticResource S}"/>
+        <Button Style="{StaticResource S}"/>
+        <Button Style="{StaticResource S}"/>
+        <Button Style="{StaticResource S}"/>
+    </StackPanel>
+</Window>
