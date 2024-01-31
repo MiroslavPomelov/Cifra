@@ -8,22 +8,21 @@
         Title="MainWindow" Height="450" Width="450">
 
     <Window.Resources>
-        <Style x:Key="S" TargetType="Button">
+        <Style x:Key="nazvanie" TargetType="Button">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="Green" CornerRadius="15" Width="140" Height="30">
+                        <Border x:Name="Border" Background="Green" CornerRadius="15" Width="140" Height="30">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="Кнопка"/>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseCaptured" Value="True">
-                                <Setter Property ="Background" Value="LightGreen">
-                                </Setter>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property ="Background" Value="LightGreen"/>
                             </Trigger>
 
-                            <Trigger Property="IsMouseCaptured" Value="True">
-                                <Setter Property ="BorderThickness" Value="2">
-                                </Setter>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Border" Property ="BorderThickness" Value="2"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="Wheat"/>
                             </Trigger>
 
                         </ControlTemplate.Triggers>
@@ -32,9 +31,6 @@
             </Setter>
             <Setter Property="Foreground" Value="White" />
             <Setter Property="Margin" Value="10"/>
-
-
-
         </Style>
 
 
@@ -42,13 +38,13 @@
     </Window.Resources>
 
     <StackPanel>
-        <Button Style="{StaticResource S}"/>
-        <Button Style="{StaticResource S}"/>
-        <Button Style="{StaticResource S}"/>
-        <Button Style="{StaticResource S}"/>
-        <Button Style="{StaticResource S}"/>
-        <Button Style="{StaticResource S}"/>
-        <Button Style="{StaticResource S}"/>
-        <Button Style="{StaticResource S}"/>
+        <Button Style="{StaticResource nazvanie}" />
+        <Button />
+        <Button />
+        <Button />
+        <Button />
+        <Button />
+        <Button />
+        <Button />
     </StackPanel>
 </Window>

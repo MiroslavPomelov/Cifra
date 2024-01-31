@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_31.01.2024", "WPF_31.01
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_Prakt", "WPF_Prakt\WPF_Prakt.csproj", "{9D86C0ED-0D11-4C13-A75D-CA5D8E01FBE3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_Slovar_Lesson_86_ResourcesDictinary", "WPF_Slovar_Lesson_86_ResourcesDictinary\WPF_Slovar_Lesson_86_ResourcesDictinary.csproj", "{94140737-11D6-4AEC-8093-3DF43412AA32}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{9D86C0ED-0D11-4C13-A75D-CA5D8E01FBE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D86C0ED-0D11-4C13-A75D-CA5D8E01FBE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D86C0ED-0D11-4C13-A75D-CA5D8E01FBE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94140737-11D6-4AEC-8093-3DF43412AA32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94140737-11D6-4AEC-8093-3DF43412AA32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94140737-11D6-4AEC-8093-3DF43412AA32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94140737-11D6-4AEC-8093-3DF43412AA32}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
