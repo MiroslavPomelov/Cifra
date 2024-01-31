@@ -121,12 +121,11 @@
 
         <Button>
             <Button.Effect>
-                <DropShadowEffect Color="OrangeRed" Direction="270" ShadowDepth="10" Opacity="0.5" BlurRadius="30"/>
+                <DropShadowEffect Color="OrangeRed" Direction="270" ShadowDepth="5" Opacity="0.5" BlurRadius="30"/>
             </Button.Effect>
         </Button>
         
-        <Button/>
-        <Button/>
-        <Button/>
+        <!--Isenanled и Background свойства чекбокса и стили добавить в дз. Грид на 3 колонки-->
+        
     </StackPanel>
 </Window>
