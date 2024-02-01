@@ -39,7 +39,11 @@ namespace PraktikV2
 
                 newUser.Money -= goods[userChoice].Price * goodQuantity;
                 newUser.TotalSum += goods[userChoice].Price * goodQuantity;
-                good.GetDiscount(newUser);
+                for (int i = 1; i < goods.Count; i++)
+                {
+                    goods[i].GetDiscount(newUser);
+                }
+
 
                 Console.WriteLine($"Итого: {newUser.TotalSum}\nВаш баланс: {newUser.Money}\nДля продолжения нажмите любую кнопку...");
                 Console.ReadKey();

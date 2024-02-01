@@ -15,7 +15,6 @@ namespace PraktikV2
             PowerUnit powerUnit = new PowerUnit();
 
             UI.UserUi(newUser, lucky, good, coolingSystem);
-
         }
     }
 }
