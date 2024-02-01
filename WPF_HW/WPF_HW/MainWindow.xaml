@@ -1,0 +1,78 @@
+﻿<Window x:Class="WPF_HW.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_HW"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+
+    
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="40*"/>
+            <ColumnDefinition Width="40*"/>
+            <ColumnDefinition Width="20*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0">
+            <Button Style="{StaticResource BaseButtonStyle}"/>
+            <Button Style="{StaticResource BaseButtonStyle}"/>
+            <Button Style="{StaticResource BaseButtonStyle}"/>
+            <Button Style="{StaticResource BaseButtonStyle}"/>
+            <Button Style="{StaticResource GreyEffectButtonStyle}"/>
+            <Button Style="{StaticResource GreyEffectButtonStyle}"/>
+            <Button Style="{StaticResource GreyEffectButtonStyle}"/>
+            <Button Style="{StaticResource GreyEffectButtonStyle}"/>
+            <Button Style="{StaticResource GreyEffectButtonStyle}"/>
+            <Button Style="{StaticResource BlueEffectButtonStyle}"/>
+            <Button Style="{StaticResource BlueEffectButtonStyle}"/>
+            <Button Style="{StaticResource BlueEffectButtonStyle}"/>
+            <Button Style="{StaticResource BlueEffectButtonStyle}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+            <TextBox Style="{StaticResource  BaseTextBoxStyle}"/>
+            <TextBox Style="{StaticResource  BaseTextBoxStyle}"/>
+            <TextBox Style="{StaticResource  BaseTextBoxStyle}"/>
+            <TextBox Style="{StaticResource  BaseTextBoxStyle}"/>
+            <TextBox Style="{StaticResource  BaseTextBoxStyle}"/>
+            <TextBox Style="{StaticResource  BaseTextBoxStyle}"/>
+            <TextBox Style="{StaticResource  GradientTextBoxStyle}"/>
+            <TextBox Style="{StaticResource  GradientTextBoxStyle}"/>
+            <TextBox Style="{StaticResource  GradientTextBoxStyle}"/>
+            <TextBox Style="{StaticResource  GradientTextBoxStyle}"/>
+            <TextBox Style="{StaticResource  GradientTextBoxStyle}"/>
+            <TextBox Style="{StaticResource  GradientTextBoxStyle}"/>
+            <TextBox Style="{StaticResource  BlueTextBoxStyle}"/>
+            <TextBox Style="{StaticResource  BlueTextBoxStyle}"/>
+            <TextBox Style="{StaticResource  BlueTextBoxStyle}"/>
+            <TextBox Style="{StaticResource  BlueTextBoxStyle}"/>
+            <TextBox Style="{StaticResource  BlueTextBoxStyle}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="2">
+            <CheckBox Style="{StaticResource BaseCheckBoxStyle}"/>
+            <CheckBox Style="{StaticResource BaseCheckBoxStyle}"/>
+            <CheckBox Style="{StaticResource BaseCheckBoxStyle}"/>
+            <CheckBox Style="{StaticResource BaseCheckBoxStyle}"/>
+            <CheckBox Style="{StaticResource BlackCheckBoxStyle}"/>
+            <CheckBox Style="{StaticResource BlackCheckBoxStyle}"/>
+            <CheckBox Style="{StaticResource BlackCheckBoxStyle}"/>
+            <CheckBox Style="{StaticResource BlackCheckBoxStyle}"/>
+            <CheckBox Style="{StaticResource RadiusCheckBoxStyle}"/>
+            <CheckBox Style="{StaticResource RadiusCheckBoxStyle}"/>
+            <CheckBox Style="{StaticResource RadiusCheckBoxStyle}"/>
+            <CheckBox Style="{StaticResource RadiusCheckBoxStyle}"/>
+            <CheckBox Style="{StaticResource IsCheckBoxStyle}"/>
+            <CheckBox Style="{StaticResource IsCheckBoxStyle}"/>
+            <CheckBox Style="{StaticResource IsCheckBoxStyle}"/>
+            <CheckBox Style="{StaticResource IsCheckBoxStyle}"/>
+            <CheckBox Style="{StaticResource IsCheckBoxStyle}"/>
+        </StackPanel>
+
+    </Grid>
+
+
+</Window>
