@@ -33,7 +33,7 @@
             <ColumnDefinition Width="40*"/>
             <ColumnDefinition Width="40*"/>
             <ColumnDefinition Width="20*"/>
-            <ColumnDefinition Width="35*"/>
+            <ColumnDefinition Width="45*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -47,5 +47,20 @@
         <TextBlock Grid.Column="2" Text="Возраст"/>
         <TextBlock Grid.Column="3" Text="Дата рождения"/>
 
+        <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding  Source={StaticResource first}, Path=Name}"/>
+        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding  Source={StaticResource first}, Path=Surname}"/>
+        <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding  Source={StaticResource first}, Path=Age}"/>
+        <TextBlock Grid.Column="3" Grid.Row="1" Text="{Binding  Source={StaticResource first}, Path=Birthday}"/>
+
+        <TextBlock Grid.Column="0" Grid.Row="2" Text="{Binding  Source={StaticResource second}, Path=Name}"/>
+        <TextBlock Grid.Column="1" Grid.Row="2" Text="{Binding  Source={StaticResource second}, Path=Surname}"/>
+        <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding  Source={StaticResource second}, Path=Age}"/>
+        <TextBlock Grid.Column="3" Grid.Row="2" Text="{Binding  Source={StaticResource second}, Path=Birthday}"/>
+
+        <TextBlock Grid.Column="0" Grid.Row="3" Text="{Binding  Source={StaticResource third}, Path=Name}"/>
+        <TextBlock Grid.Column="1" Grid.Row="3" Text="{Binding  Source={StaticResource third}, Path=Surname}"/>
+        <TextBlock Grid.Column="2" Grid.Row="3" Text="{Binding  Source={StaticResource third}, Path=Age}"/>
+        <TextBlock Grid.Column="3" Grid.Row="3" Text="{Binding  Source={StaticResource third}, Path=Birthday}"/>
+        
     </Grid>
 </Window>
