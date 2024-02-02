@@ -5,6 +5,10 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_02.02.2024", "WPF_02.02.2024\WPF_02.02.2024.csproj", "{2BDBA455-FADA-47A0-8C7E-6AA6CA5A525E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_Prakt_02.02.2024", "WPF_Prakt_02.02.2024\WPF_Prakt_02.02.2024.csproj", "{1B485DEB-4514-44AF-95BC-6E2946A97D0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_Lesson88_DataBinding", "WPF_Lesson88_DataBinding\WPF_Lesson88_DataBinding.csproj", "{BCEC3283-8CD3-4DB2-945D-57C29B9BD36E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{2BDBA455-FADA-47A0-8C7E-6AA6CA5A525E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BDBA455-FADA-47A0-8C7E-6AA6CA5A525E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BDBA455-FADA-47A0-8C7E-6AA6CA5A525E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B485DEB-4514-44AF-95BC-6E2946A97D0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B485DEB-4514-44AF-95BC-6E2946A97D0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B485DEB-4514-44AF-95BC-6E2946A97D0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B485DEB-4514-44AF-95BC-6E2946A97D0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCEC3283-8CD3-4DB2-945D-57C29B9BD36E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCEC3283-8CD3-4DB2-945D-57C29B9BD36E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCEC3283-8CD3-4DB2-945D-57C29B9BD36E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCEC3283-8CD3-4DB2-945D-57C29B9BD36E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

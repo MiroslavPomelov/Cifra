@@ -24,5 +24,29 @@ namespace WPF_02._02._2024
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            //var gradientBrush = new RadialGradientBrush(Colors.Black, Colors.Blue);
+            //Resources["MyBrush"] = gradientBrush;
+
+            Style oldStyle = (Style)Resources["recStyle"];
+
+            Style newStyle = new Style(typeof(Rectangle), oldStyle);
+
+            Setter[] setters =
+            {
+                new Setter(WidthProperty, 400.00),
+                new Setter(HeightProperty, 400.00),
+                new Setter(System.Windows.Shapes.Rectangle.FillProperty, new SolidColorBrush(Colors.Purple))
+            };
+
+            foreach (var item in setters)
+            {
+                newStyle.Setters.Add(item);
+            }
+
+            myRec.Style = newStyle;
+        }
     }
 }
