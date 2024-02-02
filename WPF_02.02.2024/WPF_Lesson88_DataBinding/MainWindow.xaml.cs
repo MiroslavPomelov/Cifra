@@ -25,4 +25,14 @@ namespace WPF_Lesson88_DataBinding
             InitializeComponent();
         }
     }
+
+    public class Person
+    {
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public int Age { get; set; }
+        public string Birthday { get; set; }
+
+
+    }
 }

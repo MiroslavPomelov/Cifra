@@ -5,13 +5,47 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_Lesson88_DataBinding"
         mc:Ignorable="d"
-        Title="MainWindow" Height="200" Width="300">
-    
-
-    <Canvas>
-        <TextBox x:Name="TextBox" Canvas.Left="50" Canvas.Top="50" Width="200"/>
+        Title="MainWindow" Height="200" Width="350">
 
 
-        <Button x:Name="button" Canvas.Left="50" Canvas.Top="100" Content="{Binding ElementName=TextBox, Path=Text}" Width="200"/>
-    </Canvas>
+    <!--<Canvas>-->
+    <!--<TextBox x:Name="TextBox" Canvas.Left="50" Canvas.Top="50" Width="200"/>
+
+        <TextBox x:Name="Tex" Canvas.Left="50" Canvas.Top="0" Width="200"/>
+
+        <TextBox x:Name="button" Canvas.Left="50" Canvas.Top="100" Text="{Binding ElementName=TextBox, Path=Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200"/>-->
+    <!--</Canvas>-->
+
+    <Window.Resources>
+
+        <local:Person x:Key="first" Name="Валерий" Surname="Иванов" Age="32" Birthday="01.02.1992"/>
+        <local:Person x:Key="second" Name="Анна" Surname="Смирнова" Age="28" Birthday="12.12.1995"/>
+        <local:Person x:Key="third" Name="Алексей" Surname="Сидоров" Age="16" Birthday="12.12.2007"/> 
+
+        <Style TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="40*"/>
+            <ColumnDefinition Width="40*"/>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="35*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Column="0" Text="Имя"/>
+        <TextBlock Grid.Column="1" Text="Фамилия"/>
+        <TextBlock Grid.Column="2" Text="Возраст"/>
+        <TextBlock Grid.Column="3" Text="Дата рождения"/>
+
+    </Grid>
 </Window>
