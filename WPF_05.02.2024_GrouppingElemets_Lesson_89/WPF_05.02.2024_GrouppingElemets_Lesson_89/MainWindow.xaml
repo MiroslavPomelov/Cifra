@@ -5,10 +5,149 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_05._02._2024_GrouppingElemets_Lesson_89"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    
-    
-    <Grid>
+        Title="MainWindow" Height="450" Width="400">
 
-    </Grid>
+
+    <!--<Expander Header="Галочки" IsExpanded="True">
+        <StackPanel>
+            <CheckBox Margin="5,10" Content="Галочка 1"/>
+            <CheckBox Margin="5,10" Content="Галочка 2"/>
+            <CheckBox Margin="5,10" Content="Галочка 3"/>
+            <CheckBox Margin="5,10" Content="Галочка 5"/>
+            <CheckBox Margin="5,10" Content="Галочка 6"/>
+            <CheckBox Margin="5,10" Content="Галочка 7"/>
+            <Expander Header="Галочки" IsExpanded="False">
+                <StackPanel>
+                    <CheckBox Margin="5,10" Content="Галочка 1"/>
+                    <CheckBox Margin="5,10" Content="Галочка 2"/>
+                    <CheckBox Margin="5,10" Content="Галочка 3"/>
+                    <CheckBox Margin="5,10" Content="Галочка 5"/>
+                    <CheckBox Margin="5,10" Content="Галочка 6"/>
+                    <CheckBox Margin="5,10" Content="Галочка 7"/>
+                    </StackPanel>
+            </Expander>
+        </StackPanel>
+    </Expander>-->
+
+
+
+
+
+
+    <!--<StackPanel>
+        <GroupBox Header="Группа" BorderThickness="3" Background="LightCoral">
+            -->
+    <!--<GroupBox.Header>
+                <StackPanel>
+                    <TextBox Width="100" Text="aaaa"/>
+                    <TextBox Width="100" Text="aaaa"/>
+                    <TextBox Width="100" Text="aaaa"/>
+                </StackPanel>
+            </GroupBox.Header>-->
+    <!--
+            <StackPanel Margin="10">
+                <Button Content="Кнопка"/>
+                <Button Content="Кнопка"/>
+                <Button Content="Кнопка"/>
+                <Button Content="Кнопка"/>
+                <Button Content="Кнопка"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Группа" BorderThickness="3" Background="LightCoral">
+            <StackPanel Margin="10">
+                <Button Content="Кнопка"/>
+                <Button Content="Кнопка"/>
+                <Button Content="Кнопка"/>
+                <Button Content="Кнопка"/>
+                <Button Content="Кнопка"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Группа" BorderThickness="3" Background="LightCoral">
+            <TextBlock  Margin="5" TextWrapping="WrapWithOverflow">
+                asdsadasddddddddd
+                asdddddddddddddddddddddddddddddddddddd
+            </TextBlock>
+        </GroupBox>
+    </StackPanel>-->
+
+    <!--<StackPanel>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Height="200">
+            <GroupBox Header="Группа" BorderThickness="3" Background="Wheat" >
+                <StackPanel Margin="10">
+                    <Button Margin="10" Content="Кнопка"/>
+                    <Button Margin="10" Content="Кнопка"/>
+                    <Button Margin="10" Content="Кнопка"/>
+                    <Button Margin="10" Content="Кнопка"/>
+                    <Button Margin="10" Content="Кнопка"/>
+                    <Button Margin="10" Content="Кнопка"/>
+                    <Button Margin="10" Content="Кнопка"/>
+                    <Button Margin="10" Content="Кнопка"/>
+                    <Button Margin="10" Content="Кнопка"/>
+                </StackPanel>
+            </GroupBox>
+        </ScrollViewer>
+    </StackPanel>-->
+
+
+
+    <ListBox SelectionMode="Extended">
+        <ListBoxItem Content="Элемент 1"/>
+        <ListBoxItem>Элемент 2</ListBoxItem>
+        <ListBoxItem>
+            <ListBoxItem.Content>
+                "ktvtyn 3
+            </ListBoxItem.Content>
+        </ListBoxItem>
+        
+        
+        <ListBoxItem>
+            <ListBoxItem.Content>
+                <Button Content="Нажми меня"/>
+            </ListBoxItem.Content>
+        </ListBoxItem>
+
+        <ListBoxItem>
+            <ListBoxItem.Content>
+                <StackPanel Orientation="Horizontal">
+                    <Button Margin="5" Content="Кнопка 1"/>
+                    <Button Margin="5" Content="Кнопка 2"/>
+                    <Button Margin="5" Content="Кнопка 3"/>
+                </StackPanel>
+            </ListBoxItem.Content>
+        </ListBoxItem>
+
+        <ListBoxItem>
+            <Ellipse Width="50" Height="50">
+                <Ellipse.Fill>
+                    <LinearGradientBrush>
+                        <GradientStop Color="Black" Offset="0.0"/>
+                        <GradientStop Color="Red" Offset="0.5"/>
+                        <GradientStop Color="Yellow" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Ellipse.Fill>
+            </Ellipse>
+        </ListBoxItem>
+
+        <ListBoxItem>
+            <ListBox Margin="10">
+                <ListBoxItem Margin="10">
+                    <Button Content="Кнопка"/>
+                </ListBoxItem>
+                <ListBoxItem Margin="10">
+                    <Button Content="Кнопка"/>
+                </ListBoxItem >
+                <ListBoxItem Margin="10">
+                    <Button Content="Кнопка"/>
+                </ListBoxItem>
+                <ListBoxItem Margin="10">
+                    <Button Content="Кнопка"/>
+                </ListBoxItem>
+                <ListBoxItem Margin="10">
+                    <Button Content="Кнопка"/>
+                </ListBoxItem>
+            </ListBox>
+        </ListBoxItem>
+        
+    </ListBox>
+
 </Window>
