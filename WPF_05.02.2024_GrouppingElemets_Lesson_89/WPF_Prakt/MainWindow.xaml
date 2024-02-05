@@ -8,28 +8,41 @@
         Title="MainWindow" Height="400" Width="800">
 
 
-    <StackPanel>
+    <StackPanel x:Name="MainStack" Margin="10">
         <StackPanel Orientation="Horizontal">
-            <GroupBox Header="Имя" Margin="10" Height="150" Width="170">
+            <GroupBox Header="Имя" Margin="10" MaxHeight="150" Width="170">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ListBox BorderThickness="0">
-                        <ListBoxItem Content="asdasd"/>
+                    <ListBox ItemsSource="{Binding MyCollection}" BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
                     </ListBox>
                 </ScrollViewer>
             </GroupBox>
 
-            <GroupBox Header="Фамилия" Margin="10" Height="150" Width="170" >
+            <GroupBox Header="Фамилия" Margin="10" MaxHeight="150" Width="170" >
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ListBox BorderThickness="0">
-
+                    <ListBox ItemsSource="{Binding MyCollection}" BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Surname}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
                     </ListBox>
                 </ScrollViewer>
             </GroupBox>
 
-            <GroupBox Header="Возраст" Margin="10" Height="150" Width="170">
+            <GroupBox Header="Возраст" Margin="10" MaxHeight="150" Width="170">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ListBox BorderThickness="0">
-
+                    <ListBox ItemsSource="{Binding MyCollection}" BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <!--<TextBlock Text="{Binding Age}"/>-->
+                                <TextBox Text="{Binding Age}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
                     </ListBox>
                 </ScrollViewer>
             </GroupBox>
@@ -37,12 +50,12 @@
         </StackPanel>
 
         <TextBlock Text="Имя" Margin="5"/>
-        <TextBox Text="" Margin="5"/>
+        <TextBox x:Name="NameTB"  Text="" Margin="5"/>
         <TextBlock Text="Фамилия" />
-        <TextBox Margin="5"/>
+        <TextBox x:Name="SurnameTB"  Margin="5"/>
         <TextBlock Text="Возраст" />
-        <TextBox Margin="5"/>
-        <Button Content="Добавить" Margin="10" Width="150"/>
+        <TextBox x:Name="AgeTB"  Margin="5"/>
+        <Button Content="Добавить" Margin="10" Width="150" Click="Button_Click"/>
 
     </StackPanel>
 </Window>

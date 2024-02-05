@@ -23,9 +23,20 @@ namespace WPF_Prakt
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        public Data MyData { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
+
+            MyData = new Data();
+            MainStack.DataContext = MyData;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MyData.MyCollection.Add(new Person(NameTB.Text, SurnameTB.Text, AgeTB.Text));
         }
     }
 
@@ -45,6 +56,11 @@ namespace WPF_Prakt
             }
         }
 
+        public Data()
+        {
+            MyCollection = new ObservableCollection<Person>();
+        }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)
@@ -58,5 +74,12 @@ namespace WPF_Prakt
         public string Name { get; set; }
         public string Surname { get; set; }
         public int Age { get; set; }
+
+        public Person(string name, string surname, string age)
+        {
+            Name = name;
+            Surname = surname;
+            Age = int.Parse(age);
+        }
     }
 }
