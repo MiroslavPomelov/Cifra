@@ -1,0 +1,10 @@
+﻿<Application x:Class="WPF_07._02._2024_Prakt.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:WPF_07._02._2024_Prakt"
+             StartupUri="Views\Windows\MainWindow.xaml">
+    
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>
