@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WPF_07._02._2024_Prakt.Model;
+using WPF_07._02._2024_Prakt.Services;
 using WPF_07._02._2024_Prakt.ViewModels.Base;
 
 namespace WPF_07._02._2024_Prakt.ViewModels
@@ -22,13 +23,34 @@ namespace WPF_07._02._2024_Prakt.ViewModels
                 {
                     _passangers = value;
                     OnPropertyChanged(nameof(Passangers));
+                    //GetCurrenPassanger();
                 }
             }
         }
+
+        private TitanicPassanger _selectedPassanger;
+        public TitanicPassanger SelectedPassanger
+        {
+            get { return _selectedPassanger; }
+            set
+            {
+                if (_selectedPassanger != value)
+                {
+                    _selectedPassanger = value;
+                    OnPropertyChanged(nameof(SelectedPassanger));
+                }
+            }
+        }
+
 
         public PassengersViewModel()
         {
             Passangers = new ObservableCollection<TitanicPassanger>();
         }
+
+        //private void GetCurrenPassanger()
+        //{
+        //    SelectedPassanger = CSVFileReader.CSVFileReadering();
+        //}
     }
 }

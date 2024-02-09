@@ -12,9 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WPF_09._02._2024_Lesson_93_PropertiesBinding.ViewModels;
 
-namespace WPF_09._02._2024_Lesson_93_PropertiesBinding
+namespace WPF_09._02._2024_Lesson94_Commands
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -24,7 +23,6 @@ namespace WPF_09._02._2024_Lesson_93_PropertiesBinding
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new ChangeValuesViewModel();
         }
     }
 }

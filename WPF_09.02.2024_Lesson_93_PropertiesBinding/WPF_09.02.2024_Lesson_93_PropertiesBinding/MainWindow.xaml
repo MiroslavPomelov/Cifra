@@ -5,10 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_09._02._2024_Lesson_93_PropertiesBinding"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    
-    
-    <Grid>
+        Title="MainWindow" Height="200" Width="170">
 
-    </Grid>
+
+    <StackPanel>
+        <GroupBox Header=" Управляющий блок" Width="150">
+            <StackPanel Margin="10">
+                <TextBlock Text="Укажите Id"/>
+                <TextBox FontSize="18" Text="{Binding TextBoxText, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Header="Управляемый блок" Width="150">
+            <StackPanel Margin="10">
+                <TextBlock Text="{Binding UserData.Name}"/>
+                <TextBlock Text="{Binding UserData.Age}" Margin="0,5,0,0"/>
+            </StackPanel>
+        </GroupBox>
+    </StackPanel>
 </Window>
