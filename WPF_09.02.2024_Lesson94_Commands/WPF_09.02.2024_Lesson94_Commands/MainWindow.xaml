@@ -5,10 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_09._02._2024_Lesson94_Commands"
         mc:Ignorable="d"
+        xmlns:cmd="clr-namespace:WPF_09._02._2024_Lesson94_Commands.Infrastructure.Commands"
+        xmlns:vm="clr-namespace:WPF_09._02._2024_Lesson94_Commands.ViewModels"
         Title="MainWindow" Height="450" Width="800">
-    
-    
-    <Grid>
 
-    </Grid>
+    <StackPanel>
+        <StackPanel.DataContext>
+            <vm:MainViewModel/>
+        </StackPanel.DataContext>
+
+        <TextBlock Text="{Binding Text}"/>
+
+        <Button Content="Выход" Width="150" Height="30" Command="{Binding ChangeTextCommand}"/>
+            <!--<Button.Command>
+                <cmd:QuitApplicationCommand/>
+            </Button.Command>-->
+    </StackPanel>
 </Window>
