@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "16.02.2024", "16.02.2024\16
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_Prakt", "WPF_Prakt\WPF_Prakt.csproj", "{6CC62D75-6BCF-494F-9041-DFCE4B22C08B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_Prakt_2", "WPF_Prakt_2\WPF_Prakt_2.csproj", "{ED001880-23CB-4B53-82F3-2018A9339A26}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6CC62D75-6BCF-494F-9041-DFCE4B22C08B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CC62D75-6BCF-494F-9041-DFCE4B22C08B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CC62D75-6BCF-494F-9041-DFCE4B22C08B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED001880-23CB-4B53-82F3-2018A9339A26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED001880-23CB-4B53-82F3-2018A9339A26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED001880-23CB-4B53-82F3-2018A9339A26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED001880-23CB-4B53-82F3-2018A9339A26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

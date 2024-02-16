@@ -58,6 +58,7 @@
                     <ComboBox Margin="15,30"  >
                         <ComboBoxItem Content="Элемент 1"/>
                         <ComboBoxItem Content="Элемент 2"/>
+                        <ComboBoxItem Content="Элемент 2"/>
                     </ComboBox>
                 </StackPanel>
 
