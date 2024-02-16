@@ -12,8 +12,6 @@ namespace WPF_09._02._2024_Lesson94_Commands.ViewModels
     public class MainViewModel : ViewModel
     {
         private string _text;
-
-
         public string Text
         {
             get => _text;
