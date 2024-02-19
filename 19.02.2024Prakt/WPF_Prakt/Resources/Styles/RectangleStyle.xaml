@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+    <Style x:Key="BaseRectangleStyle" TargetType="Rectangle">
+        <Setter Property="Fill" Value="#0b1429"/>
+        <Setter Property="Margin" Value="20"/>
+        <Setter Property="RadiusX" Value="10"/>
+        <Setter Property="RadiusY" Value="10"/>
+    </Style>
+
+</ResourceDictionary>

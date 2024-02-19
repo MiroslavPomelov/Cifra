@@ -1,0 +1,58 @@
+﻿<Window x:Class="WPF_Prakt.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_Prakt"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="1000">
+
+
+    <Grid Background="#15196b">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="80*"/>
+        </Grid.RowDefinitions>
+
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="Главное меню"/>
+            <MenuItem Header="Справка"/>
+            <MenuItem Header="Помощь"/>
+        </Menu>
+
+        <Grid Grid.Row="1">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="Офлайн магазин покупок" FontSize="20" FontWeight="Bold" Foreground="White" FontFamily="Dubai Medium" VerticalAlignment="Center" Margin="10"/>
+            <Button Grid.Column="2" Style="{StaticResource BaseButtonStyle}" FontFamily="Dubai Medium"/>
+
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30*"/>
+                <ColumnDefinition Width="60*"/>
+            </Grid.ColumnDefinitions>
+
+            <Rectangle  Style="{StaticResource BaseRectangleStyle}"/>
+            <StackPanel>
+                <TextBlock Text="Меню магазина" Margin="40,40,0,0" FontSize="25" Foreground="White" FontFamily="" FontFamily="Dubai Medium"/>
+            </StackPanel>
+
+            <Rectangle Grid.Column="1" Style="{StaticResource BaseRectangleStyle}"/>
+
+            <DataGrid Grid.Column="1" Margin="30">
+                
+            </DataGrid>
+        </Grid>
+        
+    </Grid>
+</Window>
