@@ -44,7 +44,7 @@
 
             <Rectangle  Style="{StaticResource BaseRectangleStyle}"/>
             <StackPanel>
-                <TextBlock Text="Меню магазина" Margin="40,40,0,0" FontSize="25" Foreground="White" FontFamily="" FontFamily="Dubai Medium"/>
+                <TextBlock Text="Меню магазина" Margin="40,40,0,0" FontSize="25" Foreground="White" FontFamily="Dubai Medium"/>
             </StackPanel>
 
             <Rectangle Grid.Column="1" Style="{StaticResource BaseRectangleStyle}"/>
