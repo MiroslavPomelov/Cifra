@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "19.02.2024Prakt", "19.02.2024Prakt\19.02.2024Prakt.csproj", "{6AEBF4D6-4596-4500-AC81-9682ABE49086}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF_Prakt", "WPF_Prakt\WPF_Prakt.csproj", "{574B4979-2A6B-4C1F-9C03-8727BEF66DAC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6AEBF4D6-4596-4500-AC81-9682ABE49086}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AEBF4D6-4596-4500-AC81-9682ABE49086}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AEBF4D6-4596-4500-AC81-9682ABE49086}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AEBF4D6-4596-4500-AC81-9682ABE49086}.Release|Any CPU.Build.0 = Release|Any CPU
+		{574B4979-2A6B-4C1F-9C03-8727BEF66DAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{574B4979-2A6B-4C1F-9C03-8727BEF66DAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{574B4979-2A6B-4C1F-9C03-8727BEF66DAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{574B4979-2A6B-4C1F-9C03-8727BEF66DAC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {31B2B251-4994-4E4F-B1BE-60FCF6A98ACE}
+	EndGlobalSection
+EndGlobal

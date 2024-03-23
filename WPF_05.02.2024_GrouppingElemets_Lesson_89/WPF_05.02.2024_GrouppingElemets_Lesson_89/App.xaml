@@ -1,0 +1,9 @@
+﻿<Application x:Class="WPF_05._02._2024_GrouppingElemets_Lesson_89.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:WPF_05._02._2024_GrouppingElemets_Lesson_89"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>

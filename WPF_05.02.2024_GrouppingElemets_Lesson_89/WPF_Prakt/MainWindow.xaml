@@ -1,0 +1,61 @@
+﻿<Window x:Class="WPF_Prakt.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_Prakt"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="400" Width="800">
+
+
+    <StackPanel x:Name="MainStack" Margin="10">
+        <StackPanel Orientation="Horizontal">
+            <GroupBox Header="Имя" Margin="10" MaxHeight="150" Width="170">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ListBox ItemsSource="{Binding MyCollection}" BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+            </GroupBox>
+
+            <GroupBox Header="Фамилия" Margin="10" MaxHeight="150" Width="170" >
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ListBox ItemsSource="{Binding MyCollection}" BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Surname}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+            </GroupBox>
+
+            <GroupBox Header="Возраст" Margin="10" MaxHeight="150" Width="170">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ListBox ItemsSource="{Binding MyCollection}" BorderThickness="0">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <!--<TextBlock Text="{Binding Age}"/>-->
+                                <TextBox Text="{Binding Age}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+            </GroupBox>
+
+        </StackPanel>
+
+        <TextBlock Text="Имя" Margin="5"/>
+        <TextBox x:Name="NameTB"  Text="" Margin="5"/>
+        <TextBlock Text="Фамилия" />
+        <TextBox x:Name="SurnameTB"  Margin="5"/>
+        <TextBlock Text="Возраст" />
+        <TextBox x:Name="AgeTB"  Margin="5"/>
+        <Button Content="Добавить" Margin="10" Width="150" Click="Button_Click"/>
+
+    </StackPanel>
+</Window>

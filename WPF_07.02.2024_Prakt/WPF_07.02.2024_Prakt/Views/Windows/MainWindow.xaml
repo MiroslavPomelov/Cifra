@@ -1,0 +1,64 @@
+﻿<Window x:Class="WPF_07._02._2024_Prakt.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPF_07._02._2024_Prakt"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="400">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="40"/>
+
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Row="1">
+            <Button Content="Выгрузить данные" Click="Button_Click"/>
+        </Border>
+
+        <ListBox Grid.Row="0" ItemsSource="{Binding Passangers}" SelectedItem="{Binding SelectedPassanger}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}" FontSize="12"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+
+        </ListBox>
+
+        <GroupBox Grid.Column="1" Header="Информация о пассажире">
+            <StackPanel>
+                <TextBlock Text="Id пассажира:" FontWeight="Bold" Margin="0,15,0,0"/>
+                <TextBlock Text="{Binding SelectedPassanger.PassengerID}"/>
+
+                <TextBlock Text="Имя пассажира:" FontWeight="Bold"/>
+                <TextBlock Text="{Binding SelectedPassanger.Name}"/>
+
+                <TextBlock Text="Класс пассажира:" FontWeight="Bold"/>
+                <TextBlock Text="{Binding SelectedPassanger.PClass}"/>
+
+                <TextBlock Text="Возраст пассажира:" FontWeight="Bold"/>
+                <TextBlock Text="{Binding SelectedPassanger.Age}"/>
+
+                <TextBlock Text="Пол пассажира:" FontWeight="Bold"/>
+                <TextBlock Text="{Binding SelectedPassanger.Sex}"/>
+
+                <TextBlock Text="Выжил пассажира:" FontWeight="Bold"/>
+                <TextBlock Text="{Binding SelectedPassanger.Survived}"/>
+
+                <TextBlock Text="Код пола пассажира:" FontWeight="Bold"/>
+                <TextBlock Text="{Binding SelectedPassanger.SexCode}"/>
+            </StackPanel>
+        </GroupBox>
+
+    </Grid>
+</Window>
