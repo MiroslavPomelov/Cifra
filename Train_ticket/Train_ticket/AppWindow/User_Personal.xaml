@@ -1,0 +1,52 @@
+﻿<Window x:Class="Train_ticket.AppWindow.User_Personal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Train_ticket.AppWindow"
+         xmlns:viewmodel ="clr-namespace:Train_ticket.ViewModel"
+        mc:Ignorable="d"
+        Title="User_Personal" Height="470" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#fff">
+
+    <Window.DataContext>
+        <viewmodel:MainViewModel/>
+    </Window.DataContext>
+
+    <Border Background="#fff" CornerRadius="20" >
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="75"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Меню" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#008B8B" FontSize="21" FontWeight="Bold" Margin="20 0 0 0"/>
+
+            <StackPanel Grid.Row="1">
+
+                <RadioButton Content="Данные пользователя" Height="50" Foreground="#008B8B" FontSize="14" Style="{StaticResource MenuButtonTheme}" IsChecked="True" Command="{Binding UserViewCommand}"/>
+                <RadioButton Content="Купить билет" Height="50" Foreground="#008B8B" FontSize="14" Style="{StaticResource MenuButtonTheme}" Command="{Binding BuyTicketViewCommand}"/>
+                <RadioButton Content="Ваши билеты" Height="50" Foreground="#008B8B" FontSize="14" Style="{StaticResource MenuButtonTheme}" Command="{Binding YourTicketsViewCommand}"/>
+
+                <Button HorizontalAlignment="Right" Content="Выйти" Margin="0 160 10 0" Click="ButtonExit_Click"/>
+
+            </StackPanel>
+
+            <TextBox Width="250"
+                       Height="60"
+                       VerticalAlignment="Bottom"
+                       HorizontalAlignment="Left"
+                       Margin="5"
+                       Grid.Column="1"
+                       Style="{StaticResource ModernTextBox}"/>
+
+            <ContentControl Grid.Row="1" Grid.Column="1" Margin="10" Content="{Binding CurrentView}"/>
+
+        </Grid>
+    </Border>
+</Window>

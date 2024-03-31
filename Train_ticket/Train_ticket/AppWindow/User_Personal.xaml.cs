@@ -10,19 +10,25 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Ticket_train
+namespace Train_ticket.AppWindow
 {
     /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
+    /// Логика взаимодействия для User_Personal.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class User_Personal : Window
     {
-        public MainWindow()
+        public User_Personal()
         {
             InitializeComponent();
+        }
+
+        private void ButtonExit_Click(object sender, RoutedEventArgs e)
+        {
+            AuthorizationWindow authorizationWindow = new AuthorizationWindow();
+            authorizationWindow.Show();
+            Close();
         }
     }
 }
