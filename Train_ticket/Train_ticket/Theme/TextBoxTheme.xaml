@@ -5,10 +5,10 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
-                    <Border CornerRadius="10" Background="#C0C0C0" Width="200" Height="40">
+                    <Border CornerRadius="10" Background="#C0C0C0" Width="200" Height="35">
                         <Grid>
                             <Rectangle StrokeThickness="1"/>
-                            <TextBox Margin="1" Text="{TemplateBinding Text}" BorderThickness="0" Background="Transparent" VerticalContentAlignment="Center" Padding="2" Foreground="Black" x:Name="SearhBox"/>
+                            <TextBox Margin="1" Text="{TemplateBinding Text}" BorderThickness="0" Background="Transparent" VerticalContentAlignment="Center" Padding="1" Foreground="Black" x:Name="SearhBox"/>
 
                             <TextBlock IsHitTestVisible="False" Text="Поиск" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10 0 0 0" FontSize="11" Foreground="Black" Grid.Column="1">
                                 <TextBlock.Style>

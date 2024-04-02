@@ -6,8 +6,34 @@
              xmlns:local="clr-namespace:Train_ticket.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    
+
     <Grid Background="#fff">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+
         <TextBlock Text="Билеты:" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#008B8B" FontSize="21" FontWeight="Bold" Margin="20 10 0 0"/>
+
+
+        <Border Grid.Row="1">
+
+            <StackPanel >
+                <Separator Margin="20 0 0 0" Height="0.8" Background="LightGray" VerticalAlignment="Top"/>
+
+                <DataGrid>
+
+                </DataGrid>
+            </StackPanel>
+        </Border>
     </Grid>
+
+
+
+
 </UserControl>

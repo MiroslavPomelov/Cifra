@@ -23,6 +23,12 @@ namespace Train_ticket.View
         public UserView()
         {
             InitializeComponent();
+
+            // Подключение к БД
+
+            List<User> usersInform = new List<User>();
+
+            userInformation.ItemsSource = usersInform;
         }
     }
 }
