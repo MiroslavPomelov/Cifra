@@ -9,5 +9,7 @@ namespace Train_ticket.ViewModel
         {
 
         }
+
+
     }
 }

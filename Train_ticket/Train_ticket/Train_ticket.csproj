@@ -71,6 +71,7 @@
     </Compile>
     <Compile Include="Core\ObservableObject.cs" />
     <Compile Include="Core\RelayCommand.cs" />
+    <Compile Include="Services\HttpClient.cs" />
     <Compile Include="User.cs" />
     <Compile Include="ViewModel\BuyTicketViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
