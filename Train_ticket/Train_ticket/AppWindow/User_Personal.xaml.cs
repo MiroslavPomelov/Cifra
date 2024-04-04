@@ -30,5 +30,10 @@ namespace Train_ticket.AppWindow
             authorizationWindow.Show();
             Close();
         }
+
+        private void Button_Click_Close(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
     }
 }

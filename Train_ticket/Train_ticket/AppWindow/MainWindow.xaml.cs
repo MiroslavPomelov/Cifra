@@ -108,5 +108,10 @@ namespace Train_ticket
             authorizationWindow.Show();
             Close();
         }
+
+        private void Button_Click_Exit(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
     }
 }
