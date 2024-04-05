@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Train_ticket.AppWindow"
         xmlns:viewmodel ="clr-namespace:Train_ticket.ViewModel"
+        xmlns:commands="clr-namespace:Train_ticket.Infrastructure.Commands"
         mc:Ignorable="d"
         Title="User_Personal" Height="470" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="Transparent" WindowStyle="None" AllowsTransparency="True">
 
@@ -25,10 +26,14 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Button Grid.Column="1" Background="Transparent" BorderThickness="0" Margin="545 0 10 10" FontWeight="Black" Click="Button_Click_Close">
+            <Button Grid.Column="1" Background="Transparent" BorderThickness="0" Margin="545 0 10 10" FontWeight="Black">
                 <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Width="15" Height="15">
                     <Path Fill="#696969" Data="M13.46,12L19,17.54V19H17.54L12,13.46L6.46,19H5V17.54L10.54,12L5,6.46V5H6.46L12,10.54L17.54,5H19V6.46L13.46,12Z" />
                 </Canvas>
+
+                <Button.Command>
+                    <commands:ApplicationQuitCommand/>
+                </Button.Command>
             </Button>
 
             <TextBlock Text="Меню" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#008B8B" FontSize="21" FontWeight="Bold" Margin="20 0 0 0"/>
@@ -41,6 +46,11 @@
                 <RadioButton Content="Ваши билеты" Height="50" Foreground="#008B8B" FontSize="14" Style="{StaticResource MenuButtonTheme}" Command="{Binding YourTicketsViewCommand}"/>
 
                 <Button HorizontalAlignment="Right" Content="Выйти" Margin="0 190 10 0" Click="ButtonExit_Click"/>
+                <!--<Button HorizontalAlignment="Right" Content="Выйти" Margin="0 190 10 0" >
+                    <Button.Command>
+                        <commands:AuthorizationClickCommand/>
+                    </Button.Command>
+                </Button>-->
 
             </StackPanel>
 

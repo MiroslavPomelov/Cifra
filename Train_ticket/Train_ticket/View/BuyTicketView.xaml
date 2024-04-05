@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Train_ticket.View"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="500" d:DesignWidth="800">
 
     <Grid Background="#fff">
 
@@ -38,7 +38,9 @@
                     <DatePicker Name="ArrDep" IsDropDownOpen="False" SelectedDateFormat="Short" Margin="100,130,300,0" VerticalAlignment="Top" Height="25" />
                 </Grid>
 
-                <DataGrid Margin="40"/>
+                <TextBlock Text="Доступные маршруты:" Margin="20 20 0 0" Foreground="#008B8B" FontSize="15" FontWeight="Bold" Width="180" HorizontalAlignment="Left"/>
+
+                <DataGrid Margin="40 15 40 0"/>
             </StackPanel>
         </Border>
     </Grid>

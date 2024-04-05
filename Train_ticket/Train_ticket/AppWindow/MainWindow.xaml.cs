@@ -96,20 +96,20 @@ namespace Train_ticket
                 User user = new User(name, surName, age, email, password);
 
                 // Отправка данных на сервер
-                HttpClient httpClient = new HttpClient();
-                async Task Main()
-                {
-                    HttpContent content = new StringContent("Hello");
-                    // устанавливаем заголовок 
-                    content.Headers.Add("SecreteCode", "Anything");
+                //HttpClient httpClient = new HttpClient();
+                //async Task Main()
+                //{
+                //    HttpContent content = new StringContent("Hello");
+                //    // устанавливаем заголовок 
+                //    content.Headers.Add("SecreteCode", "Anything");
 
-                    /*using*/ var response = await httpClient.PostAsync("adress", content);
-                    string responseText = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine(responseText);
-                }
+                //    using var response = await httpClient.PostAsync("adress", content);
+                //    string responseText = await response.Content.ReadAsStringAsync();
+                //    Console.WriteLine(responseText);
+                //}
 
 
-                MessageBox.Show("Готово!");
+                //MessageBox.Show("Готово!");
 
             }
         }
@@ -121,9 +121,5 @@ namespace Train_ticket
             Close();
         }
 
-        private void Button_Click_Exit(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
-        }
     }
 }

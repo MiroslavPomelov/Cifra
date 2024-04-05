@@ -72,10 +72,5 @@ namespace Train_ticket
             mainWindow.Show();
             Close();
         }
-
-        private void Button_Click_Exit(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
-        }
     }
 }

@@ -26,7 +26,7 @@
             <StackPanel >
                 <Separator Margin="20 0 0 0" Height="0.8" Background="LightGray" VerticalAlignment="Top"/>
 
-                <DataGrid>
+                <DataGrid Margin="30">
 
                 </DataGrid>
             </StackPanel>
