@@ -17,20 +17,30 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-
         <TextBlock Text="Покупка билета:" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#008B8B" FontSize="21" FontWeight="Bold" Margin="20 10 0 0"/>
-
 
         <Border Grid.Row="1">
 
             <StackPanel >
                 <Separator Margin="20 0 0 0" Height="0.8" Background="LightGray" VerticalAlignment="Top"/>
 
-               
+                <Grid>
+                    <TextBlock Text="Откуда:" Margin="20 10 0 5" Foreground="#008B8B" FontSize="15" FontWeight="Bold" Width="60" HorizontalAlignment="Left"/>
+                    <TextBox x:Name="DepCity" Text="" Height="25" Width="400" Margin="100,10,300,120" />
+
+                    <TextBlock Text="Куда:" Margin="20 50 0 5" Foreground="#008B8B" FontSize="15" FontWeight="Bold" Width="60" HorizontalAlignment="Left"/>
+                    <TextBox x:Name="ArrCity" Text="" Height="25" Width="400" Margin="100,50,300,80"/>
+
+                    <TextBlock Text="Туда:" Margin="20 90 0 5" Foreground="#008B8B" FontSize="15" FontWeight="Bold" Width="50" HorizontalAlignment="Left"/>
+                    <DatePicker Name="DateDep" IsDropDownOpen="False" SelectedDateFormat="Short" Margin="100,90,300,0" VerticalAlignment="Top" Height="25" />
+
+                    <TextBlock Text="Обратно:" Margin="20 130 0 5" Foreground="#008B8B" FontSize="15" FontWeight="Bold" Width="66" HorizontalAlignment="Left"/>
+                    <DatePicker Name="ArrDep" IsDropDownOpen="False" SelectedDateFormat="Short" Margin="100,130,300,0" VerticalAlignment="Top" Height="25" />
+                </Grid>
+
+                <DataGrid Margin="40"/>
             </StackPanel>
         </Border>
     </Grid>
-
-
 
 </UserControl>

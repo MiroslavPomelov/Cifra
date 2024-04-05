@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -27,6 +28,8 @@ namespace Train_ticket
         {
             InitializeComponent();
         }
+
+
 
         // Обработчик кнопки регистрации:
         private void Button_Reg_Click(object sender, RoutedEventArgs e)
@@ -96,6 +99,18 @@ namespace Train_ticket
                 User user = new User(name, surName, age, email, password);
 
                 // Отправка данных на сервер
+                HttpClient httpClient = new HttpClient();
+                async Task Main()
+                {
+                    HttpContent content = new StringContent("Hello");
+                    // устанавливаем заголовок 
+                    content.Headers.Add("SecreteCode", "Anything");
+
+                    using var response = await httpClient.PostAsync("adress", content);
+                    string responseText = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(responseText);
+                }
+
 
                 MessageBox.Show("Готово!");
 

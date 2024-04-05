@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,8 +11,7 @@ namespace Train_ticket.Services
     {
         static async Task PostAsync(HttpClient httpClient)
         {
-            //using StringContent jsonContent = new(
-            //    JsonSerializer.Serialize(new
+            //using (StringContent jsonContent = new(JsonSerializer.Serialize(new
             //    {
             //        userId = 77,
             //        id = 1,
@@ -18,11 +19,11 @@ namespace Train_ticket.Services
             //        completed = false
             //    }),
             //    Encoding.UTF8,
-            //    "application/json");
+            //    "application/json"))
 
-            //using HttpResponseMessage response = await httpClient.PostAsync(
+            //using (HttpResponseMessage response = await httpClient.PostAsync(
             //    "todos",
-            //    jsonContent);
+            //    JsonContent))
 
             //response.EnsureSuccessStatusCode()
             //    .WriteRequestToConsole();
