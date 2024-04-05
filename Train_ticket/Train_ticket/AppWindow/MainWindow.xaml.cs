@@ -22,13 +22,10 @@ namespace Train_ticket
     /// </summary>
     public partial class MainWindow : Window
     {
-
-        
         public MainWindow()
         {
             InitializeComponent();
         }
-
 
 
         // Обработчик кнопки регистрации:
@@ -106,7 +103,7 @@ namespace Train_ticket
                     // устанавливаем заголовок 
                     content.Headers.Add("SecreteCode", "Anything");
 
-                    using var response = await httpClient.PostAsync("adress", content);
+                    /*using*/ var response = await httpClient.PostAsync("adress", content);
                     string responseText = await response.Content.ReadAsStringAsync();
                     Console.WriteLine(responseText);
                 }
