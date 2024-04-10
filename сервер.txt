@@ -1,0 +1,73 @@
+using System.Net;
+using System.Net.Http;
+using System.Text;
+
+namespace HTTPListener
+{
+    internal class Program
+    {
+        static HttpListener server = new HttpListener();
+        static async Task Main(string[] args)
+        {
+           
+            while (true)
+            {
+               
+                // установка адресов прослушки
+                server.Prefixes.Add("http://127.0.0.1:8888/connection/");
+                server.Start(); // начинаем прослушивать входящие подключения
+
+                // получаем контекст и задаем ответ
+                var  context = await server.GetContextAsync();
+
+                HttpListenerRequest request = context.Request;
+
+                if (!request.HasEntityBody)
+                {
+                    Console.WriteLine("Нет данных!");
+                    return;
+                }
+
+                System.IO.Stream body = request.InputStream;
+                System.Text.Encoding encoding = request.ContentEncoding;
+                System.IO.StreamReader reader = new System.IO.StreamReader(body, encoding);
+
+                string s = reader.ReadToEnd();
+                Console.WriteLine(s);
+
+
+
+               
+
+                HttpListenerResponse response = context.Response;
+
+                                              
+                // отправляемый в ответ код htmlвозвращает
+                string responseText =
+                    @"<!DOCTYPE html>
+                        <html>
+                            <head>
+                                <meta charset='utf8'>
+                                <title>METANIT.COM</title>
+                            </head>
+                            <body>
+                                <h2>Hello METANIT.COM</h2>
+                            </body>
+                        </html>";
+                byte[] buffer = Encoding.UTF8.GetBytes(responseText);
+                // получаем поток ответа и пишем в него ответ
+                response.ContentLength64 = buffer.Length;
+                using Stream output = response.OutputStream;
+                // отправляем данные
+                await output.WriteAsync(buffer);
+                await output.FlushAsync();
+
+                Console.WriteLine("Запрос обработан");
+
+                
+            }
+            server.Stop();
+        }
+    }
+    
+}

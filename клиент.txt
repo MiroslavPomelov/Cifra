@@ -1,0 +1,35 @@
+using System;
+using System.Net;
+using System.Net.Http.Json;
+
+namespace _1234556666
+{
+    internal class Program
+    {
+        static HttpClient httpClient = new HttpClient();
+        
+        static async Task Main()
+        {
+            while (true)
+            {
+                               
+                // адрес сервера
+                Uri uri = new Uri("http://127.0.0.1:8888/connection/");
+
+                StringContent content = new StringContent("Tom");
+                // определяем данные запроса
+                using var request = new HttpRequestMessage(HttpMethod.Post, uri);
+                // установка отправляемого содержимого
+                request.Content = content;
+                // отправляем запрос
+                using var response = await httpClient.SendAsync(request);
+                // получаем ответ
+                string responseText = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(responseText);
+
+            }
+            
+        }
+    }
+   
+}
