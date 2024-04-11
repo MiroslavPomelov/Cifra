@@ -22,7 +22,7 @@ namespace Train_ticket.Services
                 HttpContent content = new StringContent(name, Encoding.UTF8, "application/json");
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.31.251:8080", content);
+                HttpResponseMessage response = await client.PostAsync("http://192.168.1.66:8080", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
