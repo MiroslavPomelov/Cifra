@@ -9,36 +9,34 @@ namespace Train_ticket.Services
 {
     internal class HttpClientData
     {
-        static async Task PostAsync(HttpClient httpClient)
+        public async Task SendDataAsync(string name)
         {
-            //using (StringContent jsonContent = new(JsonSerializer.Serialize(new
-            //    {
-            //        userId = 77,
-            //        id = 1,
-            //        title = "write code sample",
-            //        completed = false
-            //    }),
-            //    Encoding.UTF8,
-            //    "application/json"))
+            using (HttpClient client = new HttpClient())
+            {
+                // Создание контента для запроса
+                //string jsonBody = "{\"Heloo server\":\"I am Bogdan\"}"; // Это типа Json
+                //HttpContent content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
-            //using (HttpResponseMessage response = await httpClient.PostAsync(
-            //    "todos",
-            //    JsonContent))
 
-            //response.EnsureSuccessStatusCode()
-            //    .WriteRequestToConsole();
+                HttpContent content = new StringContent(name, Encoding.UTF8, "application/json");
 
-            //var jsonResponse = await response.Content.ReadAsStringAsync();
-            //Console.WriteLine($"{jsonResponse}\n");
+                // Отправка POST-запроса
+                HttpResponseMessage response = await client.PostAsync("http://192.168.31.251:8080", content);
 
-            // Expected output:
-            //   POST https://jsonplaceholder.typicode.com/todos HTTP/1.1
-            //   {
-            //     "userId": 77,
-            //     "id": 201,
-            //     "title": "write code sample",
-            //     "completed": false
-            //   }
+                // Проверка успешности запроса
+                if (response.IsSuccessStatusCode)
+                {
+                    // Обработка успешного ответа
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine("Ответ от сервера: " + responseContent);
+                }
+                else
+                {
+                    // Обработка неудачного ответа
+                    Console.WriteLine("Ошибка при выполнении запроса: " + response.StatusCode);
+                }
+            }
+
         }
     }
 }
