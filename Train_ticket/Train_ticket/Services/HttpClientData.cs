@@ -9,8 +9,9 @@ namespace Train_ticket.Services
 {
     internal class HttpClientData
     {
-        public async Task SendDataAsync(string name)
+        public static async Task SendDataAsync(string name)
         {
+           
             using (HttpClient client = new HttpClient())
             {
                 // Создание контента для запроса
@@ -29,6 +30,7 @@ namespace Train_ticket.Services
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
                     Console.WriteLine("Ответ от сервера: " + responseContent);
+                    
                 }
                 else
                 {
@@ -36,7 +38,7 @@ namespace Train_ticket.Services
                     Console.WriteLine("Ошибка при выполнении запроса: " + response.StatusCode);
                 }
             }
-
+           
         }
     }
 }

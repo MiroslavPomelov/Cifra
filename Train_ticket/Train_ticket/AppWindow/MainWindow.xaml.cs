@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Train_ticket.AppWindow;
+using Train_ticket.Services;
 
 namespace Train_ticket
 {
@@ -96,18 +97,13 @@ namespace Train_ticket
                 User user = new User(name, surName, age, email, password);
 
                 // Отправка данных на сервер
-                //HttpClient httpClient = new HttpClient();
-                //async Task Main()
-                //{
-                //    HttpContent content = new StringContent("Hello");
-                //    // устанавливаем заголовок 
-                //    content.Headers.Add("SecreteCode", "Anything");
 
-                //    using var response = await httpClient.PostAsync("adress", content);
-                //    string responseText = await response.Content.ReadAsStringAsync();
-                //    Console.WriteLine(responseText);
-                //}
+                _ = HttpClientData.SendDataAsync(name);
+                
 
+                //AuthorizationWindow authorizationWindow = new AuthorizationWindow();
+                //authorizationWindow.Show();
+                //Close();
 
                 //MessageBox.Show("Готово!");
 
