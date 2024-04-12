@@ -94,7 +94,7 @@ namespace Train_ticket
                 TextBoxAge.ToolTip = "";
                 TextBoxAge.Background = Brushes.Transparent;
 
-                User user = new User(name, surName, age, email, password);
+                User user = new User(name, surName, age, email, password, login);
 
                 // Отправка данных на сервер
 
