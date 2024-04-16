@@ -131,6 +131,7 @@ namespace Train_ticket.ViewModel
             if (UserName.Length < 1)
             {
                 MessageBox.Show("Корроткое имя!");
+  
             }
 
             StartWindow startWindow = new StartWindow();
