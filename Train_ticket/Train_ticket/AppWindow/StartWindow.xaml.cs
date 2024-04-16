@@ -15,20 +15,13 @@ using System.Windows.Shapes;
 namespace Train_ticket.AppWindow
 {
     /// <summary>
-    /// Логика взаимодействия для User_Personal.xaml
+    /// Логика взаимодействия для StartWindow.xaml
     /// </summary>
-    public partial class User_Personal : Window
+    public partial class StartWindow : Window
     {
-        public User_Personal()
+        public StartWindow()
         {
             InitializeComponent();
         }
-
-        //private void ButtonExit_Click(object sender, RoutedEventArgs e)
-        //{
-        //    AuthorizationWindow authorizationWindow = new AuthorizationWindow();
-        //    authorizationWindow.Show();
-        //    Close();
-        //}
     }
 }

@@ -9,7 +9,7 @@ namespace Train_ticket.Services
 {
     internal class HttpClientData
     {
-        public static async Task SendDataAsync(string name)
+        public static async Task SendDataAsync(string jsonData)
         {
            
             using (HttpClient client = new HttpClient())
@@ -19,10 +19,10 @@ namespace Train_ticket.Services
                 //HttpContent content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
 
-                HttpContent content = new StringContent(name, Encoding.UTF8, "application/json");
+                HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.1.66:8080", content);
+                HttpResponseMessage response = await client.PostAsync("http://192.168.1.66:8080/reg", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
