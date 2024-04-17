@@ -143,10 +143,10 @@
 
 //            //CurrentView = UserVm;
 
-//            //UserViewCommand = new RelayCommand(o =>
-//            //{
-//            //    CurrentView = UserVm;
-//            //});
+            //UserViewCommand = new RelayCommand(o =>
+            //{
+            //    CurrentView = UserVm;
+            //});
 
 
 //            //BuyTicketViewCommand = new RelayCommand(o =>

@@ -4,11 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Train_ticket.View"
+             xmlns:vm="clr-namespace:Train_ticket.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800">
 
     <Grid Background="#fff">
-
+        <Grid.DataContext>
+            <vm:BuyTicketViewModel/>
+        </Grid.DataContext>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
@@ -19,12 +23,12 @@
 
         <TextBlock Text="Покупка билета:" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#008B8B" FontSize="21" FontWeight="Bold" Margin="20 10 0 0"/>
 
-        <Border Grid.Row="1">
+        <Border Grid.Row="1" CornerRadius="20">
 
             <StackPanel >
                 <Separator Margin="20 0 0 0" Height="0.8" Background="LightGray" VerticalAlignment="Top"/>
 
-                <Grid>
+                <Grid Margin="0 10 0 0">
                     <TextBlock Text="Откуда:" Margin="20 10 0 5" Foreground="#008B8B" FontSize="15" FontWeight="Bold" Width="60" HorizontalAlignment="Left"/>
                     <TextBox x:Name="DepCity" Text="" Height="25" Width="400" Margin="100,10,300,120" />
 
@@ -38,9 +42,9 @@
                     <DatePicker Name="ArrDep" IsDropDownOpen="False" SelectedDateFormat="Short" Margin="100,130,300,0" VerticalAlignment="Top" Height="25" />
                 </Grid>
 
-                <TextBlock Text="Доступные маршруты:" Margin="20 20 0 0" Foreground="#008B8B" FontSize="15" FontWeight="Bold" Width="180" HorizontalAlignment="Left"/>
+                <!--<TextBlock Text="Доступные маршруты:" Margin="20 20 0 0" Foreground="#008B8B" FontSize="15" FontWeight="Bold" Width="180" HorizontalAlignment="Left"/>-->
 
-                <DataGrid Margin="40 15 40 0"/>
+                <Button Width="200" Margin="40" Content="Искать" Command="{Binding SendUserDataTicketCommand}"/>
             </StackPanel>
         </Border>
     </Grid>

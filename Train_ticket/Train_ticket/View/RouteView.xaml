@@ -1,0 +1,44 @@
+﻿<Window x:Class="Train_ticket.View.RouteView"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+         xmlns:vm="clr-namespace:Train_ticket.ViewModel"
+         xmlns:local="clr-namespace:Train_ticket.View"
+         mc:Ignorable="d" 
+         Title="RouteView" Height="470" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="Transparent" WindowStyle="None" AllowsTransparency="True">
+
+    <Grid Background="#fff">
+        <Grid.DataContext>
+            <vm:RouteViewModel/>
+        </Grid.DataContext>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Доступные маршруты:" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#008B8B" FontSize="21" FontWeight="Bold" Margin="20 10 0 0"/>
+
+        <Border Grid.Row="1" CornerRadius="20">
+
+            <StackPanel >
+                <Separator Margin="20 0 0 0" Height="0.8" Background="LightGray" VerticalAlignment="Top"/>
+
+                <DataGrid Margin="30">
+
+                </DataGrid>
+
+            </StackPanel>
+
+        </Border>
+        <Button Background="Transparent" BorderThickness="0" FontWeight="Black" Margin="747,0,10,18" Command="{Binding CloseAppCommand}">
+            <Canvas xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Width="15" Height="15">
+                <Path Fill="#696969" Data="M13.46,12L19,17.54V19H17.54L12,13.46L6.46,19H5V17.54L10.54,12L5,6.46V5H6.46L12,10.54L17.54,5H19V6.46L13.46,12Z" />
+            </Canvas>
+        </Button>
+    </Grid>
+</Window>
