@@ -61,6 +61,8 @@ namespace Train_ticket.ViewModel
 
         public void RegistrateUser(object o)
         {
+            Application.Current.Windows.OfType<AuthorizationWindow>().FirstOrDefault().Close();
+
             StartWindow startWindow = new StartWindow();
             startWindow.Show();
         }

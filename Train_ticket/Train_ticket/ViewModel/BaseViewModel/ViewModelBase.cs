@@ -10,6 +10,22 @@ namespace Train_ticket.ViewModel.BaseViewModel
 {
     public class ViewModelBase : INotifyPropertyChanged
     {
+        private User _currentUser;
+        public User CurrentUser
+        {
+            get { return _currentUser; }
+            set
+            {
+                if (value != _currentUser)
+                {
+                    _currentUser = value;
+                    OnPropertyChanged(nameof(CurrentUser));
+                }
+            }
+        }
+
+
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public virtual void OnPropertyChanged([CallerMemberName] string propertyChanged=null)

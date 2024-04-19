@@ -41,7 +41,10 @@ namespace Train_ticket.ViewModel
 
         public UserPersonalViewModel()
         {
-            CurrentView = new UserViewModel();
+            CurrentUser = new User("AAAAAAA", "BBBBB", 24, "wretewrt@mail.ru", "2222222", "qweqwrwqe"); //Здесь вы должны получить пользователя
+
+
+            CurrentView = new UserViewModel(CurrentUser);
             CloseAppCommand = new LambdaCommand(CloseApp);
             ExitUserPersonalCommand = new LambdaCommand(ExitUserPersonal);
             ViewUserWindowCommand = new LambdaCommand(ViewUserWindow);
@@ -61,7 +64,7 @@ namespace Train_ticket.ViewModel
 
         public void ViewUserWindow(object o)
         {
-            UserVm = new UserViewModel();
+            UserVm = new UserViewModel(CurrentUser);
 
             CurrentView = UserVm;
 

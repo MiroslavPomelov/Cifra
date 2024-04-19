@@ -42,8 +42,8 @@ namespace Train_ticket.ViewModel
             }
         }
 
-        private string _userAge;
-        public string UserAge
+        private int _userAge;
+        public int UserAge
         {
             get => _userAge;
             set
@@ -133,13 +133,15 @@ namespace Train_ticket.ViewModel
                 MessageBox.Show("Корроткое имя!");
   
             }
-
+            Application.Current.Windows.OfType<StartWindow>().FirstOrDefault().Close();
             StartWindow startWindow = new StartWindow();
             startWindow.Show();
         }
 
         public void EnterUserRegistrate(object o)
         {
+            Application.Current.Windows.OfType<StartWindow>().FirstOrDefault().Close();
+
             AuthorizationWindow authorizationWindow = new AuthorizationWindow();
             authorizationWindow.Show();
         }
