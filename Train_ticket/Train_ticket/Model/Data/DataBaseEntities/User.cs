@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Train_ticket
+namespace Train_ticket.Model.Data.DataBaseEntities
 {
     public class User
     {

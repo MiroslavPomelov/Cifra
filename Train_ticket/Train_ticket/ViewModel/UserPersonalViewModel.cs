@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Train_ticket.AppWindow;
 using Train_ticket.Core;
 using Train_ticket.Infrastructure.Commands;
+using Train_ticket.Model.Data.DataBaseEntities;
 using Train_ticket.View;
 using Train_ticket.ViewModel.BaseViewModel;
 
@@ -60,6 +62,7 @@ namespace Train_ticket.ViewModel
         {
             AuthorizationWindow authorizationWindow = new AuthorizationWindow();
             authorizationWindow.Show();
+            Application.Current.Windows.OfType<User_Personal>().FirstOrDefault().Close();
         }
 
         public void ViewUserWindow(object o)

@@ -38,6 +38,7 @@
                 </StackPanel>
 
             </Border>
+            <Button x:Name="BackToUserView" Content="Назад" HorizontalAlignment="Left" Margin="0 260 0 0" Command="{Binding BackToUserViewCommand}"/>
         </StackPanel>
     </Border>
 </Window>

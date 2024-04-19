@@ -3,6 +3,7 @@ using System;
 using System.Windows.Input;
 using Train_ticket.Core;
 using Train_ticket.Infrastructure.Commands;
+using Train_ticket.Model.Data.DataBaseEntities;
 using Train_ticket.View;
 using Train_ticket.ViewModel.BaseViewModel;
 

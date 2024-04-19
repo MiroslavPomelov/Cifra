@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using Train_ticket.AppWindow;
 using Train_ticket.Infrastructure.Commands;
+using Train_ticket.Model.Data.DataBaseEntities;
 using Train_ticket.ViewModel.BaseViewModel;
 
 namespace Train_ticket.ViewModel
@@ -133,6 +134,7 @@ namespace Train_ticket.ViewModel
                 MessageBox.Show("Корроткое имя!");
   
             }
+
             Application.Current.Windows.OfType<StartWindow>().FirstOrDefault().Close();
             StartWindow startWindow = new StartWindow();
             startWindow.Show();
@@ -140,10 +142,9 @@ namespace Train_ticket.ViewModel
 
         public void EnterUserRegistrate(object o)
         {
-            Application.Current.Windows.OfType<StartWindow>().FirstOrDefault().Close();
-
             AuthorizationWindow authorizationWindow = new AuthorizationWindow();
             authorizationWindow.Show();
+            Application.Current.Windows.OfType<StartWindow>().FirstOrDefault().Close();
         }
 
         public void CloseApp(object o)
