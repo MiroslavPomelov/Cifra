@@ -23,7 +23,9 @@
 
                 <TextBlock Grid.Column="0" Text="Доступные маршруты:" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#008B8B" FontSize="21" FontWeight="Bold"/>
 
-                <Button Grid.Column="2" Background="Transparent" BorderThickness="0" FontWeight="Black" Command="{Binding CloseAppCommand}" Content="X" Foreground="Black"/>
+                <Button Grid.Column="2" Background="Transparent" BorderThickness="0" FontWeight="Black" Command="{Binding CloseAppCommand}" Foreground="Black">
+                    <Path Fill="#696969" Data="M13.46,12L19,17.54V19H17.54L12,13.46L6.46,19H5V17.54L10.54,12L5,6.46V5H6.46L12,10.54L17.54,5H19V6.46L13.46,12Z" Canvas.Left="-9" Canvas.Top="-4.5" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                </Button>
             </Grid>
 
             <Border>

@@ -19,8 +19,6 @@ namespace Train_ticket.Services.WEBServices
         public async Task<string> GetData()
         {
             return await _requestCommand.Request();
-        }
-
-       
+        }      
     }
 }
