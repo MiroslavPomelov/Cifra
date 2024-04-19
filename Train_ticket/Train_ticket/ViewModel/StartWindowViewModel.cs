@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using Train_ticket.AppWindow;
 using Train_ticket.Infrastructure.Commands;
 using Train_ticket.Model.Data.DataBaseEntities;
+using Train_ticket.View;
 using Train_ticket.ViewModel.BaseViewModel;
 
 namespace Train_ticket.ViewModel
@@ -18,7 +15,7 @@ namespace Train_ticket.ViewModel
         private string _userName;
         public string UserName
         {
-            get => _userName; 
+            get => _userName;
             set
             {
                 if (_userName != value)
@@ -114,6 +111,7 @@ namespace Train_ticket.ViewModel
         }
         #endregion 
 
+
         public ICommand SendUserDataCommand { get; }
         public ICommand EnterUserRegistrateCommand { get; }
         public ICommand CloseAppCommand { get; }
@@ -127,24 +125,34 @@ namespace Train_ticket.ViewModel
         public void SendUserData(object o)
         {
             User currentUser = new User(UserName, UserSurname, UserAge, UserEmail, UserPassword, UserLogin);
-            MessageBox.Show(currentUser.ToString());
+            //MessageBox.Show(currentUser.ToString());
 
-            if (UserName.Length < 1)
+            //if (UserName.Length < 1)
+            //{
+            //    MessageBox.Show("Корроткое имя!");
+
+            //}
+
+            var windows = Application.Current.Windows.OfType<StartWindow>();
+            foreach (var window in windows)
             {
-                MessageBox.Show("Корроткое имя!");
-  
+                window.Hide();
             }
 
-            Application.Current.Windows.OfType<StartWindow>().FirstOrDefault().Close();
-            StartWindow startWindow = new StartWindow();
-            startWindow.Show();
+            AuthorizationWindow authorizationWindow = new AuthorizationWindow();
+            authorizationWindow.Show();
         }
 
         public void EnterUserRegistrate(object o)
         {
             AuthorizationWindow authorizationWindow = new AuthorizationWindow();
             authorizationWindow.Show();
-            Application.Current.Windows.OfType<StartWindow>().FirstOrDefault().Close();
+
+            var windows = Application.Current.Windows.OfType<StartWindow>();
+            foreach (var window in windows)
+            {
+                window.Close();
+            }
         }
 
         public void CloseApp(object o)

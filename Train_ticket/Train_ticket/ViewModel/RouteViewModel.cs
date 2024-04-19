@@ -32,7 +32,11 @@ namespace Train_ticket.ViewModel
         {
             User_Personal user_Personal = new User_Personal();
             user_Personal.Show();
-            Application.Current.Windows.OfType<RouteView>().FirstOrDefault().Close();
+            var windows = Application.Current.Windows.OfType<RouteView>();
+            foreach (var window in windows)
+            {
+                window.Close();
+            }
         }
     }
 }

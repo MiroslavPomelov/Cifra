@@ -63,7 +63,11 @@ namespace Train_ticket.ViewModel
         {
             StartWindow startWindow = new StartWindow();
             startWindow.Show();
-            Application.Current.Windows.OfType<AuthorizationWindow>().FirstOrDefault().Close();
+            var windows = Application.Current.Windows.OfType<AuthorizationWindow>();
+            foreach (var window in windows)
+            {
+                window.Close();
+            }
         }
 
         public void CloseApp(object o)
