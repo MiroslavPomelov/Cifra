@@ -11,14 +11,13 @@ namespace Train_ticket.Services
     {
         public static async Task SendDataAsync(string jsonData)
         {
-           
             using (HttpClient client = new HttpClient())
             {
                 // Создание контента для запроса
                 //string jsonBody = "{\"Heloo server\":\"I am Bogdan\"}"; // Это типа Json
                 //HttpContent content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
-
+                jsonData = JsonConvert.SerializeObject(jsonData);
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
                 // Отправка POST-запроса
@@ -30,7 +29,6 @@ namespace Train_ticket.Services
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
                     Console.WriteLine("Ответ от сервера: " + responseContent);
-                    
                 }
                 else
                 {
@@ -38,7 +36,6 @@ namespace Train_ticket.Services
                     Console.WriteLine("Ошибка при выполнении запроса: " + response.StatusCode);
                 }
             }
-           
         }
     }
 }

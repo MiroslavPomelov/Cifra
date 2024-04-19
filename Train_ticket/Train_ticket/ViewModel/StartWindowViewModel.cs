@@ -1,9 +1,11 @@
 ﻿using System.Linq;
+using System.Net.Http;
 using System.Windows;
 using System.Windows.Input;
 using Train_ticket.AppWindow;
 using Train_ticket.Infrastructure.Commands;
 using Train_ticket.Model.Data.DataBaseEntities;
+using Train_ticket.Services;
 using Train_ticket.View;
 using Train_ticket.ViewModel.BaseViewModel;
 
@@ -125,7 +127,12 @@ namespace Train_ticket.ViewModel
         public void SendUserData(object o)
         {
             User currentUser = new User(UserName, UserSurname, UserAge, UserEmail, UserPassword, UserLogin);
-            //MessageBox.Show(currentUser.ToString());
+           //Сереализовать сущность в дсон строку
+
+            string userJsonData = $"{UserName} {UserSurname} {UserAge} {UserEmail} {UserPassword} {UserLogin}";
+            MessageBox.Show(currentUser.ToString());
+
+            _ = HttpClientData.SendDataAsync(userJsonData);
 
             //if (UserName.Length < 1)
             //{
