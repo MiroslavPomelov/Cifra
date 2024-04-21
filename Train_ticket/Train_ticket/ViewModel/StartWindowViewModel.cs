@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
 using Train_ticket.AppWindow;
@@ -127,9 +128,11 @@ namespace Train_ticket.ViewModel
         public void SendUserData(object o)
         {
             User currentUser = new User(UserName, UserSurname, UserAge, UserEmail, UserPassword, UserLogin);
-           //Сереализовать сущность в дсон строку
 
-            string userJsonData = $"{UserName} {UserSurname} {UserAge} {UserEmail} {UserPassword} {UserLogin}";
+            //Сереализовать сущность в дсон строку
+            string userJsonData = JsonSerializer.Serialize(currentUser);
+
+            //string userJsonData = $"{UserName} {UserSurname} {UserAge} {UserEmail} {UserPassword} {UserLogin}";
             MessageBox.Show(currentUser.ToString());
 
             _ = HttpClientData.SendDataAsync(userJsonData);

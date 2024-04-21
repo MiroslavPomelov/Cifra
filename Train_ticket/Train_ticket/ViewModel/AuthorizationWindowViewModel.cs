@@ -8,6 +8,8 @@ using System.Windows;
 using Train_ticket.Infrastructure.Commands;
 using Train_ticket.ViewModel.BaseViewModel;
 using Train_ticket.AppWindow;
+using System.Text.Json;
+using Train_ticket.Services;
 
 namespace Train_ticket.ViewModel
 {
@@ -55,6 +57,9 @@ namespace Train_ticket.ViewModel
         }
         public void SendUserDataAuth(object o)
         {
+            string userAuthData = $" {UserLogin} {UserPassword}";
+            string userJsonData = JsonSerializer.Serialize(userAuthData);
+            _ = HttpClientData.SendDataAuthAsync(userJsonData);
             User_Personal user_Personal = new User_Personal();
             user_Personal.Show();
         }
