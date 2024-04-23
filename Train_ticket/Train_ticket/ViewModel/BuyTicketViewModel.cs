@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Input;
 using Train_ticket.AppWindow;
 using Train_ticket.Core;
 using Train_ticket.Infrastructure.Commands;
+using Train_ticket.Services;
 using Train_ticket.View;
 using Train_ticket.ViewModel.BaseViewModel;
 
@@ -77,6 +79,13 @@ namespace Train_ticket.ViewModel
         public void SendUserDataTicket(object o)
         {
             string ticket_data = $"{DepCity} {ArrCity} {DateDep} {ArrDep}";
+
+            string userJsonData = JsonSerializer.Serialize(ticket_data);
+
+            //string userJsonData = $"{UserName} {UserSurname} {UserAge} {UserEmail} {UserPassword} {UserLogin}";
+            MessageBox.Show(ticket_data.ToString());
+
+            _ = HttpClientData.SendDataUserRootTicketAsync(userJsonData);
 
             RouteView routeView = new RouteView();
             routeView.Show();

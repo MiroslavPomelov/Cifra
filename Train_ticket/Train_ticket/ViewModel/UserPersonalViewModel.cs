@@ -95,7 +95,7 @@ namespace Train_ticket.ViewModel
 
         public void ViewYourTicketsWindow(object o)
         {
-            YourTicketsVM = new YourTicketsViewModel();
+            YourTicketsVM = new YourTicketsViewModel(CurrentUser);
 
             CurrentView = YourTicketsVM;
 

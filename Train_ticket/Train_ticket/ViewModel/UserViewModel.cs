@@ -12,8 +12,6 @@ namespace Train_ticket.ViewModel
 {
     internal class UserViewModel : ViewModelBase
     {
-
-
         public ICommand ShowUserDataCommand { get; }
 
         public UserViewModel(User current)

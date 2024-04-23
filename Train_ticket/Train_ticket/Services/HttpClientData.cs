@@ -66,5 +66,65 @@ namespace Train_ticket.Services
                 }
             }
         }
+
+
+        public static async Task SendDataUserTicketAsync(string jsonData)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                // Создание контента для запроса
+                //string jsonBody = "{\"Heloo server\":\"I am Bogdan\"}"; // Это типа Json
+                //HttpContent content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                //jsonData = JsonConvert.SerializeObject(jsonData);
+                HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+                // Отправка POST-запроса
+                HttpResponseMessage response = await client.PostAsync("http://192.168.1.66:8080/history", content);
+
+                // Проверка успешности запроса
+                if (response.IsSuccessStatusCode)
+                {
+                    // Обработка успешного ответа
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine("Ответ от сервера: " + responseContent);
+                }
+                else
+                {
+                    // Обработка неудачного ответа
+                    Console.WriteLine("Ошибка при выполнении запроса: " + response.StatusCode);
+                }
+            }
+        }
+
+
+        public static async Task SendDataUserRootTicketAsync(string jsonData)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                // Создание контента для запроса
+                //string jsonBody = "{\"Heloo server\":\"I am Bogdan\"}"; // Это типа Json
+                //HttpContent content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+                //jsonData = JsonConvert.SerializeObject(jsonData);
+                HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+                // Отправка POST-запроса
+                HttpResponseMessage response = await client.PostAsync("http://192.168.1.66:8080/root", content);
+
+                // Проверка успешности запроса
+                if (response.IsSuccessStatusCode)
+                {
+                    // Обработка успешного ответа
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine("Ответ от сервера: " + responseContent);
+                }
+                else
+                {
+                    // Обработка неудачного ответа
+                    Console.WriteLine("Ошибка при выполнении запроса: " + response.StatusCode);
+                }
+            }
+        }
     }
 }
