@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Train_ticket.AppWindow;
 using Train_ticket.Core;
 using Train_ticket.Infrastructure.Commands;
+using Train_ticket.Model.Data.DataBaseEntities;
 using Train_ticket.Services;
 using Train_ticket.View;
 using Train_ticket.ViewModel.BaseViewModel;
@@ -41,8 +42,8 @@ namespace Train_ticket.ViewModel
             }
         }
 
-        private string _dateDep;
-        public string DateDep
+        private DateTime _dateDep;
+        public DateTime DateDep
         {
             get => _dateDep;
             set
@@ -55,8 +56,8 @@ namespace Train_ticket.ViewModel
             }
         }
 
-        private string _arrDep;
-        public string ArrDep
+        private DateTime _arrDep;
+        public DateTime ArrDep
         {
             get => _arrDep;
             set
@@ -78,12 +79,12 @@ namespace Train_ticket.ViewModel
 
         public void SendUserDataTicket(object o)
         {
-            string ticket_data = $"{DepCity} {ArrCity} {DateDep} {ArrDep}";
+            LookupSeats lookupSeats = new LookupSeats(DepCity, ArrCity, DateDep, ArrDep);
 
-            string userJsonData = JsonSerializer.Serialize(ticket_data);
+            string userJsonData = JsonSerializer.Serialize(lookupSeats);
 
             //string userJsonData = $"{UserName} {UserSurname} {UserAge} {UserEmail} {UserPassword} {UserLogin}";
-            MessageBox.Show(ticket_data.ToString());
+            MessageBox.Show(lookupSeats.ToString());
 
             _ = HttpClientData.SendDataUserRootTicketAsync(userJsonData);
 
