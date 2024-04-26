@@ -29,7 +29,7 @@
                 <StackPanel >
                     <Separator Margin="20 0 0 0" Height="0.8" Background="LightGray" VerticalAlignment="Top"/>
 
-                    <DataGrid Margin="30" ItemsSource="{Binding AvaliableSeats}">
+                    <DataGrid Margin="30" ItemsSource="{Binding AvaliableSeats}" MaxHeight="400" MaxWidth="800">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Откуда" Binding="{Binding Departure}"/>
                             <DataGridTextColumn Header="Куда" Binding="{Binding Destination}"/>

@@ -127,7 +127,7 @@ namespace Train_ticket.ViewModel
         }
         public void SendUserData(object o)
         {
-            User currentUser = new User(UserName, UserSurname, UserAge, UserEmail, UserPassword, UserLogin);
+            User currentUser = new User(UserName, UserSurname, UserAge, UserLogin, UserEmail, UserPassword);
 
             //Сереализовать сущность в дсон строку
             string userJsonData = JsonSerializer.Serialize(currentUser);

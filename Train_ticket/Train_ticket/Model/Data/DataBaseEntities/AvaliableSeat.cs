@@ -10,18 +10,18 @@ namespace Train_ticket.Model.Data.DataBaseEntities
     internal class AvaliableSeat
     {
         public int Id { get; set; }
-        public string Departure { get; set; }
-        public string Destination { get; set; }
+        public string Departure { get; set; } = null!;
+        public string Destination { get; set; } = null!;
         public DateTime DepartureTime { get; set; }
         public DateTime ArrivalTime { get; set; }
         public string TrainName { get; set; }
         public int TrainNumber { get; set; }
         public short CarriageNumber { get; set; }
-        public string Class {  get; set; }
+        public string Class {  get; set; } = null!;
         public short SeatNumber { get; set; }
         public decimal Price { get; set; }
         public byte Booked {  get; set; }
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
         public string Data { get; set; }
 
 
