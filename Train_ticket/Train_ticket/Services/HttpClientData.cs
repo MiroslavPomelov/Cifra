@@ -21,7 +21,7 @@ namespace Train_ticket.Services
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.1.66:8080/reg", content);
+                HttpResponseMessage response = await client.PostAsync("http://192.168.10.196:8080/reg", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
@@ -50,7 +50,7 @@ namespace Train_ticket.Services
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.1.66:8080/auth", content);
+                HttpResponseMessage response = await client.PostAsync("http://192.168.10.196:8080/auth", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
@@ -80,7 +80,7 @@ namespace Train_ticket.Services
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.1.66:8080/history", content);
+                HttpResponseMessage response = await client.PostAsync("http://192.168.10.196:8080/history", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
@@ -110,7 +110,7 @@ namespace Train_ticket.Services
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.1.66:8080/route", content);
+                HttpResponseMessage response = await client.PostAsync("http://192.168.10.196:8080/route", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
@@ -139,7 +139,7 @@ namespace Train_ticket.Services
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.1.66:8080/booking", content);
+                HttpResponseMessage response = await client.PostAsync("http://192.168.10.196:8080/booking", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
