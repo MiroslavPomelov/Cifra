@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Train_ticket.Model.Data.DataBaseEntities
 {
-    internal class LookupSeats
+    public class LookupSeats
     {
         public string Departure {  get; set; }
         public string Destination { get; set; }

@@ -30,16 +30,16 @@
 
                 <Grid Margin="0 10 0 0">
                     <TextBlock Text="Откуда:" Margin="20 10 0 5" Foreground="#008B8B" FontSize="15" FontWeight="Bold" Width="60" HorizontalAlignment="Left"/>
-                    <TextBox x:Name="DepCity" Text="" Height="25" Width="400" Margin="100,10,300,120" />
+                    <TextBox x:Name="DepCity" Text="{Binding DepCity}" Height="25" Width="400" Margin="100,10,300,120" />
 
                     <TextBlock Text="Куда:" Margin="20 50 0 5" Foreground="#008B8B" FontSize="15" FontWeight="Bold" Width="60" HorizontalAlignment="Left"/>
-                    <TextBox x:Name="ArrCity" Text="" Height="25" Width="400" Margin="100,50,300,80"/>
+                    <TextBox x:Name="ArrCity" Text="{Binding ArrCity}" Height="25" Width="400" Margin="100,50,300,80"/>
 
                     <TextBlock Text="Туда:" Margin="20 90 0 5" Foreground="#008B8B" FontSize="15" FontWeight="Bold" Width="50" HorizontalAlignment="Left"/>
-                    <DatePicker Name="DateDep" IsDropDownOpen="False" SelectedDateFormat="Short" Margin="100,90,300,0" VerticalAlignment="Top" Height="25" />
+                    <DatePicker Name="DateDep" IsDropDownOpen="False" SelectedDateFormat="Short" Margin="100,90,300,0" VerticalAlignment="Top" Height="25" SelectedDate="{Binding DateDep}"/>
 
                     <TextBlock Text="Обратно:" Margin="20 130 0 5" Foreground="#008B8B" FontSize="15" FontWeight="Bold" Width="66" HorizontalAlignment="Left"/>
-                    <DatePicker Name="ArrDep" IsDropDownOpen="False" SelectedDateFormat="Short" Margin="100,130,300,0" VerticalAlignment="Top" Height="25" />
+                    <DatePicker Name="ArrDep" IsDropDownOpen="False" SelectedDateFormat="Short" Margin="100,130,300,0" VerticalAlignment="Top" Height="25"  SelectedDate="{Binding ArrDep}"/>
                 </Grid>
 
                 <!--<TextBlock Text="Доступные маршруты:" Margin="20 20 0 0" Foreground="#008B8B" FontSize="15" FontWeight="Bold" Width="180" HorizontalAlignment="Left"/>-->

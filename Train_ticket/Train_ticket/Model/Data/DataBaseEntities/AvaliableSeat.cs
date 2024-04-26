@@ -20,13 +20,12 @@ namespace Train_ticket.Model.Data.DataBaseEntities
         public string Class {  get; set; }
         public short SeatNumber { get; set; }
         public decimal Price { get; set; }
-
-        [ConcurrencyCheck]
         public byte Booked {  get; set; }
-        public uint UserId { get; set; }
+        public int UserId { get; set; }
         public string Data { get; set; }
 
-        public AvaliableSeat(int id, string departure, string destination, DateTime departureTime, DateTime arrivalTime, string trainName, int trainNumber, short carriageNumber, string @class, short seatNumber, decimal price, byte booked, uint userId, string data)
+
+        public AvaliableSeat(int id, string departure, string destination, DateTime departureTime, DateTime arrivalTime, string trainName, int trainNumber, short carriageNumber, string @class, short seatNumber, decimal price, byte booked, int userId, string data)
         {
             Id = id;
             Departure = departure;

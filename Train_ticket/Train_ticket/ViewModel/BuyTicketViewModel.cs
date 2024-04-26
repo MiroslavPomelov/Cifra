@@ -9,6 +9,7 @@ using Train_ticket.Model.Data.DataBaseEntities;
 using Train_ticket.Services;
 using Train_ticket.View;
 using Train_ticket.ViewModel.BaseViewModel;
+using System.Collections.Generic;
 
 namespace Train_ticket.ViewModel
 {
@@ -77,19 +78,28 @@ namespace Train_ticket.ViewModel
             SendUserDataTicketCommand = new LambdaCommand(SendUserDataTicket);
         }
 
-        public void SendUserDataTicket(object o)
+        public async void SendUserDataTicket(object o)
         {
+            DepCity = "Калининград";
+            ArrCity = "Москва";
+
+            DateDep = new DateTime(2024, 05, 04);
+            ArrDep = new DateTime(2024, 05, 05);
+
             LookupSeats lookupSeats = new LookupSeats(DepCity, ArrCity, DateDep, ArrDep);
+
+            JsonSerializerOptions options = new JsonSerializerOptions()
+            {
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            };
 
             string userJsonData = JsonSerializer.Serialize(lookupSeats);
 
-            //string userJsonData = $"{UserName} {UserSurname} {UserAge} {UserEmail} {UserPassword} {UserLogin}";
-            MessageBox.Show(lookupSeats.ToString());
+            string jsonResult = await HttpClientData.SendDataUserRootTicketAsync(userJsonData);
 
-            _ = HttpClientData.SendDataUserRootTicketAsync(userJsonData);
+            List<AvaliableSeat> seatList = JsonSerializer.Deserialize<List<AvaliableSeat>>(jsonResult);
 
-            RouteView routeView = new RouteView();
-            routeView.Show();
+            RouteViewModel routeView = new RouteViewModel(seatList);
         }
     }
 }

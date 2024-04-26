@@ -9,10 +9,6 @@
          Title="RouteView" Height="470" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="Transparent" WindowStyle="None" AllowsTransparency="True">
 
     <Border CornerRadius="20" Background="White" Padding="20">
-        <Border.DataContext>
-            <vm:RouteViewModel/>
-        </Border.DataContext>
-
         <StackPanel>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -33,14 +29,20 @@
                 <StackPanel >
                     <Separator Margin="20 0 0 0" Height="0.8" Background="LightGray" VerticalAlignment="Top"/>
 
-                    <DataGrid Margin="30">
-
+                    <DataGrid Margin="30" ItemsSource="{Binding AvaliableSeats}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Откуда" Binding="{Binding Departure}"/>
+                            <DataGridTextColumn Header="Куда" Binding="{Binding Destination}"/>
+                            <DataGridTextColumn Header="Дата отправления" Binding="{Binding DepartureTime, StringFormat='dd.MM.yyyy'}"/>
+                            <DataGridTextColumn Header="Дата кудато" Binding="{Binding ArrivalTime, StringFormat='dd.MM.yyyy'}"/>
+                        </DataGrid.Columns>
                     </DataGrid>
 
                 </StackPanel>
 
             </Border>
-            <Button x:Name="BackToUserView" Content="Назад" HorizontalAlignment="Left" Margin="0 260 0 0" Command="{Binding BackToUserViewCommand}"/>
+            <Button x:Name="BackToUserView" Content="Назад" HorizontalAlignment="Left" Margin="0 260 0 0" Command="{Binding BackToUserViewCommand}"  Style="{StaticResource MaterialDesignFlatButton}"/>
+            <Button x:Name="BuyTicket" Content="Купить" HorizontalAlignment="Right" Margin="0 -30 0 0" Command="{Binding BuyTicketCommand}" Width="150"/>
         </StackPanel>
     </Border>
 </Window>
