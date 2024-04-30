@@ -21,7 +21,7 @@ namespace Train_ticket.ViewModel
             YourTicketsView userViewWind = new();
             userViewWind.DataContext = current;
 
-            string userJsonData = JsonSerializer.Serialize(current.Login);
+            string userJsonData = JsonSerializer.Serialize(current.Login); // передать сюда текущий логин пользователя из User Personal
 
             //string userJsonData = $"{UserName} {UserSurname} {UserAge} {UserEmail} {UserPassword} {UserLogin}";
             MessageBox.Show(current.ToString());

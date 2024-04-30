@@ -98,8 +98,8 @@ namespace Train_ticket.ViewModel
             string jsonResult = await HttpClientData.SendDataUserRootTicketAsync(userJsonData);
 
             List<AvaliableSeat> seatList = JsonSerializer.Deserialize<List<AvaliableSeat>>(jsonResult);
-
-            RouteViewModel routeView = new RouteViewModel(seatList);
+            List<Seat> seat = JsonSerializer.Deserialize<List<Seat>>(jsonResult);
+            RouteViewModel routeView = new RouteViewModel(seatList, seat);
         }
     }
 }

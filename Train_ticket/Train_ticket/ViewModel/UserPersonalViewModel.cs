@@ -23,6 +23,7 @@ namespace Train_ticket.ViewModel
         public UserViewModel UserVm { get; set; }
         public BuyTicketViewModel BuyTicketVM { get; set; }
         public YourTicketsViewModel YourTicketsVM { get; set; }
+        public User User {  get; set; }
 
         private object _currentView;
         public object CurrentView
@@ -43,8 +44,8 @@ namespace Train_ticket.ViewModel
 
         public UserPersonalViewModel()
         {
-            CurrentUser = new User("AAAAAAA", "BBBBB", 24, "qweqwrwqe", "wretewrt@mail.ru", "2222222"); //Здесь вы должны получить пользователя
-
+            /*CurrentUser = new User($"{CurrentUser.Name}", $"{CurrentUser.SurName}", CurrentUser.Age, $"{CurrentUser.Login}", $"{CurrentUser.Email}", $"{CurrentUser.Password}");*/ //Здесь я получаю пользователя
+            
             CurrentView = new UserViewModel(CurrentUser);
             CloseAppCommand = new LambdaCommand(CloseApp);
             ExitUserPersonalCommand = new LambdaCommand(ExitUserPersonal);

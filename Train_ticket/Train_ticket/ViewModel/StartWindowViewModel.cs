@@ -127,6 +127,27 @@ namespace Train_ticket.ViewModel
         }
         public void SendUserData(object o)
         {
+            if (UserName.Length < 3 || UserName is null)
+            {
+                MessageBox.Show("Корроткое имя!");
+            }
+            if (UserSurname.Length < 3 || UserSurname is null)
+            {
+                MessageBox.Show("Корроткая фамилия!");
+            }
+            if (UserAge < 18 || UserAge.Equals(null))
+            {
+                MessageBox.Show("Регистрация доступно только совершеннолетним пользователям!");
+            }
+            if (UserPassword.Length < 6)
+            {
+                MessageBox.Show("Пароль должен содержать минимум 6 символов!");
+            }
+            if (UserPassword != UserPasswordAgain)
+            {
+                MessageBox.Show("Пароли не совпадают!");
+            }
+
             User currentUser = new User(UserName, UserSurname, UserAge, UserLogin, UserEmail, UserPassword);
 
             //Сереализовать сущность в дсон строку
@@ -137,11 +158,6 @@ namespace Train_ticket.ViewModel
 
             _ = HttpClientData.SendDataAsync(userJsonData);
 
-            //if (UserName.Length < 1)
-            //{
-            //    MessageBox.Show("Корроткое имя!");
-
-            //}
 
             var windows = Application.Current.Windows.OfType<StartWindow>();
             foreach (var window in windows)

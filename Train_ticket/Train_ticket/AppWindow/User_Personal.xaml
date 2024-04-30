@@ -46,7 +46,6 @@
 
                 <Button HorizontalAlignment="Right" Content="Выйти" Margin="0 190 10 0" Command="{Binding ExitUserPersonalCommand}"/>
                 
-
             </StackPanel>
 
             <TextBox Width="220"

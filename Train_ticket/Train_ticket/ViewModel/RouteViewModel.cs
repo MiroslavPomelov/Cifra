@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Train_ticket.AppWindow;
 using Train_ticket.Infrastructure.Commands;
 using Train_ticket.Model.Data.DataBaseEntities;
+using Train_ticket.Services;
 using Train_ticket.View;
 using Train_ticket.ViewModel.BaseViewModel;
 
@@ -29,17 +31,32 @@ namespace Train_ticket.ViewModel
             }
         }
 
+        private List<Seat> _seats;
+        public List<Seat> Seats
+        {
+            get => _seats;
+            set
+            {
+                if (_seats != value)
+                {
+                    _seats = value;
+                    OnPropertyChanged(nameof(Seats));
+                }
+            }
+        }
+
         public ICommand CloseAppCommand { get; }
         public ICommand BackToUserViewCommand { get; }
         public ICommand BuyTicketCommand { get; }
 
-        public RouteViewModel(List<AvaliableSeat> data)
+        public RouteViewModel(List<AvaliableSeat> data, List<Seat> seats)
         {
             CloseAppCommand = new LambdaCommand(CloseApp);
             BackToUserViewCommand = new LambdaCommand(BackToUserView);
             BuyTicketCommand = new LambdaCommand(BuyTicket);
 
             AvaliableSeats = data;
+            Seats = seats;
 
             RouteView routeView = new RouteView();
             routeView.DataContext = this;
@@ -64,7 +81,13 @@ namespace Train_ticket.ViewModel
 
         public void BuyTicket(object o)
         {
-          //AvaliableSeat
+            //AvaliableSeat принять сущность seat и в ней изменить данные, после чего отправить
+            //Seat seat = {  };
+
+            //Сереализовать сущность в дсон строку
+            //string userJsonData = JsonSerializer.Serialize(seat);
+
+            //_ = HttpClientData.SendDataBookingTickethAsync(userJsonData);
         }
     }
 }

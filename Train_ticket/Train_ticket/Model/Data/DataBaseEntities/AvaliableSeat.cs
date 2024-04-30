@@ -21,7 +21,7 @@ namespace Train_ticket.Model.Data.DataBaseEntities
         public short SeatNumber { get; set; }
         public decimal Price { get; set; }
         public byte Booked {  get; set; }
-        public int? UserId { get; set; }
+        public int? Login { get; set; }
         public string Data { get; set; }
 
 
@@ -39,7 +39,7 @@ namespace Train_ticket.Model.Data.DataBaseEntities
             SeatNumber = seatNumber;
             Price = price;
             Booked = booked;
-            UserId = userId;
+            Login = userId;
             Data = data;
         }
     }
