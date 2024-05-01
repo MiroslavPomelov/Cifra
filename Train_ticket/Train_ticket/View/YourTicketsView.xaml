@@ -26,9 +26,15 @@
             <StackPanel >
                 <Separator Margin="20 0 0 0" Height="0.8" Background="LightGray" VerticalAlignment="Top"/>
 
-                <DataGrid Margin="30">
-
+                <DataGrid Margin="30" ItemsSource="{Binding AvaliableSeats}" MaxHeight="400" MaxWidth="800">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Откуда" Binding="{Binding Departure}"/>
+                        <DataGridTextColumn Header="Куда" Binding="{Binding Destination}"/>
+                        <DataGridTextColumn Header="Дата отправления" Binding="{Binding DepartureTime, StringFormat='dd.MM.yyyy'}"/>
+                        <DataGridTextColumn Header="Дата прибытия" Binding="{Binding ArrivalTime, StringFormat='dd.MM.yyyy'}"/>
+                    </DataGrid.Columns>
                 </DataGrid>
+                
             </StackPanel>
         </Border>
     </Grid>

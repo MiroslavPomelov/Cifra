@@ -31,7 +31,7 @@
                 </Grid>
 
                 <TextBox x:Name="TextBoxLogin" materialDesign:HintAssist.Hint="Введите логин" Margin="0 -20 0 0" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding UserLogin}"/>
-                <PasswordBox x:Name="PassBox" materialDesign:HintAssist.Hint="Введите пароль" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" PasswordChar="{Binding UserPassword}"/>
+                <TextBox x:Name="PassBox" materialDesign:HintAssist.Hint="Введите пароль" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding UserPassword}"/>
                 <Button Content="Вход в личный кабинет" Margin="0 20" Command="{Binding SendUserDataAuthCommand}"/>
             </StackPanel>
         </Border>

@@ -48,7 +48,7 @@ namespace Train_ticket.ViewModel
         public ICommand RegistrateUserCommand { get; }
         public ICommand CloseAppCommand { get; }
 
-       
+
         public AuthorizationWindowViewModel()
         {
             SendUserDataAuthCommand = new LambdaCommand(SendUserDataAuth);
@@ -59,6 +59,7 @@ namespace Train_ticket.ViewModel
         {
             string userAuthData = $" {UserLogin} {UserPassword}";
             string userJsonData = JsonSerializer.Serialize(userAuthData);
+            
             _ = HttpClientData.SendDataAuthAsync(userJsonData);
             User_Personal user_Personal = new User_Personal();
             user_Personal.Show();
