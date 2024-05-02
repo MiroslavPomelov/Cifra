@@ -2,9 +2,11 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Train_ticket.Model.Data.DataBaseEntities;
 
 namespace Train_ticket.Services
 {
@@ -70,6 +72,7 @@ namespace Train_ticket.Services
                     if (responseContent == "welldone")
                     {
                         MessageBox.Show("Успешная авторизация!");
+                        User current = System.Text.Json.JsonSerializer.Deserialize<User>(responseContent);
                     }
                     else if (responseContent == "wrong")
                     {
@@ -81,6 +84,8 @@ namespace Train_ticket.Services
                     // Обработка неудачного ответа
                     MessageBox.Show("Ошибка при выполнении запроса: " + response.StatusCode);
                 }
+
+  
             }
         }
 
