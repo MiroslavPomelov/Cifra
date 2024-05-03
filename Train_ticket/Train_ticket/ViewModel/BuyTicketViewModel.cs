@@ -74,8 +74,9 @@ namespace Train_ticket.ViewModel
 
         public ICommand SendUserDataTicketCommand { get; }
 
-        public BuyTicketViewModel()
+        public BuyTicketViewModel(User previous)
         {
+            CurrentUser = previous;
             SendUserDataTicketCommand = new LambdaCommand(SendUserDataTicket);
         }
 

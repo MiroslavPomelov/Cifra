@@ -42,6 +42,7 @@ namespace Train_ticket.ViewModel
         public ICommand ViewUserWindowCommand { get; }
         public ICommand ViewBuyTicketWindowCommand { get; }
         public ICommand ViewYourTicketsWindowCommand { get; }
+        
 
         public UserPersonalViewModel(User previous)
         {
@@ -89,7 +90,7 @@ namespace Train_ticket.ViewModel
 
         public void ViewBuyTicketWindow(object o)
         {
-            BuyTicketVM = new BuyTicketViewModel();
+            BuyTicketVM = new BuyTicketViewModel(CurrentUser);
 
             CurrentView = BuyTicketVM;
 

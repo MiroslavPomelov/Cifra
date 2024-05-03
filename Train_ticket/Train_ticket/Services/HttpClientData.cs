@@ -148,7 +148,6 @@ namespace Train_ticket.Services
             }
         }
 
-
         public static async Task<string> SendDataUserRootTicketAsync(string jsonData)
         {
             using (HttpClient client = new HttpClient())

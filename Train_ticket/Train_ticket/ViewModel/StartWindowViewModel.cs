@@ -114,7 +114,6 @@ namespace Train_ticket.ViewModel
         }
         #endregion 
 
-
         public ICommand SendUserDataCommand { get; }
         public ICommand EnterUserRegistrateCommand { get; }
         public ICommand CloseAppCommand { get; }
@@ -153,11 +152,7 @@ namespace Train_ticket.ViewModel
             //Сереализовать сущность в дсон строку
             string userJsonData = JsonSerializer.Serialize(currentUser);
 
-            //string userJsonData = $"{UserName} {UserSurname} {UserAge} {UserEmail} {UserPassword} {UserLogin}";
-            MessageBox.Show(currentUser.ToString());
-
             _ = HttpClientData.SendDataAsync(userJsonData);
-
 
             var windows = Application.Current.Windows.OfType<StartWindow>();
             foreach (var window in windows)
