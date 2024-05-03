@@ -71,6 +71,7 @@ namespace Train_ticket.ViewModel
             }
         }
 
+
         public ICommand SendUserDataTicketCommand { get; }
 
         public BuyTicketViewModel()

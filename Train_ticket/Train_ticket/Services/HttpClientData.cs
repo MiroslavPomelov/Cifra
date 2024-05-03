@@ -14,7 +14,7 @@ namespace Train_ticket.Services
 {
     internal class HttpClientData
     {
-        public static async Task SendDataAsync(string jsonData, User user)
+        public static async Task SendDataAsync(string jsonData)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -31,7 +31,7 @@ namespace Train_ticket.Services
                 {
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show("Ответ от сервера: " + responseContent);
+                   
                     if (responseContent == "welldone")
                     {
                         MessageBox.Show("Вы зарегестрированы!");
@@ -154,7 +154,7 @@ namespace Train_ticket.Services
             using (HttpClient client = new HttpClient())
             {
                 string stroke = null;
-                string token = null;
+                string token = TokenStorage.CheckLogTokenFromStorage(jsonData);
 
                 //jsonData = JsonConvert.SerializeObject(jsonData);
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
@@ -162,7 +162,7 @@ namespace Train_ticket.Services
 
                 // Отправка POST-запроса
                 HttpResponseMessage response = await client.PostAsync("http://192.168.10.170:8080/route", content);
-                token = response.Headers.GetValues("AcceptEncoding").FirstOrDefault();
+              
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
@@ -233,7 +233,5 @@ namespace Train_ticket.Services
                 }
             }
         }
-
-       
     }
 }
