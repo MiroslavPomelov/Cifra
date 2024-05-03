@@ -43,8 +43,9 @@ namespace Train_ticket.ViewModel
         public ICommand ViewBuyTicketWindowCommand { get; }
         public ICommand ViewYourTicketsWindowCommand { get; }
 
-        public UserPersonalViewModel()
+        public UserPersonalViewModel(User previous)
         {
+            CurrentUser = previous;
             /*CurrentUser = new User($"{CurrentUser.Name}", $"{CurrentUser.SurName}", CurrentUser.Age, $"{CurrentUser.Login}", $"{CurrentUser.Email}", $"{CurrentUser.Password}");*/ //Здесь я получаю пользователя
             
             CurrentView = new UserViewModel(CurrentUser);
@@ -53,6 +54,10 @@ namespace Train_ticket.ViewModel
             ViewUserWindowCommand = new LambdaCommand(ViewUserWindow);
             ViewBuyTicketWindowCommand = new LambdaCommand(ViewBuyTicketWindow);
             ViewYourTicketsWindowCommand = new LambdaCommand(ViewYourTicketsWindow);
+
+            User_Personal nextWindow = new User_Personal();
+            nextWindow.DataContext = this;
+            nextWindow.Show();
         }
         public void CloseApp(object o)
         {

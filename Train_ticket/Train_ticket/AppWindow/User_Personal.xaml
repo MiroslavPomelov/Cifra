@@ -14,11 +14,7 @@
 
     <Border Background="#fff" CornerRadius="20">
 
-        <Grid>
-            <Grid.DataContext>
-                <vm:UserPersonalViewModel/>
-            </Grid.DataContext>
-            
+        <Grid>            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
                 <ColumnDefinition/>

@@ -10,6 +10,7 @@ using Train_ticket.ViewModel.BaseViewModel;
 using Train_ticket.AppWindow;
 using System.Text.Json;
 using Train_ticket.Services;
+using Train_ticket.Model.Data.DataBaseEntities;
 
 namespace Train_ticket.ViewModel
 {
@@ -55,14 +56,13 @@ namespace Train_ticket.ViewModel
             RegistrateUserCommand = new LambdaCommand(RegistrateUser);
             CloseAppCommand = new LambdaCommand(CloseApp);
         }
-        public void SendUserDataAuth(object o)
+        public async void SendUserDataAuth(object o)
         {
-            string userAuthData = $" {UserLogin} {UserPassword}";
+            string userAuthData = $"{UserLogin} {UserPassword}";
             string userJsonData = JsonSerializer.Serialize(userAuthData);
-            
-            _ = HttpClientData.SendDataAuthAsync(userJsonData);
-            User_Personal user_Personal = new User_Personal();
-            user_Personal.Show();
+
+            User current = await HttpClientData.SendDataAuthAsync(userJsonData);
+            UserPersonalViewModel next = new(current);
         }
 
         public void RegistrateUser(object o)

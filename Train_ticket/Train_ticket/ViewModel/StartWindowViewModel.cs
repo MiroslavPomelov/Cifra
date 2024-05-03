@@ -156,7 +156,7 @@ namespace Train_ticket.ViewModel
             //string userJsonData = $"{UserName} {UserSurname} {UserAge} {UserEmail} {UserPassword} {UserLogin}";
             MessageBox.Show(currentUser.ToString());
 
-            _ = HttpClientData.SendDataAsync(userJsonData);
+            _ = HttpClientData.SendDataAsync(userJsonData, currentUser);
 
 
             var windows = Application.Current.Windows.OfType<StartWindow>();
