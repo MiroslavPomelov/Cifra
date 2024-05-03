@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Train_ticket.Model.Data.DataBaseEntities;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Train_ticket.Services
 {
@@ -16,6 +18,7 @@ namespace Train_ticket.Services
         {
             using (HttpClient client = new HttpClient())
             {
+                string token = null;
                 // Создание контента для запроса
                 //string jsonBody = "{\"Heloo server\":\"I am Bogdan\"}"; // Это типа Json
                 //HttpContent content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
@@ -31,6 +34,7 @@ namespace Train_ticket.Services
                 {
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
+                    token = response.Headers.GetValues("AcceptEncoding").FirstOrDefault();
                     MessageBox.Show("Ответ от сервера: " + responseContent);
                     if (responseContent == "welldone")
                     {
@@ -53,6 +57,7 @@ namespace Train_ticket.Services
         {
             using (HttpClient client = new HttpClient())
             {
+                string token = null;
                 // Создание контента для запроса
                 //string jsonBody = "{\"Heloo server\":\"I am Bogdan\"}"; // Это типа Json
                 //HttpContent content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
@@ -68,7 +73,9 @@ namespace Train_ticket.Services
                 {
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
+                    token = response.Headers.GetValues("AcceptEncoding").FirstOrDefault();
                     MessageBox.Show("Ответ от сервера: " + responseContent);
+
                     if (responseContent == "welldone")
                     {
                         MessageBox.Show("Успешная авторизация!");
@@ -85,7 +92,7 @@ namespace Train_ticket.Services
                     MessageBox.Show("Ошибка при выполнении запроса: " + response.StatusCode);
                 }
 
-  
+
             }
         }
 
@@ -109,7 +116,10 @@ namespace Train_ticket.Services
                 {
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show("Ответ от сервера: " + responseContent);
+                    User current = System.Text.Json.JsonSerializer.Deserialize<User>(responseContent);
+
+                    List<AvaliableSeat> avSeats = new List<AvaliableSeat>();
+                    avSeats = System.Text.Json.JsonSerializer.Deserialize<List<AvaliableSeat>>(responseContent);
                 }
                 else
                 {
