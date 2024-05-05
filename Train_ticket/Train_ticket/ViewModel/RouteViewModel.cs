@@ -87,6 +87,7 @@ namespace Train_ticket.ViewModel
             BackToUserViewCommand = new LambdaCommand(BackToUserView);
             BuyTicketCommand = new LambdaCommand(BuyTicket);
             CurrentUser = current;
+
             List<AvaliableSeat> avaliableSeats = new();
 
             avaliableSeats.Add(data.First());

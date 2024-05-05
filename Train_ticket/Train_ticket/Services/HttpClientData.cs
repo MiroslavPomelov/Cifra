@@ -107,14 +107,12 @@ namespace Train_ticket.Services
             }
         }
 
-        public static async Task SendDataUserTicketAsync(string jsonData, User user)
+        public static async Task<string> SendDataUserTicketAsync(string jsonData)
         {
             using (HttpClient client = new HttpClient())
             {
-                string token = TokenStorage.TokenStorageKey;
-
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-                client.DefaultRequestHeaders.Add("AcceptEncoding", token);
+                client.DefaultRequestHeaders.Add("AcceptEncoding", TokenStorage.TokenStorageKey);
 
                 // Отправка POST-запроса
                 HttpResponseMessage response = await client.PostAsync("http://192.168.0.240:8080/history", content);
@@ -131,6 +129,7 @@ namespace Train_ticket.Services
                     // Обработка неудачного ответа
                     MessageBox.Show("Ошибка при выполнении запроса: " + response.StatusCode);
                 }
+                return await response.Content.ReadAsStringAsync();
             }
         }
 

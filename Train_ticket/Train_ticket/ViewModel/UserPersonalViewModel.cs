@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -10,6 +11,7 @@ using Train_ticket.Core;
 using Train_ticket.Infrastructure.Commands;
 using Train_ticket.Model.Data.DataBaseEntities;
 using Train_ticket.Services;
+using Train_ticket.Services.WEBServices;
 using Train_ticket.View;
 using Train_ticket.ViewModel.BaseViewModel;
 
@@ -111,6 +113,14 @@ namespace Train_ticket.ViewModel
 
         public void ViewYourTicketsWindow(object o)
         {
+            string encryptLogin = EncryptionHelper.Encrypt(CurrentUser.Login, EncryptionHelper.encryptionKey);
+
+            string userJsonData = JsonSerializer.Serialize(encryptLogin);
+
+            HttpClientData request = new();
+
+            //List<AvaliableSeat> data = request.GETDataAsync<List<AvaliableSeat>>(userJsonData, "history").Result;
+
             YourTicketsVM = new YourTicketsViewModel(CurrentUser);
 
             CurrentView = YourTicketsVM;

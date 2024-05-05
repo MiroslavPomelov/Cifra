@@ -100,8 +100,6 @@ namespace Train_ticket.ViewModel
 
             string jsonResult = await HttpClientData.SendDataUserRootTicketAsync(userJsonData);
 
-            
-
             try
             {
                 List<AvaliableSeat> seatList = JsonSerializer.Deserialize<List<AvaliableSeat>>(jsonResult);
@@ -113,8 +111,6 @@ namespace Train_ticket.ViewModel
 
                 AuthorizationWindow user_Personal = new AuthorizationWindow();
                 user_Personal.Show();
-
-                
             }
 
             //List<Seat> seat = JsonSerializer.Deserialize<List<Seat>>(jsonResult);
