@@ -7,14 +7,14 @@ namespace Train_ticket.Model.Data.DataBaseEntities
         public uint Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public int Age { get; set; }
+        public short Age { get; set; }
         public string Login { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
 
         public User() { }
 
-        public User(string name, string surname, int age, string login, string email, string password)
+        public User(string name, string surname, short age, string login, string email, string password)
         {
             Name = name;
             Surname = surname;

@@ -24,7 +24,6 @@ namespace Train_ticket.Model.Data.DataBaseEntities
         public string? Login { get; set; }
         public string Data { get; set; }
 
-
         public AvaliableSeat(int id, string departure, string destination, DateTime departureTime, DateTime arrivalTime, string trainName, int trainNumber, short carriageNumber, string @class, short seatNumber, decimal price, byte booked, string login, string data)
         {
             Id = id;

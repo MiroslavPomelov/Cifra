@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Train_ticket.AppWindow;
 using Train_ticket.Infrastructure.Commands;
 using Train_ticket.Model.Data.DataBaseEntities;
 using Train_ticket.Services;
+using Train_ticket.Services.WEBServices;
 using Train_ticket.View;
 using Train_ticket.ViewModel.BaseViewModel;
 
@@ -33,8 +36,8 @@ namespace Train_ticket.ViewModel
             }
         }
 
-        private List<Seat> _seats;
-        public List<Seat> Seats
+        private List<AvaliableSeat> _seats;
+        public List<AvaliableSeat> Seats
         {
             get => _seats;
             set
@@ -76,20 +79,23 @@ namespace Train_ticket.ViewModel
         public ICommand BackToUserViewCommand { get; }
         public ICommand BuyTicketCommand { get; }
 
-        public RouteViewModel(List<AvaliableSeat> data, List<Seat> seats)
+        public RouteViewModel(List<AvaliableSeat> data, User current)
         {
             //AvaliableSeat seat = new AvaliableSeat(1, "asdsad", "asdsad", new DateTime(2024,05,10), new DateTime(2024, 05, 10), "asdsad",22,2, "asdsad",7,100,1, "asdsad", "asdsad");
 
             CloseAppCommand = new LambdaCommand(CloseApp);
             BackToUserViewCommand = new LambdaCommand(BackToUserView);
             BuyTicketCommand = new LambdaCommand(BuyTicket);
+            CurrentUser = current;
+            List<AvaliableSeat> avaliableSeats = new();
 
-            AvaliableSeats = data;
-            Seats = seats;
+            avaliableSeats.Add(data.First());
+            AvaliableSeats = avaliableSeats;
+            Seats = data;
 
-            string userJsonData = JsonSerializer.Serialize(seats);
+            //string userJsonData = JsonSerializer.Serialize(seats);
 
-            _ = HttpClientData.SendDataBookingTickethAsync(userJsonData);
+            //_ = HttpClientData.SendDataBookingTickethAsync(userJsonData);
 
             RouteView routeView = new RouteView();
             routeView.DataContext = this;
@@ -103,25 +109,36 @@ namespace Train_ticket.ViewModel
 
         public void BackToUserView(object o)
         {
-            User_Personal user_Personal = new User_Personal();
-            user_Personal.Show();
-            var windows = Application.Current.Windows.OfType<RouteView>();
-            foreach (var window in windows)
-            {
-                window.Close();
-            }
+            //User_Personal user_Personal = new User_Personal();
+            //user_Personal.Show();
+            //var windows = Application.Current.Windows.OfType<RouteView>();
+            //foreach (var window in windows)
+            //{
+            //    window.Close();
+            //}
+
+            UserPersonalViewModel next = new(CurrentUser);
         }
 
         public void BuyTicket(object o)
         {
-            //AvaliableSeat принять сущность seat и в ней изменить данные, после чего отправить
-            //Seat seat = {  };
+            List<AvaliableSeat> allSeats = Seats.ToList();
+            List<AvaliableSeat> bookingSeats = allSeats.Where(x => x.Booked == 1).ToList();
 
-            //Сереализовать сущность в дсон строку
-            List<Seat> seats = Seats;
-            string userJsonData = JsonSerializer.Serialize(seats);
+            string encryptLogin = EncryptionHelper.Encrypt(CurrentUser.Login, EncryptionHelper.encryptionKey);
 
-            _ = HttpClientData.SendDataBookingTickethAsync(userJsonData);
+            foreach (var item in bookingSeats)
+            {
+                item.Login = encryptLogin;
+                item.Data = EncryptionHelper.Encrypt(item.Data, EncryptionHelper.encryptionKey);
+            }
+
+            string jsonBooking = JsonSerializer.Serialize(bookingSeats);
+
+            _ = HttpClientData.SendDataBookingTickethAsync(jsonBooking);
+
+            //User current = authData.GETDataAsync<User>(userJsonData, "auth").Result;
+            UserPersonalViewModel next = new(CurrentUser);
         }
 
         public void FilterData()

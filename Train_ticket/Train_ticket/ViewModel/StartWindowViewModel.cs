@@ -44,8 +44,8 @@ namespace Train_ticket.ViewModel
             }
         }
 
-        private int _userAge;
-        public int UserAge
+        private short _userAge;
+        public short UserAge
         {
             get => _userAge;
             set
@@ -151,35 +151,41 @@ namespace Train_ticket.ViewModel
 
             User currentUser = new User(UserName, UserSurname, UserAge, UserLogin, UserEmail, UserPassword);
 
-            User encryptUser = new User(EncryptionHelper.Encrypt(currentUser.Name),
-            EncryptionHelper.Encrypt(currentUser.Surname),
+            User encryptUser = new User(EncryptionHelper.Encrypt(currentUser.Name, EncryptionHelper.primaryKey),
+            EncryptionHelper.Encrypt(currentUser.Surname, EncryptionHelper.primaryKey),
             currentUser.Age,
-            EncryptionHelper.Encrypt(currentUser.Login),
-            EncryptionHelper.Encrypt(currentUser.Email),
-            EncryptionHelper.Encrypt(currentUser.Password));
+            EncryptionHelper.Encrypt(currentUser.Login, EncryptionHelper.primaryKey),
+            EncryptionHelper.Encrypt(currentUser.Email, EncryptionHelper.primaryKey),
+            EncryptionHelper.Encrypt(currentUser.Password, EncryptionHelper.primaryKey));
 
             //Сереализовать сущность в дсон строку
             string userJsonData = JsonSerializer.Serialize(encryptUser);
 
-            HttpClientData request = new();
-            string message = request.GETDataAsync<string>(userJsonData, "reg").Result;
+            //HttpClientData request = new();
+            //string message = request.GETDataAsync<string>(userJsonData, "reg").Result;
 
-            if (message == "welldone")
-            {
-                MessageBox.Show("Вы зарегестрированы!");
+            _=HttpClientData.SendDataAsync(userJsonData);
 
-                var windows = Application.Current.Windows.OfType<StartWindow>();
-                foreach (var window in windows)
-                {
-                    window.Hide();
-                }
-                AuthorizationWindow authorizationWindow = new AuthorizationWindow();
-                authorizationWindow.Show();
-            }
-            else if (message == "loginisexist")
-            {
-                MessageBox.Show("Данный логин уже используется");
-            }
+            //if (message == "welldone")
+            //{
+            //    MessageBox.Show("Вы зарегестрированы!");
+
+            //    var windows = Application.Current.Windows.OfType<StartWindow>();
+            //    foreach (var window in windows)
+            //    {
+            //        window.Hide();
+            //    }
+            //    AuthorizationWindow authorizationWindow = new AuthorizationWindow();
+            //    authorizationWindow.Show();
+            //}
+            //else if (message == "loginisexist")
+            //{
+            //    MessageBox.Show("Данный логин уже используется");
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Не удалось зарегестрироваться!");
+            //}
         }
 
         public void EnterUserRegistrate(object o)

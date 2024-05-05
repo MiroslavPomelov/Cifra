@@ -10,6 +10,8 @@ using System.Linq;
 using System.Collections.Generic;
 using Train_ticket.AppWindow;
 using Train_ticket.Services.WEBServices;
+using Newtonsoft.Json.Linq;
+using Train_ticket.View;
 
 namespace Train_ticket.Services
 {
@@ -22,17 +24,26 @@ namespace Train_ticket.Services
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.10.170:8080/reg", content);
+                HttpResponseMessage response = await client.PostAsync("http://192.168.0.240:8080/reg", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
                 {
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
+                    responseContent = JsonSerializer.Deserialize<string>(responseContent);
 
                     if (responseContent == "welldone")
                     {
                         MessageBox.Show("Вы зарегестрированы!");
+
+                        var windows = Application.Current.Windows.OfType<StartWindow>();
+                        foreach (var window in windows)
+                        {
+                            window.Hide();
+                        }
+                        AuthorizationWindow authorizationWindow = new AuthorizationWindow();
+                        authorizationWindow.Show();
                     }
                     else if (responseContent == "loginisexist")
                     {
@@ -52,13 +63,14 @@ namespace Train_ticket.Services
             using (HttpClient client = new HttpClient())
             {
                 TokenStorage.TokenStorageKey = null;
+                EncryptionHelper.encryptionKey = null;
                 string token = null;
                 string clientKey = null;
 
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.10.170:8080/auth", content);
+                HttpResponseMessage response = await client.PostAsync("http://192.168.0.240:8080/auth", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
@@ -66,11 +78,13 @@ namespace Train_ticket.Services
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
                     token = response.Headers.GetValues("AcceptEncoding").FirstOrDefault();
-                    clientKey = response.Headers.GetValues("Authorization").FirstOrDefault();
+                    EncryptionHelper.encryptionKey = EncryptionHelper.Decrypt(response.Headers.GetValues("Authorization").FirstOrDefault(), EncryptionHelper.primaryKey);
+
+                    clientKey = EncryptionHelper.encryptionKey;
 
                     User current = JsonSerializer.Deserialize<User>(responseContent);
-                    User decryptCurrent = new User(EncryptionHelper.Decrypt(current.Name), EncryptionHelper.Decrypt(current.Surname), current.Age, EncryptionHelper.Decrypt(current.Login), EncryptionHelper.Decrypt(current.Email), EncryptionHelper.Decrypt(current.Password));
-                    EncryptionHelper._encryptionKey = response.Headers.ToString();
+                    User decryptCurrent = new User(EncryptionHelper.Decrypt(current.Name, clientKey), EncryptionHelper.Decrypt(current.Surname, clientKey), current.Age, EncryptionHelper.Decrypt(current.Login, clientKey), EncryptionHelper.Decrypt(current.Email, clientKey), EncryptionHelper.Decrypt(current.Password, clientKey));
+                    //EncryptionHelper.encryptionKey = response.Headers.ToString();
 
                     if (decryptCurrent.Name != null)
                     {
@@ -103,8 +117,7 @@ namespace Train_ticket.Services
                 client.DefaultRequestHeaders.Add("AcceptEncoding", token);
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.10.170:8080/history", content);
-
+                HttpResponseMessage response = await client.PostAsync("http://192.168.0.240:8080/history", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
@@ -112,20 +125,6 @@ namespace Train_ticket.Services
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
                     List<AvaliableSeat> avSeats = JsonSerializer.Deserialize<List<AvaliableSeat>>(responseContent);
-                    token = response.Headers.GetValues("AcceptEncoding").FirstOrDefault();
-
-
-                    if (avSeats.Count < 1)
-                    {
-                        AuthorizationWindow authorizationWindow = new AuthorizationWindow();
-                        authorizationWindow.Show();
-
-                        var windows = Application.Current.Windows.OfType<AuthorizationWindow>();
-                        foreach (var window in windows)
-                        {
-                            window.Close();
-                        }
-                    }
                 }
                 else
                 {
@@ -139,11 +138,13 @@ namespace Train_ticket.Services
         {
             using (HttpClient client = new HttpClient())
             {
+
                 //jsonData = JsonConvert.SerializeObject(jsonData);
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                client.DefaultRequestHeaders.Add("AcceptEncoding", TokenStorage.TokenStorageKey);
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.10.170:8080/route", content);
+                HttpResponseMessage response = await client.PostAsync("http://192.168.0.240:8080/route", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
@@ -167,13 +168,12 @@ namespace Train_ticket.Services
             using (HttpClient client = new HttpClient())
             {
                 string token = null;
-                string stroke = null;
 
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-                client.DefaultRequestHeaders.Add("AcceptEncoding", token);
+                client.DefaultRequestHeaders.Add("AcceptEncoding", TokenStorage.TokenStorageKey);
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.10.170:8080/booking", content);
+                HttpResponseMessage response = await client.PostAsync("http://192.168.0.240:8080/booking", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
@@ -181,14 +181,42 @@ namespace Train_ticket.Services
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
 
-                    List<AvaliableSeat> avaliableSeats = JsonSerializer.Deserialize<List<AvaliableSeat>>(responseContent);
+                    //List<AvaliableSeat> avaliableSeats = JsonSerializer.Deserialize<List<AvaliableSeat>>(responseContent);
 
-                    if (avaliableSeats.Count < 1)
+                    responseContent = JsonSerializer.Deserialize<string>(responseContent);
+
+                    if (responseContent == "welldone")
+                    {
+                        MessageBox.Show("Бронирование прошло успешно!");
+
+                        //User_Personal authorizationWindow = new User_Personal();
+                        //authorizationWindow.Show();
+
+                        //var windows = Application.Current.Windows.OfType<RouteView>();
+                        //foreach (var window in windows)
+                        //{
+                        //    window.Close();
+                        //}
+                    }
+                    else if (responseContent == "tokinisempty" || responseContent == "tokinisNotvalid")
                     {
                         AuthorizationWindow authorizationWindow = new AuthorizationWindow();
                         authorizationWindow.Show();
 
-                        var windows = Application.Current.Windows.OfType<AuthorizationWindow>();
+                        var windows = Application.Current.Windows.OfType<RouteView>();
+                        foreach (var window in windows)
+                        {
+                            window.Close();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Не удалось забронировать. Попробуйте еще раз");
+
+                        User_Personal authorizationWindow = new User_Personal();
+                        authorizationWindow.Show();
+
+                        var windows = Application.Current.Windows.OfType<RouteView>();
                         foreach (var window in windows)
                         {
                             window.Close();
@@ -209,7 +237,7 @@ namespace Train_ticket.Services
             {
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-                HttpResponseMessage response = await client.PutAsync($"http://192.168.10.170:8080/{domain}", content);
+                HttpResponseMessage response = await client.PostAsync($"http://192.168.0.240:8080/{domain}", content);
 
                 if (response.IsSuccessStatusCode)
                 {

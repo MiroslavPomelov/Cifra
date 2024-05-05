@@ -54,9 +54,20 @@ namespace Train_ticket.ViewModel
             ViewBuyTicketWindowCommand = new LambdaCommand(ViewBuyTicketWindow);
             ViewYourTicketsWindowCommand = new LambdaCommand(ViewYourTicketsWindow);
 
+
             User_Personal nextWindow = new User_Personal();
+
+            var windows = Application.Current.Windows.OfType<Window>();
+            foreach (var window in windows)
+            {
+                window.Close();
+                nextWindow = new User_Personal();
+            }
+
+           
             nextWindow.DataContext = this;
             nextWindow.Show();
+
         }
         public void CloseApp(object o)
         {

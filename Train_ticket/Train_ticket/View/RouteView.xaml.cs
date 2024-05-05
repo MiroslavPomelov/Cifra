@@ -23,7 +23,7 @@ namespace Train_ticket.View
         public RouteView()
         {
             InitializeComponent();
-            DataContext = new RouteView();
+            //DataContext = new RouteView();
         }
 
         private void DataGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

@@ -10,6 +10,7 @@ using Train_ticket.Services;
 using Train_ticket.View;
 using Train_ticket.ViewModel.BaseViewModel;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Train_ticket.ViewModel
 {
@@ -80,13 +81,13 @@ namespace Train_ticket.ViewModel
             SendUserDataTicketCommand = new LambdaCommand(SendUserDataTicket);
         }
 
-        public void SendUserDataTicket(object o)
+        public async void SendUserDataTicket(object o)
         {
             DepCity = "Калининград";
             ArrCity = "Москва";
 
-            DateDep = new DateTime(2024, 05, 04);
-            ArrDep = new DateTime(2024, 05, 05);
+            DateDep = new DateTime(2024, 06, 04);
+            ArrDep = new DateTime(2024, 06, 05);
 
             LookupSeats lookupSeats = new LookupSeats(DepCity, ArrCity, DateDep, ArrDep);
 
@@ -95,13 +96,35 @@ namespace Train_ticket.ViewModel
                 Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
             };
 
-            string userJsonData = JsonSerializer.Serialize(lookupSeats, options);
+            string userJsonData = JsonSerializer.Serialize(lookupSeats);
 
-            HttpClientData request = new();
+            string jsonResult = await HttpClientData.SendDataUserRootTicketAsync(userJsonData);
+
             
-            List<AvaliableSeat> avaliableSeats = request.GETDataAsync<List<AvaliableSeat>>(userJsonData, "route").Result;
-            List<Seat> seatList = request.GETDataAsync<List<Seat>>(userJsonData, "route").Result;
-            _ = new RouteViewModel(avaliableSeats, seatList);
+
+            try
+            {
+                List<AvaliableSeat> seatList = JsonSerializer.Deserialize<List<AvaliableSeat>>(jsonResult);
+                RouteViewModel routeView = new RouteViewModel(seatList, CurrentUser);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Сессия истекла");
+
+                AuthorizationWindow user_Personal = new AuthorizationWindow();
+                user_Personal.Show();
+
+                
+            }
+
+            //List<Seat> seat = JsonSerializer.Deserialize<List<Seat>>(jsonResult);
+
+
+            //HttpClientData request = new();
+
+            //List<AvaliableSeat> avaliableSeats = request.GETDataAsync<List<AvaliableSeat>>(userJsonData, "route").Result;
+            //List<Seat> seatList = request.GETDataAsync<List<Seat>>(userJsonData, "route").Result;
+            //_ = new RouteViewModel(avaliableSeats, seatList);
         }
     }
 }

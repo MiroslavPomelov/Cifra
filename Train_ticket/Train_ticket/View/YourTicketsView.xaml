@@ -30,8 +30,9 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Откуда" Binding="{Binding Departure}" Width="*"/>
                         <DataGridTextColumn Header="Куда" Binding="{Binding Destination}" Width="*"/>
-                        <DataGridTextColumn Header="Дата отправления" Binding="{Binding DepartureTime, StringFormat='dd.MM.yyyy'}" Width="*"/>
-                        <DataGridTextColumn Header="Дата прибытия" Binding="{Binding ArrivalTime, StringFormat='dd.MM.yyyy'}" Width="*"/>
+                        <DataGridTextColumn Header="Дата отправления" Binding="{Binding DepartureTime, StringFormat='dd.MM.yyyy HH:mm'}" Width="*"/>
+                        <DataGridTextColumn Header="Дата прибытия" Binding="{Binding ArrivalTime, StringFormat='dd.MM.yyyy HH:mm'}" Width="*"/>
+                        <DataGridTextColumn Header="Цена билета" Binding="{Binding Price}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 

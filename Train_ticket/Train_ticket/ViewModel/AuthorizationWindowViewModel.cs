@@ -11,6 +11,7 @@ using Train_ticket.AppWindow;
 using System.Text.Json;
 using Train_ticket.Services;
 using Train_ticket.Model.Data.DataBaseEntities;
+using Train_ticket.Services.WEBServices;
 
 namespace Train_ticket.ViewModel
 {
@@ -59,11 +60,12 @@ namespace Train_ticket.ViewModel
         public async void SendUserDataAuth(object o)
         {
             string userAuthData = $"{UserLogin} {UserPassword}";
-            string userJsonData = JsonSerializer.Serialize(userAuthData);
-
-            HttpClientData authData = new();
+            string userAuthDataEncrypt = EncryptionHelper.Encrypt(userAuthData, EncryptionHelper.primaryKey);
+            string userJsonData = JsonSerializer.Serialize(userAuthDataEncrypt);
+            
 
             User current = await HttpClientData.SendDataAuthAsync(userJsonData);
+            CurrentUser = current;
             //User current = authData.GETDataAsync<User>(userJsonData, "auth").Result;
             UserPersonalViewModel next = new(current);
         }
