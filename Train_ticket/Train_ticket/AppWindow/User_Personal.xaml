@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Train_ticket.AppWindow"
         xmlns:vm="clr-namespace:Train_ticket.ViewModel"
         mc:Ignorable="d"
-        Title="User_Personal" Height="470" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="Transparent" WindowStyle="None" AllowsTransparency="True">
+        Title="User_Personal" Height="600" Width="900" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="Transparent" WindowStyle="None" AllowsTransparency="True">
 
     <!--<Window.DataContext>
         <viewmodel:MainViewModel/>
@@ -40,7 +40,7 @@
                 <RadioButton Content="Купить билет" Height="50" Foreground="#008B8B" FontSize="14" Style="{StaticResource MenuButtonTheme}" Command="{Binding ViewBuyTicketWindowCommand}"/>
                 <RadioButton Content="Ваши билеты" Height="50" Foreground="#008B8B" FontSize="14" Style="{StaticResource MenuButtonTheme}" Command="{Binding ViewYourTicketsWindowCommand}"/>
 
-                <Button HorizontalAlignment="Right" Content="Выйти" Margin="0 190 10 0" Command="{Binding ExitUserPersonalCommand}"/>
+                <Button HorizontalAlignment="Right" Content="Выйти" Margin="0 320 10 0" Command="{Binding ExitUserPersonalCommand}"/>
                 
             </StackPanel>
 
