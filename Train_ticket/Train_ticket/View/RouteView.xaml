@@ -29,7 +29,7 @@
                 <StackPanel >
                     <Separator Margin="20 0 0 0" Height="0.8" Background="LightGray" VerticalAlignment="Top"/>
 
-                    <DataGrid x:Name="RoutesDataGrid" Margin="30" ItemsSource="{Binding AvaliableSeats}" MaxHeight="300" MaxWidth="600" CanUserAddRows="False">
+                    <DataGrid x:Name="RoutesDataGrid" Margin="30" ItemsSource="{Binding AvaliableSeats}" MaxHeight="300" MaxWidth="600" CanUserAddRows="False" AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Откуда" Binding="{Binding Departure}" Width="*"/>
                             <DataGridTextColumn Header="Куда" Binding="{Binding Destination}" Width="*"/>
@@ -40,16 +40,15 @@
                     
                     <TextBlock Grid.Column="0" Text="Доступные места:" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#008B8B" FontSize="21" FontWeight="Bold"/>
 
-                    <DataGrid x:Name="SeatsDataGrid" Margin="30" ItemsSource="{Binding Seats}" SelectedItem="{Binding SelectedPerson}" AutoGenerateColumns="True" MaxHeight="300" MaxWidth="600" CanUserAddRows="False">
+                    <DataGrid x:Name="SeatsDataGrid" Margin="30" ItemsSource="{Binding Seats}" SelectedItem="{Binding SelectedPerson}" AutoGenerateColumns="False" MaxHeight="300" MaxWidth="600" CanUserAddRows="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Поезд" Binding="{Binding Shedule_Id}" Width="*"/>
                             <DataGridTextColumn Header="Класс" Binding="{Binding Carriage_Id}" Width="*"/>
                             <DataGridTextColumn Header="Место" Binding="{Binding SeatNumber}" Width="*"/>
                             <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="*"/>
-                            <DataGridCheckBoxColumn Header="Выбрать" Binding="{Binding IsChecked}" Width="*"/>
+                            <DataGridCheckBoxColumn Header="Выбрать" Binding="{Binding Booked}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
-
                 </StackPanel>
 
             </Border>
