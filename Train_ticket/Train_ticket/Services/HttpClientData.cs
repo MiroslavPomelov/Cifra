@@ -9,6 +9,7 @@ using Train_ticket.Model.Data.DataBaseEntities;
 using System.Linq;
 using System.Collections.Generic;
 using Train_ticket.AppWindow;
+using Train_ticket.Services.WEBServices;
 
 namespace Train_ticket.Services
 {
@@ -18,9 +19,6 @@ namespace Train_ticket.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                               
-
-                //jsonData = JsonConvert.SerializeObject(jsonData);
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
                 // Отправка POST-запроса
@@ -31,7 +29,7 @@ namespace Train_ticket.Services
                 {
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
-                   
+
                     if (responseContent == "welldone")
                     {
                         MessageBox.Show("Вы зарегестрированы!");
@@ -53,12 +51,10 @@ namespace Train_ticket.Services
         {
             using (HttpClient client = new HttpClient())
             {
+                TokenStorage.TokenStorageKey = null;
                 string token = null;
-                // Создание контента для запроса
-                //string jsonBody = "{\"Heloo server\":\"I am Bogdan\"}"; // Это типа Json
-                //HttpContent content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+                string clientKey = null;
 
-                //jsonData = JsonConvert.SerializeObject(jsonData);
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
                 // Отправка POST-запроса
@@ -70,14 +66,17 @@ namespace Train_ticket.Services
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
                     token = response.Headers.GetValues("AcceptEncoding").FirstOrDefault();
+                    clientKey = response.Headers.GetValues("Authorization").FirstOrDefault();
 
                     User current = JsonSerializer.Deserialize<User>(responseContent);
+                    User decryptCurrent = new User(EncryptionHelper.Decrypt(current.Name), EncryptionHelper.Decrypt(current.Surname), current.Age, EncryptionHelper.Decrypt(current.Login), EncryptionHelper.Decrypt(current.Email), EncryptionHelper.Decrypt(current.Password));
+                    EncryptionHelper._encryptionKey = response.Headers.ToString();
 
-                    if (current.Name != null)
+                    if (decryptCurrent.Name != null)
                     {
-                        MessageBox.Show("Успешная авторизация!");
-                        TokenStorage.AddLogTokenToStorage(current.Login, token);
-                        return current;
+                        MessageBox.Show($"Добро пожаловать {decryptCurrent.Name}!");
+                        TokenStorage.TokenStorageKey = token;
+                        return decryptCurrent;
                     }
                     else
                     {
@@ -94,39 +93,29 @@ namespace Train_ticket.Services
             }
         }
 
-
-        public static async Task SendDataUserTicketAsync(string jsonData)
+        public static async Task SendDataUserTicketAsync(string jsonData, User user)
         {
             using (HttpClient client = new HttpClient())
             {
-                string stroke = null;
-                string token = null;
+                string token = TokenStorage.TokenStorageKey;
 
-                //jsonData = JsonConvert.SerializeObject(jsonData);
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
                 client.DefaultRequestHeaders.Add("AcceptEncoding", token);
+
                 // Отправка POST-запроса
                 HttpResponseMessage response = await client.PostAsync("http://192.168.10.170:8080/history", content);
-                token = response.Headers.GetValues("AcceptEncoding").FirstOrDefault();
+
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
                 {
-                    List<AvaliableSeat> avSeats = new List<AvaliableSeat>();
-
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
+                    List<AvaliableSeat> avSeats = JsonSerializer.Deserialize<List<AvaliableSeat>>(responseContent);
+                    token = response.Headers.GetValues("AcceptEncoding").FirstOrDefault();
 
-                    try
-                    {
-                       avSeats = System.Text.Json.JsonSerializer.Deserialize<List<AvaliableSeat>>(responseContent);
-                    }
-                    catch (Exception ex)
-                    { 
-                      stroke = System.Text.Json.JsonSerializer.Deserialize<string>(responseContent);
-                    }
 
-                    if (stroke == "tokenisempty" || stroke == "tokenisNotvalid")
+                    if (avSeats.Count < 1)
                     {
                         AuthorizationWindow authorizationWindow = new AuthorizationWindow();
                         authorizationWindow.Show();
@@ -137,8 +126,6 @@ namespace Train_ticket.Services
                             window.Close();
                         }
                     }
-
-                    User current = System.Text.Json.JsonSerializer.Deserialize<User>(responseContent);
                 }
                 else
                 {
@@ -152,34 +139,19 @@ namespace Train_ticket.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                string stroke = null;
-                string token = TokenStorage.CheckLogTokenFromStorage(jsonData);
-
                 //jsonData = JsonConvert.SerializeObject(jsonData);
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-                client.DefaultRequestHeaders.Add("AcceptEncoding", token);
 
                 // Отправка POST-запроса
                 HttpResponseMessage response = await client.PostAsync("http://192.168.10.170:8080/route", content);
-              
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
                 {
                     List<AvaliableSeat> avSeats = new List<AvaliableSeat>();
 
-
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    try
-                    {
-                        avSeats = System.Text.Json.JsonSerializer.Deserialize<List<AvaliableSeat>>(responseContent);
-                    }
-                    catch (Exception ex)
-                    {
-                        stroke = System.Text.Json.JsonSerializer.Deserialize<string>(responseContent);
-                    }
-                    
                 }
                 else
                 {
@@ -187,7 +159,6 @@ namespace Train_ticket.Services
                     MessageBox.Show("Ошибка при выполнении запроса: " + response.StatusCode);
                 }
                 return await response.Content.ReadAsStringAsync();
-
             }
         }
 
@@ -209,11 +180,10 @@ namespace Train_ticket.Services
                 {
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
-                   
-                    stroke = System.Text.Json.JsonSerializer.Deserialize<string>(responseContent);
-                    
 
-                    if (stroke == "tokenisempty" || stroke == "tokenisNotvalid")
+                    List<AvaliableSeat> avaliableSeats = JsonSerializer.Deserialize<List<AvaliableSeat>>(responseContent);
+
+                    if (avaliableSeats.Count < 1)
                     {
                         AuthorizationWindow authorizationWindow = new AuthorizationWindow();
                         authorizationWindow.Show();
@@ -229,6 +199,29 @@ namespace Train_ticket.Services
                 {
                     // Обработка неудачного ответа
                     MessageBox.Show("Ошибка при выполнении запроса: " + response.StatusCode);
+                }
+            }
+        }
+
+        public async Task<TEntity> GETDataAsync<TEntity>(string jsonData, string domain)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await client.PutAsync($"http://192.168.10.170:8080/{domain}", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseContent = await response.Content.ReadAsStringAsync();
+
+                    TEntity deserializedEntity = JsonSerializer.Deserialize<TEntity>(responseContent);
+                    return deserializedEntity;
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка" + response.StatusCode);
+                    return default(TEntity);
                 }
             }
         }

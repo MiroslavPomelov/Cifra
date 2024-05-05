@@ -20,7 +20,7 @@ namespace Train_ticket.Infrastructure.Commands
         public override void Execute(object parameter)
         {
             _execute(parameter);
-        }
+        }   
     }
 
 }

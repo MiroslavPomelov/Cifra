@@ -39,8 +39,8 @@
                 <!--<Line Stroke="Teal" X1="0" X2="500" Stretch="Fill" StrokeThickness="1" StrokeDashArray="10 3"></Line>-->
 
                 <TextBox x:Name="TextBoxLogin" materialDesign:HintAssist.Hint="Введите логин:" Margin="0 0 0 5" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding UserLogin}"/>
-                <TextBox x:Name="PassBox" materialDesign:HintAssist.Hint="Введите пароль:" Margin="0 0 0 5" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  Text="{Binding UserPassword}"/>
-                <TextBox x:Name="PassBoxAgain" materialDesign:HintAssist.Hint="Повторите пароль:" Margin="0 0 0 5" Style="{StaticResource MaterialDesignFloatingHintTextBox}"   Text="{Binding UserPasswordAgain}"/>
+                <TextBox x:Name="PassBox" materialDesign:HintAssist.Hint="Введите пароль:" Margin="0 0 0 5" Style="{StaticResource MaterialDesignFloatingHintTextBox}"  Text="{Binding UserPassword}" />
+                <TextBox x:Name="PassBoxAgain" materialDesign:HintAssist.Hint="Повторите пароль:" Margin="0 0 0 5" Style="{StaticResource MaterialDesignFloatingHintTextBox}"   Text="{Binding UserPasswordAgain}" />
                 <TextBox x:Name="TextBoxEmail" materialDesign:HintAssist.Hint="Введите Email:" Margin="0 0 0 5" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding UserEmail}"/>
                 <Button Content="Зарегестрироваться" Margin="0 20 0 0" Command="{Binding SendUserDataCommand}" FontSize="15"></Button>
             </StackPanel>

@@ -13,5 +13,6 @@ namespace Train_ticket.Infrastructure.Commands.BaseCommand
         }
         public abstract bool CanExecute(object parameter);
         public abstract void Execute(object parameter);
+
     }
 }

@@ -5,8 +5,6 @@
              xmlns:viewmodel ="clr-namespace:Train_ticket.ViewModel"
              xmlns:view ="clr-namespace:Train_ticket.View"
              StartupUri="AppWindow\AuthorizationWindow.xaml">
-             <!--StartupUri="AppWindow\AuthorizationWindow.xaml">-->
-    
 
     <Application.Resources>
         <ResourceDictionary>

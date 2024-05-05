@@ -28,10 +28,10 @@
 
                 <DataGrid Margin="30" ItemsSource="{Binding AvaliableSeats}" MaxHeight="400" MaxWidth="800">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Откуда" Binding="{Binding Departure}"/>
-                        <DataGridTextColumn Header="Куда" Binding="{Binding Destination}"/>
-                        <DataGridTextColumn Header="Дата отправления" Binding="{Binding DepartureTime, StringFormat='dd.MM.yyyy'}"/>
-                        <DataGridTextColumn Header="Дата прибытия" Binding="{Binding ArrivalTime, StringFormat='dd.MM.yyyy'}"/>
+                        <DataGridTextColumn Header="Откуда" Binding="{Binding Departure}" Width="*"/>
+                        <DataGridTextColumn Header="Куда" Binding="{Binding Destination}" Width="*"/>
+                        <DataGridTextColumn Header="Дата отправления" Binding="{Binding DepartureTime, StringFormat='dd.MM.yyyy'}" Width="*"/>
+                        <DataGridTextColumn Header="Дата прибытия" Binding="{Binding ArrivalTime, StringFormat='dd.MM.yyyy'}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Train_ticket.ViewModel;
 
 namespace Train_ticket.View
 {
@@ -22,6 +23,13 @@ namespace Train_ticket.View
         public RouteView()
         {
             InitializeComponent();
+            DataContext = new RouteView();
+        }
+
+        private void DataGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            // Обработчик события изменения выбора в первом DataGrid
+            ((RouteViewModel)DataContext).FilterData();
         }
     }
 }

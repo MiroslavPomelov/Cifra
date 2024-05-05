@@ -61,7 +61,10 @@ namespace Train_ticket.ViewModel
             string userAuthData = $"{UserLogin} {UserPassword}";
             string userJsonData = JsonSerializer.Serialize(userAuthData);
 
+            HttpClientData authData = new();
+
             User current = await HttpClientData.SendDataAuthAsync(userJsonData);
+            //User current = authData.GETDataAsync<User>(userJsonData, "auth").Result;
             UserPersonalViewModel next = new(current);
         }
 
@@ -80,6 +83,5 @@ namespace Train_ticket.ViewModel
         {
             Application.Current.Shutdown();
         }
-
     }
 }

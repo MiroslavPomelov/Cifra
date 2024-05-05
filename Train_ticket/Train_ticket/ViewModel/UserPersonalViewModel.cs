@@ -46,9 +46,7 @@ namespace Train_ticket.ViewModel
 
         public UserPersonalViewModel(User previous)
         {
-            CurrentUser = previous;
-            /*CurrentUser = new User($"{CurrentUser.Name}", $"{CurrentUser.SurName}", CurrentUser.Age, $"{CurrentUser.Login}", $"{CurrentUser.Email}", $"{CurrentUser.Password}");*/ //Здесь я получаю пользователя
-            
+            CurrentUser = previous;            
             CurrentView = new UserViewModel(CurrentUser);
             CloseAppCommand = new LambdaCommand(CloseApp);
             ExitUserPersonalCommand = new LambdaCommand(ExitUserPersonal);

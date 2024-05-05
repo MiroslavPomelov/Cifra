@@ -9,7 +9,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <Grid Background="#fff">
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
@@ -24,13 +24,14 @@
             <StackPanel >
                 <Separator Margin="20 0 0 0" Height="0.8" Background="LightGray" VerticalAlignment="Top"/>
 
-                <WrapPanel>
-                    <TextBlock Text="{Binding CurrentUser.Name}" FontWeight="Bold"/>
-                    <TextBlock Text=", "/>
-                    <TextBlock Text="{Binding CurrentUser.SurName}" FontWeight="Bold"/>
-                    <TextBlock Text=", "/>
+                <WrapPanel Orientation="Vertical">
+                    <TextBlock Text="Имя: " FontWeight="Bold"/>
+                    <TextBlock Text="{Binding CurrentUser.Name}" />
+                    <TextBlock Text="Фамилия: " FontWeight="Bold"/>
+                    <TextBlock Text="{Binding CurrentUser.Surname}" />
+                    <TextBlock Text="Возраст: " FontWeight="Bold"/>
                     <TextBlock Text="{Binding CurrentUser.Age}"/>
-                    <TextBlock Text=", "/>
+                    <TextBlock Text="Почта: " FontWeight="Bold"/>
                     <TextBlock Text="{Binding CurrentUser.Email}"/>
                 </WrapPanel>
 
