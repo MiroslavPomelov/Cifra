@@ -1,0 +1,17 @@
+*{
+    margin: 3;
+}
+
+body{
+    background-color: rgb(206, 177, 177);
+    color: rgb(0, 0, 0);
+}
+
+li{
+    font-size: 20px;
+    font-weight: 80;
+}
+
+a{
+    color: rgb(46, 0, 40);
+}
