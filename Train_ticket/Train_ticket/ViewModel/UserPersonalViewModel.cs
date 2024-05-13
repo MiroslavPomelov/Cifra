@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -9,6 +10,8 @@ using Train_ticket.AppWindow;
 using Train_ticket.Core;
 using Train_ticket.Infrastructure.Commands;
 using Train_ticket.Model.Data.DataBaseEntities;
+using Train_ticket.Services;
+using Train_ticket.Services.WEBServices;
 using Train_ticket.View;
 using Train_ticket.ViewModel.BaseViewModel;
 
@@ -23,6 +26,7 @@ namespace Train_ticket.ViewModel
         public UserViewModel UserVm { get; set; }
         public BuyTicketViewModel BuyTicketVM { get; set; }
         public YourTicketsViewModel YourTicketsVM { get; set; }
+        public User User {  get; set; }
 
         private object _currentView;
         public object CurrentView
@@ -40,17 +44,32 @@ namespace Train_ticket.ViewModel
         public ICommand ViewUserWindowCommand { get; }
         public ICommand ViewBuyTicketWindowCommand { get; }
         public ICommand ViewYourTicketsWindowCommand { get; }
+        
 
-        public UserPersonalViewModel()
+        public UserPersonalViewModel(User previous)
         {
-            CurrentUser = new User("AAAAAAA", "BBBBB", 24, "qweqwrwqe", "wretewrt@mail.ru", "2222222"); //Здесь вы должны получить пользователя
-
+            CurrentUser = previous;            
             CurrentView = new UserViewModel(CurrentUser);
             CloseAppCommand = new LambdaCommand(CloseApp);
             ExitUserPersonalCommand = new LambdaCommand(ExitUserPersonal);
             ViewUserWindowCommand = new LambdaCommand(ViewUserWindow);
             ViewBuyTicketWindowCommand = new LambdaCommand(ViewBuyTicketWindow);
             ViewYourTicketsWindowCommand = new LambdaCommand(ViewYourTicketsWindow);
+
+
+            User_Personal nextWindow = new User_Personal();
+
+            var windows = Application.Current.Windows.OfType<Window>();
+            foreach (var window in windows)
+            {
+                window.Close();
+                nextWindow = new User_Personal();
+            }
+
+           
+            nextWindow.DataContext = this;
+            nextWindow.Show();
+
         }
         public void CloseApp(object o)
         {
@@ -82,7 +101,7 @@ namespace Train_ticket.ViewModel
 
         public void ViewBuyTicketWindow(object o)
         {
-            BuyTicketVM = new BuyTicketViewModel();
+            BuyTicketVM = new BuyTicketViewModel(CurrentUser);
 
             CurrentView = BuyTicketVM;
 
@@ -94,6 +113,14 @@ namespace Train_ticket.ViewModel
 
         public void ViewYourTicketsWindow(object o)
         {
+            string encryptLogin = EncryptionHelper.Encrypt(CurrentUser.Login, EncryptionHelper.encryptionKey);
+
+            string userJsonData = JsonSerializer.Serialize(encryptLogin);
+
+            HttpClientData request = new();
+
+            //List<AvaliableSeat> data = request.GETDataAsync<List<AvaliableSeat>>(userJsonData, "history").Result;
+
             YourTicketsVM = new YourTicketsViewModel(CurrentUser);
 
             CurrentView = YourTicketsVM;

@@ -7,6 +7,7 @@ using Train_ticket.AppWindow;
 using Train_ticket.Infrastructure.Commands;
 using Train_ticket.Model.Data.DataBaseEntities;
 using Train_ticket.Services;
+using Train_ticket.Services.WEBServices;
 using Train_ticket.View;
 using Train_ticket.ViewModel.BaseViewModel;
 
@@ -43,8 +44,8 @@ namespace Train_ticket.ViewModel
             }
         }
 
-        private int _userAge;
-        public int UserAge
+        private short _userAge;
+        public short UserAge
         {
             get => _userAge;
             set
@@ -114,7 +115,6 @@ namespace Train_ticket.ViewModel
         }
         #endregion 
 
-
         public ICommand SendUserDataCommand { get; }
         public ICommand EnterUserRegistrateCommand { get; }
         public ICommand CloseAppCommand { get; }
@@ -125,32 +125,67 @@ namespace Train_ticket.ViewModel
             EnterUserRegistrateCommand = new LambdaCommand(EnterUserRegistrate);
             CloseAppCommand = new LambdaCommand(CloseApp);
         }
+
         public void SendUserData(object o)
         {
-            User currentUser = new User(UserName, UserSurname, UserAge, UserLogin, UserEmail, UserPassword);
-
-            //Сереализовать сущность в дсон строку
-            string userJsonData = JsonSerializer.Serialize(currentUser);
-
-            //string userJsonData = $"{UserName} {UserSurname} {UserAge} {UserEmail} {UserPassword} {UserLogin}";
-            MessageBox.Show(currentUser.ToString());
-
-            _ = HttpClientData.SendDataAsync(userJsonData);
-
-            //if (UserName.Length < 1)
-            //{
-            //    MessageBox.Show("Корроткое имя!");
-
-            //}
-
-            var windows = Application.Current.Windows.OfType<StartWindow>();
-            foreach (var window in windows)
+            if (UserName.Length < 3 || UserName is null)
             {
-                window.Hide();
+                MessageBox.Show("Корроткое имя!");
+            }
+            if (UserSurname.Length < 3 || UserSurname is null)
+            {
+                MessageBox.Show("Корроткая фамилия!");
+            }
+            if (UserAge < 18 || UserAge.Equals(null))
+            {
+                MessageBox.Show("Регистрация доступно только совершеннолетним пользователям!");
+            }
+            if (UserPassword.Length < 6)
+            {
+                MessageBox.Show("Пароль должен содержать минимум 6 символов!");
+            }
+            if (UserPassword != UserPasswordAgain)
+            {
+                MessageBox.Show("Пароли не совпадают!");
             }
 
-            AuthorizationWindow authorizationWindow = new AuthorizationWindow();
-            authorizationWindow.Show();
+            User currentUser = new User(UserName, UserSurname, UserAge, UserLogin, UserEmail, UserPassword);
+
+            User encryptUser = new User(EncryptionHelper.Encrypt(currentUser.Name, EncryptionHelper.primaryKey),
+            EncryptionHelper.Encrypt(currentUser.Surname, EncryptionHelper.primaryKey),
+            currentUser.Age,
+            EncryptionHelper.Encrypt(currentUser.Login, EncryptionHelper.primaryKey),
+            EncryptionHelper.Encrypt(currentUser.Email, EncryptionHelper.primaryKey),
+            EncryptionHelper.Encrypt(currentUser.Password, EncryptionHelper.primaryKey));
+
+            //Сереализовать сущность в дсон строку
+            string userJsonData = JsonSerializer.Serialize(encryptUser);
+
+            //HttpClientData request = new();
+            //string message = request.GETDataAsync<string>(userJsonData, "reg").Result;
+
+            _=HttpClientData.SendDataAsync(userJsonData);
+
+            //if (message == "welldone")
+            //{
+            //    MessageBox.Show("Вы зарегестрированы!");
+
+            //    var windows = Application.Current.Windows.OfType<StartWindow>();
+            //    foreach (var window in windows)
+            //    {
+            //        window.Hide();
+            //    }
+            //    AuthorizationWindow authorizationWindow = new AuthorizationWindow();
+            //    authorizationWindow.Show();
+            //}
+            //else if (message == "loginisexist")
+            //{
+            //    MessageBox.Show("Данный логин уже используется");
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Не удалось зарегестрироваться!");
+            //}
         }
 
         public void EnterUserRegistrate(object o)

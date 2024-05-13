@@ -1,10 +1,17 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Train_ticket.Model.Data.DataBaseEntities;
+using System.Linq;
+using System.Collections.Generic;
+using Train_ticket.AppWindow;
+using Train_ticket.Services.WEBServices;
+using Newtonsoft.Json.Linq;
+using Train_ticket.View;
 
 namespace Train_ticket.Services
 {
@@ -14,25 +21,29 @@ namespace Train_ticket.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                // Создание контента для запроса
-                //string jsonBody = "{\"Heloo server\":\"I am Bogdan\"}"; // Это типа Json
-                //HttpContent content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-
-                //jsonData = JsonConvert.SerializeObject(jsonData);
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.10.196:8080/reg", content);
+                HttpResponseMessage response = await client.PostAsync("http://192.168.0.240:8080/reg", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
                 {
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show("Ответ от сервера: " + responseContent);
+                    responseContent = JsonSerializer.Deserialize<string>(responseContent);
+
                     if (responseContent == "welldone")
                     {
                         MessageBox.Show("Вы зарегестрированы!");
+
+                        var windows = Application.Current.Windows.OfType<StartWindow>();
+                        foreach (var window in windows)
+                        {
+                            window.Hide();
+                        }
+                        AuthorizationWindow authorizationWindow = new AuthorizationWindow();
+                        authorizationWindow.Show();
                     }
                     else if (responseContent == "loginisexist")
                     {
@@ -47,94 +58,100 @@ namespace Train_ticket.Services
             }
         }
 
-        public static async Task SendDataAuthAsync(string jsonData)
+        public static async Task<User> SendDataAuthAsync(string jsonData)
         {
             using (HttpClient client = new HttpClient())
             {
-                // Создание контента для запроса
-                //string jsonBody = "{\"Heloo server\":\"I am Bogdan\"}"; // Это типа Json
-                //HttpContent content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+                TokenStorage.TokenStorageKey = null;
+                EncryptionHelper.encryptionKey = null;
+                string token = null;
+                string clientKey = null;
 
-                //jsonData = JsonConvert.SerializeObject(jsonData);
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.10.196:8080/auth", content);
+                HttpResponseMessage response = await client.PostAsync("http://192.168.0.240:8080/auth", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
                 {
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show("Ответ от сервера: " + responseContent);
-                    if (responseContent == "welldone")
+                    token = response.Headers.GetValues("AcceptEncoding").FirstOrDefault();
+                    EncryptionHelper.encryptionKey = EncryptionHelper.Decrypt(response.Headers.GetValues("Authorization").FirstOrDefault(), EncryptionHelper.primaryKey);
+
+                    clientKey = EncryptionHelper.encryptionKey;
+
+                    User current = JsonSerializer.Deserialize<User>(responseContent);
+                    User decryptCurrent = new User(EncryptionHelper.Decrypt(current.Name, clientKey), EncryptionHelper.Decrypt(current.Surname, clientKey), current.Age, EncryptionHelper.Decrypt(current.Login, clientKey), EncryptionHelper.Decrypt(current.Email, clientKey), EncryptionHelper.Decrypt(current.Password, clientKey));
+                    //EncryptionHelper.encryptionKey = response.Headers.ToString();
+
+                    if (decryptCurrent.Name != null)
                     {
-                        MessageBox.Show("Успешная авторизация!");
+                        MessageBox.Show($"Добро пожаловать {decryptCurrent.Name}!");
+                        TokenStorage.TokenStorageKey = token;
+                        return decryptCurrent;
                     }
-                    else if (responseContent == "wrong")
+                    else
                     {
                         MessageBox.Show("Неправильный логин или пароль");
+                        return null;
                     }
                 }
                 else
                 {
                     // Обработка неудачного ответа
                     MessageBox.Show("Ошибка при выполнении запроса: " + response.StatusCode);
+                    return null;
                 }
             }
         }
 
-
-        public static async Task SendDataUserTicketAsync(string jsonData)
+        public static async Task<string> SendDataUserTicketAsync(string jsonData)
         {
             using (HttpClient client = new HttpClient())
             {
-                // Создание контента для запроса
-                //string jsonBody = "{\"Heloo server\":\"I am Bogdan\"}"; // Это типа Json
-                //HttpContent content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
-
-                //jsonData = JsonConvert.SerializeObject(jsonData);
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                client.DefaultRequestHeaders.Add("AcceptEncoding", TokenStorage.TokenStorageKey);
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.10.196:8080/history", content);
+                HttpResponseMessage response = await client.PostAsync("http://192.168.0.240:8080/history", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
                 {
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show("Ответ от сервера: " + responseContent);
+                    List<AvaliableSeat> avSeats = JsonSerializer.Deserialize<List<AvaliableSeat>>(responseContent);
                 }
                 else
                 {
                     // Обработка неудачного ответа
                     MessageBox.Show("Ошибка при выполнении запроса: " + response.StatusCode);
                 }
+                return await response.Content.ReadAsStringAsync();
             }
         }
-
 
         public static async Task<string> SendDataUserRootTicketAsync(string jsonData)
         {
             using (HttpClient client = new HttpClient())
             {
-                // Создание контента для запроса
-                //string jsonBody = "{\"Heloo server\":\"I am Bogdan\"}"; // Это типа Json
-                //HttpContent content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
                 //jsonData = JsonConvert.SerializeObject(jsonData);
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                client.DefaultRequestHeaders.Add("AcceptEncoding", TokenStorage.TokenStorageKey);
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.10.196:8080/route", content);
+                HttpResponseMessage response = await client.PostAsync("http://192.168.0.240:8080/route", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
                 {
+                    List<AvaliableSeat> avSeats = new List<AvaliableSeat>();
+
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show("Ответ от сервера: " + responseContent);
                 }
                 else
                 {
@@ -149,27 +166,89 @@ namespace Train_ticket.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                // Создание контента для запроса
-                //string jsonBody = "{\"Heloo server\":\"I am Bogdan\"}"; // Это типа Json
-                //HttpContent content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+                string token = null;
 
-                //jsonData = JsonConvert.SerializeObject(jsonData);
                 HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                client.DefaultRequestHeaders.Add("AcceptEncoding", TokenStorage.TokenStorageKey);
 
                 // Отправка POST-запроса
-                HttpResponseMessage response = await client.PostAsync("http://192.168.10.196:8080/booking", content);
+                HttpResponseMessage response = await client.PostAsync("http://192.168.0.240:8080/booking", content);
 
                 // Проверка успешности запроса
                 if (response.IsSuccessStatusCode)
                 {
                     // Обработка успешного ответа
                     string responseContent = await response.Content.ReadAsStringAsync();
-                    MessageBox.Show("Ответ от сервера: " + responseContent);
+
+                    //List<AvaliableSeat> avaliableSeats = JsonSerializer.Deserialize<List<AvaliableSeat>>(responseContent);
+
+                    responseContent = JsonSerializer.Deserialize<string>(responseContent);
+
+                    if (responseContent == "welldone")
+                    {
+                        MessageBox.Show("Бронирование прошло успешно!");
+
+                        //User_Personal authorizationWindow = new User_Personal();
+                        //authorizationWindow.Show();
+
+                        //var windows = Application.Current.Windows.OfType<RouteView>();
+                        //foreach (var window in windows)
+                        //{
+                        //    window.Close();
+                        //}
+                    }
+                    else if (responseContent == "tokinisempty" || responseContent == "tokinisNotvalid")
+                    {
+                        AuthorizationWindow authorizationWindow = new AuthorizationWindow();
+                        authorizationWindow.Show();
+
+                        var windows = Application.Current.Windows.OfType<RouteView>();
+                        foreach (var window in windows)
+                        {
+                            window.Close();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Не удалось забронировать. Попробуйте еще раз");
+
+                        User_Personal authorizationWindow = new User_Personal();
+                        authorizationWindow.Show();
+
+                        var windows = Application.Current.Windows.OfType<RouteView>();
+                        foreach (var window in windows)
+                        {
+                            window.Close();
+                        }
+                    }
                 }
                 else
                 {
                     // Обработка неудачного ответа
                     MessageBox.Show("Ошибка при выполнении запроса: " + response.StatusCode);
+                }
+            }
+        }
+
+        public async Task<TEntity> GETDataAsync<TEntity>(string jsonData, string domain)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await client.PostAsync($"http://192.168.0.240:8080/{domain}", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseContent = await response.Content.ReadAsStringAsync();
+
+                    TEntity deserializedEntity = JsonSerializer.Deserialize<TEntity>(responseContent);
+                    return deserializedEntity;
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка" + response.StatusCode);
+                    return default(TEntity);
                 }
             }
         }

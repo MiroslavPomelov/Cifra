@@ -6,7 +6,7 @@
          xmlns:vm="clr-namespace:Train_ticket.ViewModel"
          xmlns:local="clr-namespace:Train_ticket.View"
          mc:Ignorable="d" 
-         Title="RouteView" Height="470" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="Transparent" WindowStyle="None" AllowsTransparency="True">
+         Title="RouteView" Height="700" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="Transparent" WindowStyle="None" AllowsTransparency="True">
 
     <Border CornerRadius="20" Background="White" Padding="20">
         <StackPanel>
@@ -29,20 +29,35 @@
                 <StackPanel >
                     <Separator Margin="20 0 0 0" Height="0.8" Background="LightGray" VerticalAlignment="Top"/>
 
-                    <DataGrid Margin="30" ItemsSource="{Binding AvaliableSeats}" MaxHeight="400" MaxWidth="800">
+                    <DataGrid x:Name="RoutesDataGrid" Margin="30" ItemsSource="{Binding AvaliableSeats}" MaxHeight="200" MaxWidth="600" CanUserAddRows="False" AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Откуда" Binding="{Binding Departure}"/>
-                            <DataGridTextColumn Header="Куда" Binding="{Binding Destination}"/>
-                            <DataGridTextColumn Header="Дата отправления" Binding="{Binding DepartureTime, StringFormat='dd.MM.yyyy'}"/>
-                            <DataGridTextColumn Header="Дата кудато" Binding="{Binding ArrivalTime, StringFormat='dd.MM.yyyy'}"/>
+                            <DataGridTextColumn Header="Откуда" Binding="{Binding Departure}" Width="*"/>
+                            <DataGridTextColumn Header="Куда" Binding="{Binding Destination}" Width="*"/>
+                            <DataGridTextColumn Header="Дата отправления" Binding="{Binding DepartureTime, StringFormat='dd.MM.yyyy HH:mm'}" Width="*"/>
+                            <DataGridTextColumn Header="Дата прибытия" Binding="{Binding ArrivalTime, StringFormat='dd.MM.yyyy HH:mm'}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
+                    
+                    <TextBlock Grid.Column="0" Text="Доступные места:" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#008B8B" FontSize="21" FontWeight="Bold"/>
 
+                    <DataGrid x:Name="SeatsDataGrid" Margin="30" ItemsSource="{Binding Seats}" AutoGenerateColumns="False" MaxHeight="300" MaxWidth="600" CanUserAddRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Название" Binding="{Binding TrainName}" Width="*"/>
+                            <DataGridTextColumn Header="Номер поезда" Binding="{Binding TrainNumber}" Width="*"/>
+                            <DataGridTextColumn Header="Номер вагона" Binding="{Binding CarriageNumber}" Width="*"/>
+                            <DataGridTextColumn Header="Класс" Binding="{Binding Class}" Width="*"/>
+                            <DataGridTextColumn Header="Место" Binding="{Binding SeatNumber}" Width="*"/>
+                            <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="*"/>
+                            <DataGridCheckBoxColumn Header="Выбрать" Binding="{Binding Booked}" Width="*"/>
+                            <DataGridTextColumn Header="Паспотрные даты" Binding="{Binding Data}" Width="*"/>
+                        </DataGrid.Columns>
+                       
+                    </DataGrid>
                 </StackPanel>
 
             </Border>
-            <Button x:Name="BackToUserView" Content="Назад" HorizontalAlignment="Left" Margin="0 260 0 0" Command="{Binding BackToUserViewCommand}"  Style="{StaticResource MaterialDesignFlatButton}"/>
-            <Button x:Name="BuyTicket" Content="Купить" HorizontalAlignment="Right" Margin="0 -30 0 0" Command="{Binding BuyTicketCommand}" Width="150"/>
+            <Button x:Name="BackToUserView" Content="Назад" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="20 0 0 0" Command="{Binding BackToUserViewCommand}" Style="{StaticResource MaterialDesignFlatButton}" Width="120"/>
+            <Button x:Name="BuyTicket" Content="Купить" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="20 -20 20 20" Command="{Binding BuyTicketCommand}" Width="150"/>
         </StackPanel>
     </Border>
 </Window>

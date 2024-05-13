@@ -26,9 +26,17 @@
             <StackPanel >
                 <Separator Margin="20 0 0 0" Height="0.8" Background="LightGray" VerticalAlignment="Top"/>
 
-                <DataGrid Margin="30">
-
+                <DataGrid Margin="30" ItemsSource="{Binding AvaliableSeats1}" MaxHeight="400" MaxWidth="600" CanUserAddRows="False" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Откуда" Binding="{Binding Departure}" Width="*"/>
+                        <DataGridTextColumn Header="Куда" Binding="{Binding Destination}" Width="*"/>
+                        <DataGridTextColumn Header="Дата отправления" Binding="{Binding DepartureTime, StringFormat='dd.MM.yyyy HH:mm'}" Width="*"/>
+                        <DataGridTextColumn Header="Дата прибытия" Binding="{Binding ArrivalTime, StringFormat='dd.MM.yyyy HH:mm'}" Width="*"/>
+                        <DataGridTextColumn Header="Цена билета" Binding="{Binding Price}" Width="*"/>
+                    </DataGrid.Columns>
                 </DataGrid>
+
+                <Button Width="200" Margin="40" Content="Искать" HorizontalAlignment="Center" VerticalAlignment="Bottom" Command="{Binding GetUserTicketsCommand}"/>
             </StackPanel>
         </Border>
     </Grid>

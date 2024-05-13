@@ -6,10 +6,10 @@
              xmlns:local="clr-namespace:Train_ticket.View"
              xmlns:vm="clr-namespace:Train_ticket.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="500" d:DesignWidth="800">
 
     <Grid Background="#fff">
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
@@ -24,14 +24,15 @@
             <StackPanel >
                 <Separator Margin="20 0 0 0" Height="0.8" Background="LightGray" VerticalAlignment="Top"/>
 
-                <WrapPanel>
-                    <TextBlock Text="{Binding CurrentUser.Name}" FontWeight="Bold"/>
-                    <TextBlock Text=", "/>
-                    <TextBlock Text="{Binding CurrentUser.SurName}" FontWeight="Bold"/>
-                    <TextBlock Text=", "/>
-                    <TextBlock Text="{Binding CurrentUser.Age}"/>
-                    <TextBlock Text=", "/>
-                    <TextBlock Text="{Binding CurrentUser.Email}"/>
+                <WrapPanel Orientation="Vertical" >
+                    <TextBlock Text="Имя: " FontWeight="Bold" FontSize="16"/>
+                    <TextBlock Text="{Binding CurrentUser.Name}" FontSize="16"/>
+                    <TextBlock Text="Фамилия: " FontWeight="Bold" FontSize="16"/>
+                    <TextBlock Text="{Binding CurrentUser.Surname}" FontSize="16"/>
+                    <TextBlock Text="Возраст: " FontWeight="Bold" FontSize="16"/>
+                    <TextBlock Text="{Binding CurrentUser.Age}" FontSize="16"/>
+                    <TextBlock Text="Почта: " FontWeight="Bold" FontSize="16"/>
+                    <TextBlock Text="{Binding CurrentUser.Email}" FontSize="16"/>
                 </WrapPanel>
 
                 <!--<ListView x:Name="userInformation" Margin="20">
