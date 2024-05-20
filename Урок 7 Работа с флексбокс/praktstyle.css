@@ -1,0 +1,208 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.general {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    width: 80%;
+
+    margin: 0 auto;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.container {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+    background-color: rgb(230, 151, 5);
+}
+
+.head {
+    width: 80%;
+    height: 250px;
+
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+
+    color: aliceblue;
+
+    text-align: left;
+
+    /* display: flex;
+    flex-direction: column; */
+}
+
+.head-button {
+    margin: 15px;
+
+    border: 0cap;
+
+    color: rgb(230, 151, 5);
+    height: 35px;
+    width: 150px;
+}
+
+.facultets {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.facult-head {
+
+    margin: 20px 10px;
+
+    color: rgba(92, 27, 1, 0.692);
+    text-align: center;
+}
+
+.facult-text {
+    margin-bottom: 20px;
+
+    color: rgba(92, 27, 1, 0.692);
+    text-align: center;
+}
+
+.facultets-block {
+    display: flex;
+    justify-content: space-around;
+}
+
+
+.block-text {
+    margin-bottom: 10px;
+
+    color: aliceblue;
+    text-align: center;
+}
+
+.first-block {
+    margin-bottom: 30px;
+    width: 150px;
+    padding: 30px;
+
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+
+    background-color: rgb(230, 151, 5);
+    color: aliceblue;
+    text-align: left;
+}
+
+.button-block {
+    width: 150px;
+    height: 40px;
+    text-align: center;
+}
+
+.brillian-block {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+
+    background-color: rgb(245, 199, 131);
+}
+
+.brilliant {
+    width: 40%;
+
+    display: flex;
+    justify-content: right;
+
+}
+
+.diamond {
+    width: 400px;
+
+    display: flex;
+    justify-content: center;
+}
+
+.brilliant-text {
+    width: 60%;
+}
+
+.brillian-header {
+    margin: 50px;
+    color: rgb(102, 49, 0);
+}
+
+.brillian-p {
+    margin-bottom: 30px;
+
+    color: rgb(102, 49, 0);
+
+}
+
+.brilliant-buttom {
+    margin: 20px;
+    width: 150px;
+    height: 35px;
+
+    border: 0cap;
+
+    background-color: rgb(102, 49, 0);
+    color: aliceblue;
+}
+
+.why-block {
+    margin-top: 30px;
+}
+
+.why-block-header {
+    margin-bottom: 30px;
+    color: rgb(102, 49, 0);
+    text-align: center;
+}
+
+.why-block-text {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.first-text {}
+
+.first-text-p {
+    margin: 30px 10px;
+    color: rgb(102, 49, 0);
+    text-align: center;
+}
+
+.footer {
+    height: 300px;
+
+    background-color: rgb(230, 151, 5);
+}
+
+.footer-text {
+    width: 50%;
+    margin: 30px;
+    font-size: 30px;
+    color: aliceblue;
+}
+
+.footer-p {
+    margin: 30px;
+    font-size: 20px;
+    color: aliceblue;
+}
+
+.footer-image {
+    width: 50%;
+}
