@@ -1,0 +1,29 @@
+.container {
+    height: 563px;
+    background-image: url(background.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /* background-position: top right; */
+
+    opacity: 0.5;
+
+}
+.button {
+    width: 150px;
+    height: 50px;
+
+    padding: 5px;
+    margin: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: white;
+
+    border: 1px solid #3498db;
+    /* border-top-right-radius: 50px;
+    border-bottom-left-radius: 35px; */
+    /* border-radius: 10px 30px 15px 40px; */
+}
