@@ -1,0 +1,37 @@
+*{
+    margin: 0;
+}
+
+.banner{
+    background-image: url(/Изображения/landscape-lights-mountains-sunset-sea-bay-21389-wallhere.com.png);
+
+    display: flex;
+    flex-direction: row;
+}
+
+.banner__header{
+    width: 20%;
+    margin: 10px;
+
+}
+
+.banner__logo{
+    width: 10%;
+}
+
+.banner__list{
+    width: 60%;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content:space-between
+}
+
+.banner-other-logo{
+    width: 20%;
+}
+
+.cbanner-ref{
+    margin: 20px;
+}
