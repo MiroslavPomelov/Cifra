@@ -1,37 +1,153 @@
-*{
+* {
     margin: 0;
 }
 
-.banner{
-    background-image: url(/Изображения/landscape-lights-mountains-sunset-sea-bay-21389-wallhere.com.png);
+.banner {
+    background-image: url(Изображения/landscape-lights-mountains-sunset-sea-bay-21389-wallhere.com.png);
+    background-size: cover;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.banner__header {
+
+    margin: 20px;
 
     display: flex;
     flex-direction: row;
+    justify-content: space-between
 }
 
-.banner__header{
-    width: 20%;
+.banner__logo {
+    width: 15%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.banner__logo1 {
+    width: 80%;
+}
+
+.banner-left-logo {
+    width: 100px;
+}
+
+.banner__list {
+    width: 50%;
+
     margin: 10px;
 
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between
 }
 
-.banner__logo{
+.banner-other-logo {
     width: 10%;
-}
 
-.banner__list{
-    width: 60%;
 
     display: flex;
     flex-direction: row;
-
-    justify-content:space-between
+    align-items: center;
 }
 
-.banner-other-logo{
+.banner__logo__icon {
     width: 20%;
+
+    margin: 10px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
-.cbanner-ref{
+.banner__logo__icon-yellow {
+
+    margin: 5px;
+    width: 50px;
+}
+
+.banner-text {
+    width: 15%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.banner__ref {
     margin: 20px;
+
+    color: aliceblue;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+}
+
+.banner_p {
+    color: aliceblue;
+    font-family: sans-serif;
+}
+
+.banner_p_number {
+
+    color: aliceblue;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 20px;
+}
+
+
+
+
+
+.banner_main {
+    width: 50%;
+
+    margin-top: 200px;
+    margin-bottom: 200px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.banner_main_text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: aliceblue;
+    align-content: center;
+    font-size: 55px;
+    font-family: sans-serif;
+}
+
+.banner_main_text_yellow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    font-size: 55px;
+    color: #EEC044;
+    font-family: sans-serif;
+}
+
+.banner_button {
+    margin: 20px;
+
+    background-color: #74B472;
+    color: aliceblue;
+    border: none;
+    border-radius: 10px;
+    width: 160px;
+    height: 50px;
 }
