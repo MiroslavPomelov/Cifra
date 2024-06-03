@@ -1,0 +1,56 @@
+/* .text {
+    color: rgb(164, 144, 238);
+    animation: moving-text 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-out;
+} */
+
+
+
+.container {
+   
+}
+
+ .text:hover {
+    animation: round 2000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+
+    border: 2px;
+    border-color: rgb(0, 0, 0);
+} 
+
+/* 
+@keyframes moving-text {
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(2);
+    }
+}
+
+@keyframes stop-text {
+    from{
+        transform: scale(1);
+    }
+    to{
+        transform: scale(0.5);
+    }
+} */ 
+
+@keyframes round {
+    0%{
+        box-shadow: 10px 20px 30px;
+        transform: scale(1);
+    }
+    50%{
+        box-shadow: 40px 50px 60px;
+        transform: scale(1.5);
+    }
+    100%{
+        box-shadow: 10px 20px 30px;
+        transform: scale(1);
+    }
+} 
