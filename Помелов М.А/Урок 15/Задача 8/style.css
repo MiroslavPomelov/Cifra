@@ -1,0 +1,24 @@
+.upper-container {
+    /* Ваш код здесь */
+    /* Поместите кота в кружок */
+
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column-reverse;
+
+}
+
+.cat-two {
+    /* Ваш код здесь */
+    /* Можете взаимодействовать с серым котом */
+
+    align-self: center;
+}
+
+.cat-three {
+    /* Ваш код здесь */
+    /* Можете взаимодействовать с рыжим котом */
+
+ align-self: flex-end;
+   
+}

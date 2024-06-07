@@ -1,0 +1,39 @@
+.general {
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+
+    flex-direction: column;
+}
+
+.form {
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+
+    flex-direction: column;
+
+    box-shadow: inset 5px 15x 5px 10px rgb(0, 0, 0);
+}
+
+h2 {
+    text-align: center;
+}
+
+.text-input {
+    width: 30%;
+
+    margin-bottom: 10px;
+
+    background-color: whitesmoke;
+
+    border-top: none;
+    border-right: none;
+    border-left: none;
+
+    border-bottom: 1px solid gray;
+
+    color: rgb(0, 0, 0);
+
+    outline: none;
+}

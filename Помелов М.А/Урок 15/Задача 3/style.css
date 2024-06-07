@@ -1,0 +1,8 @@
+.upper-container {
+    /* Ваш код здесь */
+    /* Поместите кота в кружок */
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: end;
+}

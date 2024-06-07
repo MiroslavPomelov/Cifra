@@ -1,0 +1,25 @@
+.upper-container {
+    /* Ваш код здесь */
+    /* Поместите кота в кружок */
+
+    display: flex;
+}
+
+.cat-default{
+    /* Ваш код здесь */
+    /* Вы можете взаимодействовать с бежевыми котами */
+
+    order: 3;
+}
+
+.cat-ginger{
+    /* Ваш код здесь */
+    /* Вы можете взаимодействовать с рыжими котами */
+
+    order: 2;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+}

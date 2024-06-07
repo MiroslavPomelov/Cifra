@@ -1,0 +1,30 @@
+*{
+    background-color: rgb(200, 200, 250);
+}
+
+.container{
+    color: yellow;
+
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 20px;
+    line-height: 30px;
+
+    opacity: 0.5;
+}
+
+.header ul li{
+    padding: 10px 15px;
+    margin: 5px;
+
+    background-color: rgb(128, 240, 128);
+}
+
+#list-item{
+    background-color: brown;
+}
+
+.container .header{
+    border: 2px solid black;
+
+    background-color: #fff;
+}

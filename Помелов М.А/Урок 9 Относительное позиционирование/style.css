@@ -1,0 +1,87 @@
+.fixed-block {
+    width: 100px;
+    height: 100px;
+
+
+    position: fixed;
+    top: 50px;
+    left: 50px;
+
+
+
+    background-color: black;
+}
+
+.first {
+    height: 200px;
+
+    background-color: lightgray;
+}
+
+.second {
+    height: 200px;
+
+    background-color: darkgray;
+}
+
+.container {
+    height: 500px;
+    background-color: lightcoral;
+}
+
+.sticky-block {
+    width: 100px;
+    height: 100px;
+
+    position: sticky; 
+    top: 100px;
+    left: 50%;
+    background-color: red;
+}
+
+
+
+
+/* .parent {
+    background-color: forestgreen;
+}
+
+.child-1 {
+    width: 100px;
+    height: 100px;
+
+    margin: 10px;
+
+    position: static;
+    left: 200px;
+    top: 100px;
+
+    background-color: yellowgreen;
+
+}
+
+.child-2 {
+    width: 100px;
+    height: 100px;
+
+    margin: 10px;
+
+    position: relative;
+    left: 200px;
+    top: 50px;
+
+    background-color: blueviolet;
+}
+
+.child-3 {
+    width: 100px;
+    height: 100px;
+
+    margin: 10px;
+
+    position: relative;
+    left: 200px;
+    top: 0px;
+
+    background-color: brown;
+} */
