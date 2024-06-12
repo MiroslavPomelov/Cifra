@@ -1,0 +1,166 @@
+* {
+    background-color: black;
+    margin: 0;
+    padding: 0;
+
+    font-family: sans-serif;
+    color: white;
+}
+
+.nav {
+    display: flex;
+    justify-content: center;
+}
+
+.nav__block {
+    width: 70%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+
+    border-bottom: 1px solid gray;
+}
+
+.nav__reference {
+    text-decoration: none;
+    font-family: ACADEMY ENGRAVED LET;
+
+    color: white;
+}
+
+
+
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.main__section {
+    margin-top: 175px;
+
+    display: flex;
+    justify-content: center;
+}
+
+.main__text {
+    color: rgb(255, 255, 255);
+
+    font-family: ACADEMY ENGRAVED LET;
+    font-size: 40px;
+}
+
+.main__image-block {
+
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+
+    background-image: url(anon.png);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    height: 500px;
+}
+
+
+.main__image-text {
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    color: rgb(0, 0, 0);
+    font-size: 48px;
+
+    font-family: ACADEMY ENGRAVED LET;
+}
+
+
+
+
+
+
+
+
+.main__projects {
+    width: 70%;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+
+    border: 2px solid white;
+}
+
+.main__projects-text{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.main__projects-img{
+    width: 50%;
+}
+
+.str{
+    width: 15%;
+}
+
+
+
+
+
+
+
+
+
+.main__about{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.main__about-p-text{
+    margin-top: 100px;
+    margin-bottom: 20px;
+
+    color: white;
+
+    font-size: 30px;
+    font-family: ACADEMY ENGRAVED LET;
+    text-align: center;
+}
+
+.main__info{
+
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+}
+
+.main__gigaimg{
+    width: 50%;
+}
+
+.giga{
+    width: 65%;
+}
+
+.info__text{
+    width: 50%;
+}
+
+.info__text-p{
+    margin-left: 10px;
+    line-height: 25px;
+}
