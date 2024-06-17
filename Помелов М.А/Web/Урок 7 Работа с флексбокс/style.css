@@ -1,0 +1,39 @@
+.container {
+    width: 80%;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    /* justify-content: space-between; */
+    /* justify-content: space-evenly; */
+
+    border: 2px solid brown;
+}
+
+.first-block {
+    margin: 5px;
+    padding: 5px;
+
+    order: 3;
+
+    background-color: lightblue;
+}
+
+.second-block {
+    margin: 5px;
+    padding: 5px;
+
+    order: 1;
+
+    background-color: lightblue;
+}
+
+.third-block {
+    margin: 5px;
+    padding: 5px;
+
+    order: 2;
+
+    background-color: lightblue;
+}

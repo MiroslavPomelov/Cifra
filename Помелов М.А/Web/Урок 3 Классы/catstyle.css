@@ -1,0 +1,26 @@
+body{
+    background-color: rgb(184, 184, 184);
+}
+
+.picture{
+    width: 500px;
+}
+
+.text{
+    color: green;
+}
+
+.par{
+border: 1px solid black;
+margin: 2px;
+}
+
+.reff{
+    margin: 150px;
+    background-color: rgb(81, 235, 127);
+    
+}
+
+.logo{
+    width: 50px;
+}

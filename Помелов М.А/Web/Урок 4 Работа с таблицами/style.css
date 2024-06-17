@@ -1,0 +1,17 @@
+table{
+    border: 1px solid black;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td{
+    border: 1px solid black;
+    width: 100px;
+    background-color: aquamarine;
+}
+
+tr{
+    border: 1px solid black;
+    width: 100px;
+    background-color: rgb(14, 90, 65);
+}

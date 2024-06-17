@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .form {
+            width: 500px;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form input {
+            margin: 10px 0;
+        }
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <form class="form" action=".php" method="post" novalidate>
+        <label for="login">Логин</label>
+        <input id="user_login" type="text" name="user_login" required>
+
+        <label for="password">Пароль</label>
+        <input id="user_password" type="password" name="user_password" required>
+
+        <label for="mail">Почта</label>
+        <input id="user_mail" type="email" name="user_mail" required>
+
+        <input type="file" name="" id="">
+
+        <select style="margin: 20px 0;">
+            <option value="Banana">Банан</option>
+            <option value="Apple">Яблоко</option>
+            <option value="Orange">Апельсин</option>
+        </select>
+
+        <textarea style="margin: 20px 0;" rows="4" cols="50">
+        Расскажите о себе...
+       </textarea>
+
+        <fieldset>
+            <legend>Контакная информация</legend>
+            <label for="name">Имя</label>
+            <label for="text"></label>
+            <label for="email">Выше мыло:</label>
+            <input for="email" name="" id="">Имя</input>
+        </fieldset> 
+
+        <button type="submit">Отправить</button>
+    </form>
+</body>
+
+</html>

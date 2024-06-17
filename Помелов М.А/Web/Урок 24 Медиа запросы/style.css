@@ -1,0 +1,59 @@
+.example {
+    height: 200px;
+    margin: 30px;
+
+    background-color: rgb(255, 0, 0);
+}
+
+.appearing-block{
+    width: 200px;
+    height: 200px;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: none;
+
+    background-color: purple;
+}
+
+@media (max-width:700px) {
+    .example {
+        background-color: rgb(44, 20, 109);
+    }
+}
+
+@media (min-width:1100px) {
+    .example {
+        background-color: rgb(20, 109, 24);
+    }
+
+    .appearing-block{
+       display: block;
+    }
+}
+
+/* @media (width:1100px) and (height: 500px) {
+    .example {
+        background-color: rgb(37, 71, 37);
+    }
+}
+
+@media (orientation:landscape)  {
+    .example {
+        background-color: rgb(255, 255, 255);
+    }
+}
+
+@media (orientation:portrait)  {
+    .example {
+        background-color: rgb(0, 0, 0);
+    }
+}
+
+@media (max-resolution:landscape)  {
+    .example {
+        background-color: rgb(54, 35, 136);
+    }
+} */

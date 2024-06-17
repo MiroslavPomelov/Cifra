@@ -1,0 +1,36 @@
+table{
+    border: 1px solid black;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+
+
+th{
+    border: 1px solid black;
+    width: 100px;
+}
+
+.row1{
+    border: 5px dashed red;
+    background-color: brown;
+}
+
+.row2{
+    border: 4px dotted orange;
+}
+
+.row3{
+    border: 3px solid yellow;
+}
+
+.row4{
+    border: 2px solid rgb(0, 241, 0);
+}
+
+.row5{
+    border: 1px solid rgb(74, 10, 250);
+    background-color: rgb(90, 15, 189);
+}
+
+

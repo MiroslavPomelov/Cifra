@@ -1,0 +1,31 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.logo {
+    width: 200px;
+}
+
+body {
+    background-color: rgb(255, 255, 255);
+}
+
+.border{
+    border-top: 2px brown;
+    border-bottom:2px red;
+
+    float: right;
+}
+
+.link {
+    text-decoration: none;
+
+    list-style: none;
+}
+
+.text1 {
+    text-align: center;
+    width: 20%;
+    float: right;
+}

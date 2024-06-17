@@ -1,0 +1,15 @@
+.upper-container {
+    /* Ваш код здесь */
+    /* Поместите кота в кружок */
+
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    justify-content: space-evenly;
+}
+
+.cat-two {
+    /* Ваш код здесь */
+    /* Можете взаимодействовать с серым котом*/
+    align-self: flex-start;
+}

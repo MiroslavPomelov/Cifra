@@ -1,0 +1,35 @@
+body {
+    background-color: bisque;
+}
+
+.main-header {
+    color: black;
+}
+
+.tea-icon {
+    width: 150px;
+    margin: 1;
+}
+
+title {
+    color: black;
+}
+
+text {
+    color: black;
+    font-size: 16px;
+}
+
+p {
+    width: 650px;
+}
+
+.button {
+    color: black;
+    background-color: rgb(0, 138, 92);
+    width: 150px;
+
+    border: 3px double black;
+    /* border-radius: 10px;
+    border-bottom: 3px solid red; */
+}

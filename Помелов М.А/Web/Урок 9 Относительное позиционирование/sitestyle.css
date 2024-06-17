@@ -1,0 +1,130 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.general {}
+
+.header {
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    background-color: blanchedalmond;
+}
+
+.logo{
+    margin: 5px;
+    width: 50px;
+}
+
+.burger{
+    margin: 5px;
+    width: 50px;
+}
+
+.where-block {
+    display: flex;
+    flex-direction: row;
+    margin: 30px 30px;
+
+    height: 400px;
+    background-color: azure;
+}
+
+.where-parag {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+}
+
+.where-head {
+    margin-bottom: 10px;
+    color: rgb(0, 83, 83);
+}
+
+.where-text {
+    color: rgb(0, 83, 83);
+}
+
+.where-img {
+    display: flex;
+    flex-direction: row;
+    width: 30%;
+}
+
+.question{
+    width: 100%;
+}
+
+.footer {
+    height: 400px;
+    background-color: blanchedalmond;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.block1{
+
+    margin: 10px;
+    height: 200px;
+    width: 20%;
+
+    position: relative;
+    left: 50px;
+    top: 50px;
+    
+    background-color: azure;
+}
+
+.block2{
+
+    margin: 10px;
+    width: 20%;
+    height: 200px;
+
+    position: relative;
+    left: 60px;
+    top: 50px;
+    
+    background-color: azure;
+}
+
+.block3{
+
+    margin: 10px;
+    height: 200px;
+    width: 20%;
+
+    position: relative;
+    left: 70px;
+    top: 50px;
+    
+    background-color: azure;
+}
+
+.block4{
+
+    margin: 10px;
+    height: 200px;
+    width: 20%;
+
+    position: relative;
+    left: 80px;
+    top: 50px;
+    
+    background-color: azure;
+}
+
+.block5{
+
+    margin: 10px;
+    height: 200px;
+    width: 20%;
+
+    position: relative;
+    left: 90px;
+    top: 50px;
+    
+    background-color: azure;
+}

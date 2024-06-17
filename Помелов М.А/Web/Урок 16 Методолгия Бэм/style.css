@@ -1,0 +1,330 @@
+* {
+    margin: 0;
+}
+
+.banner {
+    background-image: url(Изображения/landscape-lights-mountains-sunset-sea-bay-21389-wallhere.com.png);
+    background-size: cover;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.banner__header {
+
+    margin: 20px;
+
+    border-bottom: 1px solid rgb(109, 109, 109);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between
+}
+
+
+@media (max-width: 1231px) {
+    .banner__header{
+    }
+
+    .banner-text{
+        flex-direction: column;
+    }
+}
+
+.banner__logo {
+    width: 15%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.banner__logo1 {
+    width: 80%;
+}
+
+.banner-left-logo {
+    width: 100px;
+}
+
+.banner__list {
+    width: 50%;
+
+    margin: 10px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+
+.banner__logo-icon {
+    width: 30px;
+
+    margin: 10px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.banner__logo-icon-yellow {
+
+    margin: 50px;
+    width: 50px;
+}
+
+.banner-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.banner-number {
+    margin: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.banner__ref {
+    margin: 20px;
+
+    color: aliceblue;
+
+    text-decoration: none;
+
+    font-family: sans-serif;
+
+    white-space: nowrap;
+}
+
+.banner-p {
+    color: aliceblue;
+    font-family: sans-serif;
+
+    font-size: 12px;
+}
+
+.banner_p_number {
+
+    color: aliceblue;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 16px;
+}
+
+
+
+
+
+.banner_main {
+    width: 50%;
+
+    margin-top: 200px;
+    margin-bottom: 200px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.banner_main-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: aliceblue;
+    align-content: center;
+    font-size: 55px;
+    font-family: sans-serif;
+}
+
+.banner_main-text-yellow {
+
+    margin-right: 3%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    font-size: 55px;
+    color: #EEC044;
+    font-family: sans-serif;
+}
+
+.banner_middle-text {
+
+    display: flex;
+}
+
+.banner_button {
+    margin-top: 40px;
+
+    background-color: #74B472;
+    color: aliceblue;
+    border: none;
+    border-radius: 10px;
+    width: 160px;
+    height: 50px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.sevices{
+    background-color: wheat;
+
+    display: flex;
+    align-items: center;
+}
+
+.our-services{
+    text-align: center;
+
+}
+
+.what{
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.middle {
+    margin: 0 auto;
+
+    background-image: url(Изображения/pngegg.png);
+    background-size: 1100px;
+
+}
+
+.middle__conainer {
+    
+    margin: 150px;
+
+    margin-top: 100px;
+    margin-bottom: 100px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.middle__inform{
+    width: 33%;
+}
+
+.welcome {
+    color: #EEC044;
+}
+
+.leader {
+    font-weight: bold;
+    font-size: 30px;
+
+    font-family: sans-serif;
+
+    margin-bottom: 20px;
+}
+
+.middle_text {
+    color: rgb(139, 139, 139);
+    font-size: 13px;
+    font-family: sans-serif;
+
+    line-height: 20px;
+
+    margin-bottom: 30px;
+}
+
+.middle__tourism{
+    display: flex;
+    flex-direction: row;
+
+    margin-bottom: 20px;
+
+}
+
+.middle__tourism-text{
+   
+}
+
+.middle__level {
+    color: #49b345;
+
+    font-family: sans-serif;
+}
+
+.small-img {
+    width: 150px;
+    margin-left: 20px;
+    border-radius: 10px;
+
+    display: flex;
+    justify-content: right;
+}
+
+.middle-pictures{
+    width: 25%;
+    height: 300px;
+}
+
+.middle-settings{
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+}
+
+.up-img{
+    width: 150px;
+    margin: 10px;
+    border-top-left-radius: 50px;
+}
+
+.down-img{
+    width: 150px;
+    margin: 10px;
+}
+
+.eifel-img{
+    width: 200px;
+    margin: 10px;
+    border-top-right-radius: 50px;
+
+    height: 350px;
+}
+

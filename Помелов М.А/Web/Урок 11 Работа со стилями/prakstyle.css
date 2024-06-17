@@ -1,0 +1,41 @@
+* {
+    margin: 0;
+
+}
+
+div div {
+    display: flex;
+
+    flex-wrap: wrap;
+}
+
+div div div {
+
+    display: flex;
+    justify-content: space-evenly;
+    color: green;
+
+    border: 2px dashed black;
+
+    margin: 60px;
+    padding: 10px;
+
+
+}
+
+
+div div :hover {
+    color: rgb(0, 80, 0);
+
+    width: 110%;
+    box-shadow: inset 10px 10px 5px 10px rgb(0, 0, 0);
+    cursor: pointer;
+}
+
+div div :active {
+    color: rgb(0, 207, 180);
+    background-color: rgb(201, 143, 255);
+
+    width: 100px;
+    cursor: pointer;
+}

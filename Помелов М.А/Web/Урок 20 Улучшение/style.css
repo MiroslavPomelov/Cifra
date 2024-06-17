@@ -1,0 +1,202 @@
+* {
+    margin: 0;
+    padding: 0;
+
+    font-family: serif;
+    font-weight: lighter;
+}
+
+header {
+    width: 60%;
+
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.icon {
+    width: 48px;
+
+}
+
+.headtext {
+    font-size: 30px;
+    font-weight: lighter;
+    font-family: serif;
+}
+
+nav {
+    border-top: 1px solid black;
+}
+
+.reference {
+    text-decoration: none;
+
+    color: black;
+}
+
+.header__wrapper {
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.header__navigation {
+    margin-top: 10px;
+    width: 90%;
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.main__header {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.main__text {
+    font-size: 40px;
+    margin-bottom: 10px;
+    font-family: serif;
+    font-weight: lighter;
+}
+
+.main__images {
+    width: 50%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+.breadimg {
+    margin-top: 20px;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+}
+
+.breadimg-right {
+    margin-top: 20px;
+    width: 100%;
+
+    display: flex;
+    opacity: 50%;
+}
+
+.breadimg-left {
+    margin-top: 20px;
+    width: 100%;
+
+    display: flex;
+    opacity: 50%;
+}
+
+
+.section__baking {
+    background-color: rgb(231, 210, 190);
+}
+
+.baking__wrapper {
+    text-align: center;
+}
+
+.main__text-baking {
+    padding-top: 100px;
+    font-size: 40px;
+    margin-bottom: 10px;
+    font-family: serif;
+    font-weight: lighter;
+}
+
+.sections__labels {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-content: space-evenly;
+}
+
+.first-label {
+    width: 15%;
+    margin-top: 100px;
+    line-height: 25px;
+}
+
+.labelimg{
+    margin-bottom: 30px;
+}
+
+.underlabel-h3{
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.chief_img {
+    margin: 0 auto;
+    margin-top: 40px;
+    width: 50%;
+
+    display: flex;
+    justify-content: center;
+}
+
+.man__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.time_work-p {
+    padding-top: 100px;
+    font-size: 32px;
+    margin-bottom: 10px;
+    font-family: serif;
+    font-weight: lighter;
+}
+
+.time_work-wait {
+    font-size: 15px;
+    margin-bottom: 10px;
+    font-family: serif;
+    font-weight: lighter;
+}
+
+.button__call {
+    width: 130px;
+    height: 40px;
+    color: white;
+    background: black;
+}
+
+.man_clock {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.time_work-wait-days {
+
+}
+
+.time_work-wait-clock {
+    margin-bottom: 25px;
+}
