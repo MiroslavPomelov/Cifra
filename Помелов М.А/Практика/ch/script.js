@@ -20,9 +20,9 @@ function show_board() {
 
 function change_color(x, y) {
     if ((x + y) % 2 == 0) {
-        return "#179c68";
+        return "brown";
     }
     else {
-        return "#fff798";
+        return "beige";
     }
 }
