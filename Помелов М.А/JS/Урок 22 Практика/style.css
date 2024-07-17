@@ -1,0 +1,250 @@
+.general {
+    display: flex;
+    /* flex-direction: row; */
+    /* align-items: center; */
+    flex-wrap: wrap;
+
+    background-color: blanchedalmond;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+}
+
+.basket{
+    width: 64px;
+
+    position: relative;
+
+    display: flex;
+    background-image: url('shopping-basket.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.counter{
+    position: absolute;
+    top: 19px; left: 40px;
+    background-color: blueviolet;
+    font-size: 30px;
+    text-align: center;
+    
+    color: aliceblue;
+}
+
+.buyButton{
+    width: 80px;
+    height: 30px;
+    padding: 5px 8px;
+    background: blueviolet;
+    color: aliceblue;
+    border-radius: 10px;
+
+    border: none;
+}
+
+.card1 {
+    margin: 20px;
+    height: 250px;
+    width: 30%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    border: 5px solid rgb(108, 173, 152);
+    border-radius: 10px;
+
+    background-color: rgb(178, 233, 215);
+
+    z-index: 1;
+}
+
+.card5 {
+    margin: 20px;
+    height: 250px;
+    width: 30%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    border: 5px solid rgb(157, 190, 94);
+    border-radius: 10px;
+
+    background-color: rgb(207, 245, 118);
+
+    z-index: 1;
+}
+
+.card2 {
+    margin: 20px;
+    height: 250px;
+    width: 30%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    border: 5px solid rgb(173, 172, 108);
+    border-radius: 10px;
+
+    background-color: rgb(229, 233, 178);
+
+    z-index: 1;
+}
+
+.card3 {
+    margin: 20px;
+    height: 250px;
+    width: 30%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    border: 5px solid rgb(118, 81, 129);
+    border-radius: 10px;
+
+    background-color: rgb(211, 178, 233);
+
+    z-index: 1;
+}
+
+.card4 {
+    margin: 20px;
+    height: 250px;
+    width: 30%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    border: 5px solid rgb(139, 35, 61);
+    border-radius: 10px;
+
+    background-color: rgb(172, 88, 130);
+
+    z-index: 1;
+}
+
+
+
+
+
+
+
+
+
+.card10 {
+    margin: 20px;
+    height: 250px;
+    width: 30%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    border: 5px solid rgb(108, 173, 152);
+    border-radius: 10px;
+
+    background-color: rgb(178, 233, 215);
+
+    z-index: 1;
+}
+
+.card6 {
+    margin: 20px;
+    height: 250px;
+    width: 30%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    border: 5px solid rgb(157, 190, 94);
+    border-radius: 10px;
+
+    background-color: rgb(207, 245, 118);
+
+    z-index: 1;
+}
+
+.card7 {
+    margin: 20px;
+    height: 250px;
+    width: 30%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    border: 5px solid rgb(173, 172, 108);
+    border-radius: 10px;
+
+    background-color: rgb(229, 233, 178);
+
+    z-index: 1;
+}
+
+.card8 {
+    margin: 20px;
+    height: 250px;
+    width: 30%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    border: 5px solid rgb(118, 81, 129);
+    border-radius: 10px;
+
+    background-color: rgb(211, 178, 233);
+
+    z-index: 1;
+}
+
+.card9 {
+    margin: 20px;
+    height: 250px;
+    width: 30%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    border: 5px solid rgb(139, 35, 61);
+    border-radius: 10px;
+
+    background-color: rgb(172, 88, 130);
+
+    z-index: 1;
+}
+
+.card-p{
+    text-align: center;
+}
+
+.background{
+    width: 30%;
+    height: 150%;
+
+
+
+    position: absolute;
+    
+    z-index: 0;
+
+    opacity: 0.7;
+}
