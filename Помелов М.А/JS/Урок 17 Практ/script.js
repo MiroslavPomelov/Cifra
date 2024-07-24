@@ -1,4 +1,3 @@
-
 let squareArray = new Array();
 
 document.body.style.display = 'flex';
