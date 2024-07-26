@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* .box {
+            width: 100px;
+            height: 100px;
+
+            background-color: red;
+            animation: slide 2s infinite alternate;
+        }
+
+        @keyframes slide{
+            from{
+                transform: translateX(0);
+            }
+            to{
+                transform: translateX(200px);
+            }
+        } */
+
+
+
+        /* .box:hover {
+            transform: scale(1.5);
+        } */
+
+
+
+
+
+        /* .box {
+            width: 100px;
+            height: 100px;
+
+            position: relative;
+
+            background-color: green;
+
+        } */
+    </style>
+</head>
+
+<body>
+    <div class="football">
+        <img id="pic" src="first.png" alt="">
+    </div>
+
+    <script>
+        let pictures = ['first.png','second.png','third.png','fouth.png','fifth.png'];
+ 
+        function changeImage(number) {
+            const pic = document.getElementById('pic');
+            pic.src = pictures[number];
+            console.log(pic.src);
+        }
+
+        let interval = setInterval(man, 100);
+        let frame = 0;
+
+        function man(){
+           if (frame >= 4) {
+               clearInterval(interval);
+           }
+           else{
+              frame++;
+              changeImage(frame);
+           }
+        }
+
+
+
+
+
+        // Плавно сразу
+        //  function frame() {
+        //     if (position >= 350) {
+        //         return;
+        //     }
+        //     else{
+        //         position++;
+        //         box.style.left = position + 'px';
+        //         requestAnimationFrame(frame);
+        //     }
+        // }
+
+        // requestAnimationFrame(frame);
+
+
+
+
+
+
+        
+        // setTimeout(() => {
+        //     let interval = setInterval(frame, 10);
+        // }, 1000)
+        
+
+
+        // function frame() {
+        //     if (position >= 350) {
+        //         clearInterval(interval);
+        //     }
+        //     else{
+        //         position++;
+        //         box.style.left = position + 'px';
+        //     }
+        // }
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>

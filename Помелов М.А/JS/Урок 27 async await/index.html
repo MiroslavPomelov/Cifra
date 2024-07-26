@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        // async function doSomethingAsync() {
+        //     return 'Hello async';
+        // }
+
+        // doSomethingAsync().then(data => console.log(data))
+
+        // let data = await doSomethingAsync();
+
+
+        // async function fetchData() {
+        //     // Взаимодействие основанное на промисах
+        //     // fetch('url')
+        //     // .then(response => {
+        //     //     console.log(response);
+        //     // })
+
+        //     let response = await fetch('url');
+        //     let data = await response.json();
+
+        //     return data;
+        // }
+
+        // let result = fetchData();
+
+
+
+
+
+
+        // class Example {
+        //     constructor(url) {
+        //         this.url = url;
+        //         this.responseData = null;
+        //     }
+
+        //     async fetchData() {
+        //         let response = await fetch(this.url);
+        //         this.responseData = await response.json();
+
+        //         return this.responseData;
+        //     }
+        // }
+
+        // let example = new Example('https://jsonplaceholder.typicode.com/posts/1');
+        // example.fetchData()
+        //     .then(data => console.log(data));
+
+        //     let promise = new Promise((resolve, reject) => {
+        //     if (true){
+        //         reject('Ошибка');
+        //     }
+        //     else{
+        //         resolve('Успешно!');
+        //     }
+        // });
+
+        // promise.then((result) => {
+        //     console.log(result)
+        // })
+        // .catch((error) => {
+        //     console.error(error);
+        // })
+
+
+
+        async function many() {
+            let [data1, data2, data3] = await Promise.all([
+                fetch('https://jsonplaceholder.typicode.com/posts/1')
+                    .then(response => response.json()),
+                fetch('https://jsonplaceholder.typicode.com/posts/2')
+                    .then(response => response.json()),
+                fetch('https://jsonplaceholder.typicode.com/posts/3')
+                    .then(response => response.json())
+            ])
+
+            console.log(data1);
+            console.log(data2);
+            console.log(data3);
+        }
+
+        many();
+    </script>
+</body>
+
+</html>
