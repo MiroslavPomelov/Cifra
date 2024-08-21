@@ -1,0 +1,29 @@
+body{
+    overflow: hidden;
+}
+
+.wrapper{
+    position: absolute;    
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.box{   
+    position: relative;
+}
+
+.circle{
+    width: 120px;
+    height: 120px;
+
+    position: absolute;
+    transform: translate(50%, 50%);
+
+    border-radius: 50%;
+    box-shadow: inset 1px 1px 5px black;
+    color: brown;
+    text-wrap: wrap;
+    text-align: center;
+    
+}
