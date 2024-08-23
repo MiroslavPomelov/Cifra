@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"
+        defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Передовая электроника</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">На главную</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Пользователям</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Каталог
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Компьютеры</a></li>
+                                <li><a class="dropdown-item" href="#">Телевизоры</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="\subdomains\smartphone.html">Смартфоны</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Название устройства"
+                            aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Поиск</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            <div class="col">
+                <div class="card h-100">
+                    <img src="\resources\cards\smartphone\smartphone-image-purple-background.jpg" class="card-img-top" alt="Стильный черный смартфон">
+                    <div class="card-body">
+                        <h5 class="card-title">Стильный черный смартфон</h5>
+                        <p class="card-text">
+                            Этот элегантный смартфон в черном цвете идеально подходит для тех, кто ценит минимализм и
+                            высокую производительность.
+                            Наслаждайтесь современным дизайном и отличной функциональностью.
+                        </p>
+                        <button type="button" class="btn btn-primary">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="\resources\cards\smartphone\smartphone-image-green-neon.jpg" class="card-img-top" alt="Ультратонкий зеленый смартфон">
+                    <div class="card-body">
+                        <h5 class="card-title">Ультратонкий зеленый смартфон</h5>
+                        <p class="card-text">
+                            Этот ультратонкий смартфон в серебристом корпусе сочетает в себе мощность и стиль. Его легкость и изысканный дизайн делают его отличным выбором для повседневного использования.
+                        </p>
+                        <button type="button" class="btn btn-primary">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="\resources\cards\smartphone\smartphone-image-purple-recursive.jpg" class="card-img-top" alt="Смартфон с большим экраном">
+                    <div class="card-body">
+                        <h5 class="card-title">Смартфон с большим экраном</h5>
+                        <p class="card-text">
+                            Этот смартфон с большим экраном обеспечивает превосходное качество изображения и удобство использования. Идеально подходит для просмотра видео, игр и работы с документами.
+                        </p>
+                        <button type="button" class="btn btn-primary">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="\resources\cards\smartphone\smartphone-image-red-neon.jpg" class="card-img-top" alt="Мощный стильный красный смартфон">
+                    <div class="card-body">
+                        <h5 class="card-title">Мощный стильный красный смартфон</h5>
+                        <p class="card-text">
+                            Яркий красный смартфон с мощным процессором и долговечным аккумулятором. Отличный выбор для активных пользователей, которым важна скорость и производительность.
+                        </p>
+                        <button type="button" class="btn btn-primary">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="\resources\cards\smartphone\smartphone-image-pink-neon.jpg" class="card-img-top" alt="Смартфон с двойной камерой">
+                    <div class="card-body">
+                        <h5 class="card-title">Смартфон с двойной камерой</h5>
+                        <p class="card-text">
+                            Этот смартфон оснащен двойной камерой, которая позволяет делать потрясающие фотографии и видео. Высокое качество съемки и множество режимов для создания идеальных снимков.
+                        </p>
+                        <button type="button" class="btn btn-primary">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="\resources\cards\smartphone\smartphone-image-yellow.jpg" class="card-img-top" alt="Флагманский смартфон с 5G">
+                    <div class="card-body">
+                        <h5 class="card-title">Флагманский смартфон с 5G</h5>
+                        <p class="card-text">
+                            Этот флагманский смартфон поддерживает сети 56, обеспечивая невероятную скорость передачи данных. Современный дизайн и передовые технологии делают его лучшим выбором для тех, кто всегда хочет быть на связи.
+                        </p>
+                        <button type="button" class="btn btn-primary">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="\resources\cards\smartphone\smartphone-image-alternative-view.jpg" class="card-img-top" alt="Водонепроницаемый смартфон">
+                    <div class="card-body">
+                        <h5 class="card-title">Водонепроницаемый смартфон</h5>
+                        <p class="card-text">
+                            Смартфон с защитой от воды и пыли идеально подходит для активного образа жизни. Наслаждайтесь всеми функциями устройства даже в самых экстремальных условиях.
+                        </p>
+                        <button type="button" class="btn btn-primary">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="\resources\cards\smartphone\smartphone-image-yellow-neon.jpg" class="card-img-top" alt="Смартфон с мощной батареей">
+                    <div class="card-body">
+                        <h5 class="card-title">Смартфон с мощной батареей</h5>
+                        <p class="card-text">
+                            Этот смартфон с большой емкостью аккумулятора обеспечит вам длительное время работы без подзарядки, он держит заряд до 3 суток. Идеальный выбор для путешествий и длительных поездок.
+                        </p>
+                        <button type="button" class="btn btn-primary">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+    </div>
+</body>
+
+</html>
