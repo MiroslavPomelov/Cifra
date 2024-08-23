@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="utf-8">
@@ -7,163 +7,242 @@
     <title>Bootstrap demo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"
+        defer></script>
 </head>
 
 <body>
-
-
     <div class="container">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Navbar</a>
+                <a class="navbar-brand" href="#">Передовая электроника</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                            <a class="nav-link active" aria-current="page" href="#">На главную</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
+                            <a class="nav-link" href="#">Пользователям</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                Dropdown
+                                Каталог
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li><a class="dropdown-item" href="#">Компьютеры</a></li>
+                                <li><a class="dropdown-item" href="#">Телевизоры</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                <li><a class="dropdown-item" href="\subdomains\smartphone.html">Смартфоны</a></li>
                             </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
                         </li>
                     </ul>
                     <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
+                        <input class="form-control me-2" type="search" placeholder="Название устройства"
+                            aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Поиск</button>
                     </form>
                 </div>
             </div>
         </nav>
+    
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            <div class="col">
+                <div class="card h-100">
+                    <img src="/resources/cards/pc/pc-image-blue-notebook.jpg" class="card-img-top" alt="Cиний неон ПК">
+                    <div class="card-body">
+                        <h5 class="card-title">Cиний неон ПК</h5>
+                        <p class="card-text">
+                            Этот мощный компьютер оснащен новейшими технологиями и стильным синим неоновым освещением.
+                        </p>
+                        <button type="button " class="btn btn-primary">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="/resources/cards/pc/pc-image-blue-neon.jpg" class="card-img-top" alt="Cовременный ПК">
+                    <div class="card-body">
+                        <h5 class="card-title">Cовременный ПК</h5>
+                        <p class="card-text">
+                           Идеальный выбор для геймеров и профессионалов, с мощной производительнойстью и стильным дизайном.
+                          </p>
+                        <button type="button " class="btn btn-primary ">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="/resources/cards/pc/pc-image-green-neon.jpg" class="card-img-top" alt="Зеленый неон ПК">
+                    <div class="card-body">
+                        <h5 class="card-title">Зеленый неон ПК</h5>
+                        <p class="card-text">
+                            Этот ПК с зеленым неоновым освещенеим обеспечивает высокую производительность для самых требовательных задач.
+                          </p>
+                        <button type="button" class="btn btn-primary">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="/resources/cards/pc/pc-image-light-red-neon.jpg" class="card-img-top" alt="Красный неон ПК">
+                    <div class="card-body">
+                        <h5 class="card-title">Красный неон ПК</h5>
+                        <p class="card-text">
+                            Сочетание мощи и элегантности с красным неоновым освещением делает этот ПК идеальным для геймеров.
+                        </p>
+                        <button type="button" class="btn btn-primary">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="/resources/cards/pc/pc-image-notebook-pink.jpg" class="card-img-top" alt="ПК с неоном на светлом фоне">
+                    <div class="card-body">
+                        <h5 class="card-title">ПК с неоном на светлом фоне</h5>
+                        <p class="card-text">
+                            Этот ПК с неновым освещением на светлом фоне идеально подходит для стильного интерьера.
+                        </p>
+                        <button type="button" class="btn btn-primary">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="/resources/cards/pc/pc-image-light-red-neon.jpg" class="card-img-top" alt="Неоновый ПК на светлом фоне">
+                    <div class="card-body">
+                        <h5 class="card-title">Неоновый ПК на светлом фоне</h5>
+                        <p class="card-text">
+                           Эстетичный и мощный, этот ПК с неоновым освещением дополняет любой своременный интерьер.
+                        </p>
+                        <button type="button" class="btn btn-primary">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="/resources/cards/pc/pc-image-purple.jpg" class="card-img-top" alt="Мощный ПК с неоном">
+                    <div class="card-body">
+                        <h5 class="card-title">Мощный ПК с неоном</h5>
+                        <p class="card-text">
+                            Этот мощный ПК идеально подходит для геймеров и профессионалов благодаря своему неновыому освещению.
+                          </p>
+                        <button type="button" class="btn btn-primary">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="/resources/cards/pc/pc-image-burning.jpg" class="card-img-top" alt="Горящий мощный ПК">
+                    <div class="card-body">
+                        <h5 class="card-title">Горящий мощный ПК</h5>
+                        <p class="card-text">
+                            Этот ПК с мощным железом и впечатляющим дизайном обеспечивает исключительную производительность.
+                          </p>
+                        <button type="button" class="btn btn-primary">Подробнее</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-
+        
 
 
 
 
 
         <section class="mt-5" >
-            <!-- Footer -->
-            <footer class="bg-body-tertiary text-center">
-              <!-- Grid container -->
-              <div class="container p-4">
-                <!--Grid row-->
-                <div class="row">
-                  <!--Grid column-->
-                  <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">О нас</h5>
-    
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iste
-                      atque ea quis molestias. Fugiat pariatur maxime quis culpa
-                      corporis vitae repudiandae aliquam voluptatem veniam, est
-                      atque cumque eum delectus sint!
-                    </p>
-                  </div>
-                  <!--Grid column-->
-    
-                  <!--Grid column-->
-                  <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">Links</h5>
-    
-                    <ul class="list-unstyled mb-0">
-                      <li>
-                        <p>Email: info@electronics.com</p>
-                      </li>
-                      <li>
-                        <p>Телефон: +7 800 555 3535</p>
-                      </li>
-                      <li>Адрес: ул.Технологическая 15, Москва, Россия</li>
-                    </ul>
-                  </div>
-                  <!--Grid column-->
-    
-                  <!--Grid column-->
-                  <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-uppercase mb-0">Links</h5>
-    
-                    <div
-                      class="ul-div rounded float-start mt-2">
-
-                          <a href="#!" class="text-body"
-                            ><img
-                              style="width: 30px"
-                              src="/telegram-icon.png"
-                              alt="tg"
-                          /></a>
-                        
-                          <a href="#!" class="text-body"
-                            ><img
-                              style="width: 30px"
-                              src="/twitter-icon.png"
-                              alt="vk"
-                          /></a>
-                       
-                          <a href="#!" class="text-body"
-                            ><img
-                              style="width: 30px"
-                              src="/vk-icon.png"
-                              alt="twitter"
-                          /></a>
-                    </div>
-                  </div>
-                  <!--Grid column-->
+          <!-- Footer -->
+          <footer class="bg-dark text-center text-white">
+            
+            <!-- Grid container -->
+            <div class="container p-4">
+              <!--Grid row-->
+              <div class="row">
+                <!--Grid column-->
+                <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                  <h5 class="text-uppercase">О нас</h5>
+  
+                  <p>
+                   Передовая электроника предлагает широкий ассортимент современной электроники с выгодными условиями доставки и ценами.
+                  </p>
                 </div>
-                <!--Grid row-->
+                <!--Grid column-->
+  
+                <!--Grid column-->
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                  <h5 class="text-uppercase">Контакты</h5>
+  
+                  <ul class="list-unstyled mb-0">
+                    <li>
+                      <p>Email: info@electronics.com</p>
+                    </li>
+                    <li>
+                      <p>Телефон: +7 800 555 3535</p>
+                    </li>
+                    <li>Адрес: ул.Технологическая 15, Москва, Россия</li>
+                  </ul>
+                </div>
+                <!--Grid column-->
+  
+                <!--Grid column-->
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0    ">
+                  <h5 class="text-uppercase mb-0">Следите за нами</h5>
+  
+                  <div
+                    class="ul-div mt-2 ">
+                        <a href="#!" class="text-body"
+                          ><img
+                            style="width: 30px"
+                            src="/telegram-icon.png"
+                            alt="tg"
+                        /></a>
+                      
+                        <a href="#!" class="text-body"
+                          ><img
+                            style="width: 30px"
+                            src="/vk-icon.png"
+                            alt="vk"
+                        /></a>
+                     
+                        <a href="#!" class="text-body"
+                          ><img
+                            style="width: 30px"
+                            src="/twitter-icon.png"
+                            alt="twitter"
+                        /></a>
+                  </div>
+                </div>
+                <!--Grid column-->
               </div>
-              <!-- Grid container -->
-    
-              <!-- Copyright -->
-              <div
-                class="text-center p-3"
-                style="background-color: rgba(0, 0, 0, 0.05)"
+              <!--Grid row-->
+            </div>
+            <!-- Grid container -->
+  
+            <!-- Copyright -->
+            <div
+              class="text-center p-3"
+              style="background-color: rgba(0, 0, 0, 0.05)"
+            >
+              © 2024 Передовая электроника: все права защищены
+              <a class="text-body" href="https://mdbootstrap.com/"
+                >MDBootstrap.com</a
               >
-                © 2024 Передовая электроника: все права защищены
-                <a class="text-body" href="https://mdbootstrap.com/"
-                  >MDBootstrap.com</a
-                >
-              </div>
-              <!-- Copyright -->
-            </footer>
-            <!-- Footer -->
-          </section>
+            </div>
+            <!-- Copyright -->
+          </footer>
+          <!-- Footer -->
+        </section>
 
-      
     </div>
-
-
-
-
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
 </body>
 
 </html>
-
-
-
-
-
