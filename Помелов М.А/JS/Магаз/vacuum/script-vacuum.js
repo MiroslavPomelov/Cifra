@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     let cardText = document.createElement("p");
                     cardText.classList = "card-text";
                     cardText.textContent = chapters[j];
-                    cardText.classList.add('text-center');
+                    cardText.classList.add('w-100');
 
                     wrapper.appendChild(cardText);
                 }
