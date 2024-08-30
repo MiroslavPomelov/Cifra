@@ -46,6 +46,48 @@
                             </ul>
                         </li>
                     </ul>
+
+
+
+
+                    <a type="button" class="btn btn-primary"
+                    style="background-color: transparent; border: 0; color: rgb(16, 32, 255);" data-bs-toggle="modal"
+                    data-bs-target="#staticBackdrop">
+                    Вход
+                  </a>
+        
+                  <!-- Модальное окно -->
+                  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="staticBackdropLabel">Заголовок модального окна</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="mb-3">
+                            <label for="exampleInputEmail2" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="exampleInputEmail2">
+                            <div id="nameHelp" class="form-text">Мы никогда никому не передадим вашу электронную почту.</div>
+                          </div>
+                          <div class="mb-3">
+                            <label for="exampleInputPassword2" class="form-label">Пароль</label>
+                            <input type="password" class="form-control" id="exampleInputPassword2">
+                          </div>
+                          <button id="loginButton" type="submit" class="btn btn-primary">Отправить</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+        
+        
+                  <a class="active" aria-current="page" style="text-decoration: none; width: 120px;"
+                    href="registerUser.html">Регистрация</a>
+
+
+
+
                     <form class="d-flex" role="search">
                         <input class="form-control me-2" type="search" placeholder="Название устройства"
                             aria-label="Search">
