@@ -5,6 +5,7 @@ document.getElementById('keyWord').oninput = function () {
 let searchText = document.getElementById('SearchText');
 let h2 = document.createElement('h2');
 h2.textContent = `Результаты поиска по слову: ${localStorage.getItem('keyWord')}`;
+h2.classList = 'mb-5'
 searchText.appendChild(h2);
 
 document.addEventListener("DOMContentLoaded", () => {
