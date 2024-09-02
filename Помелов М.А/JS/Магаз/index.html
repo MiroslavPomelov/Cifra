@@ -76,7 +76,7 @@
                     <label for="exampleInputPassword2" class="form-label">Пароль</label>
                     <input type="password" class="form-control" id="exampleInputPassword2">
                   </div>
-                  <button id="loginButton" type="submit" class="btn btn-primary">Отправить</button>
+                  <button data-bs-dismiss="modal" id="loginButton" type="submit" class="btn btn-primary">Отправить</button>
                 </div>
               </div>
             </div>
@@ -89,8 +89,8 @@
 
 
           <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="keyWord">
+            <a href="/search.html" class="btn btn-outline-success" type="submit" id="searchBtn">Поиск</a>
           </form>
         </div>
       </div>
@@ -346,7 +346,7 @@
     crossorigin="anonymous"></script>
 
     <script src="/loginScript.js"></script>
-
+    <script src="/index-script.js"></script>
 
 </body>
 

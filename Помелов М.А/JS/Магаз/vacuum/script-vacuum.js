@@ -1,3 +1,9 @@
+
+document.getElementById('keyWord').oninput = function () {
+    localStorage.setItem('keyWord', this.value);
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
     fetch("http://localhost:36155/good-search/vacuum-cleaner")
         .then((response) => response.json())
