@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const employee_1 = require("./additionals/employee");
+const department_1 = require("./additionals/department");
+const programmer = new employee_1.Company.Employee('Mir', "25", 'programmer');
+const manager = new employee_1.Company.Employee('Elena', "55", 'manager');
+const teacher = new employee_1.Company.Employee('Bogdan', "25", 'teacher');
+const department = new department_1.Department('Cifra', [programmer, manager, teacher]);
+console.log(department.getEmployee());
+programmer.getInfo();
