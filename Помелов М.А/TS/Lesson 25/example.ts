@@ -108,7 +108,7 @@ type ReturnTypeOfFunction<T> = T extends (...args: any[]) => infer R ? R : any;
 type ElementType<T> = T extends any[] ? T[number] : any;
 
 
-type A = ElementType<boolean[]>;
+type A = ElementType<boolean[]>; 
 
 
 
