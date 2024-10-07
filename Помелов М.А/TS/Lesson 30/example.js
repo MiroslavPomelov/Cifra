@@ -34,24 +34,48 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 //         return originalMethod.apply(this, args);
 //     }
 // }
-function RestrictionDeco(isAdmin) {
-    return function (target, key, descriptor) {
-        const originalMethod = descriptor.value;
-        descriptor.value = function (...args) {
-            if (isAdmin) {
-                throw new Error("U not Admin");
-            }
-            return originalMethod.apply(this, args);
-        };
-    };
-}
-class MyClass {
-    adminMethod() {
-        console.log('This available only admin!');
+// function RestrictionDeco(isAdmin: boolean) {
+//     return function (target: any, key: string, descriptor: PropertyDescriptor) {
+//         const originalMethod: any = descriptor.value;
+//         descriptor.value = function (...args: any[]) {
+//             if (isAdmin) {
+//                 throw new Error("U not Admin");
+//             }
+//             return originalMethod.apply(this, args);
+//         }
+//     }
+// }
+// class MyClass {
+//     @RestrictionDeco(true)
+//     adminMethod() {
+//         console.log('This available only admin!');
+//     }
+// }
+// const myClass: MyClass = new MyClass();
+// myClass.adminMethod();
+class Person {
+    constructor(name) {
+        this.name = name;
     }
 }
 __decorate([
-    RestrictionDeco(true)
-], MyClass.prototype, "adminMethod", null);
-const myClass = new MyClass();
-myClass.adminMethod();
+    Validate
+], Person.prototype, "name", void 0);
+function Validate(target, key) {
+    let value = target[key];
+    const getter = () => value;
+    const setter = (newValue) => {
+        if (typeof newValue !== 'string') {
+            throw new Error("Argument Exception");
+        }
+        value = newValue;
+    };
+    Object.defineProperty(target, key, {
+        enumerable: false,
+        configurable: true,
+        get: getter,
+        set: setter
+    });
+}
+let pers = new Person('Valeriy');
+pers.name = 55;
