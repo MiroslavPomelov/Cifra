@@ -38,7 +38,7 @@
 // const str = 'hello world!';
 // const regex = /hello/i;
 // const newStr = str.replace(regex, 'hi');
-// console.log(newStr);
+// console.log(newStr); 
 
 
 
