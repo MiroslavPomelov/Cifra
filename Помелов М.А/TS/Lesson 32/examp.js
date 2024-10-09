@@ -99,9 +99,19 @@ $ - конец строки
 // console.log(emailRegex.test('example.com'));
 
 
-const text = 'Hello world, this is a test';
-const words = text.match(/\b\w+\b/g);
-console.log(words);
+// const text = 'Hello world, this is a test';
+// const words = text.match(/\b\w+\b/g);
+// console.log(words);
+
+
+
+// const text = ' Мой номер телефона 123-456-7890';
+// const newText = text.replace(/\d/g, '#');
+// console.log(newText);
+
+
+const regex = /\u{263A}/u;
+console.log(regex.test("\U+263A"));
 
 
 
