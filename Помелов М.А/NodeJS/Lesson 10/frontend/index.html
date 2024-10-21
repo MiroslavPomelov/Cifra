@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Task Manager</title>
+</head>
+<body>
+    <div class="container" id="task-list">
+        <h2>Список задач</h2>
+        <button onclick="getTasks()">Получить список задач</button>
+        <ul id="tasks"></ul>
+    </div>
+
+    <div class="container">
+        <h2>Добавить задачу</h2>
+        <form id="task-form" onsubmit="submitTaskForm(event)">
+            <input type="hidden" id="task-id">
+            <label for="task-title">Название задачи:</label>
+            <input type="text" id="task-title" required>
+            <div>
+                <label for="task-completed">Выполнено:</label>
+                <input type="checkbox" id="task-completed">
+            </div>
+            <button type="submit">Создать задачу</button>
+            <button type="button" onclick="updateTask()">Обновить задачу</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <h2>Удаление задачи</h2>
+        <form id="delete-form" onsubmit="deleteTask(event)">
+            <label for="delete-id">ID задачи:</label>
+            <input type="text" id="delete-id" required>
+            <button type="submit">Удалить задачу</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
