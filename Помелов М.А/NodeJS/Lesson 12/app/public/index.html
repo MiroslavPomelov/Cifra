@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <title>Wave Button</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #000;
+
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .container {
+        height: 55vh;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .coins-container {
+        position: relative;        
+    }
+
+    .coins {
+        margin: 0;
+        padding: 0 50px;
+
+        font-family: 'Roboto', sans-serif;
+        font-size: 3rem;
+
+        border-radius: 20px;
+
+        background-color: #ffffff;
+        color: #007bff;
+    }
+
+    .new-coins {
+      position: absolute;
+      top: -200%;
+      border-radius: 50%;
+      color: #fff;
+      animation: drop 0.5s linear;
+      pointer-events: none;
+      z-index: 0;
+      
+      font-family: 'Roboto', sans-serif;
+      font-size: 2rem;
+    }
+
+    .button-container {
+      position: relative;
+    }
+
+    .wave-button {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      
+      background-color: #007bff;
+      background-image: url(http://localhost:3000/dollar-symbol.png);
+      background-size: cover;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 1;
+    }
+
+    .wave {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(0, 123, 255, 0.5);
+      transform: scale(1);
+      animation: wave 0.5s linear;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .encreaser {
+      position: absolute;
+
+      width: 70px;
+      height: 70px;
+
+      top: 35%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 50%;
+
+      color: white;
+      background-color: #007bff;
+      font-family: 'Roboto', sans-serif;
+      font-size: 2rem;
+
+      animation: perceptible 3s linear infinite;
+    }
+    
+    @keyframes perceptible {
+      0% {
+        transform: scale(1);
+      }
+      79% {
+        transform: scale(1);
+      }
+
+      80% {
+        transform: scale(1.3);
+      }
+      90% {
+        transform: scale(1.1);
+      }
+      95% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes wave {
+      to {
+        transform: scale(1.7);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes drop {
+      to {
+        top: 0;
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+    <article class="container">
+        <div class="coins-container">
+            <h1 id="counter" class="coins">0</h1>
+        </div>
+        <div id="button-container" class="button-container">
+            <button class="wave-button"></button>
+        </div>
+    </article>
+
+    <script>
+        let clickButton = document.querySelector('.wave-button');
+        let coinCounter = document.getElementById('counter');
+        let additionalCoins = 10;
+        let tapCounter = 0;
+        let encreaser;
+
+        clickButton.addEventListener('click', (e) => {
+          calcTaps(e);
+          animation();
+        });
+
+        let animation = function() {
+            const wave = document.createElement('div');
+            wave.classList.add('wave');
+            
+            const rect = clickButton.getBoundingClientRect();
+            wave.style.width = wave.style.height = `${rect.width}px`;
+            wave.style.top = `0px`;
+
+            clickButton.parentNode.appendChild(wave);
+
+            wave.addEventListener('animationend', () => {
+                wave.remove();
+            });
+
+            const newCoins = document.createElement('h2');
+            newCoins.textContent = `+${additionalCoins}`;
+
+            newCoins.classList.add('new-coins');
+
+            const newCoinsRect = newCoins.getBoundingClientRect();
+            const coinsRect = coinCounter.getBoundingClientRect();
+            const randomMove = Math.floor(Math.random() * 8) * coinsRect.width / 10;
+            newCoins.style.left = `${newCoinsRect.left + randomMove}px`;
+
+            coinCounter.parentNode.appendChild(newCoins);
+
+            newCoins.addEventListener('animationend', () => {
+                newCoins.remove();
+            });
+        }
+
+        let calcTaps = function(e) {
+            tapCounter++;
+
+            let coinsAmount = parseInt(coinCounter.textContent);
+            coinsAmount += additionalCoins;
+            coinCounter.textContent = coinsAmount;
+
+            if (tapCounter % 10 == 0) {
+              let body = JSON.stringify({
+                user: 'user',
+                coins: coinsAmount,
+                taps: tapCounter
+              })
+              let url = 'http://localhost:3000/update-data';
+                
+              fetching(url, 'PUT', { 'Content-Type': 'application/json' }, body);
+            }
+
+            if (tapCounter % 100 == 0) {
+              createEncreaser();
+            }
+        }
+
+        let createEncreaser = function() {
+          if (encreaser) {
+            return;
+          }
+
+          encreaser = document.createElement('div');
+          encreaser.textContent = '+10';
+          encreaser.classList.add('encreaser');
+
+          document.getElementsByTagName('article')[0].appendChild(encreaser);
+
+          let isAdditionalCircleClicked = false;
+
+          encreaser.addEventListener('click', () => {
+            additionalCoins += 10;
+
+            let url = 'http://localhost:3000/update-additional-coins';
+
+            let body = JSON.stringify({
+              user: 'user',
+              additionalCoins: additionalCoins
+            })
+                
+            fetching(url, 'PUT', { 'Content-Type': 'application/json' }, body);
+
+            encreaser.remove();
+            encreaser = undefined;
+
+            isAdditionalCircleClicked = true;
+          });
+
+          if (!isAdditionalCircleClicked) {
+            setTimeout(() => {            
+              encreaser.remove();
+              encreaser = undefined; 
+            }, 15000);
+          }
+        }
+
+        let fetching = function(url, method, headers, body) {
+          fetch(url, {
+            method: method,
+            headers: headers,
+            body: body
+          })
+          .then(response => response.text())
+          .catch((error) => {
+            alert(error);
+          });
+        }
+    </script>
+</body>
+</html>
