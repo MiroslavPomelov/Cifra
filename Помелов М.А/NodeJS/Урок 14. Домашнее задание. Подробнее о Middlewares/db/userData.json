@@ -1,0 +1,40 @@
+[
+  {
+    "username": "Simple-Dimple",
+    "firstname": "Bogdan",
+    "lastname": "Black",
+    "email": "BogBlack@gmail.com",
+    "password": "qwerty"
+  },
+  {
+    "username": "Pinegun",
+    "firstname": "Denis",
+    "lastname": "Pinegin",
+    "email": "pinegunk@gmail.com",
+    "password": "123456"
+  },
+  {
+    "username": "12121",
+    "firstname": "121212",
+    "lastname": "121212",
+    "email": "121212@ghghg",
+    "password": "2121",
+    "token": null
+  },
+  {
+    "username": "12121",
+    "firstname": "1",
+    "lastname": "1",
+    "email": "1@1",
+    "password": "qwqwqw",
+    "token": null
+  },
+  {
+    "username": "ddd",
+    "firstname": "ddd",
+    "lastname": "ddd",
+    "email": "rr@66",
+    "password": "12345",
+    "token": null
+  }
+]

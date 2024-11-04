@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: #007bff;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar a {
+            color: #fff;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #0056b3;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            background-color: #fff;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-content h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .user-details {
+            margin-top: 20px;
+        }
+
+        .user-details p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .user-details span {
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="#" class="active">Личный кабинет</a>
+        <a href="#">На главную</a>
+        <a href="#">Настройки</a>
+        <a href="#">Сервисы</a>
+        <a href="#">Услуги</a>
+        <a href="#">Мои документы</a>
+    </div>
+
+    <div class="main-content">
+        <h2>Личный кабинет</h2>
+        <div class="user-details">
+            <p><span>Username: </span>%username%</p>
+            <p><span>Имя: </span>%firstname%</p>
+            <p><span>Фамилия: </span>%lastname%</p>
+            <p><span>Почта: </span>%email%</p>
+            <p><span>Пароль: </span>%password%</p>
+        </div>
+    </div>
+</body>
+</html>
