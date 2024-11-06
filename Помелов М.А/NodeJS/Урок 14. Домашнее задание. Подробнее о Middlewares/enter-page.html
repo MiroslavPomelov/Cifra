@@ -122,7 +122,7 @@
     <script>
         document.getElementById('loginForm').addEventListener('submit', function (event) {
             event.preventDefault();
-            const username = document.getElementById('login').value;
+            const login = document.getElementById('login').value;
             const password = document.getElementById('password').value;
 
             fetch('http://localhost:3000/login', {
@@ -132,7 +132,7 @@
                 },
                 body: JSON.stringify({
                     user: {
-                        username: username,
+                        username: login,
                         password: password
                     }
                 })
@@ -154,13 +154,13 @@
                 .then(data => {
                     console.log(data);
                     if (data.status === 201) {
-                        showMessage(data.status, data.message);
+                        window.location.href = 'http://localhost:3000/'
                     } else {
                         showMessage(data.status, data.message);
                     }
                 })
                 .catch(error => {
-                    showMessage('response.status', error.message);
+                    showMessage(data.status, data.message);
                     console.error('Error:', error);
                 });
         });
