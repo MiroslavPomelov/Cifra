@@ -2,12 +2,14 @@ import express, { Request, Response, NextFunction } from 'express';
 import { readFilePromise, writeFilePromise } from './file-operator_module';
 import { User } from './User';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 let registratedUsers: User[];
 
 
@@ -33,12 +35,11 @@ app.get('/index', async (req: Request, res: Response) => {
     res.send(await readFilePromise("../index.html"));
 });
 
-app.get('/', async (req: Request, res: Response) => {
-    res.writeHead(301, { 'Location': '/enter-page' });
-    res.end();
+app.get('/', checkCookies, async (req: Request, res: Response) => {
+    res.set('Content-Type', 'text/html')
+        .status(200);
 
-    // res.setHeader('Content-Type', 'text/html').status(200);
-    // res.send(await readFilePromise("../enter-page.html"));
+    res.send(await readFilePromise("../index.html"));
 });
 
 
@@ -60,18 +61,8 @@ app.post('/registration-page', checkRegisteredUsers, express.urlencoded({ extend
 
 
 app.post('/login', validateUser, async (req: Request, res: Response) => {
-    console.log(createTocken(64));
+    console.log(createToken(64));
 
-    // let user: User = new User(req.body.user);
-    // res.set('Content-Type', 'text/html')
-    //     .status(200)
-    //     .send(await readFilePromise("../index.html"));
-
-    // res.status(201).send({message: 'Успешная авторизация'});
-
-    // res.status(201);
-
-    // res.send(await readFilePromise("../index.html"));
 
     res.status(201);
     res.send({
@@ -93,19 +84,40 @@ app.listen(3000, () => {
 
 
 
-function createTocken(value: number): string {
+function createToken(value: number): string {
     const tockenString: string = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    
-   let tocken: string = '';
-    for (let i = 0; i < value-1; i++) {
-        if (i % 9 === 0 && i != 0){
+
+    let tocken: string = '';
+    let counter: number = 0;
+    for (let i = 0; i < value; i++) {
+        if (counter === 8) {
             tocken += '-';
+            counter = 0;
             continue;
         }
-        tocken += tockenString[Math.floor(Math.random() * (61 - 0 + 1)) + 0];       
-        
+
+        tocken += tockenString[Math.floor(Math.random() * (61 - 0 + 1)) + 0];
+        counter++;
+
     }
     return tocken;
+}
+
+function checkCookies(req: Request, res: Response, next: NextFunction) {
+    let token: string | undefined = req.cookies.token;
+    console.log(token)
+    if (token != undefined) {
+        for (let i = 0; i < registratedUsers.length; i++) {
+            if (registratedUsers[i].token == token) { 
+                console.log('Кукис чекед')               
+                next();
+                return;
+            }            
+        }
+    }
+    console.log('плохо')
+    res.writeHead(302, { 'Location': '/enter-page' });
+    res.end();
 }
 
 function checkRegisteredUsers(req: Request, res: Response, next: NextFunction) {
@@ -134,13 +146,22 @@ function validateUser(req: Request, res: Response, next: NextFunction) {
         res.status(400).send('Ошибка запроса')
     }
 
-    let findUserByUsername = registratedUsers.find(registratedUser => registratedUser.username === user.username);
+    let foundUser = registratedUsers.find(registratedUser => registratedUser.username === user.username);
 
-    if (findUserByUsername) {
+    if (foundUser) {
         console.log('findUserByUsername');
-        if (user.password === findUserByUsername.password) {
-            req.body.user = findUserByUsername;
+        if (user.password === foundUser.password) {
+            // req.body.user = findUserByUsername;
+            let token: string = createToken(256);
+            foundUser.token = token;
 
+
+            writeFilePromise('../db/userData.json', JSON.stringify(registratedUsers, null, 2))
+                .then((data: string) => {
+                    console.log(data);
+                });
+
+            res.cookie('token', token, { httpOnly: true });
             next();
         }
         else {

@@ -16,10 +16,12 @@ const express_1 = __importDefault(require("express"));
 const file_operator_module_1 = require("./file-operator_module");
 const User_1 = require("./User");
 const cors_1 = __importDefault(require("cors"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
+app.use((0, cookie_parser_1.default)());
 let registratedUsers;
 app.get('/registration-page', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.set('Content-Type', 'text/html')
@@ -36,11 +38,10 @@ app.get('/index', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         .status(200);
     res.send(yield (0, file_operator_module_1.readFilePromise)("../index.html"));
 }));
-app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.writeHead(301, { 'Location': '/enter-page' });
-    res.end();
-    // res.setHeader('Content-Type', 'text/html').status(200);
-    // res.send(await readFilePromise("../enter-page.html"));
+app.get('/', checkCookies, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.set('Content-Type', 'text/html')
+        .status(200);
+    res.send(yield (0, file_operator_module_1.readFilePromise)("../index.html"));
 }));
 app.post('/registration-page', checkRegisteredUsers, express_1.default.urlencoded({ extended: true }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);
@@ -57,14 +58,7 @@ app.post('/registration-page', checkRegisteredUsers, express_1.default.urlencode
     }));
 }));
 app.post('/login', validateUser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(createTocken(64));
-    // let user: User = new User(req.body.user);
-    // res.set('Content-Type', 'text/html')
-    //     .status(200)
-    //     .send(await readFilePromise("../index.html"));
-    // res.status(201).send({message: 'Успешная авторизация'});
-    // res.status(201);
-    // res.send(await readFilePromise("../index.html"));
+    console.log(createToken(64));
     res.status(201);
     res.send({
         status: 201,
@@ -78,17 +72,36 @@ app.listen(3000, () => {
         console.log('Server running on port 3000');
     });
 });
-function createTocken(value) {
+function createToken(value) {
     const tockenString = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     let tocken = '';
+    let counter = 0;
     for (let i = 0; i < value; i++) {
-        if (i % 9 === 0 && i != 0) {
+        if (counter === 8) {
             tocken += '-';
+            counter = 0;
             continue;
         }
         tocken += tockenString[Math.floor(Math.random() * (61 - 0 + 1)) + 0];
+        counter++;
     }
     return tocken;
+}
+function checkCookies(req, res, next) {
+    let token = req.cookies.token;
+    console.log(token);
+    if (token != undefined) {
+        for (let i = 0; i < registratedUsers.length; i++) {
+            if (registratedUsers[i].token == token) {
+                console.log('Кукис чекед');
+                next();
+                return;
+            }
+        }
+    }
+    console.log('плохо');
+    res.writeHead(302, { 'Location': '/enter-page' });
+    res.end();
 }
 function checkRegisteredUsers(req, res, next) {
     console.log(req.body);
@@ -110,11 +123,18 @@ function validateUser(req, res, next) {
     if (!req.body.user) {
         res.status(400).send('Ошибка запроса');
     }
-    let findUserByUsername = registratedUsers.find(registratedUser => registratedUser.username === user.username);
-    if (findUserByUsername) {
+    let foundUser = registratedUsers.find(registratedUser => registratedUser.username === user.username);
+    if (foundUser) {
         console.log('findUserByUsername');
-        if (user.password === findUserByUsername.password) {
-            req.body.user = findUserByUsername;
+        if (user.password === foundUser.password) {
+            // req.body.user = findUserByUsername;
+            let token = createToken(256);
+            foundUser.token = token;
+            (0, file_operator_module_1.writeFilePromise)('../db/userData.json', JSON.stringify(registratedUsers, null, 2))
+                .then((data) => {
+                console.log(data);
+            });
+            res.cookie('token', token, { httpOnly: true });
             next();
         }
         else {
