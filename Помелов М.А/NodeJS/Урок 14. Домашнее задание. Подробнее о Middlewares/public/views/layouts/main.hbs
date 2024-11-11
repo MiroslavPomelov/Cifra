@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +32,8 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .sidebar a:hover, .sidebar a.active {
+        .sidebar a:hover,
+        .sidebar a.active {
             background-color: #0056b3;
         }
 
@@ -61,25 +63,46 @@
         }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
-        <a href="/public/views/layouts/main.hbs" class="active">Личный кабинет</a>
+        <a href="http://localhost:3000/" class="active">Личный кабинет</a>
         <a href="#">На главную</a>
         <a href="#">Настройки</a>
         <a href="#">Сервисы</a>
         <a href="#">Услуги</a>
-        <button onclick="getData()">Мои документы</button>
+        <button onclick="openUploadForm()">Мои документы</button>
     </div>
 
-    <div class="main-content">
+    <div class="main-content" id="myDiv">
         <h2>Личный кабинет</h2>
         <div class="user-details">
-            <p><span>Username: </span>%username%</p>
-            <p><span>Имя: </span>%firstname%</p>
-            <p><span>Фамилия: </span>%lastname%</p>
-            <p><span>Почта: </span>%email%</p>
-            <p><span>Пароль: </span>%password%</p>
+            {{{body}}}
         </div>
     </div>
+
+    <script>
+        function openUploadForm() {
+            let main = document.getElementsByClassName('main-content')[0];
+            main.innerHTML = '';
+            let form = document.createElement('form');
+            form.action = 'http://localhost:3000/upload';
+            form.method = 'post';
+            form.enctype = 'multipart/form-data';
+            let input = document.createElement('input');
+            input.type = 'file';
+            input.name = 'file';
+            let button = document.createElement('button');
+            button.type = 'submit';
+            button.textContent = 'Отправить';
+
+            form.appendChild(input);
+            form.appendChild(button);
+            main.append(form);
+
+            body.appendChild(main);
+        }
+    </script>
 </body>
+
 </html>
