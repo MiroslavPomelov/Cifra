@@ -32,8 +32,21 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        .sidebar .myDocumentButton {
+            color: #fff;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
         .sidebar a:hover,
         .sidebar a.active {
+            background-color: #0056b3;
+        }
+
+        .sidebar .myDocumentButton:hover,
+        .sidebar .myDocumentButton.active {
             background-color: #0056b3;
         }
 
@@ -61,6 +74,18 @@
         .user-details span {
             font-weight: 700;
         }
+
+        .myDocumentButton {
+            border: none;
+            background-color: #007bff;
+            font-weight: bold;
+            color: #f0f0f0;
+            text-align: left;
+            font-size: 17px;
+            font-family: sans-serif;
+            padding: 10px;
+            padding-left: 20px;
+        }
     </style>
 </head>
 
@@ -71,7 +96,7 @@
         <a href="#">Настройки</a>
         <a href="#">Сервисы</a>
         <a href="#">Услуги</a>
-        <button onclick="openUploadForm()">Мои документы</button>
+        <button class="myDocumentButton" onclick="openUploadForm()">Мои документы</button>
     </div>
 
     <div class="main-content" id="myDiv">
@@ -83,6 +108,24 @@
 
     <script>
         function openUploadForm() {
+            fetch('http://localhost:3000/documents', {
+                method: 'GET'
+            })
+                .then(function (response) {
+                    return response.json()
+                })
+                .then(function (data) {
+                    console.log('data', data)
+                    console.log('aaaaaaaaaaaaaaaaaaaaaa');
+                })
+                .catch(function (error) {
+                    console.log('error', error)
+                });
+
+
+
+
+
             let main = document.getElementsByClassName('main-content')[0];
             main.innerHTML = '';
             let form = document.createElement('form');

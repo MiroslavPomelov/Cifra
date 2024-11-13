@@ -8,6 +8,9 @@ import * as fileSystem from "fs";
 import { engine } from "express-handlebars";
 import path from "path";
 import multer from "multer";
+
+
+import * as middleWares from "./services/middleWares";
 //---------------------------------------------------------
 const app = express();
 
@@ -64,24 +67,24 @@ app.engine(
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "../public/views"));
 
-let registratedUsers: User[];
+export let registratedUsers: User[];
 
 app.get("/registration-page", async (req: Request, res: Response) => {
   res.set("Content-Type", "text/html").status(200);
 
-  res.send(await readFilePromise("../registration-page.html"));
+  res.send(await readFilePromise("../webApp/registration-page.html"));
 });
 
 app.get("/enter-page", async (req: Request, res: Response) => {
   res.set("Content-Type", "text/html").status(200);
 
-  res.send(await readFilePromise("../enter-page.html"));
+  res.send(await readFilePromise("../webApp/enter-page.html"));
 });
 
 app.get("/index", async (req: Request, res: Response) => {
   res.set("Content-Type", "text/html").status(200);
 
-  res.send(await readFilePromise("../index.html"));
+  res.send(await readFilePromise("../webApp/index.html"));
 });
 
 //---------------------------------------
@@ -94,13 +97,15 @@ app.post("/upload", upload.single("file"), (req, res) => {
 });
 
 let authorizatedUser: User;
-app.get("/", checkCookies, (req: Request, res: Response) => {
+app.get("/", middleWares.checkCookies, (req: Request, res: Response) => {
   console.log("11111");
 
   for (let i = 0; i < registratedUsers.length; i++) {
     if (req.cookies.token === registratedUsers[i].token) {
       authorizatedUser = registratedUsers[i];
     }
+
+
   }
 
   res.render("user", {
@@ -114,7 +119,7 @@ app.get("/", checkCookies, (req: Request, res: Response) => {
 
 app.post(
   "/registration-page",
-  checkRegisteredUsers,
+  middleWares.checkRegisteredUsers,
   express.urlencoded({ extended: true }),
   async (req: Request, res: Response) => {
     console.log(req.body);
@@ -132,19 +137,23 @@ app.post(
         res
           .set("Content-Type", "text/html")
           .status(201)
-          .send(await readFilePromise("../enter-page.html"));
+          .send(await readFilePromise("..webApp/enter-page.html"));
       });
   }
 );
 
-app.post("/login", validateUser, async (req: Request, res: Response) => {
+app.post("/login", middleWares.validateUser, async (req: Request, res: Response) => {
   console.log(createToken(64));
 
-  res.status(201);
-  res.send({
-    status: 201,
-    message: "ass",
-  });
+  res.status(200);
+  res.send();
+});
+
+app.get("/documents", async (req: Request, res: Response) => {
+  console.log('Обработка Ок');
+
+  res.status(200);
+  res.end('ioioioioioi');
 });
 
 app.listen(3000, () => {
@@ -174,80 +183,80 @@ function createToken(value: number): string {
   return tocken;
 }
 
-function checkCookies(req: Request, res: Response, next: NextFunction) {
-  let token: string | undefined = req.cookies.token;
-  console.log(token);
-  if (token != undefined) {
-    for (let i = 0; i < registratedUsers.length; i++) {
-      if (registratedUsers[i].token == token) {
-        console.log("Кукис чекед");
-        next();
-        return;
-      }
-    }
-  }
-  console.log("плохо");
-  res.writeHead(302, { Location: "/enter-page" });
-  res.end();
-}
+// function checkCookies(req: Request, res: Response, next: NextFunction) {
+//   let token: string | undefined = req.cookies.token;
+//   console.log(token);
+//   if (token != undefined) {
+//     for (let i = 0; i < registratedUsers.length; i++) {
+//       if (registratedUsers[i].token == token) {
+//         console.log("Кукис чекед");
+//         next();
+//         return;
+//       }
+//     }
+//   }
+//   console.log("плохо");
+//   res.writeHead(302, { Location: "/enter-page" });
+//   res.end();
+// }
 
-function checkRegisteredUsers(req: Request, res: Response, next: NextFunction) {
-  console.log(req.body);
-  let user: User = new User(req.body.userPinegun);
+// function checkRegisteredUsers(req: Request, res: Response, next: NextFunction) {
+//   console.log(req.body);
+//   let user: User = new User(req.body.userPinegun);
 
-  if (!req.body.user) {
-    res.status(404).send("Ошибка запроса");
-  }
+//   if (!req.body.user) {
+//     res.status(404).send("Ошибка запроса");
+//   }
 
-  let findUserByEmail = registratedUsers.find(
-    (registratedUser) => registratedUser.email === user.email
-  );
+//   let findUserByEmail = registratedUsers.find(
+//     (registratedUser) => registratedUser.email === user.email
+//   );
 
-  if (findUserByEmail) {
-    res.status(401).send("Пользователь с таким email уже зарегистрирован");
-    return;
-  }
-  next();
-}
+//   if (findUserByEmail) {
+//     res.status(401).send("Пользователь с таким email уже зарегистрирован");
+//     return;
+//   }
+//   next();
+// }
 
-function validateUser(req: Request, res: Response, next: NextFunction) {
-  console.log(req.body);
-  let user: User = new User(req.body.user);
+// function validateUser(req: Request, res: Response, next: NextFunction) {
+//   console.log(req.body);
+//   let user: User = new User(req.body.user);
 
-  console.log(user);
-  if (!req.body.user) {
-    res.status(400).send("Ошибка запроса");
-  }
+//   console.log(user);
+//   if (!req.body.user) {
+//     res.status(400).send("Ошибка запроса");
+//   }
 
-  let foundUser = registratedUsers.find(
-    (registratedUser) => registratedUser.username === user.username
-  );
+//   let foundUser = registratedUsers.find(
+//     (registratedUser) => registratedUser.username === user.username
+//   );
 
-  if (foundUser) {
-    console.log("findUserByUsername");
-    if (user.password === foundUser.password) {
-      // req.body.user = findUserByUsername;
-      let token: string = createToken(256);
-      foundUser.token = token;
+//   if (foundUser) {
+//     console.log("findUserByUsername");
+//     if (user.password === foundUser.password) {
+//       // req.body.user = findUserByUsername;
+//       let token: string = createToken(256);
+//       foundUser.token = token;
 
-      writeFilePromise(
-        "../db/userData.json",
-        JSON.stringify(registratedUsers, null, 2)
-      ).then((data: string) => {
-        console.log(data);
-      });
+//       writeFilePromise(
+//         "../db/userData.json",
+//         JSON.stringify(registratedUsers, null, 2)
+//       ).then((data: string) => {
+//         console.log(data);
+//       });
 
-      res.cookie("token", token, { httpOnly: true });
-      next();
-    } else {
-      res.status(403).send({ message: "Неправильный пароль!" });
-      return;
-    }
-  } else {
-    res.status(403).send({ message: "Неправильный логин!" });
-    return;
-  }
-}
+//       res.cookie("token", token, { httpOnly: true });
+//       next();
+//     } else {
+//       res.status(403).send({ message: "Неправильный пароль!" });
+//       return;
+//     }
+//   } else {
+//     res.status(403).send({ message: "Неправильный логин!" });
+//     return;
+//   }
+// }
 
 function replaceTemplateValues(userData: User): Promise<string> {
   return new Promise((resolve, reject) => {
