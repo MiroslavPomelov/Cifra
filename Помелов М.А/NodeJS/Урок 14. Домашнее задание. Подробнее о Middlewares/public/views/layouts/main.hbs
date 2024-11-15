@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: #007bff;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar a {
+            color: #fff;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar .myDocumentButton {
+            color: #fff;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #0056b3;
+        }
+
+        .sidebar .myDocumentButton:hover,
+        .sidebar .myDocumentButton.active {
+            background-color: #0056b3;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            background-color: #fff;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-content h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .user-details {
+            margin-top: 20px;
+        }
+
+        .user-details p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .user-details span {
+            font-weight: 700;
+        }
+
+        .myDocumentButton {
+            border: none;
+            background-color: #007bff;
+            font-weight: bold;
+            color: #f0f0f0;
+            text-align: left;
+            font-size: 17px;
+            font-family: sans-serif;
+            padding: 10px;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <a href="http://localhost:3000/" class="active">Личный кабинет</a>
+        <a href="#">На главную</a>
+        <a href="#">Настройки</a>
+        <a href="#">Сервисы</a>
+        <a href="#">Услуги</a>
+        <button class="myDocumentButton" onclick="openUploadForm()">Мои документы</button>
+    </div>
+
+    <div class="main-content" id="myDiv">
+        <h2>Личный кабинет</h2>
+        <div class="user-details">
+            {{{body}}}
+        </div>
+    </div>
+
+    <script>
+        function openUploadForm() {
+            fetch('http://localhost:3000/documents', {
+                method: 'GET'
+            })
+                .then(function (response) {
+                    return response.json()
+                })
+                .then(function (data) {
+                    console.log('data', data)
+                    console.log('aaaaaaaaaaaaaaaaaaaaaa');
+                })
+                .catch(function (error) {
+                    console.log('error', error)
+                });
+
+
+
+
+
+            let main = document.getElementsByClassName('main-content')[0];
+            main.innerHTML = '';
+            let form = document.createElement('form');
+            form.action = 'http://localhost:3000/upload';
+            form.method = 'post';
+            form.enctype = 'multipart/form-data';
+            let input = document.createElement('input');
+            input.type = 'file';
+            input.name = 'file';
+            let button = document.createElement('button');
+            button.type = 'submit';
+            button.textContent = 'Отправить';
+
+            form.appendChild(input);
+            form.appendChild(button);
+            main.append(form);
+
+            body.appendChild(main);
+        }
+    </script>
+</body>
+
+</html>
