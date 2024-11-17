@@ -18,6 +18,7 @@ class User {
             this.password = userOrUsername.password;
         }
         this.token = null;
+        this.listOfFiles = [];
     }
     setUserToken(token) {
         this.token = token;

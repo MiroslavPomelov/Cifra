@@ -56,6 +56,7 @@ function checkFileType(file: any, cb: any): void {
   }
 }
 
+
 app.engine(
   "hbs",
   engine({
@@ -66,6 +67,9 @@ app.engine(
 );
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "../public/views"));
+
+
+
 
 export let registratedUsers: User[];
 
@@ -87,14 +91,27 @@ app.get("/index", async (req: Request, res: Response) => {
   res.send(await readFilePromise("../webApp/index.html"));
 });
 
-//---------------------------------------
-app.post("/upload", upload.single("file"), (req, res) => {
-  try {
-    res.send("Файл успешно загружен!");
-  } catch (err) {
-    res.sendStatus(400);
+
+
+app.post('/upload', upload.single('file'), (req: Request, res: Response) => {
+
+  if (!req.file) {
+    res.status(400).send('No file uploaded.');
+  } else {
+    const fileName: string = req.file.filename;
+    console.log(fileName);
+    let findUser: User | undefined = registratedUsers.find(registratedUser => registratedUser.token === authorizatedUser.token);
+    if (findUser) {
+      registratedUsers.find(registratedUser => registratedUser.token === authorizatedUser.token)?.listOfFiles.push({ name: fileName });
+      writeFilePromise('../db/userData.json', JSON.stringify(registratedUsers, null, 2));
+      res.send('Файл успешно загружен!');
+    }
+    else {
+      res.end('Ошибка!')
+    }
   }
 });
+
 
 let authorizatedUser: User;
 app.get("/", middleWares.checkCookies, (req: Request, res: Response) => {
@@ -104,8 +121,6 @@ app.get("/", middleWares.checkCookies, (req: Request, res: Response) => {
     if (req.cookies.token === registratedUsers[i].token) {
       authorizatedUser = registratedUsers[i];
     }
-
-
   }
 
   res.render("user", {
@@ -122,7 +137,6 @@ app.post(
   middleWares.checkRegisteredUsers,
   express.urlencoded({ extended: true }),
   async (req: Request, res: Response) => {
-    console.log(req.body);
     let user: User = new User(req.body.user);
     registratedUsers.push(user);
 
@@ -143,17 +157,22 @@ app.post(
 );
 
 app.post("/login", middleWares.validateUser, async (req: Request, res: Response) => {
-  console.log(createToken(64));
-
-  res.status(200);
-  res.send();
+  res.status(201).send({
+    status: 201,
+    message: 'success'
+  });
 });
 
 app.get("/documents", async (req: Request, res: Response) => {
-  console.log('Обработка Ок');
+  let files: { name: string }[] = authorizatedUser.listOfFiles;
 
-  res.status(200);
-  res.end('ioioioioioi');
+  res.render('availableFiles', {
+    files
+  });
+
+  res.render('main', {
+    title: 'Домашняя страница'
+  });
 });
 
 app.listen(3000, () => {
@@ -164,99 +183,26 @@ app.listen(3000, () => {
   });
 });
 
-function createToken(value: number): string {
-  const tockenString: string =
-    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+// function createToken(value: number): string {
+//   const tockenString: string =
+//     "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-  let tocken: string = "";
-  let counter: number = 0;
-  for (let i = 0; i < value; i++) {
-    if (counter === 8) {
-      tocken += "-";
-      counter = 0;
-      continue;
-    }
-
-    tocken += tockenString[Math.floor(Math.random() * (61 - 0 + 1)) + 0];
-    counter++;
-  }
-  return tocken;
-}
-
-// function checkCookies(req: Request, res: Response, next: NextFunction) {
-//   let token: string | undefined = req.cookies.token;
-//   console.log(token);
-//   if (token != undefined) {
-//     for (let i = 0; i < registratedUsers.length; i++) {
-//       if (registratedUsers[i].token == token) {
-//         console.log("Кукис чекед");
-//         next();
-//         return;
-//       }
+//   let tocken: string = "";
+//   let counter: number = 0;
+//   for (let i = 0; i < value; i++) {
+//     if (counter === 8) {
+//       tocken += "-";
+//       counter = 0;
+//       continue;
 //     }
+
+//     tocken += tockenString[Math.floor(Math.random() * (61 - 0 + 1)) + 0];
+//     counter++;
 //   }
-//   console.log("плохо");
-//   res.writeHead(302, { Location: "/enter-page" });
-//   res.end();
+//   return tocken;
 // }
 
-// function checkRegisteredUsers(req: Request, res: Response, next: NextFunction) {
-//   console.log(req.body);
-//   let user: User = new User(req.body.userPinegun);
 
-//   if (!req.body.user) {
-//     res.status(404).send("Ошибка запроса");
-//   }
-
-//   let findUserByEmail = registratedUsers.find(
-//     (registratedUser) => registratedUser.email === user.email
-//   );
-
-//   if (findUserByEmail) {
-//     res.status(401).send("Пользователь с таким email уже зарегистрирован");
-//     return;
-//   }
-//   next();
-// }
-
-// function validateUser(req: Request, res: Response, next: NextFunction) {
-//   console.log(req.body);
-//   let user: User = new User(req.body.user);
-
-//   console.log(user);
-//   if (!req.body.user) {
-//     res.status(400).send("Ошибка запроса");
-//   }
-
-//   let foundUser = registratedUsers.find(
-//     (registratedUser) => registratedUser.username === user.username
-//   );
-
-//   if (foundUser) {
-//     console.log("findUserByUsername");
-//     if (user.password === foundUser.password) {
-//       // req.body.user = findUserByUsername;
-//       let token: string = createToken(256);
-//       foundUser.token = token;
-
-//       writeFilePromise(
-//         "../db/userData.json",
-//         JSON.stringify(registratedUsers, null, 2)
-//       ).then((data: string) => {
-//         console.log(data);
-//       });
-
-//       res.cookie("token", token, { httpOnly: true });
-//       next();
-//     } else {
-//       res.status(403).send({ message: "Неправильный пароль!" });
-//       return;
-//     }
-//   } else {
-//     res.status(403).send({ message: "Неправильный логин!" });
-//     return;
-//   }
-// }
 
 function replaceTemplateValues(userData: User): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -271,7 +217,3 @@ function replaceTemplateValues(userData: User): Promise<string> {
     });
   });
 }
-
-//TODO
-// Перенести все middlewares в папку services/middlewares
-// export function

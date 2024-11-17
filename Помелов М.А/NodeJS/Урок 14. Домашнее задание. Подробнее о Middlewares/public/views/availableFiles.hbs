@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .uploadBox {
+            flex-grow: 1;
+            padding: 40px;
+            background-color: #fff;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+        }
+
+        .downloadBox {
+            flex-grow: 1;
+            padding: 40px;
+            background-color: #fff;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+        }
+
+        .uploadText {
+            font-size: 20px;
+        }
+
+        .downloadText {
+            font-size: 20px;
+        }
+
+        .filename {
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="uploadBox">
+        <h1 class="uploadText">Файлы доступные для загрузки</h1>
+        <form action='http://localhost:3000/upload' method='post' enctype='multipart/form-data'>
+            <input type="file" name='file'>
+            <button type='submit'>Отправить</button>
+        </form>
+    </div>
+
+    <div class="downloadBox">
+        <h1 class="downloadText">Файлы доступные для скачивания</h1>
+        <div class="files">
+            {{#each files}}
+            <form class="file-card">
+                <h2 class="filename">{{name}}</h2>
+                <button>Скачать</button>
+            </form>
+            {{/each}}
+        </div>
+    </div>
+
+</body>
+
+</html>

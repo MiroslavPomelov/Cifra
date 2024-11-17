@@ -104,12 +104,30 @@ app.get("/index", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send(yield (0, file_operator_module_1.readFilePromise)("../webApp/index.html"));
 }));
 //---------------------------------------
-app.post("/upload", upload.single("file"), (req, res) => {
-    try {
-        res.send("Файл успешно загружен!");
+// app.post("/upload", upload.single("file"), (req, res) => {
+//   try {
+//     res.send("Файл успешно загружен!");
+//   } catch (err) {
+//     res.sendStatus(400);
+//   }
+// });
+app.post('/upload', upload.single('file'), (req, res) => {
+    var _a;
+    if (!req.file) {
+        res.status(400).send('No file uploaded.');
     }
-    catch (err) {
-        res.sendStatus(400);
+    else {
+        const fileName = req.file.filename;
+        console.log(fileName);
+        let findUser = exports.registratedUsers.find(registratedUser => registratedUser.token === authorizatedUser.token);
+        if (findUser) {
+            (_a = exports.registratedUsers.find(registratedUser => registratedUser.token === authorizatedUser.token)) === null || _a === void 0 ? void 0 : _a.listOfFiles.push({ name: fileName });
+            (0, file_operator_module_1.writeFilePromise)('../db/userData.json', JSON.stringify(exports.registratedUsers, null, 2));
+            res.send('Файл успешно загружен!');
+        }
+        else {
+            res.end('Ошибка!');
+        }
     }
 });
 let authorizatedUser;
@@ -144,14 +162,16 @@ app.post("/registration-page", middleWares.checkRegisteredUsers, express_1.defau
     }));
 }));
 app.post("/login", middleWares.validateUser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(createToken(64));
-    res.status(200);
-    res.send();
+    res.status(201).send({
+        status: 201,
+        message: 'success'
+    });
 }));
 app.get("/documents", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('Обработка Ок');
-    res.status(200);
-    res.end('ioioioioioi');
+    let files = authorizatedUser.listOfFiles;
+    res.render('availableFiles', {
+        files
+    });
 }));
 app.listen(3000, () => {
     (0, file_operator_module_1.readFilePromise)("../db/userData.json").then((data) => {

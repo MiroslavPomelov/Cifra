@@ -12,7 +12,12 @@
     "lastname": "Pinegin",
     "email": "pinegunk@gmail.com",
     "password": "123456",
-    "token": "9NrYACR0-I9ifjbUP-OVzZF6HT-0bHKZHLl-DwG2BRBH-l7mkpN8U-yIGjhoeq-oFiudC7Y-zdNo20tX-9QnogMJl-o7Afd7W9-wfICnv3B-37NqnXaC-vDmtdcVt-WOUBA4jq-wv9IoYUq-gwjMA5uG-woqXcpxu-ewWwq2hb-GmWTeODR-11IfBEti-UQqWg6Ux-SEZdOpzv-vF3QC9VZ-Nsre32Bh-IRkffLuT-nVHgfLLZ-TTBhFlxH-o5R3"
+    "token": "qVNqw4HJ-ltiDeBHq-ngkrtz1B-Y4KKxjAS-0bdpWNqM-UVSXtHN0-ibiio95o-QnmRFpuq-9NJ2cspv-cgWNIgyo-6sAtm1Mq-87LNn1sp-sKtnVkEl-MWpbUk9z-KqTwviGh-6xrmAaVA-zxeqtaA0-gCRDMcza-xbI2GQMu-cYTAG2d3-64UUWNKA-TavyEmq3-cdEd88gD-pp58EQzO-mwlJSHaY-L7btz5w6-umFPUEYI-OdbcnXO8-rQDQ",
+    "listOfFiles": [
+      {
+        "name": "file-1731759946759.jpg"
+      }
+    ]
   },
   {
     "username": "12121",
@@ -20,7 +25,8 @@
     "lastname": "121212",
     "email": "121212@ghghg",
     "password": "2121",
-    "token": null
+    "token": null,
+    "listOfFiles": []
   },
   {
     "username": "12121",
@@ -28,7 +34,8 @@
     "lastname": "1",
     "email": "1@1",
     "password": "qwqwqw",
-    "token": null
+    "token": null,
+    "listOfFiles": []
   },
   {
     "username": "ddd",
@@ -36,6 +43,7 @@
     "lastname": "ddd",
     "email": "rr@66",
     "password": "12345",
-    "token": null
+    "token": null,
+    "listOfFiles": []
   }
 ]

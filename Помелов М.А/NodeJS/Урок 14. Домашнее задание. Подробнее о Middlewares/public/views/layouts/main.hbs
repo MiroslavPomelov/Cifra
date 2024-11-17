@@ -77,7 +77,7 @@
 
         .myDocumentButton {
             border: none;
-            background-color: #007bff;
+            background-color: #323232;
             font-weight: bold;
             color: #f0f0f0;
             text-align: left;
@@ -96,7 +96,7 @@
         <a href="#">Настройки</a>
         <a href="#">Сервисы</a>
         <a href="#">Услуги</a>
-        <button class="myDocumentButton" onclick="openUploadForm()">Мои документы</button>
+        <a href="http://localhost:3000/documents">Мои документы</a>
     </div>
 
     <div class="main-content" id="myDiv">
@@ -106,46 +106,7 @@
         </div>
     </div>
 
-    <script>
-        function openUploadForm() {
-            fetch('http://localhost:3000/documents', {
-                method: 'GET'
-            })
-                .then(function (response) {
-                    return response.json()
-                })
-                .then(function (data) {
-                    console.log('data', data)
-                    console.log('aaaaaaaaaaaaaaaaaaaaaa');
-                })
-                .catch(function (error) {
-                    console.log('error', error)
-                });
-
-
-
-
-
-            let main = document.getElementsByClassName('main-content')[0];
-            main.innerHTML = '';
-            let form = document.createElement('form');
-            form.action = 'http://localhost:3000/upload';
-            form.method = 'post';
-            form.enctype = 'multipart/form-data';
-            let input = document.createElement('input');
-            input.type = 'file';
-            input.name = 'file';
-            let button = document.createElement('button');
-            button.type = 'submit';
-            button.textContent = 'Отправить';
-
-            form.appendChild(input);
-            form.appendChild(button);
-            main.append(form);
-
-            body.appendChild(main);
-        }
-    </script>
+  
 </body>
 
 </html>

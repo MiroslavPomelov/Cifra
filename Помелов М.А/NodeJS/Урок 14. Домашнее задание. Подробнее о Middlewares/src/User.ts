@@ -5,6 +5,7 @@ export class User {
     email: string;
     password: string;
     token: string | null;
+    listOfFiles: {name : string}[]
 
     constructor(user: User);
     constructor(username: string, firstname: string, lastname: string, email: string, password: string);
@@ -23,6 +24,7 @@ export class User {
             this.password = userOrUsername.password;
         }
         this.token = null;
+        this.listOfFiles = [];
     }
 
     setUserToken(token: string): void {

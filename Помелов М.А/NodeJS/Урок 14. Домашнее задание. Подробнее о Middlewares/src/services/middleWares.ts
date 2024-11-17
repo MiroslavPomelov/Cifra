@@ -33,7 +33,6 @@ export function checkCookies(req: Request, res: Response, next: NextFunction) {
 
 
 export function checkRegisteredUsers(req: Request, res: Response, next: NextFunction) {
-    console.log(req.body);
     let user: User = new User(req.body.userPinegun);
 
     if (!req.body.user) {
@@ -53,7 +52,6 @@ export function checkRegisteredUsers(req: Request, res: Response, next: NextFunc
 
 
 export function validateUser(req: Request, res: Response, next: NextFunction) {
-    console.log(req.body);
     let user: User = new User(req.body.user);
 
     console.log(user);
@@ -68,7 +66,6 @@ export function validateUser(req: Request, res: Response, next: NextFunction) {
     if (foundUser) {
         console.log("findUserByUsername");
         if (user.password === foundUser.password) {
-            // req.body.user = findUserByUsername;
             let token: string = createToken(256);
             foundUser.token = token;
 
