@@ -28,15 +28,11 @@ app.set('views', path.join(__dirname, '../public/views'));
 const storage: multer.StorageEngine = multer.diskStorage({
     destination: function (req, file, cb) {
         let findUser: User | undefined = registratedUsers.find(registratedUser => registratedUser.token === req.cookies.token);
-        if(findUser){
-            const uploadPath = path.join('../dist/uploads/', findUser.username);
-            fileSystem.mkdirSync(uploadPath, {recursive: true});
-            cb(null, uploadPath)
-        } 
-        else {
-            const uploadPath = path.join('../dist/uploads/', 'otherFiles');
-            cb(null, uploadPath);
-        }     
+        if (!findUser) return;
+
+        const uploadPath = path.join('../dist/uploads/', findUser.username);
+        fileSystem.mkdirSync(uploadPath, { recursive: true });
+        cb(null, uploadPath);
     },
     filename: function (req, file, cb) {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -48,23 +44,25 @@ const upload: any = multer({
     limits: { fileSize: 1000000000 },
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
-    }    
+    }
 })
 
-function checkFileType(file: any, cb: any): void{
+function checkFileType(file: any, cb: any): void {
     // Разрешенные типы файлов
     const filetypes: any = /jpeg|jpg|png|gif/;
-// Проверка расширения файла
-const extName: any = path.extname(file.originalname).toLowerCase();
-const extname: any = filetypes.test(extName);
-// Проверка mime-типа
-const mimetype: any = filetypes.test(file.mimetype);
-if (mimetype && extname) {
-    return cb(null, true);
-} else {
-    cb('Ошибка: Только изображения!');
-}};
+    // Проверка расширения файла
+    const extName: any = path.extname(file.originalname).toLowerCase();
+    const extname: any = filetypes.test(extName);
+    // Проверка mime-типа
+    const mimetype: any = filetypes.test(file.mimetype);
+    if (mimetype && extname) {
+        return cb(null, true);
+    } else {
+        cb('Ошибка: Только изображения!');
+    }
+};
 
+// Вынести в отдельную папку (SHARED) и модуль. 
 function replaceTemplateValues(userData: User): Promise<string> {
     return new Promise((resolve, reject) => {
         readFilePromise('../webApp/index.html')
@@ -81,7 +79,7 @@ function replaceTemplateValues(userData: User): Promise<string> {
 
 export let registratedUsers: User[];
 
-let authorizatedUser: User;
+
 
 app.get('/registration-page', async (req: Request, res: Response) => {
     console.log('загрузка регистрации');
@@ -91,50 +89,41 @@ app.get('/registration-page', async (req: Request, res: Response) => {
     res.send(await readFilePromise("../webApp/registration-page.html"));
 });
 
-app.get('/', middlewares.checkCookies, (req: Request, res: Response) => {   
-
+app.get('/', middlewares.checkCookies, (req: Request, res: Response) => {
     for (let i = 0; i < registratedUsers.length; i++) {
         if (req.cookies.token === registratedUsers[i].token) {
-            authorizatedUser = registratedUsers[i];
+            res.render('user', { user: registratedUsers[i] });
+            return;
         }
     }
 
-    res.render('user', {
-        username: authorizatedUser.username,
-        firstname: authorizatedUser.firstname,
-        lastname: authorizatedUser.lastname,
-        email: authorizatedUser.email,
-        password: authorizatedUser.password
-    });    
 });
 
 app.post('/upload', middlewares.checkCookies, upload.single('file'), (req: Request, res: Response) => {
     console.log('enter');
     if (!req.file) {
         res.status(400).send('No file uploaded.');
-    }  
-    else
-    {
-        const fileName: string = req.file.filename;              
-        let findUser: User | undefined = registratedUsers.find(registratedUser => registratedUser.token === req.cookies.token);        
-       
-        if (findUser) {                                    
-            registratedUsers.find(registratedUser => registratedUser.token === req.cookies.token)?.listOfFiles.push({name : fileName});
+    }
+    else {
+        const fileName: string = req.file.filename;
+        let findUser: User | undefined = registratedUsers.find(registratedUser => registratedUser.token === req.cookies.token);
+
+        if (findUser) {
+            registratedUsers.find(registratedUser => registratedUser.token === req.cookies.token)?.listOfFiles.push({ name: fileName });
             writeFilePromise('../db/userData.json', JSON.stringify(registratedUsers, null, 2));
             res.status(201).send({
                 status: 201,
                 message: 'файл успешно загружен'
-            });            
-        } 
-        else
-        {
+            });
+        }
+        else {
             res.send({
                 status: 200,
                 message: 'не удалось загрузить файл'
-            });                  
-        } 
-    }       
-});    
+            });
+        }
+    }
+});
 
 app.get('/enter-page', async (req: Request, res: Response) => {
     res.set('Content-Type', 'text/html')
@@ -143,7 +132,7 @@ app.get('/enter-page', async (req: Request, res: Response) => {
 });
 
 app.post('/registration-page', middlewares.checkRegisteredUsers, express.urlencoded({ extended: true }), async (req: Request, res: Response) => {
-    
+
     let user: User = new User(req.body.user);
     registratedUsers.push(user);
 
@@ -172,26 +161,27 @@ app.get('/index', async (req: Request, res: Response) => {
     res.send(await readFilePromise("../webApp/index.html"));
 });
 
-app.get('/documents', middlewares.checkCookies, async (req: Request, res: Response) =>{
+app.get('/documents', middlewares.checkCookies, async (req: Request, res: Response) => {
     console.log(req.cookies.token);
 
     let findUser: User | undefined = registratedUsers.find(registratedUser => registratedUser.token === req.cookies.token);
-    
+
     if (findUser) {
-        let files: {name : string}[] = findUser.listOfFiles;
-    res.render('avaliableFiles', { files })    
+        let files: { name: string }[] = findUser.listOfFiles;
+        res.render('avaliableFiles', { files })
     }
     else {
         res.end('Ошибка!');
-    }     
+    }
 });
 
-app.get('/download', middlewares.checkCookies, async (req: Request, res: Response) =>{        
+app.get('/download', middlewares.checkCookies, async (req: Request, res: Response) => {
     let findUser: User | undefined = registratedUsers.find(registratedUser => registratedUser.token === req.cookies.token);
-    const fileName = req.query.name;   
-    
-    if (findUser) {           
-        res.status(200).sendFile(path.join(__dirname,`../dist/uploads/${findUser.username}/${fileName}`),  function (err) {
+    const fileName = req.query.name;
+
+    if (findUser) {
+        res.header('Content-Disposition', 'attachment')
+        res.status(200).sendFile(path.join(__dirname, `../dist/uploads/${findUser.username}/${fileName}`), function (err) {
             if (err) {
                 console.error('Ошибка при загрузке файла:', err);
             } else {
@@ -201,20 +191,19 @@ app.get('/download', middlewares.checkCookies, async (req: Request, res: Respons
     }
     else {
         res.end('Ошибка!');
-    } 
+    }
 });
 
 app.get('/exit', middlewares.checkCookies, (req: Request, res: Response) => {
     let findUser: User | undefined = registratedUsers.find(registratedUser => registratedUser.token === req.cookies.token);
-    if (findUser){
+    if (findUser) {
         findUser.token = null;
         res.writeHead(302, { 'Location': '/enter-page' });
         res.end();
     }
-    else
-    {
+    else {
         res.end('Ошибка!');
-    } 
+    }
 })
 
 app.listen(3000, () => {

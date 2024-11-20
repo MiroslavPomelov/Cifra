@@ -61,15 +61,11 @@ app.set('views', path_1.default.join(__dirname, '../public/views'));
 const storage = multer_1.default.diskStorage({
     destination: function (req, file, cb) {
         let findUser = exports.registratedUsers.find(registratedUser => registratedUser.token === req.cookies.token);
-        if (findUser) {
-            const uploadPath = path_1.default.join('../dist/uploads/', findUser.username);
-            fileSystem.mkdirSync(uploadPath, { recursive: true });
-            cb(null, uploadPath);
-        }
-        else {
-            const uploadPath = path_1.default.join('../dist/uploads/', 'otherFiles');
-            cb(null, uploadPath);
-        }
+        if (!findUser)
+            return;
+        const uploadPath = path_1.default.join('../dist/uploads/', findUser.username);
+        fileSystem.mkdirSync(uploadPath, { recursive: true });
+        cb(null, uploadPath);
     },
     filename: function (req, file, cb) {
         cb(null, file.fieldname + '-' + Date.now() + path_1.default.extname(file.originalname));
@@ -98,6 +94,7 @@ function checkFileType(file, cb) {
     }
 }
 ;
+// Вынести в отдельную папку (SHARED) и модуль. 
 function replaceTemplateValues(userData) {
     return new Promise((resolve, reject) => {
         (0, file_operator_module_1.readFilePromise)('../webApp/index.html')
@@ -111,7 +108,6 @@ function replaceTemplateValues(userData) {
         });
     });
 }
-let authorizatedUser;
 app.get('/registration-page', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log('загрузка регистрации');
     res.set('Content-Type', 'text/html')
@@ -121,16 +117,10 @@ app.get('/registration-page', (req, res) => __awaiter(void 0, void 0, void 0, fu
 app.get('/', middlewares.checkCookies, (req, res) => {
     for (let i = 0; i < exports.registratedUsers.length; i++) {
         if (req.cookies.token === exports.registratedUsers[i].token) {
-            authorizatedUser = exports.registratedUsers[i];
+            res.render('user', { user: exports.registratedUsers[i] });
+            return;
         }
     }
-    res.render('user', {
-        username: authorizatedUser.username,
-        firstname: authorizatedUser.firstname,
-        lastname: authorizatedUser.lastname,
-        email: authorizatedUser.email,
-        password: authorizatedUser.password
-    });
 });
 app.post('/upload', middlewares.checkCookies, upload.single('file'), (req, res) => {
     var _a;
@@ -201,6 +191,7 @@ app.get('/download', middlewares.checkCookies, (req, res) => __awaiter(void 0, v
     let findUser = exports.registratedUsers.find(registratedUser => registratedUser.token === req.cookies.token);
     const fileName = req.query.name;
     if (findUser) {
+        res.header('Content-Disposition', 'attachment');
         res.status(200).sendFile(path_1.default.join(__dirname, `../dist/uploads/${findUser.username}/${fileName}`), function (err) {
             if (err) {
                 console.error('Ошибка при загрузке файла:', err);
