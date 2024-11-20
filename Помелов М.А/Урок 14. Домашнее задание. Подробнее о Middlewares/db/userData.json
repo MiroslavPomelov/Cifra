@@ -1,0 +1,106 @@
+[
+  {
+    "username": "Simple-Dimple",
+    "firstname": "Bogdan",
+    "lastname": "Black",
+    "email": "BogBlack@gmail.com",
+    "password": "qwerty",
+    "token": null,
+    "listOfFiles": []
+  },
+  {
+    "username": "Pinegun",
+    "firstname": "Denis",
+    "lastname": "Pinegin",
+    "email": "pinegunk@gmail.com",
+    "password": "123456",
+    "token": "0h2J10CJ-Rus1B2uT-I2EJMeLV-QcozjiVr-eZ5jsLcn-FLqF6MHP-vku7c8lw-xXx9wCLf-S2juq20s-c0fudAHd-DIqPhyTa-RcyWJQKT-PDEjFTsp-hxztQXlX-SC3Q0gf8-Ol7BSL0D-UvTNaY0g-R4IXUnI4-4ItkK6Hz-JrFZAvI5-McWkvlEe-e2Ko2kyw-9S0U21t3-nuu2vu1p-vgI5Ig3c-ZYdJuPHa-ozkzHviE-15O2CMEl-VHrP",
+    "listOfFiles": [
+      {
+        "name": "file-1731686396153.jpg"
+      },
+      {
+        "name": "file-1731698549907.png"
+      },
+      {
+        "name": "file-1731863546278.jpg"
+      },
+      {
+        "name": "file-1731863561341.jpg"
+      },
+      {
+        "name": "file-1731869941534.jpg"
+      },
+      {
+        "name": "file-1731930061664.jpg"
+      },
+      {
+        "name": "file-1731953065643.png"
+      },
+      {
+        "name": "file-1732117951142.jpg"
+      }
+    ]
+  },
+  {
+    "username": "12121",
+    "firstname": "121212",
+    "lastname": "121212",
+    "email": "121212@ghghg",
+    "password": "2121",
+    "token": null,
+    "listOfFiles": []
+  },
+  {
+    "username": "12121",
+    "firstname": "1",
+    "lastname": "1",
+    "email": "1@1",
+    "password": "qwqwqw",
+    "token": null,
+    "listOfFiles": []
+  },
+  {
+    "username": "ddd",
+    "firstname": "ddd",
+    "lastname": "ddd",
+    "email": "rr@66",
+    "password": "12345",
+    "token": null,
+    "listOfFiles": []
+  },
+  {
+    "username": "Alina",
+    "firstname": "Alina",
+    "lastname": "Pinegina",
+    "email": "Alinab-90@mail.ru",
+    "password": "123",
+    "token": "o5Ijar83-IIKkORxL-Rzhscxh5-MDH6bBgh-vO92tyRU-vUX7VOPn-TN61gN7m-AQ6ScqGt-yM8SNdZb-Lf4NrJt8-R6yf2SVo-x9zyMwLp-VpzEkPLy-TEIEbN8L-O6IutnSS-8IoR92O9-GSoSMP4X-D5qZ9weN-Hm1Qx2Ij-Kz8ZcL6i-I5SfERJB-GePIVJNc-QmxXadXn-t0nUChjU-sxcShkFK-dn6fWTPK-LgkiEAGb-zE60oAbm-eWrO",
+    "listOfFiles": [
+      {
+        "name": "file-1732051985101.jpg"
+      },
+      {
+        "name": "file-1732057360886.jpg"
+      },
+      {
+        "name": "file-1732057681867.jpg"
+      },
+      {
+        "name": "file-1732057747864.jpg"
+      },
+      {
+        "name": "file-1732057871306.jpg"
+      },
+      {
+        "name": "file-1732057890334.jpg"
+      },
+      {
+        "name": "file-1732057904720.jpg"
+      },
+      {
+        "name": "file-1732120553594.png"
+      }
+    ]
+  }
+]

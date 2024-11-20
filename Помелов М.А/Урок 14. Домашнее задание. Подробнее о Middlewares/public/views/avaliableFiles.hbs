@@ -1,0 +1,28 @@
+<div class="uploadBox">
+    <h2>Загрузка файлов на сервер</h2>
+    <form class="uploadForm" id="uploadForm" action='http://localhost:3000/upload'>
+        
+        <label class="input-file">
+	        <span class="input-file-text" type="text"></span>
+	        <input type="file" name="file">        
+ 	        <span class="input-file-btn">Выберите файл</span>
+ 	    </label>
+               
+        <button type='submit' class="fileBTN">Отправить</button>
+    </form> 
+</div>
+
+<div class="downloadBox">
+    <h2>Файлы доступные для скачивания</h2>
+    <div class="files">
+        {{#each files}}
+        <form class="file-card">
+        <h3 id="fileName" >{{name}}</h3>
+        <a class="fileBTN" id="fileDownloadBTN" href='http://localhost:3000/download?name={{name}}' >Скачать</a>
+        </form>
+        {{/each}}
+    </div>
+</div>
+<script>
+        document.querySelector('h2').textContent = 'Мои документы';
+</script>

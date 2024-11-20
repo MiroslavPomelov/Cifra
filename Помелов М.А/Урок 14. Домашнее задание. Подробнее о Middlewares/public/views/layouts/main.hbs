@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: #007bff;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar a {
+            color: #fff;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .sidebar .myDocumentBTN {
+            color: #fff;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #0056b3;
+        }       
+
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            background-color: #fff;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-content h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .user-details {
+            margin-top: 20px;
+        }
+
+        .user-details p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .user-details span {
+            font-weight: 700;
+        }
+
+        .myDocumentBTN {
+            border: none;
+            background-color: #6689aa;
+            font-weight: bold;
+            color: #f0f0f0;
+            text-align: left;
+            font-size: 17px;
+            font-family: sans-serif;
+            padding: 10px;
+            padding-left: 20px;
+        }
+        .fileBTN{
+            padding: 5px 20px;
+            height: 30px;            
+            text-align: center;
+            text-decoration: none;           
+            border:none;
+            border-radius: 5px;
+            background-color: #0056b3;
+            color: rgb(255 255 255);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }        
+        .fileBTN:hover {
+           background-color: #007bff; 
+        }
+        .files{
+             display: flex;
+             flex-wrap: wrap;
+             width: 1000px;
+        }
+
+        .file-card{
+            padding:15px 10px;
+            margin: 5px;
+            width:250px ;
+            display: flex;
+            flex-direction: column;            
+            align-items: center;
+            background-color:rgb(169, 207, 238) ;
+            border-radius: 10px;
+            border-style: solid;
+            border-color: #0056b3;
+            border-width: 1px;
+        }
+        .input-file {
+	        position: relative;
+	        display: inline-block;
+        }
+        .input-file-text {
+            margin: 0 5px;
+        	padding: 0 10px;
+        	line-height: 30px;
+        	text-align: left;
+        	height: 30px;
+        	display: block;
+        	float: left;
+        	box-sizing: border-box;
+        	width: 300px;
+        	border-style: solid;
+            border-radius: 5px;
+            border-color: #0056b3;
+            border-width: 1px;
+            
+        }
+        .input-file-btn {
+            height: 30px;
+        	padding: 5px;
+            position: relative;
+        	display: inline-block;
+        	cursor: pointer;
+        	outline: none;
+        	text-decoration: none;
+        	font-size: 12px;
+        	vertical-align: middle;
+        	color: rgb(255 255 255);
+        	text-align: center;
+        	border-radius: 5px;
+        	background-color: #0056b3;
+        	line-height: 22px;         	
+        	box-sizing:border-box;
+        	border: none;
+        	margin: 0;
+        	transition: background-color 0.2s;
+        }
+        .input-file input[type=file] {
+        	position: absolute;
+        	z-index: -1;
+        	opacity: 0;
+        	display: block;
+        	width: 0;
+        	height: 0;
+        }
+
+        /* Focus */
+        {{!-- .input-file input[type=file]:focus + .input-file-btn {
+        	box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        } --}}
+
+        /* Hover/active */
+        .input-file:hover .input-file-btn {
+        	background-color: #007bff;
+        }
+        .input-file:active .input-file-btn {
+        	background-color: #007bff;
+        }
+
+        /* Disabled */
+        .input-file input[type=file]:disabled + .input-file-btn {
+        	background-color: #eee;
+        }
+         .error-message {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: red;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.5s forwards, slideUp 0.5s 2.5s forwards;
+        }
+
+        @keyframes slideDown {
+            from {
+                top: -50px;
+                opacity: 0;
+            }
+
+            to {
+                top: 10px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                top: 10px;
+                opacity: 1;
+            }
+
+            to {
+                top: -50px;
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="#" class="active">Личный кабинет</a>
+        <a href="http://localhost:3000/">На главную</a>
+        <a href="#">Настройки</a>
+        <a href="#">Сервисы</a>
+        <a href="#">Услуги</a>
+        <a href="http://localhost:3000/documents">Мои документы</a>
+        <a href="http://localhost:3000/exit">Выход</a>
+    </div>
+
+    <div class="main-content">
+        <div class="error-message" id="errorMessage"></div>
+        <h2>Личный кабинет</h2>
+        <div class="user-details">
+            {{{body}}}
+        </div>
+    </div>
+    
+
+    <script src="https://snipp.ru/cdn/jquery/2.1.1/jquery.min.js">
+    </script>
+
+    <script>
+        $('.input-file input[type=file]').on('change', function(){
+	    let file = this.files[0];
+	    $(this).closest('.input-file').find('.input-file-text').html(file.name);
+    });
+    </script>  
+
+    <script>
+         const form = document.getElementById('uploadForm');
+         form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                })
+
+                if (!response.ok){
+                    throw new Error(`Ошибка HTTP! Статус: ${response.status}`);
+                }
+
+                const data = await response.json();
+                showMessage(data.status, data.message);
+            }
+            catch {
+                console.error('Во время загрузки произошла ошибка:', error);
+                alert('Во время загрузки возникла ошибка!');
+
+            }
+
+         });
+
+         function showMessage(status, message) {
+            const notifier = document.getElementById('errorMessage');
+
+            if (status === 201) {
+                notifier.style.backgroundColor = 'green';
+            } else {                
+                notifier.style.backgroundColor = 'red';
+            }
+
+            notifier.textContent = message;
+            notifier.style.display = 'block';
+            setTimeout(() => {
+                notifier.style.display = 'none';
+                window.location.href = "http://localhost:3000/documents";                 
+            }, 3000);
+            
+        }
+    </script>
+</body>
+</html>
