@@ -14,11 +14,15 @@ export function readFilePromise(fileName: string): Promise<string> {
 
 export function writeFilePromise(fileName: string, data: string): Promise<string> {
     return new Promise((resolve, reject) => {
-        fs.writeFile(fileName, data, 'utf8', (err) => {
-            if (err) {
-                reject(err);
-            }
-            resolve('success');
-        });
+        try {
+            fs.writeFile(fileName, data, 'utf8', (err) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve('success');
+            });
+        } catch (error) {
+            reject('Ошибка')
+        }
     });
 }
