@@ -2,6 +2,7 @@ import { AppDataSource } from "./configuration/DataSource";
 import { createStudents, createTeachers, createUniversities } from "./DataCreators/creator";
 import { Student } from "./Entities/Student";
 import { Teacher } from "./Entities/Teacher";
+import { University } from "./Entities/University";
 
 
 // async function seedDatabase() {
@@ -28,17 +29,24 @@ async function getStudentsWithDetails() {
     // Инициализируем подключение к БД
     await AppDataSource.initialize();
     // Получаем репозиторий студента
+
+
+
+    const universutyRepository = AppDataSource.getRepository(University);
+    const university: University | null = await universutyRepository.findOne(
+        {
+            where: { name: 'Marquardt Inc' },
+        });
+
+
     const studentRepository = AppDataSource.getRepository(Student);
+    let students: Student[] | null;
+    if (university) {
+        students = await studentRepository.find({
+            where: { university: university }
+        })
+    }
 
-
-
-
-
-
-    // const students: Student[] = await studentRepository.find({
-    //     where: { university: { name: 'Stamm LLC' } },
-    //     relations: ['university', 'teacher'],
-    // })
 
 
 
