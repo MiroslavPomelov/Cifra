@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <!-- Перенести в header.hbs -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 120vh;
+
+            background-image: url(/PnP_online_shop/frontend/images/ruvim-noga-pazM9TQJ2Ck-unsplash.jpg);
+            background-size: cover;
+            background-position: center;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            align-items: center;
+
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 0px 0px 20px 0;
+
+            /* border-bottom: 1px solid rgba(255, 255, 255, .5);
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, .5); */
+        }
+
+        .header_menu {
+            margin-bottom: 15px;
+            display: flex;
+            width: 100%;
+            padding: 15px;
+            justify-content: space-evenly;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, .5);
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+            backdrop-filter: blur(15px);
+        }
+
+        .catalog_block {
+            width: 160px;
+            height: 50px;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid #e8e8e8;
+            background-image: linear-gradient(to right, #f43b47 30%, #c9225a 100%);
+        }
+
+        .header_burgers {
+            display: flex;
+            width: 90%;
+            padding: 0px 35px;
+            justify-content: space-between;
+        }
+
+        .catalog_block_text {
+            color: #e8e8e8;
+            user-select: none;
+            font-size: 1.1em;
+        }
+
+
+
+        .search_block form {
+            width: 350px;
+            height: 40px;
+            display: flex;
+            margin: 0 auto;
+            color: #ffffff;
+        }
+
+        input.search {
+            width: calc(100% - 54px);
+            height: auto;
+            background-color: #c1c1c100;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+            border: 1px solid #e8e8e893;
+            padding-left: 15px;
+            outline: none;
+        }
+
+        input.search::placeholder {
+            color: #e8e8e893;
+        }
+
+        input.submit {
+            background: url("https://img.icons8.com/ffffff/search") center center/40% auto no-repeat #c9225a;
+            border: 0;
+            width: 54px;
+            height: auto;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            border: 1px solid #e8e8e893;
+        }
+
+        .basket {
+            display: flex;
+            align-items: center;
+        }
+
+
+
+
+
+
+
+
+        .logo {
+            font-size: 2em;
+            color: #e8e8e8;
+            user-select: none;
+        }
+
+        .navigation a {
+            position: relative;
+            font-size: 1em;
+            color: #e8e8e8;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 40px;
+        }
+
+        .navigation a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 100%;
+            height: 3px;
+            background: #e8e8e8;
+            border-radius: 5px;
+            transform-origin: right;
+            transform: scale(0);
+            transition: transform .5s;
+        }
+
+        .navigation a:hover::after {
+            transform-origin: left;
+            transform: scale(1);
+        }
+
+        .btnLogin-popup {
+            background-image: linear-gradient(to right, #523a94 30%, #b71e49 100%);
+        }
+
+        .btnLogin-popup {
+            width: 130px;
+            height: 40px;
+            border: 2px solid #e8e8e8;
+            outline: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            color: #e8e8e8;
+            font-weight: 500;
+            margin-left: 40px;
+            transition: .5s;
+            background-size: 200% auto;
+        }
+
+        .btnLogin-popup:hover {
+            background-position: center;
+
+            color: #fff;
+            text-decoration: none;
+        }
+
+
+
+        .wrapper {
+            position: relative;
+            width: 400px;
+            height: 440px;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, .5);
+            border-radius: 20px;
+            backdrop-filter: blur(18px);
+            box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            transform: scale(0);
+
+            transition: transform .5s ease, height .2s ease;
+        }
+
+        .wrapper.active-popup {
+            transform: scale(1);
+            z-index: 100;
+        }
+
+        .wrapper.active {
+            height: 570px;
+        }
+
+
+        .wrapper .form-box {
+            width: 100%;
+            padding: 40px;
+        }
+
+        .wrapper .form-box.auth {
+            transition: transform .18s ease;
+            transform: translateX(0);
+        }
+
+        .wrapper.active .form-box.auth {
+            transition: none;
+            transform: translateX(-400px);
+
+        }
+
+        .wrapper .form-box.registration {
+            position: absolute;
+            transition: none;
+            transform: translateX(400px);
+        }
+
+        .wrapper.active .form-box.registration {
+            transition: transform .18s ease;
+            transform: translateX(0);
+        }
+
+        .wrapper .icon-close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50px;
+            height: 50px;
+            font-size: 2em;
+            background-image: linear-gradient(to left, #523a94 15%, #c12551 100%);
+            display: flex;
+            color: #fff;
+            justify-content: center;
+            align-items: center;
+            border-bottom-left-radius: 20px;
+            cursor: pointer;
+            z-index: 1;
+            background-size: 200% auto;
+        }
+
+        .icon-close:hover {
+            background: #bc2f57;
+        }
+
+        .icon-close i:hover {
+            transition: .6s;
+            transform: rotate(90deg);
+        }
+
+
+        .form-box h2 {
+            font-size: 2em;
+            text-align: center;
+            color: #e8e8e8;
+        }
+
+        .form-box.registration h2 {
+            font-size: 27px;
+            text-align: center;
+            color: #e8e8e8;
+        }
+
+        .auth-box {
+            position: relative;
+            width: 100%;
+            height: 50px;
+            border-bottom: 2px solid #e8e8e8;
+            margin: 20px 0;
+
+        }
+
+        .auth-box label {
+            position: absolute;
+            top: 50%;
+            left: 5px;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: #e8e8e8;
+            font-weight: 500;
+            pointer-events: none;
+            transition: .6s;
+        }
+
+        .auth-box input:focus~label,
+        .auth-box input:valid~label {
+            top: -1px;
+        }
+
+        .auth-box input {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            color: #e8e8e8;
+            font-weight: 500;
+            padding: 0 35px 0 5px;
+        }
+
+        .auth-box .icon {
+            position: absolute;
+            right: 8px;
+            font-size: 1.2em;
+            color: #e8e8e8;
+            line-height: 57px;
+
+        }
+
+        .remember-forgot {
+            font-size: 14px;
+            color: #e8e8e8;
+            font-weight: 500;
+            margin: -1px 5px 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .remember-forgot label input {
+            accent-color: #0b4fef;
+            margin-right: 3px;
+        }
+
+        .remember-forgot a {
+            color: #e8e8e8;
+            text-decoration: none;
+        }
+
+        .remember-forgot a:hover {
+            text-decoration: underline;
+            color: #24445c;
+        }
+
+        .btn-enter {
+            width: 100%;
+            height: 45px;
+            background-image: linear-gradient(to left, #523a94 20%, #c12551 100%);
+            border: none;
+            outline: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            color: #fff;
+            font-weight: 500;
+            transition: .1s ease;
+            background-size: 140% auto;
+        }
+
+        .btn-enter:hover {
+            background-position: center;
+            background-image: linear-gradient(to right, rgba(82, 58, 148, 0.943)0%, #b3234c 70%);
+            transition: .9s ease-in-out;
+        }
+
+        .auth-registration {
+            font-size: .9em;
+            color: #e8e8e8;
+            text-align: center;
+            font-weight: 500;
+            margin: 25px 0 10px;
+        }
+
+        .auth-registration p a {
+            color: #e8e8e8;
+            font-weight: 600;
+        }
+
+        .auth-registration p a:hover {
+            text-decoration: underline;
+            color: #b4b4b4;
+        }
+
+        /* input::-webkit-calendar-picker-indicator {
+                opacity: 0;
+            } */
+
+
+
+        .burger-checkbox {
+            position: absolute;
+            visibility: hidden;
+        }
+
+        .burger {
+            position: relative;
+            cursor: pointer;
+            display: block;
+            position: relative;
+            border: none;
+            background: transparent;
+            width: 30px;
+            height: 26px;
+        }
+
+        .burger::before,
+        .burger::after {
+            content: '';
+            left: 0;
+            position: absolute;
+            display: block;
+            width: 100%;
+            height: 4px;
+            border-radius: 10px;
+            background: #28054b;
+        }
+
+        .burger::before {
+            top: 0;
+            box-shadow: 0 11px 0 #000;
+            transition: box-shadow .3s .15s, top .3s .15s, transform .3s;
+        }
+
+        .burger::after {
+            bottom: 0;
+            transition: bottom .3s .15s, transform .3s;
+        }
+
+        .burger-checkbox:checked+.burger::before {
+            top: 11px;
+            transform: rotate(45deg);
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0);
+            transition: box-shadow .15s, top .3s, transform .3s .15s;
+        }
+
+        .burger-checkbox:checked+.burger::after {
+            bottom: 11px;
+            transform: rotate(-45deg);
+            transition: bottom .3s, transform .3s .15s;
+        }
+
+
+
+
+
+        .menu-list {
+            top: 0;
+            left: 0;
+            position: absolute;
+            display: grid;
+            width: 200px;
+            gap: 12px;
+            padding: 42px 0;
+            margin: 0;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+            list-style-type: none;
+            transform: translateX(-100%);
+            transition: .3s;
+            height: max-content;
+            backdrop-filter: blur(10px);
+        }
+
+        .menu-item {
+            padding: 8px;
+            color: white;
+            font-size: 18px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .menu-item:hover {
+            background: rgba(58, 8, 8, 0.2);
+            border-radius: 10px;
+        }
+
+        .burger-checkbox:checked~.menu-list {
+            transform: translateX(0);
+            transform: translateY(50%);
+        }
+
+        .menu__drop-variants-list {
+            position: absolute;
+            width: max-content;
+            left: 200px;
+            display: none;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+        }
+
+        .menu_variant {
+
+            margin: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .menu__variant-item {
+            width: 200px;
+            position: relative;
+            padding: 10px;
+            font-size: 18px;
+            backdrop-filter: blur(10px);
+        }
+
+        .menu__move-link {
+            color: #e8e8e8;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .menu_variant:hover {
+            transition: ease 0.3s;
+        }
+
+        .menu_variant:hover>.menu__drop-variants-list {
+            display: flex;
+        }
+
+        .menu__move-link:hover {
+            transition: ease 0.3s;
+        }
+
+        .fa-solid.fa-basket-shopping {
+            font-size: 25px;
+        }
+    </style>
+
+    <header>
+
+        <div class="header_menu">
+            <h2 class="logo">P&P Co.</h2>
+            <nav class="navigation">
+                <a href="#">Домашняя страница</a>
+                <a href="#">О нас</a>
+                <a href="#">Акции</a>
+                <a href="#">Контакты</a>
+            </nav>
+
+            <!-- КОРЗИНА -->
+            <div class="basket"></div>
+            <i class="fa-solid fa-basket-shopping"></i>
+            <button class="btnLogin-popup">Войти</button>
+        </div>
+
+
+        </div>
+
+
+
+
+
+
+        <div class="header_burgers">
+            <div class="catalog_block">
+                <p class="catalog_block_text">Каталог</p>
+                <!-- BURGER -->
+                <div class="menu">
+                    <input type="checkbox" id="burger-checkbox" class="burger-checkbox">
+                    <label for="burger-checkbox" class="burger"></label>
+                    <ul class="menu-list">
+                        <li class="menu_variant">
+                            <a href="#" class="menu-item">Диваны</a>
+                            <div class="menu__drop-variants-list">
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Угловые</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Прямые</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Раскладные</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Выдвижные</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Раздвижные</a>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="menu_variant">
+                            <a href="#" class="menu-item">Кровати</a>
+                            <div class="menu__drop-variants-list">
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Детские</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Односпальные</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Полутороспальные</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Двуспальные</a>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="menu_variant">
+                            <a href="#" class="menu-item">Кресла</a>
+                            <div class="menu__drop-variants-list">
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Классическое</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Кресло-стул</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Раскладное</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Кресло-реклайнер</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Кресло-качалка</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Кресло-понг</a>
+                                </div>
+                            </div>
+                        </li>
+
+
+                        <li class="menu_variant">
+                            <a href="#" class="menu-item">Стулья</a>
+                            <div class="menu__drop-variants-list">
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Для дома</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Офисные</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Специального назначения</a>
+                                </div>
+                            </div>
+                        </li>
+
+
+                        <li class="menu_variant">
+                            <a href="#" class="menu-item">Столы</a>
+                            <div class="menu__drop-variants-list">
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Прямые</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Угловые</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Круглые</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Обеденные</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Рабочие</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Кофейные</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Компьютерные</a>
+                                </div>
+                            </div>
+                        </li>
+
+
+                        <li class="menu_variant">
+                            <a href="#" class="menu-item">Шкафы</a>
+                            <div class="menu__drop-variants-list">
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Для гардероба</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Для прихожих</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Для спален</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Для гостинных</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Для детских</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Для кухонь</a>
+                                </div>
+                                <div class="menu__variant-item">
+                                    <a class="menu__move-link" href="#">Для кабинетов</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <!-- ПОИСК -->
+            <div class="search_block">
+                <form>
+                    <input type="text" name="text" class="search" placeholder="Поиск">
+                    <input type="submit" name="submit" class="submit" value="">
+                </form>
+            </div>
+    </header>
+
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-pause="none">
+        <style>
+            .black {
+                padding: 50px;
+                position: relative;
+                top: -760px;
+                left: 10px;
+                width: 350px;
+                height: 350px;
+
+                backdrop-filter: blur(15px);
+                border-bottom: 1px solid rgba(255, 255, 255, .5);
+                border-radius: 180px;
+                box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+                background-color: black;
+            }
+
+            .black-box {
+                padding-left: 20px;
+                width: 60px;
+                color: blanchedalmond;
+            }
+
+            .discount h1 {
+                font-size: 80px;
+                color: blanchedalmond;
+            }
+
+            .discount h5 {
+                color: blanchedalmond;
+            }
+        </style>
+
+        <div class="carousel-inner ">
+            <div class="carousel-item active " data-bs-interval="10000">
+                <img src="/PnP_online_shop/backend/src/images/carousel/a6c31395b22511efaf86c2a772d65421.png"
+                    class="d-block w-100 rounded " alt="bed">
+                <div class="black">
+                    <div class="black-box">
+                        <h2>ЧЕРНАЯ ПЯТНИЦА</h2>
+                        <div class="discount">
+                            <h5>скидки до</h5>
+                            <h1>70%</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item " data-bs-interval="10000">
+                <img src="/PnP_online_shop/backend/src/images/carousel/bdfca396b22511ef8b0b8e4276c9f2bc.png"
+                    class="d-block w-100 rounded" alt="sofa">
+
+                <div class="black">
+                    <div class="black-box">
+                        <h2>ЧЕРНАЯ ПЯТНИЦА</h2>
+                        <div class="discount">
+                            <h5>скидки до</h5>
+                            <h1>70%</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item " data-bs-interval="10000">
+                <img src="/PnP_online_shop/backend/src/images/carousel/df84ed38b22511efb2edeabb81e3d9ad.png"
+                    class="d-block w-100 rounded " alt="wardrobe">
+                <div class="black">
+                    <div class="black-box">
+                        <h2>ЧЕРНАЯ ПЯТНИЦА</h2>
+                        <div class="discount">
+                            <h5>скидки до</h5>
+                            <h1>70%</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Предыдущий</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Следующий</span>
+        </button>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+    </div>
+
+
+    <div class="wrapper">
+        <span class="icon-close">
+            <i class="fa-solid fa-xmark"></i>
+        </span>
+
+
+        <!-- ФОРМА ВХОДА -->
+        <div class="form-box auth">
+            <h2>Войти</h2>
+            <form action="#">
+                <div class="auth-box">
+                    <span class="icon">
+                        <i class="fa-solid fa-envelope"></i>
+                    </span>
+                    <input type="text" name="login" required>
+                    <label>Логин</label>
+                </div>
+                <div class="auth-box">
+                    <span class="icon">
+                        <i class="fa-solid fa-lock"></i>
+                    </span>
+                    <input type="password" name="password" required>
+                    <label>Пароль</label>
+                </div>
+                <div class="remember-forgot">
+                    <label><input type="checkbox">Запомнить меня</label>
+                    <a href="#">Забыли пароль?</a>
+                </div>
+                <button class="btn-enter" type="submit">Войти</button>
+                <div class="auth-registration">
+                    <p>Еще нет аккаунта? <a href="#" class="registration-link">Зарегистрироваться</a></p>
+                </div>
+            </form>
+        </div>
+
+
+        <!-- section + DOM -->
+        <!-- ФОРМА РЕГИСТРАЦИИ -->
+
+        <div class="form-box registration">
+            <h2>Регистрация</h2>
+            <form action="#">
+
+                <div class="auth-box">
+                    <span class="icon">
+                        <i class="fa-solid fa-user"></i>
+                    </span>
+                    <input type="text" name="username" required>
+                    <label>Имя пользователя</label>
+                </div>
+
+                <div class="auth-box">
+                    <span class="icon">
+                        <i class="fa-solid fa-envelope"></i>
+                    </span>
+                    <input type="email" name="email" required>
+                    <label>Адрес электроной почты</label>
+                </div>
+
+                <div class="auth-box">
+                    <span class="icon">
+                        <i class="fa-solid fa-lock"></i>
+                    </span>
+                    <input type="password" name="password" required>
+                    <label>Придумайте пароль</label>
+                </div>
+
+                <div class="auth-box">
+                    <span class="icon">
+                        <i class="fa-solid fa-lock"></i>
+                    </span>
+                    <input type="password" name="passwordRepeat" required>
+                    <label>Повторите пароль</label>
+                </div>
+
+                <!-- <div class="auth-box">
+                    <span class="icon">
+                        <i class="fa-solid fa-calendar"></i>
+                    </span>
+                    <input type="date" name="date" required>
+
+                </div> -->
+
+                <div class="remember-forgot">
+                    <label><input type="checkbox" checked required>Я принимаю условия персональных данных</label>
+                </div>
+                <button class="btn-enter" type="submit">Зарегситрироваться</button>
+                <div class="auth-registration">
+                    <p>Уже есть аккаунт?<a href="#" class="auth-link"> Войти</a></p>
+                </div>
+            </form>
+        </div>
+
+
+
+        <script>
+            const wrapper = document.querySelector(".wrapper");
+            const authLink = document.querySelector(".auth-link");
+            const registerLink = document.querySelector(".registration-link");
+            const btnAuth = document.querySelector(".btnLogin-popup");
+            const iconClose = document.querySelector(".icon-close");
+
+            registerLink.addEventListener('click', () => {
+                wrapper.classList.add('active');
+            });
+
+            authLink.addEventListener('click', () => {
+                wrapper.classList.remove('active');
+            });
+
+            btnAuth.addEventListener('click', () => {
+                wrapper.classList.add('active-popup');
+            });
+
+            iconClose.addEventListener('click', () => {
+                wrapper.classList.remove('active-popup');
+            });
+        </script>
+    </div>
+
+
+
+
+
+    <footer>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                color: #e8e8e8;
+                box-sizing: border-box;
+                font-family: 'Poppins', sans-serif;
+            }
+
+            footer {
+                padding: 20px 100px;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                z-index: 99;
+                /* position: fixed;
+                bottom: 0;                
+                left: 0; */
+                width: 100%;
+                padding: 20px 100px;
+                backdrop-filter: blur(15px);
+                border-bottom: 1px solid rgba(255, 255, 255, .5);
+                border-radius: 15px 15px 0 0;
+                box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+
+
+
+            }
+
+            .footer-row {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+
+            }
+
+            .footer-row_info {
+                width: 30%;
+
+            }
+
+            .footer-row_contacts {
+                padding: 0 30px;
+                width: 30%;
+
+            }
+
+            .footer-row_social {
+                width: 15%;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-row_social_link-box {
+                padding: 20px 0;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .footer-text {
+                padding: 10px;
+            }
+
+            .footer-text h5 {
+                color: #453a94
+            }
+        </style>
+        <div class="footer-row">
+            <div class="footer-row_info">
+                <h5>О нас</h5>
+                <p>
+                    Мы предлагаем широкий выбор товара, наличие на складе, быструю доставку и доступные цены.
+                </p>
+            </div>
+            <div class="footer-row_contacts">
+                <h5>Контакты</h5>
+                <ul class="footer-row_contacts_list">
+                    <li>
+                        <p>Email: P&P@gmail.com</p>
+                    </li>
+                    <li>
+                        <p>Телефон: +7 800 555 3535</p>
+                    </li>
+                    <li>
+                        <p>Адрес: ул. Мебельная 15, Москва, Россия</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="footer-row_social">
+                <h5>Следите за нами</h5>
+                <div class="footer-row_social_link-box">
+                    <a href="#"><img style="width: 30px" src="/backend/src/images/icons/telegram-icon.png"
+                            alt="tg" /></a>
+                    <a href="#"><img style="width: 30px" src="/backend/src/images/icons/twitter-icon.png"
+                            alt="twitter" /></a>
+                    <a href="#"><img style="width: 30px" src="/backend/src/images/icons/vk-icon.png" alt="vk" /></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-text">
+            <h5>© 2024 Передовая электроника: все права защищены</h5>
+        </div>
+
+
+    </footer>
+
+
+    <!-- 
+Картинки -->
+    <script src="https://kit.fontawesome.com/281f2d2681.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
