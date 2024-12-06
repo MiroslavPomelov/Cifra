@@ -10,7 +10,12 @@ const template = Handlebars.compile(templateFile);
 let username = 'Войти';
 
 const data = {
-    name: username
+    name: username,
+    icons: {
+        telegram: "https://cdn-icons-png.flaticon.com/512/4423/4423446.png ",
+        twitter: "https://cdn-icons-png.flaticon.com/512/5968/5968830.png ",
+        vk: "https://cdn-icons-png.flaticon.com/512/25/25684.png "
+    }
 };
 
 // Рендеринг HTML
