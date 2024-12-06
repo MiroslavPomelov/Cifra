@@ -64,7 +64,10 @@
             backdrop-filter: blur(15px);
         }
 
+
         .catalog_block {
+            position: relative;
+
             width: 160px;
             height: 50px;
             display: flex;
@@ -198,7 +201,8 @@
 
 
         .wrapper {
-            position: relative;
+            position: absolute;
+            top: 25%;
             width: 400px;
             height: 440px;
             background: transparent;
@@ -221,7 +225,7 @@
         }
 
         .wrapper.active {
-            height: 570px;
+            height: 720px;
         }
 
 
@@ -461,9 +465,6 @@
         }
 
 
-
-
-
         .menu-list {
             top: 0;
             left: 0;
@@ -476,10 +477,15 @@
             border-radius: 15px;
             box-shadow: 0 0 30px rgba(0, 0, 0, .5);
             list-style-type: none;
-            transform: translateX(-100%);
-            transition: .3s;
+            transform: translateY(300px);
+            opacity: 0;
+
+            transition: 1s;
             height: max-content;
             backdrop-filter: blur(10px);
+
+
+            z-index: 100;
         }
 
         .menu-item {
@@ -497,7 +503,8 @@
 
         .burger-checkbox:checked~.menu-list {
             transform: translateX(0);
-            transform: translateY(50%);
+            transform: translateY(12%);
+            opacity: 1;
         }
 
         .menu__drop-variants-list {
@@ -524,6 +531,7 @@
             padding: 10px;
             font-size: 18px;
             backdrop-filter: blur(10px);
+            background-color: #8d8d8d49;
         }
 
         .menu__move-link {
@@ -546,6 +554,35 @@
 
         .fa-solid.fa-basket-shopping {
             font-size: 25px;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: auto;
+            height: auto;
+            color: transparent;
+            background: transparent;
+        }
+
+        input[type="date"]::-webkit-inner-spin-button,
+        input[type="date"]::-webkit-clear-button {
+            z-index: -10;
+        }
+
+        input[type="date"]::-webkit-input-placeholder {
+            z-index: 99;
+        }
+
+        input[type="date"]:placeholder {
+            z-index: 99;
+        }
+
+        input[type="date"] {
+            background-color: #28054b;
         }
     </style>
 
@@ -576,6 +613,7 @@
 
         <div class="header_burgers">
             <div class="catalog_block">
+
                 <p class="catalog_block_text">Каталог</p>
                 <!-- BURGER -->
                 <div class="menu">
@@ -730,12 +768,15 @@
             </div>
     </header>
 
-    <div id="carouselExample " class="carousel slide" data-bs-ride="carousel" data-bs-pause="none">
+    <div id="carouselExample" class="carousel slide m5" data-bs-ride="carousel" data-bs-pause="none">
         <style>
-            .black {
-                padding: 50px;
+            .carousel-item {
                 position: relative;
-                top: -760px;
+            }
+
+            .black {
+                position: absolute;
+                top: 10px;
                 left: 10px;
                 width: 350px;
                 height: 350px;
@@ -748,8 +789,12 @@
             }
 
             .black-box {
-                padding-left: 20px;
-                width: 60px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+
+                transform: translate(-50%, -50%);
+                /* padding-left: 20px; */
                 color: blanchedalmond;
             }
 
@@ -763,59 +808,62 @@
             }
         </style>
 
-        <div class="carousel-inner ">
-            <div class="carousel-item active " data-bs-interval="10000">
-                <img src="/PnP_online_shop/backend/src/images/carousel/a6c31395b22511efaf86c2a772d65421.png"
-                    class="d-block w-100 rounded " alt="bed">
-                <div class="black">
-                    <div class="black-box">
-                        <h2>ЧЕРНАЯ ПЯТНИЦА</h2>
-                        <div class="discount">
-                            <h5>скидки до</h5>
-                            <h1>70%</h1>
+        <div class="container">
+            <div class="carousel-inner">
+                <div class="carousel-item active " data-bs-interval="10000">
+                    <img src="/PnP_online_shop/backend/src/images/carousel/a6c31395b22511efaf86c2a772d65421.png"
+                        class="d-block rounded" alt="bed">
+                    <div class="black">
+                        <div class="black-box">
+                            <h2>ЧЕРНАЯ ПЯТНИЦА</h2>
+                            <div class="discount">
+                                <h5>скидки до</h5>
+                                <h1>70%</h1>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="carousel-item " data-bs-interval="10000">
-                <img src="/PnP_online_shop/backend/src/images/carousel/bdfca396b22511ef8b0b8e4276c9f2bc.png"
-                    class="d-block w-100 rounded" alt="sofa">
+                <div class="carousel-item " data-bs-interval="10000">
+                    <img src="/PnP_online_shop/backend/src/images/carousel/bdfca396b22511ef8b0b8e4276c9f2bc.png"
+                        class="d-block w-100 rounded" alt="sofa">
 
-                <div class="black">
-                    <div class="black-box">
-                        <h2>ЧЕРНАЯ ПЯТНИЦА</h2>
-                        <div class="discount">
-                            <h5>скидки до</h5>
-                            <h1>70%</h1>
+                    <div class="black">
+                        <div class="black-box">
+                            <h2>ЧЕРНАЯ ПЯТНИЦА</h2>
+                            <div class="discount">
+                                <h5>скидки до</h5>
+                                <h1>70%</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item " data-bs-interval="10000">
+                    <img class="w-20%"
+                        src="/PnP_online_shop/backend/src/images/carousel/df84ed38b22511efb2edeabb81e3d9ad.png"
+                        class="d-block w-100 rounded " alt="wardrobe">
+                    <div class="black">
+                        <div class="black-box">
+                            <h2>ЧЕРНАЯ ПЯТНИЦА</h2>
+                            <div class="discount">
+                                <h5>скидки до</h5>
+                                <h1>70%</h1>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="carousel-item " data-bs-interval="10000">
-                <img class="w-20%" src="/PnP_online_shop/backend/src/images/carousel/df84ed38b22511efb2edeabb81e3d9ad.png"
-                    class="d-block w-100 rounded " alt="wardrobe">
-                <div class="black">
-                    <div class="black-box">
-                        <h2>ЧЕРНАЯ ПЯТНИЦА</h2>
-                        <div class="discount">
-                            <h5>скидки до</h5>
-                            <h1>70%</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Предыдущий</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Следующий</span>
+            </button>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+                crossorigin="anonymous"></script>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Предыдущий</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Следующий</span>
-        </button>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous"></script>
     </div>
 
 
@@ -872,6 +920,22 @@
 
                 <div class="auth-box">
                     <span class="icon">
+                        <i class="fa-solid fa-pen"></i>
+                    </span>
+                    <input type="text" name="firstname" required>
+                    <label>Введите имя</label>
+                </div>
+
+                <div class="auth-box">
+                    <span class="icon">
+                        <i class="fa-solid fa-pen"></i>
+                    </span>
+                    <input type="text" name="lastname" required>
+                    <label>Введите фамилию</label>
+                </div>
+
+                <div class="auth-box">
+                    <span class="icon">
                         <i class="fa-solid fa-envelope"></i>
                     </span>
                     <input type="email" name="email" required>
@@ -880,7 +944,7 @@
 
                 <div class="auth-box">
                     <span class="icon">
-                        <i class="fa-solid fa-lock"></i>
+                        <i class="fa-solid fa-unlock"></i>
                     </span>
                     <input type="password" name="password" required>
                     <label>Придумайте пароль</label>
@@ -894,18 +958,17 @@
                     <label>Повторите пароль</label>
                 </div>
 
-                <!-- <div class="auth-box">
+                <div class="auth-box">
                     <span class="icon">
                         <i class="fa-solid fa-calendar"></i>
                     </span>
                     <input type="date" name="date" required>
-
-                </div> -->
+                </div>
 
                 <div class="remember-forgot">
                     <label><input type="checkbox" checked required>Я принимаю условия персональных данных</label>
                 </div>
-                <button class="btn-enter" type="submit">Зарегситрироваться</button>
+                <a href="http://localhost:3000/registration" class="btn-enter" type="submit">Зарегистрироваться</a>
                 <div class="auth-registration">
                     <p>Уже есть аккаунт?<a href="#" class="auth-link"> Войти</a></p>
                 </div>
@@ -1038,8 +1101,8 @@
             <div class="footer-row_social">
                 <h5>Следите за нами</h5>
                 <div class="footer-row_social_link-box">
-                    <a href="#"><img style="width: 30px" src="/PnP_online_shop/backend/src/images/icons/telegram-icon.png"
-                            alt="tg" /></a>
+                    <a href="#"><img style="width: 30px"
+                            src="/PnP_online_shop/backend/src/images/icons/telegram-icon.png" alt="tg" /></a>
                     <a href="#"><img style="width: 30px" src="/backend/src/images/icons/twitter-icon.png"
                             alt="twitter" /></a>
                     <a href="#"><img style="width: 30px" src="/backend/src/images/icons/vk-icon.png" alt="vk" /></a>
