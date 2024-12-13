@@ -544,7 +544,7 @@
             backdrop-filter: blur(10px);
             border-radius: 15px;
             box-shadow: 0 0 30px rgba(0, 0, 0, .5);
-            background-color: #938f8f8d;
+            background-color: #00b3ff5c;
         }
 
         .menu_variant {
@@ -697,6 +697,7 @@
             flex-direction: column;
             background-color: #009dff1f;
             overflow: hidden;
+            /* transition: transform .5s ease, height .2s ease; */
         }
 
         .user-pers {
@@ -754,6 +755,7 @@
             padding: 0 35px 0 5px;
             border: 1px solid #e8e8e8;
             border-radius: 3px;
+            margin-bottom: 10px;
         }
 
         .user-personal-info {
@@ -770,7 +772,13 @@
             align-items: center;
         }
 
-        .user-personal-btn:hover {
+        .user-personal-btn-firstname:hover {
+            background-position: right center;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .user-personal-btn-lastname:hover {
             background-position: right center;
             color: #fff;
             text-decoration: none;
@@ -782,7 +790,12 @@
 
         .user-personal-a {
             color: #00afb5;
-            font-size: 16px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .user-personal-a:hover {
+            color: #019398;
         }
 
         .user-personal-password {
@@ -833,6 +846,8 @@
 
 
     <header>
+
+        <div class="error-message" id="errorMessage"></div>
 
         <div class="header_menu">
             <h2 class="logo">P&P Co.</h2>
@@ -1058,11 +1073,14 @@
                     <button type="submit" class="user-personal-btn-lastname">Изменить</button>
                 </div>
 
+                <p class="user-personal-p">Адрес электронной почты: </p>
+
                 <p class="user-personal-p">Возраст: </p>
 
                 <a class="user-personal-a">Изменить пароль?</a>
                 <div class="user-personal-info-text">
-                    <p class="user-personal-password">Для смены пароля бут отпрвалено письмо на ваш почтовый ящик - </p>
+                    <p class="user-personal-password">Для смены пароля будет отправленно письмо на ваш почтовый ящик -
+                    </p>
                 </div>
             </div>
 
@@ -1254,6 +1272,7 @@
             const input_firstname = document.querySelector(".user-personal-input-firstname");
             const input_lastname = document.querySelector(".user-personal-input-lastname");
             const a_username = document.querySelector(".userNameHead");
+            const a_password = document.querySelector(".user-personal-a");
             const user_personal = document.querySelector(".user-personal");
             const authLink = document.querySelector(".auth-link");
             const registerLink = document.querySelector(".registration-link");
@@ -1286,6 +1305,10 @@
                 user_personal.style.display = 'block';
             });
 
+            a_password.addEventListener('click', () => {
+                showMessage(201, "Письмо отправленно!");
+            });
+
             user_personal_btn_firstname.addEventListener('click', () => {
                 const chName = input_firstname.textContent;
 
@@ -1312,7 +1335,7 @@
                         console.error('Error:', error);
                     })
 
-                    user_personal.style.display = 'none';
+                user_personal.style.display = 'none';
             });
 
             user_personal_btn_lastname.addEventListener('click', () => {
@@ -1323,13 +1346,30 @@
 
 
 
+
+
+            //CМСка
             function showMessage(status, message) {
                 const notifier = document.getElementById('errorMessage');
 
                 if (status === 201) {
                     notifier.style.backgroundColor = 'green';
+                    notifier.style.position = 'absolute';
+                    notifier.style.zIndex = '100';
+                    notifier.style.margin = '10px';
+                    notifier.style.borderRadius = '5px';
+                    notifier.style.width = '200px';
+                    notifier.style.height = '35px';
+                    notifier.style.textAlign = 'center';
                 } else {
                     notifier.style.backgroundColor = 'red';
+                    notifier.style.position = 'absolute';
+                    notifier.style.zIndex = '100';
+                    notifier.style.margin = '10px';
+                    notifier.style.borderRadius = '5px';
+                    notifier.style.width = '200px';
+                    notifier.style.height = '35px';
+                    notifier.style.textAlign = 'center';
                 }
 
                 notifier.textContent = message;
