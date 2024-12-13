@@ -20,7 +20,10 @@
             font-family: 'Poppins', sans-serif;
         }
 
+
+
         body {
+            /* position: relative; */
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -189,9 +192,13 @@
         }
 
 
-        .userName {
+        .userNameHead {
             color: #e8e8e8;
             text-decoration: none;
+        }
+
+        .userNameHead:hover {
+            cursor: pointer;
         }
 
         .btnLogin-popup {
@@ -284,7 +291,7 @@
             width: 50px;
             height: 50px;
             font-size: 2em;
-            background-image: linear-gradient(to left, #523a94 15%, #c12551 100%);
+            background-image: linear-gradient(to right, #1A2980 0%, #26D0CE 51%, #1A2980 100%);
             display: flex;
             color: #fff;
             justify-content: center;
@@ -391,7 +398,8 @@
         .btn-enter {
             width: 100%;
             height: 45px;
-            background-image: linear-gradient(to left, #523a94 20%, #c12551 100%);
+            background-size: 200% 100%;
+            background-image: linear-gradient(to right, #1A2980 0%, #26D0CE 51%, #1A2980 100%);
             border: none;
             outline: none;
             border-radius: 6px;
@@ -400,12 +408,11 @@
             color: #fff;
             font-weight: 500;
             transition: .1s ease;
-            background-size: 140% auto;
         }
 
         .btn-enter:hover {
             background-position: center;
-            background-image: linear-gradient(to right, rgba(82, 58, 148, 0.943)0%, #b3234c 70%);
+            background-image: linear-gradient(to right, #1A2980 0%, #26D0CE 51%, #1A2980 100%);
             transition: .9s ease-in-out;
         }
 
@@ -667,6 +674,161 @@
         .description {
             padding: 10px;
         }
+
+
+
+
+
+
+
+
+        .user-personal {
+            width: 80%;
+            padding: 40px;
+            position: absolute;
+            display: none;
+            z-index: 100;
+            transform: translate(20px, 200px);
+            border: 1.5px solid #e8e8e8;
+            border-radius: 10px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 20px #00000071;
+            align-items: center;
+            flex-direction: column;
+            background-color: #009dff1f;
+            overflow: hidden;
+        }
+
+        .user-pers {
+            display: flex;
+            justify-content: space-around;
+        }
+
+
+
+        .user-personal-btn-firstname {
+            width: 130px;
+            height: 35px;
+            margin: 0px 0px 0px 60px;
+            background-size: 200% 100%;
+            background-image: linear-gradient(to right, #1A2980 0%, #26D0CE 51%, #1A2980 100%);
+            border: 1.5px solid #e8e8e8;
+            border-radius: 3px;
+            transition: 0.5s;
+        }
+
+        .user-personal-btn-lastname {
+            width: 130px;
+            height: 35px;
+            margin: 0px 0px 0px 60px;
+            background-size: 200% 100%;
+            background-image: linear-gradient(to right, #1A2980 0%, #26D0CE 51%, #1A2980 100%);
+            border: 1.5px solid #e8e8e8;
+            border-radius: 3px;
+            transition: 0.5s;
+        }
+
+        .user-personal-input-firstname {
+            width: 500px;
+            height: 35px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            color: #e8e8e8;
+            font-weight: 500;
+            padding: 0 35px 0 5px;
+            border: 1px solid #e8e8e8;
+            border-radius: 3px;
+        }
+
+        .user-personal-input-lastname {
+            width: 500px;
+            height: 35px;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            color: #e8e8e8;
+            font-weight: 500;
+            padding: 0 35px 0 5px;
+            border: 1px solid #e8e8e8;
+            border-radius: 3px;
+        }
+
+        .user-personal-info {
+            width: 70%;
+            display: flex;
+            justify-content: space-around;
+            flex-direction: column;
+
+        }
+
+
+        .user-personal-info-text {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-personal-btn:hover {
+            background-position: right center;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .user-personal-p {
+            margin: 10px;
+        }
+
+        .user-personal-a {
+            color: #00afb5;
+            font-size: 16px;
+        }
+
+        .user-personal-password {
+            font-size: 14px;
+        }
+
+        .user-history-info {
+            margin-left: 20px;
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-left: 2px dashed gray;
+        }
+
+        .user-history-p {
+            font-size: 21px;
+        }
+
+        .icon-closes {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50px;
+            height: 50px;
+            font-size: 2em;
+            background-image: linear-gradient(to right, #1A2980 0%, #26D0CE 51%, #1A2980 100%);
+            display: flex;
+            color: #fff;
+            justify-content: center;
+            align-items: center;
+            border-bottom-left-radius: 20px;
+            cursor: pointer;
+            z-index: 1;
+            background-size: 200% auto;
+
+        }
+
+        .icon-closes:hover {
+            background: #bc2f57;
+        }
+
+        .icon-closes i:hover {
+            transition: .6s;
+            transform: rotate(90deg);
+        }
     </style>
 
 
@@ -684,7 +846,7 @@
             <!-- КОРЗИНА -->
             <div class="basket"></div>
             <i class="fa-solid fa-basket-shopping"></i>
-            <a class="userName">Гость</a>
+            <a class="userNameHead">Гость</a>
             <button class="btnLogin-popup">Войти</button>
         </div>
 
@@ -870,6 +1032,53 @@
 
 
 
+
+    <!-- ЛИЧНЫЙ КАБИНЕТ -->
+
+    <div class="user-personal">
+        <span class="icon-closes">
+            <i class="fa-solid fa-xmark"></i>
+        </span>
+        <h2 class="user-personal-h2">Личный кабинет</h2>
+        <div class="user-pers">
+            <div class="user-personal-info">
+                <div class="user-personal-info-text">
+                    <p class="user-personal-p">Имя пользователя: </p>
+                </div>
+
+                <p class="user-personal-p">Ваше имя: </p>
+                <div class="user-personal-info-text">
+                    <input class="user-personal-input-firstname" type="text">
+                    <button type="submit" class="user-personal-btn-firstname">Изменить</button>
+                </div>
+
+                <p class="user-personal-p">Ваша фамилия: </p>
+                <div class="user-personal-info-text">
+                    <input class="user-personal-input-lastname" type="text">
+                    <button type="submit" class="user-personal-btn-lastname">Изменить</button>
+                </div>
+
+                <p class="user-personal-p">Возраст: </p>
+
+                <a class="user-personal-a">Изменить пароль?</a>
+                <div class="user-personal-info-text">
+                    <p class="user-personal-password">Для смены пароля бут отпрвалено письмо на ваш почтовый ящик - </p>
+                </div>
+            </div>
+
+
+            <div class="user-history-info">
+                <p class="user-history-p">История заказов: </p>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
     <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-bs-ride="carousel">
         <style>
             .carousel-inner {
@@ -1029,12 +1238,28 @@
         </div>
 
 
+
+
+
+
+
+
+
+
+
         <script>
             const wrapper = document.querySelector(".wrapper");
+            const user_personal_btn_firstname = document.querySelector(".user-personal-btn-firstname");
+            const user_personal_btn_lastname = document.querySelector(".user-personal-btn-lastname");
+            const input_firstname = document.querySelector(".user-personal-input-firstname");
+            const input_lastname = document.querySelector(".user-personal-input-lastname");
+            const a_username = document.querySelector(".userNameHead");
+            const user_personal = document.querySelector(".user-personal");
             const authLink = document.querySelector(".auth-link");
             const registerLink = document.querySelector(".registration-link");
             const btnAuth = document.querySelector(".btnLogin-popup");
             const iconClose = document.querySelector(".icon-close");
+            const iconCloses = document.querySelector(".icon-closes");
 
             registerLink.addEventListener('click', () => {
                 wrapper.classList.add('active');
@@ -1053,9 +1278,68 @@
                 wrapper.classList.remove('active-popup');
             });
 
+            iconCloses.addEventListener('click', () => {
+                user_personal.style.display = 'none';
+            });
+
+            a_username.addEventListener('click', () => {
+                user_personal.style.display = 'block';
+            });
+
+            user_personal_btn_firstname.addEventListener('click', () => {
+                const chName = input_firstname.textContent;
+
+                fetch(`http://localhost:3000/user-person:${chName}`)
+                    .then(response => {
+                        return new Promise((resolve, reject) => {
+                            response.json()
+                                .then((answer) => {
+                                    resolve({
+                                        status: response.status,
+                                        message: answer.message
+                                    })
+                                })
+                                .catch((err) => {
+                                    reject(err)
+                                })
+                        })
+                    })
+                    .then(data => {
+                        showMessage(data.status, data.message);
+                    })
+                    .catch(error => {
+                        showMessage(data.status, data.message);
+                        console.error('Error:', error);
+                    })
+
+                    user_personal.style.display = 'none';
+            });
+
+            user_personal_btn_lastname.addEventListener('click', () => {
+                const chLastname = input_lastname.textContent;
+
+                fetch(`http://localhost:3000/user-person:${chLastname}`)
+            });
+
+
+
+            function showMessage(status, message) {
+                const notifier = document.getElementById('errorMessage');
+
+                if (status === 201) {
+                    notifier.style.backgroundColor = 'green';
+                } else {
+                    notifier.style.backgroundColor = 'red';
+                }
+
+                notifier.textContent = message;
+                notifier.style.display = 'block';
+                setTimeout(() => {
+                    notifier.style.display = 'none';
+                }, 3000);
+            }
+
         </script>
-
-
 
     </div>
 
