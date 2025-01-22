@@ -63,10 +63,38 @@ services:
       - DATABASE_PASSWORD=veryStrongPasswordQWERTY1
       - DATABASE_NAME=productsdb
 
+
+  ordersdb:
+    container_name: mongodb-service
+    image: mongodb:latest
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+
   orders-service:
     build:
       context: ./service3
     ports:
       - "3003:3000"
     container_name: orders-service
+    depends_on:
+      - ordersdb
+
+reviews-service:
+  build: 
+    context: ./service4
+  ports:
+    - "3003:3000"
+  environment:
+    - MONGODB_URI=mongodb://mongodb:27017/reviewsdb
+  depends_on:
+    - mongodb
+  mongodb:
+    image: mongodb:latest
+    ports:
+    - "27017:27017"
+  volumes:
+    - mongodb_data:/data/db
+
     
