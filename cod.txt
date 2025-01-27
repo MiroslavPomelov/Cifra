@@ -1,6 +1,6 @@
 create schema air; 
 
-CREATE table if not exists air.Airport (
+CREATE table if not exists air.Airport (    
     id serial PRIMARY KEY,
     name text,
     city varchar(50),
