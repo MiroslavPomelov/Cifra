@@ -12,10 +12,7 @@ const ItemList = () => {
     return (
         <div>
             <ul>
-                <li>Apple</li>
-                <li>XApple</li>
-                <li>MApple</li>
-                <li>DApple</li>
+               {ItemList}
             </ul>
         </div>
     )
