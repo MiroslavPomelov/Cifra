@@ -56,7 +56,13 @@ const message = '<p>Это <strong>ВАЖНОЕ</strong> сообщение</p>'
 
 
 function App() {
-  let [listData, setListData] = useState([]);
+  const [listData, setListData] = useState([]);
+  const [inputData, setinputData] = useState('');
+
+
+  const go = (event) => {
+    setinputData(event.target.value);
+  }
 
 
 
@@ -97,6 +103,8 @@ function App() {
   //   KEEP_CONTENT: true // Просто получу текст
   // });
 
+
+
   return (
     // <div>
     //   <Header>
@@ -133,17 +141,19 @@ function App() {
     // </div>
 
 
-
     <div>
       <h1>Пример динамического добавления</h1>
 
+      <input onChange={go} type="text" placeholder='Name of fruits' />
+      <input type="text" placeholder='Sort of fruits' />
+
       <div>
-        {listData.map((value, index) => <p>{value} + {index}</p>)}
+        {listData.map((sort, name) => <p>Name:{name} Sort:{sort}</p>)}
       </div>
 
-        <button onClick={() => {
-          setListData([...listData, "NEWDATA"])
-        }}>Добавить текст</button>
+      <button onClick={() => {
+        setListData([...listData, inputData])
+      }}>Добавить фрукт</button>
     </div>
   );
 
