@@ -145,7 +145,7 @@ function App() {
       <h1>Пример динамического добавления</h1>
 
       <input onChange={go} type="text" placeholder='Name of fruits' />
-      <input type="text" placeholder='Sort of fruits' />
+      <input onChange={go} type="text" placeholder='Sort of fruits' />
 
       <div>
         {listData.map((sort, name) => <p>Name:{name} Sort:{sort}</p>)}
