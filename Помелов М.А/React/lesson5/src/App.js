@@ -15,7 +15,7 @@ function Notification({ unreadMessages }) {
 function Roles({ role }) {
   return (
     <div>
-      <h1>U role {role} </h1>
+      <h1>U role - {role} </h1>
       {role == 'admin' && <div><p>Welcome admin!</p> <button>Manage users</button> </div>}
       {role == 'user' && <button>Welcome User!</button>}
       {role == 'guest' && <button>Welcome Guest! Pls Log In</button>}
@@ -26,8 +26,8 @@ function Roles({ role }) {
 function App() {
   const [role, setRole] = useState('guest');
 
-  const handleGetRole = () =>
-    setRole(!role);
+  const handleGetRole = (event) =>
+    setRole(event.target.value);
 
   return (
     <div>
