@@ -3,6 +3,7 @@ import React from 'react'
 const General = ({ children }) => {
     return (
         <div style={{
+            padding: '15px',
             border: 'none',
             borderRadius: '10px',
             backgroundColor: 'whiteSmoke',

@@ -11,7 +11,8 @@ const Quarter = () => {
       borderRadius: '10px', 
       cursor: 'pointer',
       alignItems: 'center',
-      boxShadow: '2px 2px 2px 2px grey'
+      boxShadow: '2px 2px 2px 2px grey',
+      textAlign: "center",
     }} >
     </div>
   )

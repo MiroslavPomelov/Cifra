@@ -6,7 +6,7 @@ import Button from './components/Button';
 
 function App() {
   return (
-    <div>
+    <div className='App-header'>
       <General>
         <Wrapper>
           <Quarter />
