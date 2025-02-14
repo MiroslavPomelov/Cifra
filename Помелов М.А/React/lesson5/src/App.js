@@ -2,23 +2,26 @@ import { useState } from 'react';
 import './App.css';
 import SimpleForm from './components/MultiFieldForm/MultiFieldForm';
 import FormWithValidation from './components/ValidatedForm/ValidatedForm';
+import Admin from './components/UserComponent/UserComponent';
+import Guest from './components/GuestComponent/GuestComponent';
+import User from './components/AdminComponent/AdminComponent';
 
-function Notification({ unreadMessages }) {
-  return (
-    <div>
-      <h1>U have {unreadMessages} new messages</h1>
-      {unreadMessages > 0 && <p>U have mew messages!</p>}
-    </div>
-  )
-}
+// function Notification({ unreadMessages }) {
+//   return (
+//     <div>
+//       <h1>U have {unreadMessages} new messages</h1>
+//       {unreadMessages > 0 && <p>U have mew messages!</p>}
+//     </div>
+//   )
+// }
 
 function Roles({ role }) {
   return (
     <div>
       <h1>U role - {role} </h1>
-      {role == 'admin' && <div><p>Welcome admin!</p> <button>Manage users</button> </div>}
-      {role == 'user' && <button>Welcome User!</button>}
-      {role == 'guest' && <button>Welcome Guest! Pls Log In</button>}
+      <Admin/>
+      <User/>
+      <Guest/>
     </div>
   )
 }
@@ -32,8 +35,6 @@ function App() {
   return (
     <div>
       <Roles role={role} />
-
-      <button>Set new Role</button>
     </div>
   );
 
