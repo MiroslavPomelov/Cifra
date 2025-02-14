@@ -3,13 +3,12 @@ import React from 'react'
 const General = ({ children }) => {
     return (
         <div style={{
-            border: '1px solid black',
+            border: 'none',
             borderRadius: '10px',
             backgroundColor: 'whiteSmoke',
             margin: '0 auto',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
             alignItems: 'center',
             width: '50%',
             fontFamily: 'sans-serif',

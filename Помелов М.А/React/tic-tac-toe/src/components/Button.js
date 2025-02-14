@@ -13,6 +13,8 @@ const Button = () => {
             fontSize: '15px',
             marginTop: '20px',
             marginBottom: '20px',
+            display: 'flex',
+            justifyContent: 'center',
         }}>Перезапустить игру</button>
     )
 }
