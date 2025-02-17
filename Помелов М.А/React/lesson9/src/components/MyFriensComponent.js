@@ -9,12 +9,17 @@ function MyFriensComponent() {
         { id: 5, name: 'Sergey' },
     ]);
 
-    const [name, setName] = useState('aad');
+    const [name, setName] = useState('');
 
-    const addFriend = (nameFriend) => {
-        const newFriend = { id: friendsList.length + 1, name: nameFriend }
+    const updateText = (event) => (
+        setName(event.target.value)
+    )
 
-        return [...newFriend, friendsList];
+    const addFriend = (name) => {
+        const newFriend = { id: friendsList.length + 1, name: name };
+
+        friendsList = [...newFriend, friendsList];
+        return setFriendsList(friendsList);
     }
 
 
@@ -22,7 +27,7 @@ function MyFriensComponent() {
         <div>
             Add Friend
             <br />
-            <input type="text" onChange={setName} />
+            <input type="text" onChange={updateText} />
 
             <ul>
                 {
