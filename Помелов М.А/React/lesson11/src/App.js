@@ -1,5 +1,8 @@
 import { useRef, useState, forwardRef } from 'react';
 import './App.css';
+import Square from './components/Square';
+import SquareRed from './components/SquareRed';
+import Wrapper from './components/Wrapper';
 
 
 // function TextInputWithFocusButton() {
@@ -97,15 +100,80 @@ import './App.css';
 // }
 
 
+
+
+
+// function App() {
+//   const [data, setData] = useState(null);
+
+//   const handleClick =  async () => {
+//       const response = await fetch('https://jsonplaceholder.typicode.com/posts/1');
+//       const data = await response.json();
+
+//       setData(data);
+//   }
+
+//   return (
+//       <>
+//           <button onClick={handleClick}>Upload data</button>
+//           {data && <p>{`ID: ${data.id}, Title: ${data.title}, Body: ${data.body}`}</p>}
+//       </>
+//   )
+// }
+
+
+
+
+
+// function App() {
+//   const [keyPressed, setKeyPressed] = useState('');
+
+//   const handleKeyDown = (event) => {
+//       setKeyPressed(event.key);
+//   }
+
+//   return (
+//       <div tabIndex={0} onKeyDown={handleKeyDown} style={{outline: 'none', border: '2px dashed red'}}>
+//           Для отлова событий клавиатуры, блок должен быть в фокусе
+//           <p>Нажата клавиша: {keyPressed}</p>
+//       </div>
+//   )
+// }
+
+
 function App() {
-  const [data, setData] = useState(null);
+  const [keyPressed, setKeyPressed] = useState('');
 
-  const handleClick =  async () => {
-      const response = await fetch('https://jsonplaceholder.typicode.com/posts/1');
-      const data = await response.json();
+  
+  const inputElement = useRef(<SquareRed />);
 
-      setData(data);
+  const handleKeyDown = (event) => {
+    setKeyPressed(event.key);
+    inputElement.current.focus();
   }
+
+  const onButtonClick = () => {
+    //Устанавливается фокус на текстовое поле
+    inputElement.current.focus();
+  }
+
+
+  return (
+    <div >
+      <Square />
+      <Square />
+      <Square />
+      <Square />
+      <SquareRed onButtonClick={handleKeyDown} />
+      <Square />
+      <Square />
+      <Square />
+      <Square />
+    </div>
+
+  );
 }
+
+
 
 export default App;
