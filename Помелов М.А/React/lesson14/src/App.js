@@ -27,12 +27,10 @@ const Square = () => {
     borderRadius: '10px',
     margin: '10px',
     borderRadius: '10px',
-    display: 'flex',
-    flexDirection: "row",
     textAlign: 'center',
+    allignItems: 'center',
     background: theme === 'dark' ? '#333' : '#fff',
     color: theme === 'dark' ? '#fff' : '#000',
-
   }
 
   return (
@@ -53,9 +51,13 @@ function App() {
 
   return (
     < ThemeContext.Provider value={theme}>
-      <Square />
-      <Square />
-      <Square />
+      <div style={{
+        display: 'flex',
+      }} >
+        <Square />
+        <Square />
+        <Square />
+      </div>
       <Toolbar />
       <button style={{
         background: theme === 'dark' ? '#333' : '#fff',
