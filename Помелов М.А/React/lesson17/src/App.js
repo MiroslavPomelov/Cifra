@@ -18,12 +18,18 @@ function useTimer(interval) {
   return seconds;
 }
 
+function TimerComponent() {
+  const seconds = useTimer(1000);
+
+  return <div>Прошло секунд: {seconds}</div>
+}
+
 function App() {
 
 
   return (
     <div>
-
+      <TimerComponent />
     </div>
   );
 }
