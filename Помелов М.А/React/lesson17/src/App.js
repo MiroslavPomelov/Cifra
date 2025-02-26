@@ -69,7 +69,7 @@ function DataComponent() {
 
       <ul>
         {
-          data.map(item => (<li key={item.id}>{item.title}</li>))
+          data.map((item) => (<li key={item.id}>{item.title}</li>))
         }
       </ul>
     </div>
