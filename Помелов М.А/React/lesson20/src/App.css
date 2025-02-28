@@ -1,167 +1,240 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+     /* Общие стили */
+     * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+  }
 
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f9f9f9;
-  color: #333;
-  line-height: 1.6;
-}
+  body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+  }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
+  .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+  }
 
-h1,
-h2,
-h3 {
-  color: #4a4a4a;
-}
+  h1,
+  h2,
+  h3 {
+      color: #4a4a4a;
+  }
 
-a {
-  text-decoration: none;
-  color: #4a90e2;
-}
+  a {
+      text-decoration: none;
+      color: #4a90e2;
+  }
 
-ul {
-  list-style: none;
-}
+  ul {
+      list-style: none;
+  }
 
-/* Стили для шапки */
-header {
-  background-color: #6eb5ff;
-  padding: 20px 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
-}
+  /* Стили для шапки */
+  header {
+      background-color: #6eb5ff;
+      padding: 20px 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-bottom-left-radius: 15px;
+      border-bottom-right-radius: 15px;
+  }
 
-header h1 {
-  text-align: center;
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
+  header h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 10px;
+  }
 
-.nav-links {
-  display: flex;
-  justify-content: center;
-}
+  .nav-links {
+      display: flex;
+      justify-content: center;
+  }
 
-.nav-links li {
-  margin: 0 15px;
-}
+  .nav-links li {
+      margin: 0 15px;
+  }
 
-.nav-links a {
-  color: white;
-  font-weight: bold;
-  font-size: 1.1rem;
-  padding: 5px 10px;
-  transition: background 0.3s ease;
-}
+  .nav-links a {
+      color: white;
+      font-weight: bold;
+      font-size: 1.1rem;
+      padding: 5px 10px;
+      transition: background 0.3s ease;
+  }
 
-.nav-links a:hover {
-  background-color: white;
-  color: #6eb5ff;
-  border-radius: 5px;
-}
+  .nav-links a:hover {
+      background-color: white;
+      color: #6eb5ff;
+      border-radius: 5px;
+  }
 
-/* Стили для секции "О нас" */
-.about-us {
-  background-color: #e8f5ff;
-  padding: 50px 20px;
-  border-radius: 10px;
-  margin-top: 20px;
-  text-align: center;
-}
+  /* Стили для секции Hero */
+  .hero {
+      background-color: #e8f5ff;
+      text-align: center;
+      padding: 50px 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+  }
 
-.about-us h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
+  .hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+  }
 
-.about-us p {
-  font-size: 1.2rem;
-  margin-bottom: 30px;
-}
+  .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+  }
 
-.about-us ul {
-  text-align: left;
-  margin: 0 auto;
-  display: inline-block;
-  padding-left: 20px;
-}
+  .btn {
+      background-color: #4a90e2;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      transition: background 0.3s ease;
+  }
 
-.about-us ul li {
-  font-size: 1rem;
-  margin-bottom: 10px;
-}
+  .btn:hover {
+      background-color: #357abd;
+  }
 
-.btn {
-  background-color: #4a90e2;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 25px;
-  transition: background 0.3s ease;
-}
+  /* Стили для секции Features */
+  .features {
+      margin: 40px 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+  }
 
-.btn:hover {
-  background-color: #357abd;
-}
+  .feature {
+      background-color: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      flex: 1;
+  }
 
-/* Стили для секции "Наша команда" */
-.team {
-  margin: 40px 0;
-  text-align: center;
-}
+  .feature h3 {
+      margin-bottom: 15px;
+  }
 
-.team-members {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-}
+  .feature p {
+      font-size: 1rem;
+      color: #666;
+  }
 
-.member {
-  background-color: white;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  flex: 1;
-}
+  /* Стили для футера */
+  footer {
+      background-color: #6eb5ff;
+      padding: 10px 0;
+      text-align: center;
+      margin-top: 20px;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+  }
 
-.member img {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 15px;
-}
+  footer p {
+      color: white;
+      font-size: 0.9rem;
+  }
 
-.member h3 {
-  margin-bottom: 10px;
-}
+       /* Стили для секции "О нас" */
+       .about-us {
+        background-color: #e8f5ff;
+        padding: 50px 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+        text-align: center;
+    }
 
-.member p {
-  font-size: 1rem;
-  color: #666;
-}
+    .about-us h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
 
-/* Стили для футера */
-footer {
-  background-color: #6eb5ff;
-  padding: 10px 0;
-  text-align: center;
-  margin-top: 20px;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
-}
+    .about-us p {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+    }
 
-footer p {
-  color: white;
-  font-size: 0.9rem;
-}
+    .about-us ul {
+        text-align: left;
+        margin: 0 auto;
+        display: inline-block;
+        padding-left: 20px;
+    }
+
+    .about-us ul li {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+    .btn {
+        background-color: #4a90e2;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #357abd;
+    }
+
+    /* Стили для секции "Наша команда" */
+    .team {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    .team-members {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .member {
+        background-color: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        flex: 1;
+    }
+
+    .member img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 15px;
+    }
+
+    .member h3 {
+        margin-bottom: 10px;
+    }
+
+    .member p {
+        font-size: 1rem;
+        color: #666;
+    }
+
+    /* Стили для футера */
+    footer {
+        background-color: #6eb5ff;
+        padding: 10px 0;
+        text-align: center;
+        margin-top: 20px;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+
+    footer p {
+        color: white;
+        font-size: 0.9rem;
+    }

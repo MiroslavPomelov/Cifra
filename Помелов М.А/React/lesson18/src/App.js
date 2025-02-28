@@ -5,8 +5,6 @@ function useTimer(interval) {
   const [active, setActive] = useState(true);
   const [second, setSecond] = useState(0);
 
-
-
   function handleActivity(event) {
     setSecond(0);
     setActive(true);
