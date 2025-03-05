@@ -11,8 +11,8 @@ app.get('/user/:id', (req, res) => {
 
         const users = JSON.parse(data);
 
-        const concreteID = response.url.split('/')
-        const concreteUsers = users.find(user => user.id );
+        const concreteID = response.url.split('/').pop();
+        const concreteUsers = users.find(user => user.id === concreteID);
 
         res.send(userData);
 
