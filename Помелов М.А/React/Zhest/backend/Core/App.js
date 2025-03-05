@@ -14,9 +14,9 @@ app.get('/user/:id', (req, res) => {
         const concreteID = response.url.split('/').pop();
         const concreteUsers = users.find(user => user.id === concreteID);
 
-        res.send(userData);
-
+        res.send(concreteUsers);
     });
+
 });
 
 app.get('/logger', (req, res) => {
