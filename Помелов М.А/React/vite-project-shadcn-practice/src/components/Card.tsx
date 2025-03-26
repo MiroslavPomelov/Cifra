@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 function Card({ children }: Props): ReactNode {
     return (
-        <div className="rounded-lg border-2-black border-4 my-5">
+        <div className="rounded-lg border-2-black border-3 my-5">
             <header className="flex place-content-evenly my-10">
                 {children}
                 <div className="text-neutral-500 text-sm ">
