@@ -9,6 +9,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        unuasual: "bg-gradient-to-r from-green-900 to-black text-white rounded-lg hover:from-red-900 hover:to-black",
         default:
           "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
         destructive:
