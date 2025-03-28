@@ -12,9 +12,9 @@ function Circle(props: CircleProps): ReactNode {
         <div className={props.isActive ? activeStyle : props.isColored ? coloredStyle : defaultStyle}
             style={{
                 gridColumnStart: props.chordX,
-                gridColumnEnd: props.chordY,
-                gridRowStart: 1,
-                gridRowEnd: 1,
+                gridColumnEnd: props.chordX,
+                gridRowStart: props.chordY,
+                gridRowEnd: props.chordY,
             }}>
         </div>
     )

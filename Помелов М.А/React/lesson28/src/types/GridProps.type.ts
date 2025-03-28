@@ -1,7 +1,8 @@
 import { ReactNode } from "react"
 
 type GridProps = {
-    children: ReactNode
+   activeCellChordX: number,
+   activeCellChordY: number,
 }
 
 export default GridProps;
