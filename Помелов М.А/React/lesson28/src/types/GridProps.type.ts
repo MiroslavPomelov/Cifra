@@ -1,7 +1,7 @@
 import { ReactNode } from "react"
 
-type Props = {
+type GridProps = {
     children: ReactNode
 }
 
-export default Props;
+export default GridProps;
