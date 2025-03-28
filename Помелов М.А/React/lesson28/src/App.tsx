@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { KeyboardEvent, useState } from 'react'
 import './App.css'
 
 
@@ -21,7 +21,7 @@ function App() {
 
   return (
     <>
-      <div onKeyDown={handleButtonPressing }>
+      <div tabIndex={0} onKeyDown={handleButtonPressing }>
         <GameGrid activeCellChordX={isAactiveCellChordXctive} activeCellChordY={isAactiveCellChordYctive}>
 
         </GameGrid>
