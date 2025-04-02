@@ -1,4 +1,4 @@
-import { Box, Flex, Grid } from '@radix-ui/themes'
+import { Box, Container, Flex, Grid, Heading, Text } from '@radix-ui/themes'
 import './App.css'
 
 function App() {
@@ -10,19 +10,21 @@ function App() {
 
   return (
     <>
-      <Grid align={'center'} gapY={'20px'} columns={'4'} style={{
-        justifyItems: 'center'
-      }} >
-        <Box p="20px" style={defaultBoxStyle}>Item 1</Box>
-        <Box p="20px" style={defaultBoxStyle}>Item 2</Box>
-        <Box p="20px" style={defaultBoxStyle}>Item 3</Box>
-        <Box p="20px" style={defaultBoxStyle}>Item 4</Box>
-        <Box p="20px" style={defaultBoxStyle}>Item 5</Box>
-        <Box p="20px" style={defaultBoxStyle}>Item 6</Box>
-        <Box p="20px" style={defaultBoxStyle}>Item 7</Box>
-        <Box p="20px" style={defaultBoxStyle}>Item 8</Box>
-        <Box p="20px" style={defaultBoxStyle}>Item 9</Box>
-      </Grid>
+      <Container
+        size={'1'}
+        mx={'auto'}
+        px={'6'}
+        py={'4'}>
+
+        <Heading size={'5'} align={'center'} as='h1'>
+          Header page
+        </Heading>
+
+        <Text size={'5'} align={'center'} as='p'>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Deleniti quaerat molestias tempora velit nulla cumque neque corrupti distinctio reiciendis nostrum soluta ratione consectetur accusamus, dicta perferendis cum necessitatibus eaque reprehenderit commodi quasi maxime animi. Expedita quae dolore tempore laboriosam iusto est ipsum, itaque, reprehenderit tempora nisi deleniti assumenda cupiditate amet?
+        </Text>
+
+      </Container>
     </>
 
   )
@@ -31,6 +33,24 @@ function App() {
 export default App
 
 
+
+
+
+
+
+// <Grid align={'center'} gapY={'20px'} columns={'4'} style={{
+//   justifyItems: 'center'
+// }} >
+//   <Box p="20px" style={defaultBoxStyle}>Item 1</Box>
+//   <Box p="20px" style={defaultBoxStyle}>Item 2</Box>
+//   <Box p="20px" style={defaultBoxStyle}>Item 3</Box>
+//   <Box p="20px" style={defaultBoxStyle}>Item 4</Box>
+//   <Box p="20px" style={defaultBoxStyle}>Item 5</Box>
+//   <Box p="20px" style={defaultBoxStyle}>Item 6</Box>
+//   <Box p="20px" style={defaultBoxStyle}>Item 7</Box>
+//   <Box p="20px" style={defaultBoxStyle}>Item 8</Box>
+//   <Box p="20px" style={defaultBoxStyle}>Item 9</Box>
+// </Grid>
 
 
 
