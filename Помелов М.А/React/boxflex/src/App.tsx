@@ -1,42 +1,28 @@
-import { Box, Flex } from '@radix-ui/themes'
+import { Box, Flex, Grid } from '@radix-ui/themes'
 import './App.css'
 
 function App() {
+  const defaultBoxStyle: Object = {
+    with: '50%',
+    backgroundColor: '#a1f9ff',
+    textAlign: 'center'
+  }
 
   return (
     <>
-      <Flex width={'100%'}>
-
-        <Box width='600px' height='800px' style={{
-          backgroundColor: 'lightblue',
-          borderRadius: '10px'
-        }}> How improve programming skills
-          <Flex justify='center' direction={'column'} align={'center'}>
-
-            <Box width={'85%'}>
-              <img style={{ borderRadius: '10px' }} src="public\photo-1742238346056-c73aa0fca41f.avif" alt="#" />
-            </Box>
-
-            <Box>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia totam quas eligendi autem, libero molestiae nam corporis saepe. Tempore qui fugiat fugit dolore dicta ea debitis ad error iusto inventore eos aut animi recusandae corporis, doloremque rerum voluptates totam blanditiis porro. Voluptatem nemo iste nulla sunt, aperiam eligendi vel neque aut tempore repellat magnam libero ab similique est obcaecati sit id recusandae harum deleniti ipsam facere commodi fugiat. Earum omnis nulla, cupiditate sapiente inventore harum eos dicta illo aliquam impedit consectetur corporis voluptate vel sunt molestiae autem repellendus optio ipsum vitae, dolorum amet, quos hic temporibus doloribus. Quis, repellat nobis.
-            </Box>
-          </Flex>
-
-
-
-        </Box >
-        <Flex width={'15%'}>
-          <Box width='200px' height='800px' style={{
-            backgroundColor: 'wheat',
-            borderRadius: '10px'
-          }}>
-
-          </Box>
-        </Flex>
-
-
-      </Flex>
-
+      <Grid align={'center'} gapY={'20px'} columns={'4'} style={{
+        justifyItems: 'center'
+      }} >
+        <Box p="20px" style={defaultBoxStyle}>Item 1</Box>
+        <Box p="20px" style={defaultBoxStyle}>Item 2</Box>
+        <Box p="20px" style={defaultBoxStyle}>Item 3</Box>
+        <Box p="20px" style={defaultBoxStyle}>Item 4</Box>
+        <Box p="20px" style={defaultBoxStyle}>Item 5</Box>
+        <Box p="20px" style={defaultBoxStyle}>Item 6</Box>
+        <Box p="20px" style={defaultBoxStyle}>Item 7</Box>
+        <Box p="20px" style={defaultBoxStyle}>Item 8</Box>
+        <Box p="20px" style={defaultBoxStyle}>Item 9</Box>
+      </Grid>
     </>
 
   )
@@ -98,3 +84,62 @@ export default App
 //   }} />
 
 // </Flex>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{/* <Flex width={'100%'}>
+
+<Box width='600px' height='800px' style={{
+  backgroundColor: 'lightblue',
+  borderRadius: '10px'
+}}> How improve programming skills
+  <Flex justify='center' direction={'column'} align={'center'}>
+
+    <Box width={'85%'}>
+      <img style={{ borderRadius: '10px' }} src="public\photo-1742238346056-c73aa0fca41f.avif" alt="#" />
+    </Box>
+
+    <Box>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia totam quas eligendi autem, libero molestiae nam corporis saepe. Tempore qui fugiat fugit dolore dicta ea debitis ad error iusto inventore eos aut animi recusandae corporis, doloremque rerum voluptates totam blanditiis porro. Voluptatem nemo iste nulla sunt, aperiam eligendi vel neque aut tempore repellat magnam libero ab similique est obcaecati sit id recusandae harum deleniti ipsam facere commodi fugiat. Earum omnis nulla, cupiditate sapiente inventore harum eos dicta illo aliquam impedit consectetur corporis voluptate vel sunt molestiae autem repellendus optio ipsum vitae, dolorum amet, quos hic temporibus doloribus. Quis, repellat nobis.
+    </Box>
+  </Flex>
+
+
+
+</Box >
+<Flex width={'15%'}>
+  <Box width='200px' height='800px' style={{
+    backgroundColor: 'wheat',
+    borderRadius: '10px'
+  }}>
+
+  </Box>
+</Flex>
+
+
+</Flex> */}
+
