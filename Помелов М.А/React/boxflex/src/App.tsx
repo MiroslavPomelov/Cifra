@@ -1,5 +1,6 @@
 import { Box, Container, Flex, Grid, Heading, Text } from '@radix-ui/themes'
 import './App.css'
+import { useState } from 'react';
 
 function App() {
   const defaultBoxStyle: Object = {
@@ -8,21 +9,62 @@ function App() {
     textAlign: 'center'
   }
 
+
+  type CellState = 'closed' | 'opened' | 'patialityOpened';
+
+  class Cell {
+    state: CellState;
+    data: string;
+
+    constructor(state: CellState, data: string) {
+      this.state = state;
+      this.data = data;
+    }
+  }
+
+  const [cells, setCells] = useState([
+    new Cell('closed', '0'),
+    new Cell('closed', '1'),
+    new Cell('closed', '2'),
+    new Cell('closed', '3'),
+    new Cell('closed', '4'),
+    new Cell('closed', '5'),
+    new Cell('closed', '6'),
+    new Cell('closed', '7'),
+    new Cell('closed', '8'),
+    new Cell('closed', '9'),
+    new Cell('closed', '10'),
+    new Cell('closed', '12'),
+    new Cell('closed', '13'),
+    new Cell('closed', '14'),
+    new Cell('closed', '15'),
+    new Cell('closed', '16'),
+
+  ]);
+
+
   return (
     <>
-      <Container
-        size={'1'}
+      <Container size={'1'}
         mx={'auto'}
         px={'6'}
-        py={'4'}>
+        py={'4'} width={'300px'} style={{ borderRadius: '10px' }}>
 
-        <Heading size={'5'} align={'center'} as='h1'>
-          Header page
-        </Heading>
-
-        <Text size={'5'} align={'center'} as='p'>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Deleniti quaerat molestias tempora velit nulla cumque neque corrupti distinctio reiciendis nostrum soluta ratione consectetur accusamus, dicta perferendis cum necessitatibus eaque reprehenderit commodi quasi maxime animi. Expedita quae dolore tempore laboriosam iusto est ipsum, itaque, reprehenderit tempora nisi deleniti assumenda cupiditate amet?
-        </Text>
+        <Grid align={'center'} gap={'5px'} columns={'4'} style={{
+          justifyItems: 'center'
+        }}>
+          {cells.map((num, index) => (
+            <Box width={'64px'} height={'64px'} style={{
+              backgroundColor: 'teal',
+              borderRadius: '10px',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              color: 'teal',
+              fontWeight: 'bold'
+            }}>{index}</Box>
+          ))}
+        </Grid>
 
       </Container>
     </>
@@ -35,6 +77,23 @@ export default App
 
 
 
+
+
+{/* <Container
+size={'1'}
+mx={'auto'}
+px={'6'}
+py={'4'}>
+
+<Heading size={'5'} align={'center'} as='h1'>
+  Header page
+</Heading>
+
+<Text size={'5'} align={'center'} as='p'>
+  Lorem ipsum dolor sit amet consectetur, adipisicing elit. Deleniti quaerat molestias tempora velit nulla cumque neque corrupti distinctio reiciendis nostrum soluta ratione consectetur accusamus, dicta perferendis cum necessitatibus eaque reprehenderit commodi quasi maxime animi. Expedita quae dolore tempore laboriosam iusto est ipsum, itaque, reprehenderit tempora nisi deleniti assumenda cupiditate amet?
+</Text>
+
+</Container> */}
 
 
 
