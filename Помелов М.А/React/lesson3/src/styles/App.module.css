@@ -1,0 +1,17 @@
+.header {
+    background-color: #282c34;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: rgb(88, 4, 4);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}

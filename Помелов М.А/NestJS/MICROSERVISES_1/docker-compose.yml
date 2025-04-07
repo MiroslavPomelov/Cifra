@@ -1,0 +1,111 @@
+version: '3'
+services: 
+  
+#БД для пользователей
+  usersdb:
+    container_name: usersdb-service
+    image: mariadb:latest
+    environment:
+      MARIADB_USER: usersService
+      MARIADB_ROOT_PASSWORD: STRONG_Pass
+      MARIADB_DATABASE: usersdb
+    ports:
+      - "3306:3306"
+
+ #БД для продуктов
+  productsdb:
+    container_name: productsdb-service
+    image: mariadb:latest
+    environment:
+      MARIADB_USER: productsService
+      MARIADB_ROOT_PASSWORD: STRONG_Pass
+      MARIADB_DATABASE: productsdb
+    ports:
+      - "3307:3306"
+
+#БД для корзины
+  ordersdb:
+    container_name: ordersdb-service
+    image: mongo:latest
+    volumes:
+      - /data/db
+    ports:
+      - "27017:27017"
+
+ #БД для отзывов
+  reportsdb:
+    container_name: reportsdb-service
+    image: mongo:latest
+    volumes:
+      - /data/db
+    ports:
+      - "27018:27017"
+
+  users-service:
+    build:
+      context: ./service1
+    ports:
+      - "3001:3000"
+    container_name: users-service
+    depends_on:
+      - usersdb
+    environment:
+      - DATABASE_HOST=usersdb
+      - DATABASE_PORT=3306
+      - DATABASE_USER=usersService
+      - DATABASE_PASSWORD=STRONG_Pass
+      - DATABASE_NAME=usersdb
+
+  products-service:
+    build:
+      context: ./service2
+    ports:
+      - "3002:3000"
+    container_name: products-service
+    depends_on:
+      - productsdb
+    environment:
+      - DATABASE_PORT=3306
+      - DATABASE_USER=productsService
+      - DATABASE_PASSWORD=STRONG_Pass
+      - DATABASE_NAME=productsdb
+      - DATABASE_HOST=productsdb
+
+  orders-service:
+    build:
+      context: ./service3
+    ports:
+      - "3003:3000"
+    container_name: orders-service
+    depends_on:
+      - ordersdb
+  
+  reports-service:
+    build:
+      context: ./service4
+    ports:
+      - "3004:3000"
+    container_name: reports-service
+    depends_on:
+      - reportsdb
+
+  chat-service:
+    build:
+      context: ./chat-service
+    ports:
+     - "3005:3000"
+    container_name: chat-service
+    depends_on:
+      - products-service
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "80:80"
+    depends_on:
+      - users-service
+      - products-service
+      - orders-service
+      - reports-service
+      - chat-service      

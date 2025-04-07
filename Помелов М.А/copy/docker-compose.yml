@@ -1,0 +1,100 @@
+version: '3'
+services:
+  nginx:
+    build:
+      context: /nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - users-service
+      - products-service
+      - orders-service
+
+  mariadb:
+    container_name: mariadb-service
+    image: mariadb:latest
+    environment:
+      MARIADB_USER: usersService
+      MARIADB_ROOT_PASSWORD: STRONG_Pass
+      MARIADB_DATABASE: usersdb
+    ports:
+      - "3306:3306"
+
+  users-service:
+    build:
+      context: ./service1
+    ports:
+      - "3001:3000"
+    container_name: users-service
+    depends_on:
+      - mariadb
+    environment:
+      - DATABASE_HOST=mariadb
+      - DATABASE_PORT=3306
+      - DATABASE_USER=usersService
+      - DATABASE_PASSWORD=veryStrongPasswordQWERTY1
+      - DATABASE_NAME=usersdb
+
+
+
+
+  mariadbp:
+    container_name: mariadbp-service
+    image: mariadb:latest
+    environment:
+      MARIADB_USER: productsService
+      MARIADB_ROOT_PASSWORD: STRONG_Pass
+      MARIADB_DATABASE: productsdb
+    ports:
+      - "3307:3306"
+
+  products-service:
+    build:
+      context: ./service2
+    ports:
+      - "3002:3000"
+    container_name: products-service
+    depends_on:
+      - mariadbp
+    environment:
+      - DATABASE_HOST=mariadbp
+      - DATABASE_PORT=3307
+      - DATABASE_USER=productsService
+      - DATABASE_PASSWORD=veryStrongPasswordQWERTY1
+      - DATABASE_NAME=productsdb
+
+
+  ordersdb:
+    container_name: mongodb-service
+    image: mongodb:latest
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+
+  orders-service:
+    build:
+      context: ./service3
+    ports:
+      - "3003:3000"
+    container_name: orders-service
+    depends_on:
+      - ordersdb
+
+reviews-service:
+  build: 
+    context: ./service4
+  ports:
+    - "3003:3000"
+  environment:
+    - MONGODB_URI=mongodb://mongodb:27017/reviewsdb
+  depends_on:
+    - mongodb
+  mongodb:
+    image: mongodb:latest
+    ports:
+    - "27017:27017"
+  volumes:
+    - mongodb_data:/data/db
+
+    

@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "firstName": "Иван",
+        "lastName": "Иванов",
+        "email": "ivan@example.com",
+        "address": "г. Москва, ул. Ленина, д. 10"
+    },
+    {
+        "id": 2,
+        "firstName": "AAAAA",
+        "lastName": "BBBBBB",
+        "email": "ivaasdasdasdasdasdn@example.com",
+        "address": "г. Москasdasdasdaaва, ул. Лsadasdasdasdasdasdasdенина, д. 10"
+    },
+    {
+        "id": 3,
+        "firstName": "CCCCCC",
+        "lastName": "CCCCCCCCCC",
+        "email": "asdasdasdasdasdasd@example.com",
+        "address": "г. Москвasdasdasdasdasdasdа, ул. Ленина, д. 10"
+    }
+]

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+    <style>
+        /* Общие стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #4a4a4a;
+        }
+
+        a {
+            text-decoration: none;
+            color: #4a90e2;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Стили для шапки */
+        header {
+            background-color: #6eb5ff;
+            padding: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        header h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-links li {
+            margin: 0 15px;
+        }
+
+        .nav-links a {
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 5px 10px;
+            transition: background 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: white;
+            color: #6eb5ff;
+            border-radius: 5px;
+        }
+
+        /* Стили для секции Hero */
+        .hero {
+            background-color: #e8f5ff;
+            text-align: center;
+            padding: 50px 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #357abd;
+        }
+
+        /* Стили для секции Features */
+        .features {
+            margin: 40px 0;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .feature {
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            flex: 1;
+        }
+
+        .feature h3 {
+            margin-bottom: 15px;
+        }
+
+        .feature p {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        /* Стили для футера */
+        footer {
+            background-color: #6eb5ff;
+            padding: 10px 0;
+            text-align: center;
+            margin-top: 20px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        footer p {
+            color: white;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>Добро пожаловать на наш сайт</h1>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="./index.html">Главная</a></li>
+                    <li><a href="./aboutUs.html">О нас</a></li>
+                    <li><a href="#">Услуги</a></li>
+                    <li><a href="#">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h2>Откройте для себя что-то новое</h2>
+                <p>Наш сайт предлагает лучшие решения для вашего бизнеса</p>
+                <a href="#" class="btn">Узнать больше</a>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <div class="feature">
+                    <h3>Легкость в использовании</h3>
+                    <p>Наши решения просты и удобны для каждого.</p>
+                </div>
+                <div class="feature">
+                    <h3>Безопасность данных</h3>
+                    <p>Мы обеспечиваем высокий уровень защиты ваших данных.</p>
+                </div>
+                <div class="feature">
+                    <h3>Поддержка 24/7</h3>
+                    <p>Наша команда всегда готова помочь вам в любое время суток.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Наш сайт. Все права защищены.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

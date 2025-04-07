@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>О нас</title>
+    <style>
+        /* Общие стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #4a4a4a;
+        }
+
+        a {
+            text-decoration: none;
+            color: #4a90e2;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Стили для шапки */
+        header {
+            background-color: #6eb5ff;
+            padding: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        header h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-links li {
+            margin: 0 15px;
+        }
+
+        .nav-links a {
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 5px 10px;
+            transition: background 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: white;
+            color: #6eb5ff;
+            border-radius: 5px;
+        }
+
+        /* Стили для секции "О нас" */
+        .about-us {
+            background-color: #e8f5ff;
+            padding: 50px 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .about-us h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .about-us p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .about-us ul {
+            text-align: left;
+            margin: 0 auto;
+            display: inline-block;
+            padding-left: 20px;
+        }
+
+        .about-us ul li {
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #357abd;
+        }
+
+        /* Стили для секции "Наша команда" */
+        .team {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .team-members {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .member {
+            background-color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            flex: 1;
+        }
+
+        .member img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .member h3 {
+            margin-bottom: 10px;
+        }
+
+        .member p {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        /* Стили для футера */
+        footer {
+            background-color: #6eb5ff;
+            padding: 10px 0;
+            text-align: center;
+            margin-top: 20px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        footer p {
+            color: white;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>О нашей компании</h1>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="./index.html">Главная</a></li>
+                    <li><a href="./aboutUs.html">О нас</a></li>
+                    <li><a href="#">Услуги</a></li>
+                    <li><a href="#">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="about-us">
+            <div class="container">
+                <h2>Кто мы?</h2>
+                <p>Наша компания предоставляет высококачественные решения для малого и среднего бизнеса. Мы
+                    сосредоточены на том, чтобы помочь нашим клиентам достичь успеха, предлагая инновационные решения и
+                    безупречное обслуживание.</p>
+
+                <h2>Наша миссия</h2>
+                <p>Мы стремимся стать вашим надежным партнёром в развитии бизнеса, предоставляя услуги, которые помогают
+                    эффективно решать задачи в любой отрасли.</p>
+
+                <h2>Наши ценности</h2>
+                <ul>
+                    <li>Честность и прозрачность</li>
+                    <li>Инновации и креативность</li>
+                    <li>Клиентоориентированность</li>
+                    <li>Профессионализм и качество</li>
+                </ul>
+                <br>
+                <a href="#" class="btn">Связаться с нами</a>
+            </div>
+        </section>
+
+        <section class="team">
+            <div class="container">
+                <h2>Наша команда</h2>
+                <div class="team-members">
+                    <div class="member">
+                        <img src="./Images/user1.png" alt="Член команды 1">
+                        <h3>Иван Иванов</h3>
+                        <p>Генеральный директор</p>
+                    </div>
+                    <div class="member">
+                        <img src="./Images/user3.png" alt="Член команды 2">
+                        <h3>Анна Смирнова</h3>
+                        <p>Руководитель проектов</p>
+                    </div>
+                    <div class="member">
+                        <img src="./Images/user2.png" alt="Член команды 3">
+                        <h3>Максим Кузнецов</h3>
+                        <p>Ведущий разработчик</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Наша компания. Все права защищены.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

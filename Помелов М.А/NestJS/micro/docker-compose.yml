@@ -1,0 +1,114 @@
+version: '3'
+services:
+  #БД для продуктов
+  productsdb:
+    container_name: productsdb-service
+    image: mariadb:latest
+    environment:
+      MYSQL_USER: productsService
+      MYSQL_PASSWORD: STRONG_Pass
+      MYSQL_ROOT_PASSWORD: VERY_STRONG_Pass
+      MYSQL_DATABASE: productsdb
+    ports:
+      - "3307:3306"
+
+  products-service:
+    build:
+      context: ./product-service
+    ports:
+      - "3002:3000"
+    container_name: products-service
+    depends_on:
+      - productsdb
+    environment:
+      - DATABASE_HOST=productsdb
+      - DATABASE_PORT=3306
+      - DATABASE_USER=productsService
+      - DATABASE_PASSWORD=STRONG_Pass
+      - DATABASE_NAME=productsdb
+  
+
+  #БД для корзины
+  ordersdb:
+    container_name: ordersdb-service
+    image: mongo:latest
+    volumes:
+      - /data/db
+    ports:
+      - "27017:27017"
+
+  #БД для отзывов
+  reportsdb:
+    container_name: reportsdb-service
+    image: mongo:latest
+    volumes:
+      - /data/db
+    ports:
+      - "27018:27017"
+
+
+#БД для пользователей
+  usersdb:
+    container_name: usersdb-service
+    image: mariadb:latest
+    environment:
+      MYSQL_USER: usersService
+      MYSQL_PASSWORD: STRONG_Pass
+      MYSQL_ROOT_PASSWORD: VERY_STRONG_Pass
+      MYSQL_DATABASE: usersdb
+    ports:
+      - "3306:3306"
+
+  users-service:
+    build:
+      context: ./user-service
+    ports:
+      - "3001:3000"
+    container_name: users-service
+    depends_on:
+      - usersdb
+    environment:
+      - DATABASE_HOST=usersdb
+      - DATABASE_PORT=3306
+      - DATABASE_USER=usersService
+      - DATABASE_PASSWORD=STRONG_Pass
+      - DATABASE_NAME=usersdb
+
+  orders-service:
+    build:
+      context: ./order-service
+    ports:
+      - "3003:3000"
+    container_name: orders-service
+    depends_on:
+      - ordersdb
+
+  reports-service:
+    build:
+      context: ./review-service
+    ports:
+      - "3004:3000"
+    container_name: reports-service
+    depends_on:
+      - reportsdb
+
+  chat-service:
+    build:
+      context: ./chat-service
+    ports:
+     - "3005:3000"
+    container_name: chat-service
+    depends_on:
+      - products-service
+      - api-gateway
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - users-service
+      - products-service
+      - orders-service
+      - reports-service
