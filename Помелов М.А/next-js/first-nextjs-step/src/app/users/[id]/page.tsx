@@ -29,7 +29,7 @@ export default function DisplayUser() {
     const { id } = useParams();
     const user: User | undefined = users.find(user => user.id == Number(id))
     return (
-        <div className="bg-sky-600 rounded-xl flex content-center ">
+        <div className="w-50 h-50 bg-sky-600 rounded-xl flex content-center flex-col place-items-center">
             <p>User ID: {id}</p>
             <p>username: {user?.name}</p>
             <p>username: {user?.age}</p>
