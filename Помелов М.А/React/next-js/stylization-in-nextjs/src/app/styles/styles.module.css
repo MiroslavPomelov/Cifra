@@ -1,0 +1,11 @@
+.container {
+    background-color: rgb(221, 221, 221);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.title {
+    color: rgb(118, 33, 255);
+    font-size: 24px;
+
+}

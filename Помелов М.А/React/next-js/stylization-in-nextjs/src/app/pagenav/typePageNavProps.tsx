@@ -1,0 +1,3 @@
+type PageNavProps = {
+    length: number;
+}
