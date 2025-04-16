@@ -1,6 +1,7 @@
 import React from 'react'
 import PostsPage from './posts/page'
 import Posts from './components/swrPosts/posts'
+import CommentPage from './components/comment/page'
 
 
 const Home: React.FC = () => {
@@ -10,7 +11,11 @@ const Home: React.FC = () => {
 
       </PostsPage> */}
 
-      <Posts></Posts>
+      {/* <Posts></Posts> */}
+
+      <CommentPage>
+        
+      </CommentPage>
     </div>
   )
 }
