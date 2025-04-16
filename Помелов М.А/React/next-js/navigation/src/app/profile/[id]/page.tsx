@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 
 type User = {
-    id: number;
+    id: string;
     name: string;
     surname: string;
     login: string;
@@ -17,7 +17,7 @@ export default function ProfileId() {
 
     const users: User[] = [
         {
-            id: 1,
+            id: "1",
             name: 'Miroslav',
             surname: 'Pomelov',
             login: 'meros',
@@ -25,7 +25,7 @@ export default function ProfileId() {
             email: 'mail@.ru'
         },
         {
-            id: 2,
+            id: "2",
             name: 'Denis',
             surname: 'Pinegun',
             login: 'den4ik',
@@ -33,7 +33,7 @@ export default function ProfileId() {
             email: 'mail@.ru'
         },
         {
-            id: 3,
+            id: "3",
             name: 'Bogdan',
             surname: 'Cherniy',
             login: 'Bog',
@@ -42,7 +42,7 @@ export default function ProfileId() {
         }
     ];
 
-    const filterUsers: User | undefined = users.find(user => user.id == Number(id));
+    const filterUsers: User | undefined = users.find(user => user.id == String(id));
 
 
     return (
