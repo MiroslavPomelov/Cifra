@@ -10,4 +10,10 @@ export default function DashboardLayout(
     }
 ) {
 
+    return (
+        <div style={{ display: 'flex' }}>
+            <div style={{ flex: 3 }}>{children}</div>
+            <div style={{ flex: 1 }}>{sidebar}</div>
+        </div>
+    );
 }
