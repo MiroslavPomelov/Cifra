@@ -4,11 +4,17 @@ import Statistics from "../Statistics";
 import { MainContentProps } from "./types/mainContentProps.type";
 
 
-export default function MainContent(data: MainContentProps) {
+export default function MainContent({ data }: { data: MainContentProps }) {
 
     return (
         <Flex ml={'20px'} direction={'column'} justify={'between'} width={'70%'} >
-            <ListView />
+            <ListView>
+                {data.map((item, index) => (
+                    <ul>
+                        <li key={index}></li>
+                    </ul>
+                ))}
+            </ListView>
             <Statistics />
         </Flex>
     );

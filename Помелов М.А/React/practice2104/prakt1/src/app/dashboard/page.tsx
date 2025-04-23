@@ -1,3 +1,5 @@
+'use client'
+
 import ListVariants from "@/components/dashboardsComponents/ListVariants";
 import MainContent from "@/components/dashboardsComponents/mainContent/MainContent";
 import { ListVariantButtonProps } from "@/components/dashboardsComponents/mainContent/types/ListVariantButtonProps.type";
@@ -26,7 +28,7 @@ export default function DashboardPage() {
     return (
         <Flex p={'20px'} width={'100vw'} height={'100vh'} className="bg-blue-100 rounded-xl border-[lightgray] border-10">
 
-            <ListVariants {} />
+            <ListVariants buttonsPayload={buttonsProps} />
             <MainContent />
 
         </Flex>

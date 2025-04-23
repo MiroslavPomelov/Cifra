@@ -1,10 +1,6 @@
-import { Product } from "@/model/entities/Product";
-import { User } from "@/model/entities/User";
-import { Worker } from "@/model/entities/Worker";
+import { IStringable } from "@/model/repository/interfaces/IStrigable";
 
 
 export type MainContentProps = {
-    users?: User[];
-    products?: Product[];
-    workers?: Worker[];
+  data: IStringable[];
 }

@@ -29,9 +29,9 @@ export class WorkerRepo implements IRepository<Worker> {
 
     }
 
-     public readAll(): Worker[] {
-            return this.listOfWorkers;
-        }
+    public readAll(): Worker[] {
+        return this.listOfWorkers;
+    }
 
     public update(updateData: Partial<Worker>): void {
         try {
