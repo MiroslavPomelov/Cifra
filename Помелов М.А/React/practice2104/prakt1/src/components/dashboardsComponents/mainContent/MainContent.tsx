@@ -9,7 +9,7 @@ export default function MainContent({ data }: { data: MainContentProps }) {
     return (
         <Flex ml={'20px'} direction={'column'} justify={'between'} width={'70%'} >
             <ListView>
-                {data.map((item, index) => (
+                {data.map((item: any, index: number) => (
                     <ul>
                         <li key={index}>{item}</li>
                     </ul>
