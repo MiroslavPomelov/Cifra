@@ -11,7 +11,7 @@ export default function MainContent({ data }: { data: MainContentProps }) {
             <ListView>
                 {data.map((item, index) => (
                     <ul>
-                        <li key={index}></li>
+                        <li key={index}>{item}</li>
                     </ul>
                 ))}
             </ListView>
