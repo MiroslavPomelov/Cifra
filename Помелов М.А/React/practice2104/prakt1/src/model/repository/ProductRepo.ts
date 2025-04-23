@@ -1,9 +1,9 @@
-import { IRepo } from "./interfaces/IRepo";
+import { IRepository } from "./interfaces/IRepository";
 import { Product } from "../entities/Product";
 import { productsDataGenerator } from "./functions/generateFunctions";
 
 
-export class ProductRepo implements IRepo<Product> {
+export class ProductRepo implements IRepository<Product> {
     listOfProducts: Product[] = [];
 
     constructor() {
@@ -15,7 +15,7 @@ export class ProductRepo implements IRepo<Product> {
         return this.listOfProducts;
     }
 
-    public read(id: number): Product | undefined {
+    public readOne(id: number): Product | undefined {
 
         try {
             const searchProduct: Product | undefined = this.listOfProducts.find(product => product.id == id);
@@ -29,10 +29,14 @@ export class ProductRepo implements IRepo<Product> {
 
     }
 
+    public readAll(): Product[] {
+        return this.listOfProducts;
+    }
+
     public update(updateData: Partial<Product>): void {
         try {
 
-            let updatingProduct: Product | undefined = this.listOfProducts.find(product => product.id == updateData.id);
+            let updatingProduct: Partial<Product> | undefined = this.listOfProducts.find(product => product.id == updateData.id);
 
             if (!updateData.id) throw new Error('Product is not exist!');
             if (!updatingProduct) throw new Error('Product is not exist!');

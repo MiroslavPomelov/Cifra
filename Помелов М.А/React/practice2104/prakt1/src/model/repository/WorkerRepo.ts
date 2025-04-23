@@ -1,9 +1,9 @@
 import { Worker } from "../entities/Worker";
 import { workerDataGenerator } from "./functions/generateFunctions";
-import { IRepo } from "./interfaces/IRepo";
+import { IRepository } from "./interfaces/IRepository";
 
 
-export class WorkerRepo implements IRepo<Worker> {
+export class WorkerRepo implements IRepository<Worker> {
     listOfWorkers: Worker[] = [];
 
     constructor() {
@@ -15,7 +15,7 @@ export class WorkerRepo implements IRepo<Worker> {
         return this.listOfWorkers;
     }
 
-    public read(id: number): Worker | undefined {
+    public readOne(id: number): Worker | undefined {
 
         try {
             const searchWorker: Worker | undefined = this.listOfWorkers.find(worker => worker.id == id);
@@ -29,10 +29,14 @@ export class WorkerRepo implements IRepo<Worker> {
 
     }
 
+     public readAll(): Worker[] {
+            return this.listOfWorkers;
+        }
+
     public update(updateData: Partial<Worker>): void {
         try {
 
-            let updatingWorker: Worker | undefined = this.listOfWorkers.find(user => user.id == updateData.id);
+            let updatingWorker: Partial<Worker> | undefined = this.listOfWorkers.find(user => user.id == updateData.id);
 
             if (!updateData.id) throw new Error('Worker is not exist!');
             if (!updatingWorker) throw new Error('Worker is not exist!');

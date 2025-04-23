@@ -1,4 +1,6 @@
-export class Product {
+import { IStringable } from "../repository/interfaces/IStrigable";
+
+export class Product implements IStringable {
     id: number;
     name: string;
     price: number;
@@ -14,4 +16,10 @@ export class Product {
         this.weight = weight;
         this.category = category;
     }
+
+    public toString(): string {
+        return `${this.name} \n Price: ${this.price} \n Producer: ${this.producer} \n Weight: ${this.weight} \n Category: ${this.category}`;
+    }
+
+
 }

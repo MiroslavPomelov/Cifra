@@ -1,7 +1,8 @@
+import { IStringable } from "../repository/interfaces/IStrigable";
 import { Product } from "./Product";
 
 
-export class User {
+export class User implements IStringable {
     id: number;
     name: string;
     age: number;
@@ -16,5 +17,9 @@ export class User {
         this.age = age;
         this.phone = phone;
         this.email = email;
+    }
+
+    public toString(): string {
+        return `${this.name} - ${this.email}`;
     }
 }

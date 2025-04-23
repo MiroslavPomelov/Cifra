@@ -1,8 +1,8 @@
-import { IRepo } from "./interfaces/IRepo";
+import { IRepository } from "./interfaces/IRepository";
 import { User } from "../entities/User";
 import { userDataGenerator } from "./functions/generateFunctions";
 
-export class UserRepo implements IRepo<User> {
+export class UserRepo implements IRepository<User> {
     listOfUsers: User[] = [];
 
     constructor() {
@@ -14,7 +14,7 @@ export class UserRepo implements IRepo<User> {
         return this.listOfUsers;
     }
 
-    public read(id: number): User | undefined {
+    public readOne(id: number): User | undefined {
 
         try {
             const searchUser: User | undefined = this.listOfUsers.find(user => user.id == id);
@@ -28,10 +28,14 @@ export class UserRepo implements IRepo<User> {
 
     }
 
+    public readAll(): User[] {
+        return this.listOfUsers;
+    }
+
     public update(updateData: Partial<User>): void {
         try {
 
-            let updatingUser: User | undefined = this.listOfUsers.find(user => user.id == updateData.id);
+            let updatingUser: Partial<User> | undefined = this.listOfUsers.find(user => user.id == updateData.id);
 
             if (!updateData.id) throw new Error('User is not exist!');
             if (!updatingUser) throw new Error('User is not exist!');
