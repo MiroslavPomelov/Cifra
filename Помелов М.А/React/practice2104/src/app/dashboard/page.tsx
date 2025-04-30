@@ -25,6 +25,12 @@ export default function DashboardPage() {
   const [updatingRepository, setUpdatingRepository] = useState<number>(1);
   const productList: Product[] = productRepository.readAll();
 
+  const newList = productList.map(item => {
+    return {
+      item: item
+      isSelected: false
+    }
+  })
 
   const updateReporitory = (newData: object) => {
     console.log('вот')
