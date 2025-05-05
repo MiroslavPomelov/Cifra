@@ -10,13 +10,30 @@ import { IStringable } from "../model/repositories/interfaces/IStringable";
 import { ListVariantButtonProps } from "@/components/dashboardComponents/listVariants/types/ListVariantButtonProps.type";
 import { IObjectable } from "../model/repositories/interfaces/IObjectable";
 import { Product } from "../model/entities/Product";
+import ImageSlider from "@/components/dashboardComponents/imageSlider/ImageSlider";
+
+const slides = [
+  {
+    src: '/first-image.jpg',
+    title: 'Слайд 1',
+    description: 'Описание слайда 1'
+  },
+  {
+    src: '/second-image.jpg',
+    title: 'Слайд 2',
+    description: 'Описание слайда 2'
+  },
+  {
+    src: '/third-image.jpg',
+    title: 'Слайд 3',
+    description: 'Описание слайда 3'
+  },
+];
 
 export default function DashboardPage() {
   let userRepository: UserRepo = new UserRepo();
   let productRepository: ProductRepo = new ProductRepo();
   let workerRepository: WorkerRepo = new WorkerRepo();
-
-
 
 
   const [mainContent, setMainContent] = useState<IStringable[]>(['Выберите категорию для отображения списка']);
@@ -27,7 +44,7 @@ export default function DashboardPage() {
 
   const newList = productList.map(item => {
     return {
-      item: item
+      item: item,
       isSelected: false
     }
   })
@@ -56,12 +73,15 @@ export default function DashboardPage() {
     { text: 'Товары', onClick: () => { setMainContent(productRepository.readAll()), setCardViewContent(productRepository.readAll()), setSelectedItem(null), setUpdatingRepository(2) } },
     { text: 'Работники', onClick: () => { setMainContent(workerRepository.readAll()), setCardViewContent(workerRepository.readAll()), setSelectedItem(null), setUpdatingRepository(3) } }
   ]
-
-
-
+  
+  
+  
   return (
     <Flex p={"20px"} height={'100vh'} direction={"row"} justify={"between"} className='bg-[#dfeefe] border-[lightgrey] border-10'>
+     
       <ListVariants buttonsPayload={buttonsProps} />
+
+      
       <MainContent productList={productList} usersData={userRepository.readAll()} data={mainContent} objects={cardViewContent} onClick={(index: number) => { setSelectedItem(index) }} onBack={() => { setSelectedItem(null) }} selectedItem={selectedItem} onUpdate={(newData: object) => { updateReporitory(newData) }} />
     </Flex>
   );

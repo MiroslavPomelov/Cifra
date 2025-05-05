@@ -1,6 +1,26 @@
 import { Flex } from "@radix-ui/themes";
 import ListVariantsButton from "./ui/ListVariantsButton";
 import { ListVariantButtonProps } from "./types/ListVariantButtonProps.type";
+import ImageSlider from "../imageSlider/ImageSlider";
+
+
+const slides = [
+  {
+    src: '/first-image.jpg',
+    title: 'Слайд 1',
+    description: 'Описание слайда 1'
+  },
+  {
+    src: '/second-image.jpg',
+    title: 'Слайд 2',
+    description: 'Описание слайда 2'
+  },
+  {
+    src: '/third-image.jpg',
+    title: 'Слайд 3',
+    description: 'Описание слайда 3'
+  },
+];
 
 export default function ListVariants({
   buttonsPayload,
@@ -21,6 +41,8 @@ export default function ListVariants({
           </li>
         </ul>
       ))}
+      <ImageSlider slides={slides} interval={3000} />
+
     </Flex>
   );
 }
