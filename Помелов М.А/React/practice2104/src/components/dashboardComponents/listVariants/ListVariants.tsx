@@ -25,7 +25,7 @@ const slides = [
 export default function ListVariants({
   buttonsPayload,
 }: {
-  buttonsPayload: ListVariantButtonProps[];
+  buttonsPayload: ListVariantButtonProps[]; 
 }) {
   return (
     <Flex
