@@ -23,10 +23,22 @@ namespace Auth02_06.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest request)
         {
-            if (request.Username == "admin" && request.Role == "password")
+            if (request.Username == "guest" && request.Role == "guest")
             {
-                var token = _tokenService.GenerateToken(request.Role, "admin");
-                return Ok(new {token });
+                var token = _tokenService.GenerateToken(request.Role, "guest");
+                return Ok(new { token });
+            }
+
+            if (request.Username == "reader" && request.Role == "reader")
+            {
+                var token = _tokenService.GenerateToken(request.Role, "guest");
+                return Ok(new { token });
+            }
+
+            if (request.Username == "librarian" && request.Role == "librarian")
+            {
+                var token = _tokenService.GenerateToken(request.Role, "guest");
+                return Ok(new { token });
             }
 
             return Unauthorized("Not valid auth token");

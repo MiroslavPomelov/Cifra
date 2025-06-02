@@ -32,8 +32,13 @@ namespace Practice
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapGet("/", () => "Hello World!");
-            app.MapGet("/login", [Authorize] () => "Hello from Secure route!");
+
+            app.MapGet("/secure", [Authorize] () => "Hello from Secure route!");
+
+            app.MapGet("/guest", [Authorize(Roles = "guest")] () => "Hello guest!").RequireAuthorization();
+            app.MapGet("/reader", [Authorize(Roles = "reader")] () => "Hello reader!").RequireAuthorization();
+            app.MapGet("/librarian", [Authorize(Roles = "librarian")] () => "Hello librarian!").RequireAuthorization();
+
 
             app.Run();
         }
