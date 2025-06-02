@@ -1,0 +1,41 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
+namespace Practice
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidIssuer = "practice-app",
+                    ValidAudience = "practice-app-books",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super_secret_key_12345213123123122323232323223233123123213123"))
+                };
+            });
+            builder.Services.AddControllers();
+
+            WebApplication app = builder.Build();
+
+            app.MapControllers();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.MapGet("/", () => "Hello World!");
+            app.MapGet("/login", [Authorize] () => "Hello from Secure route!");
+
+            app.Run();
+        }
+    }
+}

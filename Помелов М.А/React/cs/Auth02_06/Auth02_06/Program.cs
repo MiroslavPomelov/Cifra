@@ -1,3 +1,4 @@
+using Auth02_06.Authorization.Handlers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -10,6 +11,8 @@ namespace Auth02_06
         public static void Main(string[] args)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddSingleton<IAuthorizationHandler, DocumentAuthorizationHandler>();
 
             builder.Services.AddAuthentication("Bearer").AddJwtBearer(options =>
             {

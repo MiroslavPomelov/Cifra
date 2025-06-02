@@ -10,10 +10,11 @@ namespace Auth02_06.Authorization.Handlers
         {
             if (requirement.Name == "Edit" && resource.AuthorId == context?.User?.Identity?.Name)
             {
-                
+                context.Succeed(requirement);
             }
+            return Task.CompletedTask;
         }
 
-        
+
     }
 }
