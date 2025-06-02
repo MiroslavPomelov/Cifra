@@ -8,7 +8,12 @@ namespace Auth02_06.Authorization.Handlers
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement, Document resource)
         {
-            throw new NotImplementedException();
+            if (requirement.Name == "Edit" && resource.AuthorId == context?.User?.Identity?.Name)
+            {
+                
+            }
         }
+
+        
     }
 }
