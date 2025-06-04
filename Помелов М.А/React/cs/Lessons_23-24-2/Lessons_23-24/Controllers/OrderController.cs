@@ -8,7 +8,7 @@ namespace Lessons_23_24.Controllers
         [Route("all")]
         public IActionResult AllOrders()
         {
-            return Content("");
+            return Content("aaa");
             //return View("List");
         }
 
