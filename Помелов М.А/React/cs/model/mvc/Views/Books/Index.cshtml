@@ -1,0 +1,21 @@
+﻿<table>
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Автор</th>
+            <th>Количество страниц</th>
+            <th>Дата публикации</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Book book in Model)
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>@book.Pages</td>
+                <td>@book.PublishedDate.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>
