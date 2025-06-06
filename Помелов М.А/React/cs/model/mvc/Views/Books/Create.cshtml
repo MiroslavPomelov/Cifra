@@ -1,0 +1,27 @@
+﻿@model Book
+
+
+<form asp-action="Create" method="post">
+    <div>
+        <label>Название</label>
+        <input asp-for="Title" />
+        <span asp-validation-for="Title"></span>
+    </div>
+    <div>
+        <label>Автор</label>
+        <input asp-for="Author" />
+        <span asp-validation-for="Author"></span>
+    </div>
+    <div>
+        <label>Количество страниц</label>
+        <input asp-for="Pages" type="number" />
+        <span asp-validation-for="Pages"></span>
+    </div>
+    <div>
+        <label>Дата публикации</label>
+        <input asp-for="PublishedDate" type="date" />
+        <span asp-validation-for="PublishedDate"></span>
+    </div>
+    <button type="submit">Добавить</button>
+</form>
+

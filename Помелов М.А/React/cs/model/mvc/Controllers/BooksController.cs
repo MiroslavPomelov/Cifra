@@ -14,7 +14,12 @@ namespace mvc.Controllers
         [HttpPost]
         public IActionResult Create(Book book)
         {
-            return View();
+            if (ModelState.IsValid) // Состояние модели корректное
+            {
+                return RedirectToAction("Index");   
+            }
+
+            return View(book);
         }
     }
 }
