@@ -1,0 +1,16 @@
+# Use root/example as user/password credentials
+
+services:
+
+
+  database: 
+    image: mariadb:latest
+    
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: productService
+      MYSQL_PASSWORD: admin
+      MYSQL_DATABASE: productdb
+    ports:
+      - "3306:3306"
+
