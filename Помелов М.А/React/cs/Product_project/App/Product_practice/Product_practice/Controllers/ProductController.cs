@@ -46,14 +46,10 @@ namespace Product_practice.Controllers
                 });
             }
 
-
-
             _context.AddRange(products);
             _context.SaveChanges();
 
-            string jsonString = JsonSerializer.Serialize(products);
-
-            return Ok(jsonString);
+            return Json(products);
         }
 
 
