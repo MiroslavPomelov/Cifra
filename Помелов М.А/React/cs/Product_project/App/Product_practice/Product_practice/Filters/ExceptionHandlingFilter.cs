@@ -2,13 +2,13 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Product_practice.Utils;
 
-namespace Product_practice.Filters
+namespace Filter11_06_2025.Filters
 {
     public class ExceptionHandlingFilter : IExceptionFilter
     {
-        private readonly FileLogger<ExceptionHandlingFilter> _logger;
+        private readonly FileLogger _logger;
 
-        public ExceptionHandlingFilter(FileLogger<ExceptionHandlingFilter> logger)
+        public ExceptionHandlingFilter(FileLogger logger)
         {
             _logger = logger;
         }

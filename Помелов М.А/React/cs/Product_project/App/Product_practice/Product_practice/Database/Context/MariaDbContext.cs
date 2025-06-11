@@ -10,6 +10,7 @@ namespace Product_practice.Database.Context
         public MariaDbContext(DbContextOptions options) : base(options)
         {
             Console.WriteLine(Database.CanConnect());
+            Database.EnsureCreated();
         }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

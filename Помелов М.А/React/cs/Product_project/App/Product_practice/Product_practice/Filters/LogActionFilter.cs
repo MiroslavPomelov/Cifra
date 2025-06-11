@@ -5,9 +5,9 @@ namespace Product_practice.Filters
 {
     public class LogActionFilter : IActionFilter
     {
-        private readonly FileLogger<LogActionFilter> _logger;
+        private readonly FileLogger _logger;
 
-        public LogActionFilter(FileLogger<LogActionFilter> logger)
+        public LogActionFilter(FileLogger logger)
         {
             _logger = logger;
         }
