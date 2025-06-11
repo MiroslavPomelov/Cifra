@@ -7,10 +7,13 @@ namespace Filter11_06_2025
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            ConfigureServices(builder.Services);
+           
 
             // Add services to the container.
+            builder.Services.AddSingleton<LogActionFilter>();
+
             builder.Services.AddControllersWithViews();
+            ConfigureServices(builder.Services);
 
             var app = builder.Build();
 

@@ -14,11 +14,20 @@ namespace Filter11_06_2025.Filters
         public void OnActionExecuting(ActionExecutingContext context)
         {
             _logger.LogInformation($"Request to action: {context.ActionDescriptor.DisplayName}");
+
+
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
         {
-            throw new NotImplementedException();
+            if (context.Exception != null)
+            {
+                _logger.LogError($"Error: \"{context.Exception.Message}\"");
+            }
+            else
+            {
+                _logger.LogInformation("Route has been handled succesfully");
+            }
         }
 
        
