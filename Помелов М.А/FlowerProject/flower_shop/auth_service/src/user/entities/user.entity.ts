@@ -1,1 +1,79 @@
-export class User {}
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    CreateDateColumn,
+    UpdateDateColumn,
+    Index,
+    BeforeInsert,
+    BeforeUpdate,
+} from 'typeorm';
+import { Exclude } from 'class-transformer';
+import * as bcrypt from 'bcrypt';
+
+export enum UserRole {
+    CUSTOMER = 'customer',
+    COURIER = 'courier',
+    ADMIN = 'admin',
+}
+
+@Entity()
+export class User {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @Column({ length: 100, unique: true })
+    @Index({ unique: true })
+    email: string;
+
+    @Column({ length: 255 })
+    @Exclude() // Исключаем из ответов API
+    password_hash: string;
+
+    @Column({ length: 50, name: 'first_name' })
+    firstName: string;
+
+    @Column({ length: 50, name: 'last_name' })
+    lastName: string;
+
+    @Column({ length: 20 })
+    phone: string;
+
+    @Column({
+        type: 'enum',
+        enum: UserRole,
+        default: UserRole.CUSTOMER,
+    })
+    role: UserRole;
+
+    @CreateDateColumn({
+        name: 'registration_date',
+        type: 'timestamp',
+        default: () => 'CURRENT_TIMESTAMP',
+    })
+    registrationDate: Date;
+
+    @Column({ name: 'last_login', type: 'timestamp', nullable: true })
+    lastLogin: Date | null;
+
+    @Column({ name: 'is_active', default: true })
+    isActive: boolean;
+
+    @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
+    updatedAt: Date;
+
+    // Хеширование пароля перед сохранением
+    @BeforeInsert()
+    @BeforeUpdate()
+    async hashPassword() {
+        if (this.password_hash) {
+            const salt = await bcrypt.genSalt();
+            this.password_hash = await bcrypt.hash(this.password_hash, salt);
+        }
+    }
+
+    // Проверка пароля
+    async validatePassword(password: string): Promise<boolean> {
+        return bcrypt.compare(password, this.password_hash);
+    }
+}
