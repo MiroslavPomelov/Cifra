@@ -1,0 +1,67 @@
+version: '3.9'
+
+services:
+  # --- PostgreSQL для Auth Service ---
+  usersdb:
+    image: postgres:14
+    container_name: usersdb
+    environment:
+      POSTGRES_USER: auth_user
+      POSTGRES_PASSWORD: auth_password
+      POSTGRES_DB: usersdb
+    volumes:
+      - usersdb_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U auth_user -d usersdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+  # --- Auth Service (Nest.js) ---
+  auth-service:
+    build:
+      context: ./auth-service
+    container_name: auth-service
+    ports:
+      - "3001:3000"  # Порт 3001 на хосте -> 3000 в контейнере
+    environment:
+      DB_HOST: usersdb
+      DB_PORT: 5432
+      DB_USERNAME: auth_user
+      DB_PASSWORD: auth_password
+      DB_NAME: usersdb
+      JWT_SECRET: "your_strong_jwt_secret_here"
+    depends_on:
+      usersdb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+
+  # --- API Gateway (Nest.js) ---
+  api-gateway:
+    build:
+      context: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "3000:3000"  # Основной порт для API
+    environment:
+      AUTH_SERVICE_URL: "http://auth-service:3000"  # Внутри сети Docker
+    depends_on:
+      auth-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+
+volumes:
+  usersdb_data:
