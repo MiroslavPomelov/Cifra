@@ -5,17 +5,8 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     Index,
-    BeforeInsert,
-    BeforeUpdate,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
-import * as bcrypt from 'bcrypt';
-
-export enum UserRole {
-    CUSTOMER = 'customer',
-    COURIER = 'courier',
-    ADMIN = 'admin',
-}
 
 @Entity()
 export class User {
@@ -36,15 +27,14 @@ export class User {
     @Column({ length: 50, name: 'last_name' })
     lastName: string;
 
+    @Column()
+    birthDate: Date;
+
     @Column({ length: 20 })
     phone: string;
 
-    @Column({
-        type: 'enum',
-        enum: UserRole,
-        default: UserRole.CUSTOMER,
-    })
-    role: UserRole;
+    @Column({ length: 30 })
+    city: string;
 
     @CreateDateColumn({
         name: 'registration_date',
@@ -62,18 +52,6 @@ export class User {
     @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
     updatedAt: Date;
 
-    // Хеширование пароля перед сохранением
-    @BeforeInsert()
-    @BeforeUpdate()
-    async hashPassword() {
-        if (this.password_hash) {
-            const salt = await bcrypt.genSalt();
-            this.password_hash = await bcrypt.hash(this.password_hash, salt);
-        }
-    }
-
-    // Проверка пароля
-    async validatePassword(password: string): Promise<boolean> {
-        return bcrypt.compare(password, this.password_hash);
-    }
+    @Column()
+    personalData: boolean;
 }
