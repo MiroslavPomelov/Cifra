@@ -11,7 +11,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const existingUser = await this.userRepository.findOne({
@@ -32,15 +32,15 @@ export class UserService {
   }
 
   async findAll(): Promise<User[]> {
-    return this.userRepository.find({ 
+    return this.userRepository.find({
       where: { isActive: true },
       order: { registrationDate: 'DESC' }
     });
   }
 
   async findOne(id: number): Promise<User> {
-    const user = await this.userRepository.findOne({ 
-      where: { id, isActive: true } 
+    const user = await this.userRepository.findOne({
+      where: { id, isActive: true }
     });
 
     if (!user) {
@@ -51,20 +51,28 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-  const user = await this.findOne(id);
-  
-  if (updateUserDto.password_hash) {
-    user.password_hash = await bcrypt.hash(updateUserDto.password_hash, 10);
-  }
+    const user = await this.findOne(id);
+    const { password, firstName, lastName, city, birthDate, ...rest } = updateUserDto;
 
-  Object.keys(updateUserDto).forEach(key => {
-    if (updateUserDto[key] !== undefined && key !== 'password') {
-      user[key] = updateUserDto[key];
+    if (password) {
+      user.password_hash = await bcrypt.hash(password, 10);
     }
-  });
 
-  return this.userRepository.save(user);
-}
+    // Обновляем только разрешенные поля
+    const allowedUpdates = { firstName, lastName, city, birthDate };
+    Object.entries(allowedUpdates).forEach(([key, value]) => {
+      if (value !== undefined) {
+        user[key] = key === 'birthDate' ? new Date(value) : value;
+      }
+    });
+
+    // Логируем попытку изменить запрещенные поля
+    if (Object.keys(rest).length > 0) {
+      console.warn(`Attempt to update restricted fields for user ${id}:`, Object.keys(rest));
+    }
+
+    return this.userRepository.save(user);
+  }
 
   async deactivate(id: number): Promise<User> {
     const user = await this.findOne(id);
@@ -73,8 +81,8 @@ export class UserService {
   }
 
   async activate(id: number): Promise<User> {
-    const user = await this.userRepository.findOne({ 
-      where: { id, isActive: false } 
+    const user = await this.userRepository.findOne({
+      where: { id, isActive: false }
     });
 
     if (!user) {
@@ -86,7 +94,7 @@ export class UserService {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.userRepository.findOne({ 
+    return this.userRepository.findOne({
       where: { email, isActive: true },
       select: ['id', 'email', 'password_hash', 'isActive']
     });
