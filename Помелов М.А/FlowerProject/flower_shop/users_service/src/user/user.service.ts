@@ -51,16 +51,20 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.findOne(id);
-
-    if (updateUserDto.password_hash) {
-      updateUserDto.password_hash = await bcrypt.hash(updateUserDto.password_hash, 10);
-      delete updateUserDto.password_hash;
-    }
-
-    Object.assign(user, updateUserDto);
-    return this.userRepository.save(user);
+  const user = await this.findOne(id);
+  
+  if (updateUserDto.password_hash) {
+    user.password_hash = await bcrypt.hash(updateUserDto.password_hash, 10);
   }
+
+  Object.keys(updateUserDto).forEach(key => {
+    if (updateUserDto[key] !== undefined && key !== 'password') {
+      user[key] = updateUserDto[key];
+    }
+  });
+
+  return this.userRepository.save(user);
+}
 
   async deactivate(id: number): Promise<User> {
     const user = await this.findOne(id);

@@ -6,8 +6,8 @@ services:
     image: postgres:14
     container_name: usersdb
     environment:
-      POSTGRES_USER: auth_user
-      POSTGRES_PASSWORD: auth_password
+      POSTGRES_USER: usersdb_user
+      POSTGRES_PASSWORD: usersdb_password
       POSTGRES_DB: usersdb
     volumes:
       - usersdb_data:/var/lib/postgresql/data
@@ -21,17 +21,17 @@ services:
 
 
   # --- Auth Service (Nest.js) ---
-  auth-service:
+  users-service:
     build:
-      context: ./auth-service
-    container_name: auth-service
+      context: ./users-service
+    container_name: users-service
     ports:
       - "3001:3000"  # Порт 3001 на хосте -> 3000 в контейнере
     environment:
       DB_HOST: usersdb
       DB_PORT: 5432
-      DB_USERNAME: auth_user
-      DB_PASSWORD: auth_password
+      DB_USERNAME: users_user
+      DB_PASSWORD: users_password
       DB_NAME: usersdb
       JWT_SECRET: "your_strong_jwt_secret_here"
     depends_on:

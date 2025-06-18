@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsEmail, IsString, IsNotEmpty, MinLength, MaxLength, IsPhoneNumber, IsEnum, IsNumber, Min, Max, IsBoolean, IsIn, IsDate } from 'class-validator';
 
 
@@ -19,6 +20,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   lastName: string;
 
+  @Type(() => Date)
   @IsDate()
   @IsNotEmpty()
   @Min(14)
