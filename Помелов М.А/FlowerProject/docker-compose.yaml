@@ -5,7 +5,7 @@ services:
     image: postgres:14
     container_name: usersdb
     environment:
-      POSTGRES_USER: users_user  # Изменено для соответствия
+      POSTGRES_USER: users_user  
       POSTGRES_PASSWORD: users_password
       POSTGRES_DB: usersdb
     volumes:
@@ -45,17 +45,17 @@ services:
       timeout: 5s
       retries: 3
 
-  api-gateway:
-    build:
-      context: ./api-gateway
-      dockerfile: Dockerfile  # Явное указание Dockerfile
-    ports:
-      - "80:3000"
-    networks:
-      - app_network
-    depends_on:
-      users-service:
-        condition: service_healthy
+  # api-gateway:
+  #   build:
+  #     context: ./api-gateway
+  #     dockerfile: Dockerfile  # Явное указание Dockerfile
+  #   ports:
+  #     - "80:3000"
+  #   networks:
+  #     - app_network
+  #   depends_on:
+  #     users-service:
+  #       condition: service_healthy
 
 networks:
   app_network:

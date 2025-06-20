@@ -52,10 +52,10 @@ export class UserService {
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
-    const { password, firstName, lastName, city, birthDate, ...rest } = updateUserDto;
+    const { password_hash, firstName, lastName, city, birthDate, ...rest } = updateUserDto;
 
-    if (password) {
-      user.password_hash = await bcrypt.hash(password, 10);
+    if (password_hash) {
+      user.password_hash = await bcrypt.hash(password_hash, 10);
     }
 
     // Обновляем только разрешенные поля
