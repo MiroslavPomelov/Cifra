@@ -45,22 +45,38 @@ services:
 
 
   # --- API Gateway (Nest.js) ---
-  api-gateway:
-    build:
-      context: ./api-gateway
-    container_name: api-gateway
+  api-gateway:  # ✅ Правильная структура
+    build: ./api-gateway
     ports:
-      - "3000:3000"  # Основной порт для API
-    environment:
-      AUTH_SERVICE_URL: "http://auth-service:3000"  # Внутри сети Docker
+      - "80:3000"
     depends_on:
-      auth-service:
+      users-service:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+
+
+
+# api-gateway:
+#   build:
+#     context: ./api-gateway
+#   container_name: api-gateway
+#   ports:
+#     - "80:3000"  # Основной порт для API
+#   environment:
+#     AUTH_SERVICE_URL: "http://auth-service:3000"  # Внутри сети Docker
+#   depends_on:
+#     users-service:
+#       condition: service_healthy
+#   healthcheck:
+#     test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+#     interval: 10s
+#     timeout: 5s
+#     retries: 3
 
 
 volumes:

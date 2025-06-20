@@ -19,7 +19,7 @@ export class UserService {
     });
 
     if (existingUser) {
-      throw new ConflictException('User with this email already exists');
+      throw new ConflictException('User with this email already exists!');
     }
 
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
