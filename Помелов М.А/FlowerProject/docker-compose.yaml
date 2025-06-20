@@ -1,32 +1,32 @@
 version: '3.9'
 
 services:
-  # --- PostgreSQL для Auth Service ---
   usersdb:
     image: postgres:14
     container_name: usersdb
     environment:
-      POSTGRES_USER: usersdb_user
-      POSTGRES_PASSWORD: usersdb_password
+      POSTGRES_USER: users_user  # Изменено для соответствия
+      POSTGRES_PASSWORD: users_password
       POSTGRES_DB: usersdb
     volumes:
       - usersdb_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - app_network  # Добавлено подключение к сети
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U auth_user -d usersdb"]
+      test: ["CMD-SHELL", "pg_isready -U users_user -d usersdb"]  # Исправлен пользователь
       interval: 5s
       timeout: 5s
       retries: 5
 
-
-  # --- Auth Service (Nest.js) ---
   users-service:
     build:
       context: ./users-service
+      dockerfile: Dockerfile  # Явное указание Dockerfile
     container_name: users-service
     ports:
-      - "3001:3000"  # Порт 3001 на хосте -> 3000 в контейнере
+      - "3001:3000"
     environment:
       DB_HOST: usersdb
       DB_PORT: 5432
@@ -34,6 +34,8 @@ services:
       DB_PASSWORD: users_password
       DB_NAME: usersdb
       JWT_SECRET: "your_strong_jwt_secret_here"
+    networks:
+      - app_network
     depends_on:
       usersdb:
         condition: service_healthy
@@ -43,41 +45,21 @@ services:
       timeout: 5s
       retries: 3
 
-
-  # --- API Gateway (Nest.js) ---
-  api-gateway:  # ✅ Правильная структура
-    build: ./api-gateway
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile  # Явное указание Dockerfile
     ports:
       - "80:3000"
+    networks:
+      - app_network
     depends_on:
       users-service:
         condition: service_healthy
-    networks:
-      - app_network
 
 networks:
   app_network:
     driver: bridge
-
-
-
-# api-gateway:
-#   build:
-#     context: ./api-gateway
-#   container_name: api-gateway
-#   ports:
-#     - "80:3000"  # Основной порт для API
-#   environment:
-#     AUTH_SERVICE_URL: "http://auth-service:3000"  # Внутри сети Docker
-#   depends_on:
-#     users-service:
-#       condition: service_healthy
-#   healthcheck:
-#     test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
-#     interval: 10s
-#     timeout: 5s
-#     retries: 3
-
 
 volumes:
   usersdb_data:
