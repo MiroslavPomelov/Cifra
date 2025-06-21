@@ -99,4 +99,17 @@ export class UserService {
       select: ['id', 'email', 'password_hash', 'isActive']
     });
   }
+
+  async findOneWithFavourites(id: number): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { id, isActive: true },
+      relations: ['favouriteProducts']
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return user;
+  }
 }

@@ -5,8 +5,10 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     Index,
+    OneToMany,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { FavouriteProduct } from './favourite-product.entity';
 
 @Entity()
 export class User {
@@ -54,4 +56,7 @@ export class User {
 
     @Column()
     personalData: boolean;
+
+    @OneToMany(() => FavouriteProduct, favouriteProduct => favouriteProduct.user)
+    favouriteProducts: FavouriteProduct[];
 }

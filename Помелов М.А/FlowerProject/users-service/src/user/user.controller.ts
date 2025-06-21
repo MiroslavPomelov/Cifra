@@ -36,4 +36,9 @@ export class UserController {
   activate(@Param('id') id: string) {
     return this.userService.activate(+id);
   }
+
+  @Get(':id/with-favourites')
+  findOneWithFavourites(@Param('id') id: string) {
+    return this.userService.findOneWithFavourites(+id);
+  }
 }
