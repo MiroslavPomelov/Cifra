@@ -50,7 +50,7 @@ const buttonStyle: React.CSSProperties = {
 // }
 
 
-const ImageSlider: React.FC<ImageSliderProps> = ({ slides, interval = 3000 }) => {
+const ImageSlider: React.FC<ImageSliderProps> = ({ slides, interval = 5000 }) => {
     const [currentIndex, setCurrentIndex] = useState(0); //Index текущего слайда
 
     const goToNextSlide = () => {
