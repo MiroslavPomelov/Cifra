@@ -5,7 +5,7 @@ services:
     image: postgres:14
     container_name: usersdb
     environment:
-      POSTGRES_USER: users_user  
+      POSTGRES_USER: users_user
       POSTGRES_PASSWORD: users_password
       POSTGRES_DB: usersdb
     volumes:
