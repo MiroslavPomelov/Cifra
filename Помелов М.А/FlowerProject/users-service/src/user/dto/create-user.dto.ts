@@ -1,7 +1,11 @@
+import { Logger } from '@nestjs/common';
 import { Type, Transform, plainToClass } from 'class-transformer';
 import { IsEmail, IsString, IsNotEmpty, MinLength, MaxLength, IsPhoneNumber, IsBoolean, IsIn, IsDate } from 'class-validator';
 
 export class CreateUserDto {
+
+  private static readonly logger = new Logger(CreateUserDto.name);
+
   @IsEmail({}, { message: 'Email должен быть валидным email адресом' })
   @IsNotEmpty({ message: 'Email обязателен' })
   email: string;
@@ -62,6 +66,7 @@ export class CreateUserDto {
     const extraFields = receivedFields.filter(field => !allowedFields.includes(field));
     
     if (extraFields.length > 0) {
+      this.logger.warn(`Попытка создания недопустимого поля: ${extraFields.join(', ')}`);
       throw new Error(`Недопустимые поля: ${extraFields.join(', ')}`);
     }
     

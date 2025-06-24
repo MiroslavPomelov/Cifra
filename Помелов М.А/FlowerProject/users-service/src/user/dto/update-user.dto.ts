@@ -2,8 +2,12 @@ import { IsOptional, IsString, MinLength, IsNotEmpty, MaxLength, IsDate } from '
 import { Type, Transform, plainToClass } from 'class-transformer';
 import { CreateUserDto } from './create-user.dto';
 import { PartialType } from '@nestjs/mapped-types';
+import { Logger } from '@nestjs/common';
+
+
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
+  private static readonly logger = new Logger(UpdateUserDto.name);
 
     @IsOptional()
     @IsString()
@@ -45,6 +49,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
     // Статический метод для валидации и трансформации
     static fromRequest(data: any): UpdateUserDto {
+      
       // Проверяем на дополнительные поля
       const allowedFields = [
         'email', 'password', 'firstName', 'lastName', 
@@ -56,6 +61,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
       const extraFields = receivedFields.filter(field => !allowedFields.includes(field));
       
       if (extraFields.length > 0) {
+        this.logger.warn(`Попытка обновить недопустимые поля: ${extraFields.join(', ')}`);
         throw new Error(`Недопустимые поля: ${extraFields.join(', ')}`);
       }
       

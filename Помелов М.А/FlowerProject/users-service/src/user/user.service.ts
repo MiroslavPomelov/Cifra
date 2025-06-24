@@ -1,4 +1,4 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException, Logger, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -8,6 +8,8 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger(UserService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -19,6 +21,7 @@ export class UserService {
     });
 
     if (existingUser) {
+      this.logger.warn(`Попытка создать пользователя с уже существующим email: ${createUserDto.email}`);
       throw new ConflictException('User with this email already exists!');
     }
 
@@ -28,6 +31,7 @@ export class UserService {
       password_hash: hashedPassword,
     });
 
+    this.logger.log(`Создан новый пользователь: ${user.email}`);
     return this.userRepository.save(user);
   }
 
@@ -51,6 +55,18 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    // if (updateUserDto.email !== undefined) {
+    //   throw new BadRequestException('Обновление email запрещено');
+    // }
+    // Проверка на недопустимые поля
+    const allowedFields = [
+      'password_hash', 'firstName', 'lastName', 'birthDate', 'city', 'phone', 'personalData'
+    ];
+    const receivedFields = Object.keys(updateUserDto);
+    const extraFields = receivedFields.filter(field => !allowedFields.includes(field));
+    if (extraFields.length > 0) {
+      throw new BadRequestException(`Недопустимые поля: ${extraFields.join(', ')}`);
+    }
     const user = await this.findOne(id);
     const { password_hash, firstName, lastName, city, birthDate, ...rest } = updateUserDto;
 
@@ -75,9 +91,14 @@ export class UserService {
   }
 
   async deactivate(id: number): Promise<User> {
-    const user = await this.findOne(id);
+    const user = await this.userRepository.findOne({ where: { id, isActive: true } });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found or already deactivated`);
+    }
     user.isActive = false;
-    return this.userRepository.save(user);
+    await this.userRepository.save(user);
+    this.logger.log(`Пользователь деактивирован: ${user.email}`);
+    return user;
   }
 
   async activate(id: number): Promise<User> {
@@ -110,6 +131,34 @@ export class UserService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
+    return user;
+  }
+
+  async findByEmailAndPassword(email: string, password: string): Promise<User | null> {
+    const user = await this.userRepository.findOne({
+      where: { email, isActive: true },
+      select: ['id', 'email', 'password_hash', 'isActive', 'firstName', 'lastName', 'birthDate', 'phone', 'city', 'registrationDate', 'lastLogin', 'personalData']
+    });
+    if (!user) {
+      this.logger.warn(`Неудачная попытка входа: пользователь с email ${email} не найден или не активен`);
+      throw new NotFoundException(`Неверный лоигн или пароль!`);
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+    if (!isPasswordValid) {
+      this.logger.warn(`Неудачная попытка входа: неверный пароль для email ${email}`);
+      throw new NotFoundException(`Неверный лоигн или пароль!`);
+    }
+    this.logger.log(`Пользователь успешно вошёл: ${email}`);
+    return user;
+  }
+
+  async remove(id: number): Promise<User | null> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    this.logger.log(`Удален пользователь: ${user.email}`);
+    await this.userRepository.remove(user);
     return user;
   }
 }
