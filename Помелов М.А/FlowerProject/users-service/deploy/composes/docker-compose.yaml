@@ -1,0 +1,54 @@
+version: '3.9'
+
+services:
+  usersdb:
+    image: postgres:14
+    container_name: usersdb
+    environment:
+      POSTGRES_USER: users_user
+      POSTGRES_PASSWORD: users_password
+      POSTGRES_DB: usersdb
+    volumes:
+      - usersdb_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network  # Добавлено подключение к сети
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U users_user -d usersdb"]  # Исправлен пользователь
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  users-service:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Явное указание Dockerfile
+    container_name: users-service
+    ports:
+      - "3001:3000"
+    environment:
+      DB_HOST: usersdb
+      DB_PORT: 5432
+      DB_USERNAME: users_user
+      DB_PASSWORD: users_password
+      DB_NAME: usersdb
+      JWT_SECRET: "your_strong_jwt_secret_here"
+    networks:
+      - app_network
+    depends_on:
+      usersdb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  usersdb_data:
