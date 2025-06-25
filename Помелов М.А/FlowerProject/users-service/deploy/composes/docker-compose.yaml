@@ -27,6 +27,8 @@ services:
     container_name: users-service
     ports:
       - "3001:3000"
+    env_file:
+      - ../environments/dev.env
     environment:
       DB_HOST: usersdb
       DB_PORT: 5432
@@ -40,7 +42,7 @@ services:
       usersdb:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3

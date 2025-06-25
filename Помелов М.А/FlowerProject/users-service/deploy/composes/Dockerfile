@@ -1,5 +1,8 @@
 FROM node:alpine
 
+# Устанавливаем wget для healthcheck
+RUN apk add --no-cache wget
+
 WORKDIR /usr/src/app
 COPY package.json ./
 
