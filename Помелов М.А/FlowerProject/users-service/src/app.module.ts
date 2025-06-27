@@ -37,11 +37,3 @@ import { AppController } from './app.controller';
   ]
 })
 export class AppModule { }
-
-
-
-console.log(`HOST: ${process.env.DB_HOST}`);
-console.log(`PORT: ${process.env.DB_PORT}`);
-console.log(`USERNAME: ${process.env.DB_USERNAME}`);
-console.log(`DATABASE: ${process.env.DB_NAME}`);
-console.log(`TOKEN: ${process.env.ENV_TOKEN}`);

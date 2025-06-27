@@ -1,5 +1,5 @@
 import { Transform, Type } from "class-transformer";
-import { IsDate, IsEmail, IsNotEmpty, IsPhoneNumber, IsString, MaxLength, MinLength } from "class-validator";
+import { IsDate, IsEmail, IsNotEmpty, IsPhoneNumber, IsString, MaxLength, MinLength, IsBoolean, IsIn } from "class-validator";
 
 
 export class SignupDto {
@@ -41,4 +41,13 @@ export class SignupDto {
     @IsPhoneNumber('RU', { message: 'Телефон должен быть валидным российским номером' })
     @IsNotEmpty({ message: 'Телефон обязателен' })
     phone: string;
+
+    @IsString({ message: 'Город должен быть строкой' })
+    @IsNotEmpty({ message: 'Город обязателен' })
+    @MaxLength(30, { message: 'Город не должен превышать 30 символов' })
+    city: string;
+
+    @IsBoolean({ message: 'Согласие с обработкой персональных данных должно быть булевым значением' })
+    @IsIn([true], { message: 'Необходимо согласие с обработкой персональных данных' })
+    personalData: boolean;
 }

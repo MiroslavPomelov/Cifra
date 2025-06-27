@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException 
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { SigninDto } from './dto/signin.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('users')
@@ -21,6 +22,19 @@ export class UserController {
       return this.userService.create(createUserDto);
     } catch (error) {
       throw new BadRequestException(error.message);
+    }
+  }
+
+  @Post('signin')
+  @ApiOperation({ summary: 'Войти в систему' })
+  @ApiResponse({ status: 200, description: 'Успешный вход' })
+  @ApiResponse({ status: 404, description: 'Неверный логин или пароль' })
+  async signin(@Body() signinData: SigninDto) {
+    try {
+      const user = await this.userService.findByEmailAndPassword(signinData.email, signinData.password);
+      return user;
+    } catch (error) {
+      throw error; // Пробрасываем ошибку как есть, так как она уже правильного типа
     }
   }
 

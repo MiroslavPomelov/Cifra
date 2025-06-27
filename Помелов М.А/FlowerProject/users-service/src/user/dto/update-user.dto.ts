@@ -12,7 +12,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     @IsOptional()
     @IsString()
     @MinLength(6)
-    password_hash?: string;
+    password?: string;
 
     @IsOptional()
     @IsString()
@@ -53,8 +53,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
       // Проверяем на дополнительные поля
       const allowedFields = [
         'email', 'password', 'firstName', 'lastName', 
-        'birthDate', 'phone', 'city', 'personalData',
-        'password_hash' // Дополнительное поле для обновления
+        'birthDate', 'phone', 'city', 'personalData'
       ];
       
       const receivedFields = Object.keys(data);

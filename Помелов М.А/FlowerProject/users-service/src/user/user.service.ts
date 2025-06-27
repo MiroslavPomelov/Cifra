@@ -60,7 +60,7 @@ export class UserService {
     // }
     // Проверка на недопустимые поля
     const allowedFields = [
-      'password_hash', 'firstName', 'lastName', 'birthDate', 'city', 'phone', 'personalData'
+      'password', 'firstName', 'lastName', 'birthDate', 'city', 'phone', 'personalData'
     ];
     const receivedFields = Object.keys(updateUserDto);
     const extraFields = receivedFields.filter(field => !allowedFields.includes(field));
@@ -68,10 +68,10 @@ export class UserService {
       throw new BadRequestException(`Недопустимые поля: ${extraFields.join(', ')}`);
     }
     const user = await this.findOne(id);
-    const { password_hash, firstName, lastName, city, birthDate, ...rest } = updateUserDto;
+    const { password, firstName, lastName, city, birthDate, ...rest } = updateUserDto;
 
-    if (password_hash) {
-      user.password_hash = await bcrypt.hash(password_hash, 10);
+    if (password) {
+      user.password_hash = await bcrypt.hash(password, 10);
     }
 
     // Обновляем только разрешенные поля
@@ -84,7 +84,7 @@ export class UserService {
 
     // Логируем попытку изменить запрещенные поля
     if (Object.keys(rest).length > 0) {
-      console.warn(`Attempt to update restricted fields for user ${id}:`, Object.keys(rest));
+      this.logger.warn(`Attempt to update restricted fields for user ${id}:`, Object.keys(rest));
     }
 
     return this.userRepository.save(user);
@@ -141,12 +141,12 @@ export class UserService {
     });
     if (!user) {
       this.logger.warn(`Неудачная попытка входа: пользователь с email ${email} не найден или не активен`);
-      throw new NotFoundException(`Неверный лоигн или пароль!`);
+      throw new NotFoundException(`Неверный логин или пароль!`);
     }
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
     if (!isPasswordValid) {
       this.logger.warn(`Неудачная попытка входа: неверный пароль для email ${email}`);
-      throw new NotFoundException(`Неверный лоигн или пароль!`);
+      throw new NotFoundException(`Неверный логин или пароль!`);
     }
     this.logger.log(`Пользователь успешно вошёл: ${email}`);
     return user;
