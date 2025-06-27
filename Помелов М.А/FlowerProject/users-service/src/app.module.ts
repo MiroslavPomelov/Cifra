@@ -14,14 +14,7 @@ import { AppController } from './app.controller';
       envFilePath: './deploy/environments/dev.env',
     }), // Для получения переменных среды
     TypeOrmModule.forRoot({
-      type: 'postgres',
-      // host: 'usersdb',
-      // port: 5432,
-      // username: 'users_user',
-      // password: 'users_password',
-      // database: 'usersdb',
-      // entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      // synchronize: true, 
+      type: 'postgres', 
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT),
       username: process.env.DB_USERNAME,
@@ -29,9 +22,9 @@ import { AppController } from './app.controller';
       database: process.env.DB_NAME,
       autoLoadEntities: true,
       synchronize: true,
-      logging: true, // Включаем логирование SQL запросов
-      retryAttempts: 10, // Увеличиваем количество попыток подключения
-      retryDelay: 3000, // Задержка между попытками в миллисекундах
+      logging: true, 
+      retryAttempts: 10, 
+      retryDelay: 3000, 
     }),
     UserModule,
   ],
