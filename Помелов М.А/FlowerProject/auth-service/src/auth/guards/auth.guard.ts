@@ -8,15 +8,9 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
-
-interface JwtPayload {
-  sub: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  iat: number;
-  exp: number;
-}
+import { AxiosResponse } from 'axios';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -24,8 +18,9 @@ export class AuthGuard implements CanActivate {
 
   constructor(
     private jwtService: JwtService,
-    private configService: ConfigService
-  ) {}
+    private configService: ConfigService,
+    private readonly httpService: HttpService,
+  ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -40,36 +35,26 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync<JwtPayload>(
-        token,
-        {
-          secret: secretKey
-        }
+      const response: AxiosResponse = await firstValueFrom(
+        this.httpService.post(
+          `http://auth-service:3000/users/validatetoken`,
+          token,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        ),
       );
-      
-      // Проверяем, что payload содержит необходимые поля
-      if (!payload.sub || !payload.email) {
-        this.logger.warn('Токен содержит неполные данные');
-        throw new UnauthorizedException('Invalid token structure');
+
+      const payload = await response.data;
+      if (payload) {
+        request['user'] = payload;
       }
-      
-      // Добавляем пользователя в request для использования в контроллерах
-      request['user'] = payload;
-      
-      this.logger.debug(`Успешная аутентификация для пользователя: ${payload.email} (ID: ${payload.sub})`);
     } catch (error) {
-      if (error.name === 'TokenExpiredError') {
-        this.logger.warn('Попытка использования истекшего токена');
-        throw new UnauthorizedException('Token has expired');
-      } else if (error.name === 'JsonWebTokenError') {
-        this.logger.warn('Попытка использования невалидного токена');
-        throw new UnauthorizedException('Invalid token');
-      } else {
-        this.logger.warn(`Неудачная попытка аутентификации: ${error.message}`);
-        throw new UnauthorizedException('Invalid or expired token');
-      }
+      throw new UnauthorizedException(error.message);
     }
-    
+
     return true;
   }
 
