@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Headers } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './guards/auth.guard';
 import { User, UserRequest } from './decorators/user.decorator';
@@ -7,20 +7,21 @@ import { SignupDto } from './dto/signup.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  signin(@Body() signin: SigninDto) {
+  async signin(@Body() signin: SigninDto) {
     return this.authService.login(signin);
   }
 
   @Post('registration')
-  signup(@Body() signup: SignupDto) {
+  async signup(@Body() signup: SignupDto) {
     return this.authService.registration(signup);
   }
 
   @Post('validatetoken')
-  validatetoken(@Body() token: string) {
+  async validatetoken(@Headers('authorization') auth: string) {
+    const token = auth?.replace('Bearer ', '');
     return this.authService.validateToken(token);
   }
 

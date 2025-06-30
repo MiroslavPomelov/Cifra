@@ -8,21 +8,14 @@ import { UpdateFavouriteProductDto } from './dto/update-favourite-product.dto';
 @Injectable()
 export class FavouriteProductService {
     private readonly logger = new Logger(FavouriteProductService.name);
+    
     constructor(
         @InjectRepository(FavouriteProduct)
-        private favouriteProductRepository: Repository<FavouriteProduct>,
+        private readonly favouriteProductRepository: Repository<FavouriteProduct>,
     ) {}
 
     async create(userId: number, createFavouriteProductDto: CreateFavouriteProductDto): Promise<FavouriteProduct> {
-        // Проверяем, не добавлен ли уже этот товар в избранное
-        const existing = await this.favouriteProductRepository.findOne({
-            where: { userId, productId: createFavouriteProductDto.productId }
-        });
-
-        if (existing) {
-            this.logger.warn(`Попытка добавить уже существующий товар (productId: ${createFavouriteProductDto.productId}) в избранное для пользователя ${userId}`);
-            throw new ConflictException('Product already in favourites');
-        }
+        await this.checkProductNotExists(userId, createFavouriteProductDto.productId);
 
         const favouriteProduct = this.favouriteProductRepository.create({
             ...createFavouriteProductDto,
@@ -55,6 +48,7 @@ export class FavouriteProductService {
     async update(id: number, userId: number, updateFavouriteProductDto: UpdateFavouriteProductDto): Promise<FavouriteProduct> {
         const favouriteProduct = await this.findOne(id, userId);
         Object.assign(favouriteProduct, updateFavouriteProductDto);
+        
         this.logger.log(`Обновлён избранный товар (id: ${id}) для пользователя ${userId}`);
         return this.favouriteProductRepository.save(favouriteProduct);
     }
@@ -66,10 +60,7 @@ export class FavouriteProductService {
     }
 
     async removeByProductId(userId: number, productId: number): Promise<void> {
-        const favouriteProduct = await this.favouriteProductRepository.findOne({
-            where: { userId, productId }
-        });
-
+        const favouriteProduct = await this.findByProductId(userId, productId);
         if (!favouriteProduct) {
             this.logger.warn(`Попытка удалить несуществующий избранный товар (productId: ${productId}) для пользователя ${userId}`);
             throw new NotFoundException('Favourite product not found');
@@ -79,11 +70,30 @@ export class FavouriteProductService {
         this.logger.log(`Удалён избранный товар (productId: ${productId}) для пользователя ${userId}`);
     }
 
-    async checkIfFavourite(userId: number, productId: number): Promise<boolean> {
-        const favouriteProduct = await this.favouriteProductRepository.findOne({
+    async checkIfFavourite(userId: number, productId: number): Promise<{ isFavourite: boolean; favouriteProduct?: FavouriteProduct }> {
+        const favouriteProduct = await this.findByProductId(userId, productId);
+        
+        return {
+            isFavourite: !!favouriteProduct,
+            favouriteProduct
+        };
+    }
+
+    // Приватные методы для улучшения читаемости
+    private async checkProductNotExists(userId: number, productId: number): Promise<void> {
+        const existing = await this.favouriteProductRepository.findOne({
             where: { userId, productId }
         });
 
-        return !!favouriteProduct;
+        if (existing) {
+            this.logger.warn(`Попытка добавить уже существующий товар (productId: ${productId}) в избранное для пользователя ${userId}`);
+            throw new ConflictException('Product already in favourites');
+        }
+    }
+
+    private async findByProductId(userId: number, productId: number): Promise<FavouriteProduct | null> {
+        return this.favouriteProductRepository.findOne({
+            where: { userId, productId }
+        });
     }
 } 

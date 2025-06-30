@@ -1,24 +1,16 @@
-# Postman Testing Guide для Auth-Service
+# Руководство по тестированию API через Postman
 
 ## Настройка Postman
 
-### 1. Создание Environment
+### 1. Создание коллекции
 1. Откройте Postman
-2. Нажмите на шестеренку (⚙️) в правом верхнем углу
-3. Создайте новое Environment с именем "FlowerProject Auth"
-4. Добавьте переменные:
-   - `base_url`: `http://localhost:3000`
-   - `token`: (оставьте пустым, будет заполнено автоматически)
+2. Создайте новую коллекцию "FlowerProject API"
+3. Добавьте переменную окружения `base_url` со значением `http://localhost:80`
 
-### 2. Создание Collection
-1. Создайте новую Collection "Auth Service Tests"
-2. Добавьте все запросы в эту коллекцию
+## Аутентификация
 
-## Тестирование эндпоинтов
-
-### 1. Регистрация пользователя (POST /auth/registration)
-
-**URL:** `{{base_url}}/auth/registration`
+### 1. Регистрация пользователя
+**POST** `{{base_url}}/auth/registration`
 
 **Headers:**
 ```
@@ -39,27 +31,29 @@ Content-Type: application/json
 }
 ```
 
-**Ожидаемый ответ (200):**
+**Ожидаемый ответ:**
 ```json
 {
   "message": "Registration successful!",
-  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "email": "test@example.com",
+    "firstName": "Иван",
+    "lastName": "Иванов",
+    "birthDate": "1990-01-01T00:00:00.000Z",
+    "phone": "+79001234567",
+    "city": "Москва",
+    "personalData": true,
+    "isActive": true,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
 }
 ```
 
-**Тест для автоматического сохранения токена:**
-```javascript
-if (pm.response.code === 200) {
-    const response = pm.response.json();
-    if (response.accessToken) {
-        pm.environment.set("token", response.accessToken);
-    }
-}
-```
-
-### 2. Вход пользователя (POST /auth/login)
-
-**URL:** `{{base_url}}/auth/login`
+### 2. Вход в систему
+**POST** `{{base_url}}/auth/login`
 
 **Headers:**
 ```
@@ -74,34 +68,95 @@ Content-Type: application/json
 }
 ```
 
-**Ожидаемый ответ (200):**
+**Ожидаемый ответ:**
 ```json
 {
   "message": "Authorization successful!",
-  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "email": "test@example.com",
+    "firstName": "Иван",
+    "lastName": "Иванов",
+    "birthDate": "1990-01-01T00:00:00.000Z",
+    "phone": "+79001234567",
+    "city": "Москва",
+    "personalData": true,
+    "isActive": true,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
 }
 ```
 
-**Тест для автоматического сохранения токена:**
+### 3. Сохранение токена
+После успешной регистрации или входа:
+1. Скопируйте значение `accessToken` из ответа
+2. В коллекции создайте переменную `auth_token`
+3. Установите значение `auth_token` равным скопированному токену
+
+**Автоматическое сохранение токена в Postman:**
+Добавьте следующий тест в раздел "Tests" для запросов регистрации и входа:
+
 ```javascript
+// Автоматическое сохранение токена
 if (pm.response.code === 200) {
     const response = pm.response.json();
     if (response.accessToken) {
-        pm.environment.set("token", response.accessToken);
+        pm.collectionVariables.set("auth_token", response.accessToken);
+        console.log("Токен сохранен:", response.accessToken);
     }
 }
 ```
 
-### 3. Получение профиля (GET /auth/profile)
+## Тестирование маршрутов Auth Service
 
-**URL:** `{{base_url}}/auth/profile`
+### 4. Валидация токена
+**POST** `{{base_url}}/auth/validatetoken`
 
 **Headers:**
 ```
-Authorization: Bearer {{token}}
+Authorization: Bearer {{auth_token}}
 ```
 
-**Ожидаемый ответ (200):**
+**Ожидаемый ответ (валидный токен):**
+```json
+{
+  "valid": true,
+  "user": {
+    "sub": 1,
+    "email": "test@example.com",
+    "firstName": "Иван",
+    "lastName": "Иванов"
+  }
+}
+```
+
+**Ожидаемый ответ (невалидный токен):**
+```json
+{
+  "valid": false,
+  "error": "Invalid token"
+}
+```
+
+**Ожидаемый ответ (отсутствует токен):**
+```json
+{
+  "valid": false,
+  "error": "Access token is required"
+}
+```
+
+### 5. Получение профиля (защищенный маршрут)
+**GET** `{{base_url}}/auth/profile`
+
+**Headers:**
+```
+Authorization: Bearer {{auth_token}}
+```
+
+**Ожидаемый ответ:**
 ```json
 {
   "message": "Profile accessed successfully",
@@ -114,228 +169,438 @@ Authorization: Bearer {{token}}
 }
 ```
 
-## Тестирование ошибок
+## Тестирование маршрутов Users Service
 
-### 1. Регистрация с существующим email
+### 6. Получение всех пользователей
+**GET** `{{base_url}}/users`
 
-**Body:**
+**Headers:**
+```
+Authorization: Bearer {{auth_token}}
+```
+
+**Ожидаемый ответ:**
+```json
+[
+  {
+    "id": 1,
+    "email": "test@example.com",
+    "firstName": "Иван",
+    "lastName": "Иванов",
+    "isActive": true,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+]
+```
+
+### 7. Получение пользователя по ID
+**GET** `{{base_url}}/users/1`
+
+**Headers:**
+```
+Authorization: Bearer {{auth_token}}
+```
+
+**Ожидаемый ответ:**
 ```json
 {
+  "id": 1,
   "email": "test@example.com",
-  "password": "password123",
   "firstName": "Иван",
   "lastName": "Иванов",
-  "birthDate": "1990-01-01",
-  "phone": "+79001234567",
-  "city": "Москва",
-  "personalData": true
+  "isActive": true,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
 }
 ```
 
-**Ожидаемый ответ (400):**
+### 8. Обновление пользователя
+**PATCH** `{{base_url}}/users/1`
+
+**Headers:**
+```
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+```
+
+**Body (raw JSON):**
 ```json
 {
-  "statusCode": 400,
-  "message": "User with this email already exists",
-  "error": "Bad Request"
+  "firstName": "Петр",
+  "lastName": "Петров"
 }
 ```
 
-### 2. Вход с неверными данными
-
-**Body:**
+**Ожидаемый ответ:**
 ```json
 {
-  "email": "wrong@example.com",
-  "password": "wrongpassword"
+  "id": 1,
+  "email": "test@example.com",
+  "firstName": "Петр",
+  "lastName": "Петров",
+  "isActive": true,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
 }
 ```
 
-**Ожидаемый ответ (401):**
+### 9. Активация пользователя
+**PATCH** `{{base_url}}/users/1/activate`
+
+**Headers:**
+```
+Authorization: Bearer {{auth_token}}
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "id": 1,
+  "email": "test@example.com",
+  "firstName": "Петр",
+  "lastName": "Петров",
+  "isActive": true,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+### 10. Деактивация пользователя
+**PATCH** `{{base_url}}/users/1/deactivate`
+
+**Headers:**
+```
+Authorization: Bearer {{auth_token}}
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "id": 1,
+  "email": "test@example.com",
+  "firstName": "Петр",
+  "lastName": "Петров",
+  "isActive": false,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+### 11. Получение пользователя с избранными товарами
+**GET** `{{base_url}}/users/1/with-favourites`
+
+**Headers:**
+```
+Authorization: Bearer {{auth_token}}
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "id": 1,
+  "email": "test@example.com",
+  "firstName": "Петр",
+  "lastName": "Петров",
+  "isActive": false,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "favouriteProducts": []
+}
+```
+
+## Тестирование маршрутов избранных товаров
+
+### 12. Добавление товара в избранное
+**POST** `{{base_url}}/users/1/favourites`
+
+**Headers:**
+```
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+```
+
+**Body (raw JSON):**
+```json
+{
+  "productId": 123,
+  "productName": "Роза красная",
+  "productPrice": 299.99,
+  "productImage": "https://example.com/rose.jpg"
+}
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "id": 1,
+  "userId": 1,
+  "productId": 123,
+  "productName": "Роза красная",
+  "productPrice": 299.99,
+  "productImage": "https://example.com/rose.jpg",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+### 13. Получение всех избранных товаров пользователя
+**GET** `{{base_url}}/users/1/favourites`
+
+**Headers:**
+```
+Authorization: Bearer {{auth_token}}
+```
+
+**Ожидаемый ответ:**
+```json
+[
+  {
+    "id": 1,
+    "userId": 1,
+    "productId": 123,
+    "productName": "Роза красная",
+    "productPrice": 299.99,
+    "productImage": "https://example.com/rose.jpg",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+]
+```
+
+### 14. Получение избранного товара по ID
+**GET** `{{base_url}}/users/1/favourites/1`
+
+**Headers:**
+```
+Authorization: Bearer {{auth_token}}
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "id": 1,
+  "userId": 1,
+  "productId": 123,
+  "productName": "Роза красная",
+  "productPrice": 299.99,
+  "productImage": "https://example.com/rose.jpg",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+### 15. Проверка, добавлен ли товар в избранное
+**GET** `{{base_url}}/users/1/favourites/check/123`
+
+**Headers:**
+```
+Authorization: Bearer {{auth_token}}
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "isFavourite": true,
+  "favouriteProduct": {
+    "id": 1,
+    "userId": 1,
+    "productId": 123,
+    "productName": "Роза красная",
+    "productPrice": 299.99,
+    "productImage": "https://example.com/rose.jpg"
+  }
+}
+```
+
+### 16. Обновление избранного товара
+**PATCH** `{{base_url}}/users/1/favourites/1`
+
+**Headers:**
+```
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+```
+
+**Body (raw JSON):**
+```json
+{
+  "productName": "Роза красная премиум",
+  "productPrice": 399.99
+}
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "id": 1,
+  "userId": 1,
+  "productId": 123,
+  "productName": "Роза красная премиум",
+  "productPrice": 399.99,
+  "productImage": "https://example.com/rose.jpg",
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+### 17. Удаление избранного товара по ID
+**DELETE** `{{base_url}}/users/1/favourites/1`
+
+**Headers:**
+```
+Authorization: Bearer {{auth_token}}
+```
+
+**Ожидаемый ответ:** 204 No Content
+
+### 18. Удаление избранного товара по productId
+**DELETE** `{{base_url}}/users/1/favourites/product/123`
+
+**Headers:**
+```
+Authorization: Bearer {{auth_token}}
+```
+
+**Ожидаемый ответ:** 204 No Content
+
+## Тестирование ошибок
+
+### 19. Попытка доступа без токена
+**GET** `{{base_url}}/users`
+
+**Headers:** (без Authorization)
+
+**Ожидаемый ответ:**
 ```json
 {
   "statusCode": 401,
-  "message": "Invalid credentials",
-  "error": "Unauthorized"
+  "message": "Unauthorized"
 }
 ```
 
-### 3. Доступ к профилю без токена
-
-**Headers:** (пустые)
-
-**Ожидаемый ответ (401):**
-```json
-{
-  "statusCode": 401,
-  "message": "Access token is required",
-  "error": "Unauthorized"
-}
-```
-
-### 4. Доступ к профилю с неверным токеном
+### 20. Попытка доступа с неверным токеном
+**GET** `{{base_url}}/users`
 
 **Headers:**
 ```
 Authorization: Bearer invalid_token_here
 ```
 
-**Ожидаемый ответ (401):**
+**Ожидаемый ответ:**
 ```json
 {
   "statusCode": 401,
-  "message": "Invalid token",
-  "error": "Unauthorized"
+  "message": "Invalid token"
 }
 ```
 
-## Тестирование валидации
+### 21. Попытка доступа к несуществующему пользователю
+**GET** `{{base_url}}/users/999`
 
-### 1. Неверный формат email
+**Headers:**
+```
+Authorization: Bearer {{auth_token}}
+```
 
-**Body:**
+**Ожидаемый ответ:**
 ```json
 {
-  "email": "invalid-email",
-  "password": "password123",
-  "firstName": "Иван",
-  "lastName": "Иванов",
-  "birthDate": "1990-01-01",
-  "phone": "+79001234567",
-  "city": "Москва",
-  "personalData": true
+  "statusCode": 404,
+  "message": "User not found"
 }
 ```
 
-### 2. Короткий пароль
+## Автоматизация тестирования
 
-**Body:**
-```json
-{
-  "email": "test@example.com",
-  "password": "123",
-  "firstName": "Иван",
-  "lastName": "Иванов",
-  "birthDate": "1990-01-01",
-  "phone": "+79001234567",
-  "city": "Москва",
-  "personalData": true
-}
-```
+### Создание тестов в Postman
 
-### 3. Неверный формат телефона
-
-**Body:**
-```json
-{
-  "email": "test@example.com",
-  "password": "password123",
-  "firstName": "Иван",
-  "lastName": "Иванов",
-  "birthDate": "1990-01-01",
-  "phone": "1234567890",
-  "city": "Москва",
-  "personalData": true
-}
-```
-
-### 4. Отсутствие согласия с обработкой данных
-
-**Body:**
-```json
-{
-  "email": "test@example.com",
-  "password": "password123",
-  "firstName": "Иван",
-  "lastName": "Иванов",
-  "birthDate": "1990-01-01",
-  "phone": "+79001234567",
-  "city": "Москва",
-  "personalData": false
-}
-```
-
-## Автоматизированные тесты
-
-### Создание тестового скрипта
-
-Добавьте следующий скрипт в Pre-request Script для автоматической очистки токена:
+Для каждого запроса можно добавить автоматические тесты:
 
 ```javascript
-// Очищаем токен перед каждым запросом (кроме login и registration)
-if (pm.request.url.path[1] !== 'login' && pm.request.url.path[1] !== 'registration') {
-    pm.environment.set("token", "");
-}
-```
+// Проверка статуса ответа
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
 
-### Тесты для проверки структуры ответа
-
-**Для login/registration:**
-```javascript
+// Проверка структуры ответа
 pm.test("Response has correct structure", function () {
-    const response = pm.response.json();
-    pm.expect(response).to.have.property('message');
-    pm.expect(response).to.have.property('accessToken');
-    pm.expect(response.accessToken).to.be.a('string');
-    pm.expect(response.accessToken.length).to.be.greaterThan(0);
+    const jsonData = pm.response.json();
+    pm.expect(jsonData).to.have.property('id');
+    pm.expect(jsonData).to.have.property('email');
 });
-```
 
-**Для profile:**
-```javascript
-pm.test("Profile response has correct structure", function () {
-    const response = pm.response.json();
-    pm.expect(response).to.have.property('message');
-    pm.expect(response).to.have.property('user');
-    pm.expect(response.user).to.have.property('id');
-    pm.expect(response.user).to.have.property('email');
-    pm.expect(response.user).to.have.property('firstName');
-    pm.expect(response.user).to.have.property('lastName');
-});
-```
-
-## Последовательность тестирования
-
-1. **Регистрация нового пользователя**
-2. **Вход с созданными данными**
-3. **Получение профиля с токеном**
-4. **Тестирование ошибок валидации**
-5. **Тестирование ошибок аутентификации**
-
-## Проверка работоспособности сервиса
-
-### Health Check
-**URL:** `{{base_url}}/health`
-
-**Ожидаемый ответ (200):**
-```json
-{
-  "status": "ok",
-  "timestamp": "2024-01-01T12:00:00.000Z"
+// Автоматическое сохранение токена
+if (pm.response.json().accessToken) {
+    pm.collectionVariables.set("auth_token", pm.response.json().accessToken);
 }
 ```
 
-## Советы по тестированию
+### Запуск коллекции
 
-1. **Используйте разные email адреса** для каждого теста регистрации
-2. **Проверяйте все поля валидации** отдельно
-3. **Тестируйте граничные значения** (минимальная/максимальная длина)
-4. **Проверяйте обработку специальных символов** в полях
-5. **Тестируйте истечение токена** (подождите 1 час или измените время в коде)
+1. В Postman выберите коллекцию "FlowerProject API"
+2. Нажмите "Run collection"
+3. Выберите порядок выполнения запросов
+4. Запустите тесты
 
-## Устранение неполадок
+## Примечания
 
-### Сервис не отвечает
-1. Проверьте, что Docker контейнеры запущены
-2. Проверьте логи: `docker-compose logs auth-service`
-3. Убедитесь, что порт 3000 не занят
+- Все запросы к `/users/*` требуют валидный JWT токен
+- Запросы к `/auth/*` (кроме login и registration) также требуют токен
+- Токен автоматически передается через API Gateway к соответствующим сервисам
+- При ошибках проверяйте логи контейнеров: `docker-compose logs api-gateway auth-service users-service`
 
-### Ошибки валидации
-1. Проверьте формат даты (YYYY-MM-DD)
-2. Убедитесь, что телефон в формате +7XXXXXXXXXX
-3. Проверьте, что personalData = true
+## Типизация API
 
-### Ошибки аутентификации
-1. Убедитесь, что users-service запущен
-2. Проверьте переменные окружения
-3. Проверьте логи auth-service и users-service 
+### Почему мы исправили `Promise<any>`
+
+Изначально метод `validateToken` возвращал `Promise<any>`, что является плохой практикой в TypeScript по следующим причинам:
+
+1. **Отсутствие типизации** - `any` отключает проверку типов, что может привести к ошибкам во время выполнения
+2. **Сложность поддержки** - разработчики не знают, какую структуру данных ожидать
+3. **Проблемы с IDE** - отсутствует автодополнение и подсказки
+
+### Что мы исправили
+
+1. **Создали интерфейсы:**
+   ```typescript
+   interface JwtPayload {
+     sub: number;
+     email: string;
+     firstName: string;
+     lastName: string;
+     iat: number;
+     exp: number;
+   }
+
+   interface TokenValidationResult {
+     valid: boolean;
+     user?: {
+       sub: number;
+       email: string;
+       firstName: string;
+       lastName: string;
+     };
+     error?: string;
+   }
+   ```
+
+2. **Изменили возвращаемый тип:**
+   ```typescript
+   // Было:
+   async validateToken(token: string): Promise<any>
+
+   // Стало:
+   async validateToken(token: string): Promise<TokenValidationResult>
+   ```
+
+3. **Улучшили обработку ошибок** - теперь метод возвращает структурированный ответ вместо выброса исключений
+
+4. **Обновили API Gateway** для работы с новым форматом ответа
+
+### Преимущества новой типизации
+
+- **Типобезопасность** - TypeScript проверяет правильность использования данных
+- **Лучшая документация** - интерфейсы служат документацией API
+- **Упрощение тестирования** - четко определенная структура ответов
+- **Улучшение разработки** - IDE предоставляет автодополнение и подсказки 

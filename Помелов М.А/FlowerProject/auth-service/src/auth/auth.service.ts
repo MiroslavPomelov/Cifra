@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, BadRequestException, Logger, ExecutionContext } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException, Logger } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { AxiosResponse } from 'axios';
 import { HttpService } from '@nestjs/axios';
@@ -6,8 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { SigninDto } from './dto/signin.dto';
 import { SignupDto } from './dto/signup.dto';
-import { Request } from 'express';
-
+import { JwtPayload, TokenValidationResult, AuthResponse } from '../interfaces';
 
 @Injectable()
 export class AuthService {
@@ -15,179 +14,143 @@ export class AuthService {
 
   constructor(
     private readonly httpService: HttpService,
-    private configService: ConfigService,
+    private readonly configService: ConfigService,
     private readonly jwtService: JwtService
-  ) { }
+  ) {}
 
-  async login(signin: SigninDto): Promise<{ message: string; accessToken?: string }> {
+  async login(signin: SigninDto): Promise<AuthResponse> {
     try {
       this.logger.log(`Попытка входа для пользователя: ${signin.email}`);
 
-      const validToken = this.configService.get('ENV_TOKEN');
-      const secretKey = this.configService.get('ENV_KEY');
-      const usersServiceUrl = this.configService.get('USERS_SERVICE_URL') || 'http://users-service:3000';
+      const user = await this.authenticateUser(signin);
+      const accessToken = this.generateToken(user);
 
-      const response: AxiosResponse = await firstValueFrom(
-        this.httpService.post(
-          `${usersServiceUrl}/users/signin`,
-          signin,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'envservicetoken': validToken,
-            },
-          },
-        ),
-      );
-
-      const user = response.data;
-      if (user) {
-        const payload = {
-          sub: user.id,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName
-        };
-        const accessToken = this.jwtService.sign(payload, { secret: secretKey, expiresIn: '1h' });
-
-        this.logger.log(`Успешный вход пользователя: ${user.email}`);
-        return {
-          message: 'Authorization successful!',
-          accessToken
-        };
-      } else {
-        throw new UnauthorizedException('Invalid credentials');
-      }
+      this.logger.log(`Успешный вход пользователя: ${user.email}`);
+      return {
+        message: 'Authorization successful!',
+        accessToken,
+        user
+      };
     } catch (error) {
       this.logger.error(`Ошибка входа для ${signin.email}: ${error.message}`);
-
-      if (error.response?.status === 404) {
-        throw new UnauthorizedException('Invalid credentials');
-      }
-      if (error.response?.status === 400) {
-        throw new BadRequestException('Invalid input data');
-      }
-      if (error.response?.status === 401) {
-        throw new UnauthorizedException('Invalid token');
-      }
-      throw new BadRequestException(`Login failed: ${error.message}`);
+      this.handleAuthError(error);
     }
   }
 
-  async registration(signup: SignupDto): Promise<{ message: string; accessToken?: string }> {
+  async registration(signup: SignupDto): Promise<AuthResponse> {
     try {
       this.logger.log(`Попытка регистрации пользователя: ${signup.email}`);
 
-      const validToken = this.configService.get('ENV_TOKEN');
-      const secretKey = this.configService.get('ENV_KEY');
-      const usersServiceUrl = this.configService.get('USERS_SERVICE_URL') || 'http://users-service:3000';
+      const user = await this.createUser(signup);
+      const accessToken = this.generateToken(user);
 
-      // Преобразуем SignupDto в формат, ожидаемый CreateUserDto
-      const userData = {
-        email: signup.email,
-        password: signup.password,
-        firstName: signup.firstName,
-        lastName: signup.lastName,
-        birthDate: signup.birthDate,
-        phone: signup.phone,
-        city: signup.city,
-        personalData: signup.personalData
+      this.logger.log(`Успешная регистрация пользователя: ${user.email}`);
+      return {
+        message: 'Registration successful!',
+        accessToken,
+        user
       };
-
-      const response: AxiosResponse = await firstValueFrom(
-        this.httpService.post(
-          `${usersServiceUrl}/users`,
-          userData,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'envservicetoken': validToken,
-            },
-          },
-        ),
-      );
-
-      const user = response.data;
-      if (user) {
-        const payload = {
-          sub: user.id,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName
-        };
-        const accessToken = this.jwtService.sign(payload, { secret: secretKey, expiresIn: '1h' });
-
-        this.logger.log(`Успешная регистрация пользователя: ${user.email}`);
-        return {
-          message: 'Registration successful!',
-          accessToken
-        };
-      } else {
-        throw new BadRequestException('Registration failed');
-      }
     } catch (error) {
       this.logger.error(`Ошибка регистрации для ${signup.email}: ${error.message}`);
-
-      if (error.response?.status === 409) {
-        throw new BadRequestException('User with this email already exists');
-      }
-      if (error.response?.status === 400) {
-        throw new BadRequestException('Invalid input data');
-      }
-      if (error.response?.status === 401) {
-        throw new UnauthorizedException('Invalid token');
-      }
-      throw new BadRequestException(`Registration failed: ${error.message}`);
+      this.handleAuthError(error);
     }
   }
 
-  // async validateToken(context: ExecutionContext): Promise<boolean> {
-  //   const request = context.switchToHttp().getRequest();
-  //   const token = this.extractTokenFromHeader(request);
-  //   const secretKey = this.configService.get('ENV_KEY');
-
-  //    if (!token) {
-  //     throw new UnauthorizedException('Access token is required');
-  //   }
-
-  //   try {
-  //     const payload = await this.jwtService.verifyAsync<JwtPayload>(
-  //       token,
-  //       {
-  //         secret: secretKey
-  //       }
-  //     );
-
-  //     request['user'] = payload;
-  //     this.logger.debug(`Успешная аутентификация для пользователя: ${payload.email} (ID: ${payload.sub})`);
-  //   } catch (error) {
-  //     throw new UnauthorizedException();
-  //   }
-  //   return true;
-  // }
-
-  // private extractTokenFromHeader(request: Request): string | undefined {
-  //   const [type, token] = request.headers.authorization?.split(' ') ?? [];
-  //   return type === 'Bearer' ? token : undefined;
-  // }
-
-  async validateToken(token: string): Promise<string> | undefined {
-    const secretKey = this.configService.get('ENV_KEY');
-
+  async validateToken(token: string): Promise<TokenValidationResult> {
     if (!token) {
-      throw new UnauthorizedException('Access token is required');
+      this.logger.warn('Попытка валидации без токена');
+      return {
+        valid: false,
+        error: 'Access token is required'
+      };
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync(
+      this.logger.debug(`Валидация токена: ${token.substring(0, 20)}...`);
+      
+      const payload = await this.jwtService.verifyAsync<JwtPayload>(
         token,
-        {
-          secret: secretKey
-        }
+        { secret: this.configService.get('ENV_KEY') }
       );
-      return payload;
+      
+      this.logger.debug(`Токен валиден для пользователя: ${payload.email}`);
+      return {
+        valid: true,
+        user: {
+          sub: payload.sub,
+          email: payload.email,
+          firstName: payload.firstName,
+          lastName: payload.lastName
+        }
+      };
     } catch (error) {
-      throw new UnauthorizedException();
+      this.logger.error(`Ошибка валидации токена: ${error.message}`);
+      return {
+        valid: false,
+        error: 'Invalid token'
+      };
     }
+  }
+
+  private async authenticateUser(signin: SigninDto) {
+    const response: AxiosResponse = await firstValueFrom(
+      this.httpService.post(
+        `${this.getUsersServiceUrl()}/users/signin`,
+        signin,
+        { headers: this.getServiceHeaders() }
+      )
+    );
+    return response.data;
+  }
+
+  private async createUser(signup: SignupDto) {
+    const response: AxiosResponse = await firstValueFrom(
+      this.httpService.post(
+        `${this.getUsersServiceUrl()}/users`,
+        signup,
+        { headers: this.getServiceHeaders() }
+      )
+    );
+    return response.data;
+  }
+
+  private generateToken(user: any): string {
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName
+    };
+    return this.jwtService.sign(payload, { 
+      secret: this.configService.get('ENV_KEY'), 
+      expiresIn: '1h' 
+    });
+  }
+
+  private getUsersServiceUrl(): string {
+    return this.configService.get('USERS_SERVICE_URL') || 'http://users-service:3000';
+  }
+
+  private getServiceHeaders() {
+    return {
+      'Content-Type': 'application/json',
+      'envservicetoken': this.configService.get('ENV_TOKEN'),
+    };
+  }
+
+  private handleAuthError(error: any): never {
+    if (error.response?.status === 404) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    if (error.response?.status === 409) {
+      throw new BadRequestException('User with this email already exists');
+    }
+    if (error.response?.status === 400) {
+      throw new BadRequestException('Invalid input data');
+    }
+    if (error.response?.status === 401) {
+      throw new UnauthorizedException('Invalid token');
+    }
+    throw new BadRequestException(`Authentication failed: ${error.message}`);
   }
 }

@@ -8,32 +8,24 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  private readonly SAULT_ENV = 10;
+  private readonly SALT_ROUNDS = 10;
   private readonly logger = new Logger(UserService.name);
 
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const existingUser: User = await this.userRepository.findOne({
-      where: { email: createUserDto.email },
-    });
-
-    if (existingUser) {
-      this.logger.warn(`Trying create user with existing email: ${createUserDto.email}`);
-      throw new ConflictException('User with this email already exists!');
-    }
-
-    const hashedPassword = await bcrypt.hash(createUserDto.password, this.SAULT_ENV);
+    await this.checkEmailExists(createUserDto.email);
+    
+    const hashedPassword = await bcrypt.hash(createUserDto.password, this.SALT_ROUNDS);
     const user = this.userRepository.create({
       ...createUserDto,
       password_hash: hashedPassword,
     });
 
     this.logger.log(`Создан новый пользователь: ${user.email}`);
-    
     return this.userRepository.save(user);
   }
 
@@ -45,74 +37,31 @@ export class UserService {
   }
 
   async findOne(id: number): Promise<User> {
-    const user = await this.userRepository.findOne({
-      where: { id, isActive: true }
-    });
-
+    const user = await this.findUserById(id);
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-
     return user;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-
-    const allowedFields = [
-      'password', 'firstName', 'lastName', 'birthDate', 'city', 'phone', 'personalData'
-    ];
-    const receivedFields = Object.keys(updateUserDto);
-    const extraFields = receivedFields.filter(field => !allowedFields.includes(field));
-
-    if (extraFields.length > 0) {
-      throw new BadRequestException(`Недопустимые поля: ${extraFields.join(', ')}`);
-    }
-
+    this.validateUpdateFields(updateUserDto);
+    
     const user = await this.findOne(id);
-    const { password, firstName, lastName, city, birthDate, ...rest } = updateUserDto;
+    const { password, ...updateData } = updateUserDto;
 
     if (password) {
-      user.password_hash = await bcrypt.hash(password, 10);
+      user.password_hash = await bcrypt.hash(password, this.SALT_ROUNDS);
     }
 
-    // Обновляем только разрешенные поля
-    const allowedUpdates = { firstName, lastName, city, birthDate };
-    Object.entries(allowedUpdates).forEach(([key, value]) => {
-      if (value !== undefined) {
-        user[key] = key === 'birthDate' ? new Date(value) : value;
-      }
-    });
-
-    // Логируем попытку изменить запрещенные поля
-    if (Object.keys(rest).length > 0) {
-      this.logger.warn(`Attempt to update restricted fields for user ${id}:`, Object.keys(rest));
-    }
+    // Обновляем разрешенные поля
+    Object.assign(user, this.sanitizeUpdateData(updateData));
 
     return this.userRepository.save(user);
   }
 
-  async deactivate(id: number): Promise<User> {
-
-    const user = await this.userRepository.findOne({ where: { id, isActive: true } });
-
-    if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found or already deactivated`);
-    }
-
-    user.isActive = false;
-
-    await this.userRepository.save(user);
-    this.logger.log(`Пользователь деактивирован: ${user.email}`);
-
-    return user;
-  }
-
   async activate(id: number): Promise<User> {
-
-    const user = await this.userRepository.findOne({
-      where: { id, isActive: false }
-    });
-
+    const user = await this.findInactiveUserById(id);
     if (!user) {
       throw new NotFoundException(`Deactivated user with ID ${id} not found`);
     }
@@ -121,8 +70,20 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async deactivate(id: number): Promise<User> {
+    const user = await this.findUserById(id);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found or already deactivated`);
+    }
 
+    user.isActive = false;
+    await this.userRepository.save(user);
+    
+    this.logger.log(`Пользователь деактивирован: ${user.email}`);
+    return user;
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
     return this.userRepository.findOne({
       where: { email, isActive: true },
       select: ['id', 'email', 'password_hash', 'isActive']
@@ -130,7 +91,6 @@ export class UserService {
   }
 
   async findOneWithFavourites(id: number): Promise<User> {
-
     const user = await this.userRepository.findOne({
       where: { id, isActive: true },
       relations: ['favouriteProducts']
@@ -143,8 +103,7 @@ export class UserService {
     return user;
   }
 
-  async findByEmailAndPassword(email: string, password: string): Promise<User | null> {
-
+  async findByEmailAndPassword(email: string, password: string): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { email, isActive: true },
       select: ['id', 'email', 'password_hash', 'isActive', 'firstName', 'lastName', 'birthDate', 'phone', 'city', 'registrationDate', 'lastLogin', 'personalData']
@@ -156,7 +115,6 @@ export class UserService {
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
-
     if (!isPasswordValid) {
       this.logger.warn(`Неудачная попытка входа: неверный пароль для email ${email}`);
       throw new NotFoundException(`Неверный логин или пароль!`);
@@ -166,17 +124,63 @@ export class UserService {
     return user;
   }
 
-  async remove(id: number): Promise<User | null> {
-
+  async remove(id: number): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
-
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
     this.logger.log(`Удален пользователь: ${user.email}`);
     await this.userRepository.remove(user);
-
     return user;
+  }
+
+  // Приватные методы для улучшения читаемости
+  private async checkEmailExists(email: string): Promise<void> {
+    const existingUser = await this.userRepository.findOne({
+      where: { email }
+    });
+
+    if (existingUser) {
+      this.logger.warn(`Trying create user with existing email: ${email}`);
+      throw new ConflictException('User with this email already exists!');
+    }
+  }
+
+  private async findUserById(id: number): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: { id, isActive: true }
+    });
+  }
+
+  private async findInactiveUserById(id: number): Promise<User | null> {
+    return this.userRepository.findOne({
+      where: { id, isActive: false }
+    });
+  }
+
+  private validateUpdateFields(updateUserDto: UpdateUserDto): void {
+    const allowedFields = [
+      'password', 'firstName', 'lastName', 'birthDate', 'city', 'phone', 'personalData'
+    ];
+    
+    const receivedFields = Object.keys(updateUserDto);
+    const extraFields = receivedFields.filter(field => !allowedFields.includes(field));
+
+    if (extraFields.length > 0) {
+      throw new BadRequestException(`Недопустимые поля: ${extraFields.join(', ')}`);
+    }
+  }
+
+  private sanitizeUpdateData(updateData: any): any {
+    const { firstName, lastName, city, birthDate } = updateData;
+    const sanitized: any = {};
+
+    if (firstName !== undefined) sanitized.firstName = firstName;
+    if (lastName !== undefined) sanitized.lastName = lastName;
+    if (city !== undefined) sanitized.city = city;
+    if (birthDate !== undefined) sanitized.birthDate = new Date(birthDate);
+
+    return sanitized;
   }
 }

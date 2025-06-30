@@ -1,20 +1,19 @@
 // app.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { UserModule } from './user/user.module';
 import { ServiceAuthGuard } from './user/guards/user-auth.guard';
 import { AppController } from './app.controller';
-
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: './deploy/environments/dev.env',
-    }), // Для получения переменных среды
+    }),
     TypeOrmModule.forRoot({
-      type: 'postgres', 
+      type: 'postgres',
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT),
       username: process.env.DB_USERNAME,
@@ -22,9 +21,9 @@ import { AppController } from './app.controller';
       database: process.env.DB_NAME,
       autoLoadEntities: true,
       synchronize: true,
-      logging: true, 
-      retryAttempts: 10, 
-      retryDelay: 3000, 
+      logging: true,
+      retryAttempts: 10,
+      retryDelay: 3000,
     }),
     UserModule,
   ],
@@ -36,4 +35,4 @@ import { AppController } from './app.controller';
     }
   ]
 })
-export class AppModule { }
+export class AppModule {}
