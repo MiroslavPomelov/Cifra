@@ -1,9 +1,10 @@
-import { IsOptional, IsString, MinLength, IsNotEmpty, MaxLength, IsDate, IsNumber } from 'class-validator';
-import { Type, Transform, plainToClass } from 'class-transformer';
+import { IsOptional, IsString, MinLength, IsNotEmpty, MaxLength, IsDate, IsNumber, IsArray } from 'class-validator';
+import { Type, Transform } from 'class-transformer';
 import { CreateUserDto } from './create-user.dto';
 import { PartialType } from '@nestjs/mapped-types';
 import { Logger } from '@nestjs/common';
 import { UserBasket } from '../interfaces/user.basket';
+import { validateAndTransformDto } from '../utils/dto-validation.util';
 
 
 
@@ -48,35 +49,31 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @MaxLength(30)
   city?: string;
 
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   @MaxLength(12)
-  phone: string;
+  phone?: string;
 
-  basket: UserBasket[] | null;
+  @IsOptional()
+  @IsArray()
+  basket?: UserBasket[] | null;
 
-  shopId: number | null;
-
+  @IsOptional()
+  @Type(() => Number)
   @IsNumber()
-  bonus: number;
+  shopId?: number | null;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  bonus?: number;
 
   // Статический метод для валидации и трансформации
   static fromRequest(data: any): UpdateUserDto {
-
-    // Проверяем на дополнительные поля
-    const allowedFields = [
+    return validateAndTransformDto(UpdateUserDto, data, [
       'password', 'firstName', 'lastName',
-      'birthDate', 'city', 'bonus', 'phone'
-    ];
-
-    const receivedFields = Object.keys(data);
-    const extraFields = receivedFields.filter(field => !allowedFields.includes(field));
-
-    if (extraFields.length > 0) {
-      this.logger.warn(`Попытка обновить недопустимые поля: ${extraFields.join(', ')}`);
-      throw new Error(`Недопустимые поля: ${extraFields.join(', ')}`);
-    }
-
-    return plainToClass(UpdateUserDto, data);
+      'birthDate', 'city', 'bonus', 'phone', 'basket', 'shopId'
+    ], UpdateUserDto.logger);
   }
 }

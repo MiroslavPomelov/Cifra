@@ -3,7 +3,7 @@ version: '3.9'
 services:
   api-gateway:
     build:
-      context: ../../
+      context: ../../..
       dockerfile: api-gateway/deploy/composes/Dockerfile
     ports:
       - "80:3000"
@@ -16,8 +16,8 @@ services:
 
   users-service:
     build:
-      context: ../../
-      dockerfile: users-service/deploy/composes/Dockerfile
+      context: ../../../users-service
+      dockerfile: deploy/composes/Dockerfile
     ports:
       - "3001:3000"
     container_name: users-service
@@ -29,8 +29,8 @@ services:
 
   auth-service:
     build:
-      context: ../../
-      dockerfile: auth-service/deploy/composes/Dockerfile
+      context: ../../../auth-service
+      dockerfile: deploy/composes/Dockerfile
     ports:
       - "3002:3000"
     container_name: auth-service

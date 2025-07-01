@@ -8,24 +8,19 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { AxiosResponse } from 'axios';
-import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   private readonly logger = new Logger(AuthGuard.name);
 
   constructor(
-    private jwtService: JwtService,
-    private configService: ConfigService,
-    private readonly httpService: HttpService,
-  ) { }
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<Request>();
     const token = this.extractTokenFromHeader(request);
-    const secretKey = this.configService.get('ENV_KEY');
 
     this.logger.debug(`Проверка аутентификации для ${request.method} ${request.url}`);
 
@@ -34,32 +29,25 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('Access token is required');
     }
 
-    try {
-      const response: AxiosResponse = await firstValueFrom(
-        this.httpService.post(
-          `http://auth-service:3000/users/validatetoken`,
-          token,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          },
-        ),
-      );
-
-      const payload = await response.data;
-      if (payload) {
-        request['user'] = payload;
-      }
-    } catch (error) {
-      throw new UnauthorizedException(error.message);
-    }
-
+    const payload = await this.validateToken(token);
+    request['user'] = payload;
     return true;
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
+  }
+
+  private async validateToken(token: string): Promise<any> {
+    try {
+      const secret = this.configService.get<string>('ENV_KEY');
+      const payload = await this.jwtService.verifyAsync(token, { secret });
+      this.logger.debug(`Токен валиден для пользователя: ${payload.email}`);
+      return payload;
+    } catch (error) {
+      this.logger.warn(`Ошибка валидации токена: ${error.message}`);
+      throw new UnauthorizedException('Invalid or expired token');
+    }
   }
 }

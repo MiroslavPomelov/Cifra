@@ -1,7 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { Type, Transform, plainToClass } from 'class-transformer';
-import { IsEmail, IsString, IsNotEmpty, MinLength, MaxLength, IsPhoneNumber, IsBoolean, IsIn, IsDate, IsNumber, Min } from 'class-validator';
+import { IsEmail, IsString, IsNotEmpty, MinLength, MaxLength, IsPhoneNumber, IsBoolean, IsIn, IsDate, IsNumber, Min, IsOptional, IsArray } from 'class-validator';
 import { UserBasket } from '../interfaces/user.basket';
+import { validateAndTransformDto } from '../utils/dto-validation.util';
 
 export class CreateUserDto {
 
@@ -55,30 +56,25 @@ export class CreateUserDto {
   @IsIn([true], { message: 'Необходимо согласие с обработкой персональных данных' })
   personalData: boolean;
 
+  @IsOptional()
+  @IsArray()
   basket: UserBasket[] | null;
 
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
   shopId: number | null;
 
+  @Type(() => Number)
   @IsNumber()
   @Min(0, { message: 'Bonus cannot be negative' })
   bonus: number;
 
   // Статический метод для валидации и трансформации
   static fromRequest(data: any): CreateUserDto {
-    // Проверяем на дополнительные поля
-    const allowedFields = [
+    return validateAndTransformDto(CreateUserDto, data, [
       'email', 'password', 'firstName', 'lastName',
-      'birthDate', 'phone', 'city', 'personalData', 'bonus',
-    ];
-
-    const receivedFields = Object.keys(data);
-    const extraFields = receivedFields.filter(field => !allowedFields.includes(field));
-
-    if (extraFields.length > 0) {
-      this.logger.warn(`Попытка создания недопустимого поля: ${extraFields.join(', ')}`);
-      throw new Error(`Недопустимые поля: ${extraFields.join(', ')}`);
-    }
-
-    return plainToClass(CreateUserDto, data);
+      'birthDate', 'phone', 'city', 'personalData', 'bonus', 'basket', 'shopId'
+    ], CreateUserDto.logger);
   }
 }

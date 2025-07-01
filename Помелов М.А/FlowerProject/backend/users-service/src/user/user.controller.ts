@@ -20,6 +20,11 @@ export class UserController {
       const createUserDto = CreateUserDto.fromRequest(rawData);
       return await this.userService.create(createUserDto);
     } catch (error) {
+      // Если это ConflictException (пользователь уже существует), пропускаем его
+      if (error.status === 409) {
+        throw error;
+      }
+      // Для других ошибок валидации выбрасываем BadRequestException
       throw new BadRequestException(error.message);
     }
   }

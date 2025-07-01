@@ -22,8 +22,8 @@ services:
 
   users-service:
     build:
-      context: ../..
-      dockerfile: ./users-service/deploy/composes/Dockerfile
+      context: ../../../users-service
+      dockerfile: deploy/composes/Dockerfile
     container_name: users-service
     ports:
       - "3001:3000"
@@ -48,8 +48,8 @@ services:
 
   auth-service:
     build:
-      context: ../..
-      dockerfile: ./auth-service/deploy/composes/Dockerfile
+      context: ../../..
+      dockerfile: deploy/composes/Dockerfile
     container_name: auth-service
     ports:
       - "3000:3000"
