@@ -5,11 +5,11 @@ import * as bodyParser from 'body-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
-  // Отключаем парсинг body для проксируемых маршрутов
+  // Отключил парсинг body для прокси маршрутов
   app.use('/auth/*', bodyParser.raw({ type: '*/*' }));
   app.use('/users/*', bodyParser.raw({ type: '*/*' }));
   
-  // Включаем CORS
+  // Вкл CORS
   app.enableCors({
     origin: true,
     credentials: true,

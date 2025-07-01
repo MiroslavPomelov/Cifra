@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { FavouriteProduct } from './favourite-product.entity';
+import { UserBasket } from '../interfaces/user.basket';
 
 @Entity()
 export class User {
@@ -56,6 +57,15 @@ export class User {
 
     @Column()
     personalData: boolean;
+
+    @Column({ type: 'jsonb', default: null })
+    basket: UserBasket[] | null;
+
+    @Column({ type: 'jsonb', default: null })
+    shopId: number | null;
+
+    @Column({default: 0})
+    bonus: number;
 
     @OneToMany(() => FavouriteProduct, favouriteProduct => favouriteProduct.user)
     favouriteProducts: FavouriteProduct[];
