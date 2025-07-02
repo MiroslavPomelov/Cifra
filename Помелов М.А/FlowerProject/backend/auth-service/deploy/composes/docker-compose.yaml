@@ -28,7 +28,7 @@ services:
     ports:
       - "3001:3000"
     env_file:
-      - ../environments/dev.env
+      - ../../../users-service/deploy/environments/dev.env
     environment:
       DB_HOST: usersdb
       DB_PORT: 5432
@@ -48,13 +48,13 @@ services:
 
   auth-service:
     build:
-      context: ../../..
+      context: ../..
       dockerfile: deploy/composes/Dockerfile
     container_name: auth-service
     ports:
       - "3000:3000"
     env_file:
-      - ../environments/dev.env
+      - ../../deploy/environments/dev.env
     environment:
       USERS_SERVICE_URL: http://users-service:3000
     networks:
