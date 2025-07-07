@@ -2,13 +2,13 @@ import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from "class-valid
 
 
 export class SigninDto {
-  @IsEmail()
-  @IsNotEmpty()
+  @IsEmail({}, { message: 'Email must be a valid email address' })
+  @IsNotEmpty({ message: 'Email is required' })
   readonly email: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(6, { message: 'Пароль должен содержать минимум 6 символов' })
-  @MaxLength(100, { message: 'Пароль не должен превышать 100 символов' })
+  @IsNotEmpty({ message: 'Password is required' })
+  @IsString({ message: 'Password must be a string' })
+  @MinLength(6, { message: 'Password must be at least 6 characters' })
+  @MaxLength(100, { message: 'Password must not exceed 100 characters' })
   readonly password: string;
 }

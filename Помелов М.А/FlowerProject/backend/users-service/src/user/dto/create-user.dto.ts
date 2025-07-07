@@ -8,29 +8,29 @@ export class CreateUserDto {
 
   private static readonly logger = new Logger(CreateUserDto.name);
 
-  @IsEmail({}, { message: 'Email должен быть валидным email адресом' })
-  @IsNotEmpty({ message: 'Email обязателен' })
+  @IsEmail({}, { message: 'Email must be a valid email address' })
+  @IsNotEmpty({ message: 'Email is required' })
   email: string;
 
-  @IsString({ message: 'Пароль должен быть строкой' })
-  @IsNotEmpty({ message: 'Пароль обязателен' })
-  @MinLength(6, { message: 'Пароль должен содержать минимум 6 символов' })
-  @MaxLength(100, { message: 'Пароль не должен превышать 100 символов' })
+  @IsString({ message: 'Password must be a string' })
+  @IsNotEmpty({ message: 'Password is required' })
+  @MinLength(6, { message: 'Password must be at least 6 characters' })
+  @MaxLength(100, { message: 'Password must not exceed 100 characters' })
   password: string;
 
-  @IsString({ message: 'Имя должно быть строкой' })
-  @IsNotEmpty({ message: 'Имя обязательно' })
-  @MaxLength(50, { message: 'Имя не должно превышать 50 символов' })
+  @IsString({ message: 'First name must be a string' })
+  @IsNotEmpty({ message: 'First name is required' })
+  @MaxLength(50, { message: 'First name must not exceed 50 characters' })
   firstName: string;
 
-  @IsString({ message: 'Фамилия должна быть строкой' })
-  @IsNotEmpty({ message: 'Фамилия обязательна' })
-  @MaxLength(50, { message: 'Фамилия не должна превышать 50 символов' })
+  @IsString({ message: 'Last name must be a string' })
+  @IsNotEmpty({ message: 'Last name is required' })
+  @MaxLength(50, { message: 'Last name must not exceed 50 characters' })
   lastName: string;
 
   @Type(() => Date)
-  @IsDate({ message: 'Дата рождения должна быть валидной датой' })
-  @IsNotEmpty({ message: 'Дата рождения обязательна' })
+  @IsDate({ message: 'Birth date must be a valid date' })
+  @IsNotEmpty({ message: 'Birth date is required' })
   @Transform(({ value }) => {
     if (typeof value === 'string') {
       const date = new Date(value);
@@ -43,17 +43,17 @@ export class CreateUserDto {
   })
   birthDate: Date;
 
-  @IsPhoneNumber('RU', { message: 'Телефон должен быть валидным российским номером' })
-  @IsNotEmpty({ message: 'Телефон обязателен' })
+  @IsPhoneNumber('RU', { message: 'Phone must be a valid Russian phone number' })
+  @IsNotEmpty({ message: 'Phone is required' })
   phone: string;
 
-  @IsString({ message: 'Город должен быть строкой' })
-  @IsNotEmpty({ message: 'Город обязателен' })
-  @MaxLength(30, { message: 'Город не должен превышать 30 символов' })
+  @IsString({ message: 'City must be a string' })
+  @IsNotEmpty({ message: 'City is required' })
+  @MaxLength(30, { message: 'City must not exceed 30 characters' })
   city: string;
 
-  @IsBoolean({ message: 'Согласие с обработкой персональных данных должно быть булевым значением' })
-  @IsIn([true], { message: 'Необходимо согласие с обработкой персональных данных' })
+  @IsBoolean({ message: 'Consent to personal data processing must be a boolean value' })
+  @IsIn([true], { message: 'Consent to personal data processing is required' })
   personalData: boolean;
 
   @IsOptional()
