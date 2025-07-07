@@ -13,19 +13,19 @@ export class AppController {
     return 'API Gateway is running!';
   }
 
-  @All('users')
-  @All('users/')
+  // @All('users')
+  // @All('users/')
   @All('users/*')
   @UseGuards(AuthGuard)
   async proxyUsers(@Req() req: Request, @Res() res: Response) {
-    if (!req.headers['envservicetoken']) {
-      return res.status(401).json({ message: 'envservicetoken header is required' });
-    }
+    // if (!req.headers['envservicetoken']) {
+    //   return res.status(401).json({ message: 'envservicetoken header is required' });
+    // }
     await this.proxyRequest(req, res, 'http://users-service:3000', true);
   }
 
-  @All('auth')
-  @All('auth/')
+  // @All('auth')
+  // @All('auth/')
   @All('auth/*')
   async proxyAuth(@Req() req: Request, @Res() res: Response) {
     await this.proxyRequest(req, res, 'http://auth-service:3000', false);
@@ -40,7 +40,7 @@ export class AppController {
     const url = `${targetUrl}${req.url}`;
     const method = req.method.toLowerCase();
     const data = req.body && Buffer.isBuffer(req.body) ? req.body : undefined;
-    const headers = { ...req.headers };
+    const headers = { ...req.headers, 'Content-Type': 'application/json', 'envservicetoken': process.env.ENV_TOKEN };
 
     if (addServiceToken) {
       headers['envservicetoken'] = process.env.ENV_TOKEN || 'your-service-token';
@@ -64,4 +64,6 @@ export class AppController {
       });
     }
   }
+
+ 
 }
