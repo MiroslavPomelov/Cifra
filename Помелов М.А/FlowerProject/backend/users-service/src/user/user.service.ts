@@ -23,6 +23,7 @@ export class UserService {
     const user = this.userRepository.create({
       ...createUserDto,
       password_hash: hashedPassword,
+      isActive: createUserDto.isActive !== undefined ? createUserDto.isActive : false,
     });
 
     this.logger.log(`Создан новый пользователь: ${user.email}`);

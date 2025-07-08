@@ -1,16 +1,50 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [AuthModule,
-    MailerModule,
+  imports: [
+    AuthModule,
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        transport: {
+          host: 'smtp.gmail.com', // или другой SMTP сервер
+          port: 587,
+          secure: false,
+          auth: {
+            user: configService.get<string>('EMAIL_USER'),
+            pass: configService.get<string>('EMAIL_PASSWORD'),
+          },
+        },
+        defaults: {
+          from: '"No Reply" <noreply@example.com>',
+        },
+      }),
+      inject: [ConfigService],
+    }),
     ConfigModule.forRoot({
-      envFilePath: './deploy/environments/dev.env'
-    })
+      envFilePath: './deploy/environments/dev.env',
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('POSTGRES_HOST', 'localhost'),
+        port: parseInt(configService.get<string>('POSTGRES_PORT', '5432'), 10),
+        username: configService.get<string>('POSTGRES_USER', 'postgres'),
+        password: configService.get<string>('POSTGRES_PASSWORD', 'postgres'),
+        database: configService.get<string>('POSTGRES_DB', 'postgres'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        synchronize: true,
+      }),
+      inject: [ConfigService],
+    }),
   ],
-  controllers: [AppController]
+  controllers: [AppController],
 })
 export class AppModule {}

@@ -1,5 +1,5 @@
 import { Transform, Type } from "class-transformer";
-import { IsDate, IsEmail, IsNotEmpty, IsPhoneNumber, IsString, MaxLength, MinLength, IsBoolean, IsIn } from "class-validator";
+import { IsDate, IsEmail, IsNotEmpty, IsPhoneNumber, IsString, MaxLength, MinLength, IsBoolean, IsIn, IsOptional } from "class-validator";
 
 
 export class SignupDto {
@@ -50,4 +50,8 @@ export class SignupDto {
     @IsBoolean({ message: 'Consent to personal data processing must be a boolean value' })
     @IsIn([true], { message: 'Consent to personal data processing is required' })
     personalData: boolean;
+
+    @IsString({ message: 'Verification-email code must be a string' })
+    @IsOptional()
+    code?: string;
 }

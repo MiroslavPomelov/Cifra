@@ -58,6 +58,43 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Регистрация пользователя с подтверждением по email
+
+1. **POST /auth/registration**
+   - Описание: Отправляет код подтверждения на email. Пользователь НЕ создаётся на этом этапе.
+   - Тело запроса (JSON):
+     ```json
+     {
+       "email": "user@example.com",
+       "password": "your_password",
+       "firstName": "Иван",
+       "lastName": "Иванов",
+       "birthDate": "2000-01-01",
+       "phone": "+79991234567",
+       "city": "Москва",
+       "personalData": true
+     }
+     ```
+   - Ответ: `{ "message": "Код для подтверждения отправлен на email" }`
+
+2. **POST /auth/verify**
+   - Описание: Проверяет код и завершает регистрацию пользователя.
+   - Тело запроса (JSON):
+     ```json
+     {
+       "email": "user@example.com",
+       "code": "123456",
+       "password": "your_password",
+       "firstName": "Иван",
+       "lastName": "Иванов",
+       "birthDate": "2000-01-01",
+       "phone": "+79991234567",
+       "city": "Москва",
+       "personalData": true
+     }
+     ```
+   - Ответ: `{ "message": "Registration successful!", ... }`
+
 ## Deployment
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.

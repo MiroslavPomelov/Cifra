@@ -57,6 +57,10 @@ export class CreateUserDto {
   personalData: boolean;
 
   @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+
+  @IsOptional()
   @IsArray()
   basket: UserBasket[] | null;
 
@@ -74,7 +78,7 @@ export class CreateUserDto {
   static fromRequest(data: any): CreateUserDto {
     return validateAndTransformDto(CreateUserDto, data, [
       'email', 'password', 'firstName', 'lastName',
-      'birthDate', 'phone', 'city', 'personalData', 'bonus', 'basket', 'shopId'
+      'birthDate', 'phone', 'city', 'personalData', 'bonus', 'basket', 'shopId', 'isActive'
     ], CreateUserDto.logger);
   }
 }

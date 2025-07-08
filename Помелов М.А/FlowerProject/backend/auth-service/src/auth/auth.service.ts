@@ -29,10 +29,8 @@ export class AuthService {
   async login(signin: SigninDto): Promise<AuthResponse> {
     try {
       this.logger.log(`Попытка входа для пользователя: ${signin.email}`);
-
       const user = await this.authenticateUser(signin);
       const accessToken = this.generateToken(user);
-
       this.logger.log(`Успешный вход пользователя: ${user.email}`);
       return {
         message: 'Authorization successful!',
@@ -45,23 +43,9 @@ export class AuthService {
     }
   }
 
-  async registration(signup: SignupDto): Promise<AuthResponse> {
-    try {
-      this.logger.log(`Попытка регистрации пользователя: ${signup.email}`);
-
-      const user = await this.createUser(signup);
-      const accessToken = this.generateToken(user);
-
-      this.logger.log(`Успешная регистрация пользователя: ${user.email}`);
-      return {
-        message: 'Registration successful!',
-        accessToken,
-        user
-      };
-    } catch (error) {
-      this.logger.error(`Ошибка регистрации для ${signup.email}: ${error.message}`);
-      this.handleAuthError(error);
-    }
+  async registration(signup: SignupDto): Promise<{ message: string }> {
+    await this.generateAndSendVerificationCode(signup.email);
+    return { message: 'Код для подтверждения отправлен на email' };
   }
 
   async validateToken(token: string): Promise<TokenValidationResult> {
@@ -72,15 +56,12 @@ export class AuthService {
         error: 'Access token is required'
       };
     }
-
     try {
       this.logger.debug(`Валидация токена: ${token.substring(0, 20)}...`);
-
       const payload = await this.jwtService.verifyAsync<JwtPayload>(
         token,
         { secret: this.configService.get('ENV_KEY') }
       );
-
       this.logger.debug(`Токен валиден для пользователя: ${payload.email}`);
       return {
         valid: true,
@@ -111,11 +92,11 @@ export class AuthService {
     return response.data;
   }
 
-  private async createUser(signup: SignupDto) {
+  private async createUser(userData: any) {
     const response: AxiosResponse = await firstValueFrom(
       this.httpService.post(
         `${this.getUsersServiceUrl()}/users`,
-        signup,
+        userData,
         { headers: this.getServiceHeaders() }
       )
     );
@@ -147,67 +128,47 @@ export class AuthService {
   }
 
   private handleAuthError(error: any): never {
-    if (error.response?.status === 404) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-    if (error.response?.status === 409) {
-      throw new BadRequestException('User with this email already exists');
-    }
-    if (error.response?.status === 400) {
-      throw new BadRequestException('Invalid input data');
-    }
-    if (error.response?.status === 401) {
-      throw new UnauthorizedException('Invalid token');
+    const statusMap: Record<number, () => Error> = {
+      404: () => new UnauthorizedException('Invalid credentials'),
+      409: () => new BadRequestException('User with this email already exists'),
+      400: () => new BadRequestException('Invalid input data'),
+      401: () => new UnauthorizedException('Invalid token'),
+    };
+    const status = error.response?.status;
+    if (status && statusMap[status]) {
+      throw statusMap[status]();
     }
     throw new BadRequestException(`Authentication failed: ${error.message}`);
   }
 
-
-
-
-  //ОТПРАВКА ПОЧТОВОГО КОДА НА EMAIL
-
-  //ОТПРАВКА
-  async sendVerificationCode(email: string) {
-    // Генерируем 6-значный код
+  /**
+   * Генерирует и отправляет код подтверждения на email, сохраняет его в БД
+   */
+  private async generateAndSendVerificationCode(email: string) {
     const code = crypto.randomInt(100000, 999999).toString();
     this.logger.warn(`КОД - ${code}`);
-
-    // Сохраняем код в БД
     await this.verificationRepo.save({ email, code });
-
-    // Отправляем email
     await this.mailerService.sendMail({
       to: email,
       subject: 'Код подтверждения',
       text: `Ваш код: ${code}`,
     });
-
-    return { message: 'Код отправлен на email' };
   }
 
-  //ПРОВЕРКА
   async verifyCodeAndRegister(email: string, code: string, signup: SignupDto): Promise<AuthResponse> {
-    // Находим последний код для этого email
     const verification = await this.verificationRepo.findOne({
       where: { email },
       order: { createdAt: 'DESC' },
     });
-
     if (!verification || verification.code !== code) {
       throw new Error('Неверный код');
     }
-
-    // Удаляем использованный код
     await this.verificationRepo.delete({ email });
-
-    // Регистрируем пользователя (здесь ваша логика)
+    const { code: _, ...signupWithoutCode } = signup;
     try {
       this.logger.log(`Попытка регистрации пользователя: ${signup.email}`);
-
-      const user = await this.createUser(signup);
+      const user = await this.createUser({ ...signupWithoutCode, isActive: true });
       const accessToken = this.generateToken(user);
-
       this.logger.log(`Успешная регистрация пользователя: ${user.email}`);
       return {
         message: 'Registration successful!',
