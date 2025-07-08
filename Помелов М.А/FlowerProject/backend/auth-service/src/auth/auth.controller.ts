@@ -25,6 +25,23 @@ export class AuthController {
     return this.authService.validateToken(token);
   }
 
+
+  //КОД НА ПОЧТУ
+  @Post('send-code')
+  async sendCode(@Body('email') email: string) {
+    return this.authService.sendVerificationCode(email);
+  }
+
+  @Post('verify')
+  async verify(
+    @Body('email') email: string,
+    @Body('code') code: string,
+     @Body() signup: SignupDto
+  ) {
+    return this.authService.verifyCodeAndRegister(email, code, signup);
+  }
+
+  //Проверка на польз
   @Get('profile')
   @UseGuards(AuthGuard)
   getProfile(@User() user: UserRequest) {

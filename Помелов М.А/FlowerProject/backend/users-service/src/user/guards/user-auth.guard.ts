@@ -21,8 +21,9 @@ export class ServiceAuthGuard implements CanActivate {
 
         this.logger.debug(`Request URL: ${request.url}, Token: ${token}`);
 
+        
         if (token !== validToken) {
-            this.logger.warn('Не валидный токен');
+            this.logger.warn('Не валидный(межсервисный) токен');
             throw new UnauthorizedException('Не валидный токен');
         }
 

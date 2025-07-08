@@ -7,16 +7,24 @@ import { JwtService } from '@nestjs/jwt';
 import { SigninDto } from './dto/signin.dto';
 import { SignupDto } from './dto/signup.dto';
 import { JwtPayload, TokenValidationResult, AuthResponse } from '../interfaces';
+import * as crypto from 'crypto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { VerificationCode } from './entities/verificationcode.entity';
+import { Repository } from 'typeorm';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   constructor(
+    @InjectRepository(VerificationCode)
+    private verificationRepo: Repository<VerificationCode>,
+    private readonly mailerService: MailerService,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService
-  ) {}
+  ) { }
 
   async login(signin: SigninDto): Promise<AuthResponse> {
     try {
@@ -67,12 +75,12 @@ export class AuthService {
 
     try {
       this.logger.debug(`Валидация токена: ${token.substring(0, 20)}...`);
-      
+
       const payload = await this.jwtService.verifyAsync<JwtPayload>(
         token,
         { secret: this.configService.get('ENV_KEY') }
       );
-      
+
       this.logger.debug(`Токен валиден для пользователя: ${payload.email}`);
       return {
         valid: true,
@@ -121,9 +129,9 @@ export class AuthService {
       firstName: user.firstName,
       lastName: user.lastName
     };
-    return this.jwtService.sign(payload, { 
-      secret: this.configService.get('ENV_KEY'), 
-      expiresIn: '1h' 
+    return this.jwtService.sign(payload, {
+      secret: this.configService.get('ENV_KEY'),
+      expiresIn: '1h'
     });
   }
 
@@ -152,5 +160,63 @@ export class AuthService {
       throw new UnauthorizedException('Invalid token');
     }
     throw new BadRequestException(`Authentication failed: ${error.message}`);
+  }
+
+
+
+
+  //ОТПРАВКА ПОЧТОВОГО КОДА НА EMAIL
+
+  //ОТПРАВКА
+  async sendVerificationCode(email: string) {
+    // Генерируем 6-значный код
+    const code = crypto.randomInt(100000, 999999).toString();
+    this.logger.warn(`КОД - ${code}`);
+
+    // Сохраняем код в БД
+    await this.verificationRepo.save({ email, code });
+
+    // Отправляем email
+    await this.mailerService.sendMail({
+      to: email,
+      subject: 'Код подтверждения',
+      text: `Ваш код: ${code}`,
+    });
+
+    return { message: 'Код отправлен на email' };
+  }
+
+  //ПРОВЕРКА
+  async verifyCodeAndRegister(email: string, code: string, signup: SignupDto): Promise<AuthResponse> {
+    // Находим последний код для этого email
+    const verification = await this.verificationRepo.findOne({
+      where: { email },
+      order: { createdAt: 'DESC' },
+    });
+
+    if (!verification || verification.code !== code) {
+      throw new Error('Неверный код');
+    }
+
+    // Удаляем использованный код
+    await this.verificationRepo.delete({ email });
+
+    // Регистрируем пользователя (здесь ваша логика)
+    try {
+      this.logger.log(`Попытка регистрации пользователя: ${signup.email}`);
+
+      const user = await this.createUser(signup);
+      const accessToken = this.generateToken(user);
+
+      this.logger.log(`Успешная регистрация пользователя: ${user.email}`);
+      return {
+        message: 'Registration successful!',
+        accessToken,
+        user
+      };
+    } catch (error) {
+      this.logger.error(`Ошибка регистрации для ${signup.email}: ${error.message}`);
+      this.handleAuthError(error);
+    }
   }
 }
