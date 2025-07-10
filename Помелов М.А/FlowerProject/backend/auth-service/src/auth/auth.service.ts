@@ -146,78 +146,17 @@ export class AuthService {
     const code = crypto.randomInt(100000, 999999).toString();
     this.logger.warn(`КОД - ${code}`);
     await this.verificationRepo.save({ email, code });
-    await this.mailerService.sendMail({
-      to: email,
-      subject: 'Код подтверждения для регистрации на площадке Flowe-shop',
-       html: `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-            <meta name="viewport" content="width=device-width">
-            <style>
-                body { font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 0; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; }
-                .header { background: linear-gradient(to right, #fff5f7, #ffebee); padding: 30px 0; text-align: center; }
-                .content { padding: 30px; background: white; }
-                .code { 
-                    background: linear-gradient(to right, #fff5f7, #ffebee); 
-                    padding: 18px; 
-                    margin: 25px 0; 
-                    text-align: center; 
-                    font-size: 28px; 
-                    letter-spacing: 3px; 
-                    color: #d23669; 
-                    font-weight: bold; 
-                    border-radius: 8px; 
-                    border: 1px dashed #f8bbd0;
-                }
-                .footer { background: #fff5f7; padding: 20px; text-align: center; font-size: 12px; color: #d23669; }
-                .btn { 
-                    display: inline-block; 
-                    background: linear-gradient(to right, #ff8a9f, #d23669); 
-                    color: white; 
-                    padding: 12px 30px; 
-                    border-radius: 30px; 
-                    text-decoration: none; 
-                    font-weight: 500; 
-                    letter-spacing: 0.5px;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="header">
-                    <img src="https://plus.unsplash.com/premium_photo-1664298572491-fbb6a3212a45?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-                         alt="flower-shop" 
-                         style="max-width: 80%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-                </div>
-                
-                <div class="content">
-                    <h1 style="color: #d23669; font-weight: 300; margin-top: 0; font-size: 24px;">Добро пожаловать в Flower-shop!</h1>
-                    
-                    <p style="color: #555; font-size: 16px; line-height: 1.6;">Для завершения регистрации используйте этот код подтверждения:</p>
-                    
-                    <div class="code">${code}</div>
-                    
-                    <p style="color: #888; font-size: 14px; border-left: 3px solid #f8bbd0; padding-left: 12px;">
-                        Код действителен в течение 10 минут. Никому не сообщайте этот код.
-                    </p>
-                    
-                    <div style="margin: 30px 0; text-align: center;">
-                        <a href="https://flower-shop.com" class="btn">Перейти в магазин</a>
-                    </div>
-                </div>
-                
-                <div class="footer">
-                    <p style="margin: 0;">© ${new Date().getFullYear()} Flower-shop. Все права защищены.</p>
-                    <p style="margin: 8px 0 0; font-size: 11px; color: #ff8a9f;">С любовью создано для вас</p>
-                </div>
-            </div>
-        </body>
-        </html>
-        `,
-    });
+    try {
+      await this.mailerService.sendMail({
+        to: email,
+        subject: '<b>Код для регистрации</b>',
+        html: `<h2>Добро пожаловать в Flower-shop!</h2><p>Ваш код подтверждения: <b>${code}</b></p>`
+      });
+      this.logger.log(`Письмо успешно отправлено на ${email}`);
+    } catch (error) {
+      this.logger.error(`Ошибка при отправке письма на ${email}: ${error.message}`, error.stack);
+      throw new Error('Ошибка при отправке письма: ' + error.message);
+    }
   }
 
   async verifyCodeAndRegister(email: string, code: string, signup: SignupDto): Promise<AuthResponse> {
