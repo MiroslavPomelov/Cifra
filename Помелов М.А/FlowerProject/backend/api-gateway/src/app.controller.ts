@@ -35,7 +35,7 @@ export class AppController {
     const headers = {
       ...req.headers,
       'Content-Type': 'application/json',
-      'envservicetoken': process.env.ENV_TOKEN || 'your-service-token',
+      'envservicetoken': process.env.ENV_TOKEN || 'ya29.asdgv_sadashldkjhasdiufrekjhkjhdaksjhduHOIUhiluGHiglUUU',
     };
 
     try {
