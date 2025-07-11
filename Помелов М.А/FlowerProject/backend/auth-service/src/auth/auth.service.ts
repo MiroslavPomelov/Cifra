@@ -149,7 +149,7 @@ export class AuthService {
     try {
       await this.mailerService.sendMail({
         to: email,
-        subject: '<b>Код для регистрации</b>',
+        subject: 'Код для регистрации',
         html: `<h2>Добро пожаловать в Flower-shop!</h2><p>Ваш код подтверждения: <b>${code}</b></p>`
       });
       this.logger.log(`Письмо успешно отправлено на ${email}`);

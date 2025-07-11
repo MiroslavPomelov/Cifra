@@ -8,7 +8,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 @ApiTags('users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post()
   @ApiOperation({ summary: 'Создать пользователя' })
@@ -36,6 +36,8 @@ export class UserController {
   async signin(@Body() signinData: SigninDto) {
     return await this.userService.findByEmailAndPassword(signinData.email, signinData.password);
   }
+
+
 
   @Get()
   @ApiOperation({ summary: 'Получить всех пользователей' })
