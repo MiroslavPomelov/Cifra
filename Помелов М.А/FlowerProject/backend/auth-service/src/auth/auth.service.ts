@@ -12,6 +12,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { VerificationCode } from './entities/verificationcode.entity';
 import { Repository } from 'typeorm';
 import { MailerService } from '@nestjs-modules/mailer';
+import { ShopSignupDto } from './dto/shop-signup.dto';
+import { ShopSigninDto } from './dto/shop-signin.dto';
 
 @Injectable()
 export class AuthService {
@@ -44,6 +46,11 @@ export class AuthService {
   }
 
   async registration(signup: SignupDto): Promise<{ message: string }> {
+    // Проверка существования пользователя
+    const userExists = await this.checkUserExistsByEmail(signup.email);
+    if (userExists) {
+      throw new BadRequestException('Пользователь с таким email уже существует');
+    }
     await this.generateAndSendVerificationCode(signup.email);
     return { message: 'Verification code has send on your email' };
   }
@@ -182,6 +189,139 @@ export class AuthService {
     } catch (error) {
       this.logger.error(`Registration Error for: ${signup.email}: ${error.message}`);
       this.handleAuthError(error);
+    }
+  }
+
+  // Проверка существования пользователя по email через users-service
+  private async checkUserExistsByEmail(email: string): Promise<boolean> {
+    try {
+      const response: AxiosResponse = await firstValueFrom(
+        this.httpService.get(
+          `${this.getUsersServiceUrl()}/users`,
+          { headers: this.getServiceHeaders() }
+        )
+      );
+      // users-service возвращает массив пользователей
+      const users = response.data;
+      return Array.isArray(users) && users.some((u: any) => u.email === email);
+    } catch (error) {
+      // Если сервис недоступен или другая ошибка, логируем и считаем, что пользователя нет
+      this.logger.error(`Ошибка при проверке пользователя по email: ${email}: ${error.message}`);
+      return false;
+    }
+  }
+
+
+
+  async shopLogin(dto: ShopSigninDto): Promise<any> {
+    try {
+      const response: AxiosResponse = await firstValueFrom(
+        this.httpService.post(
+          `${this.configService.get('SHOP_SERVICE_URL') || 'http://shop-service:3000'}/shops/login`,
+          dto,
+          { headers: this.getServiceHeaders() }
+        )
+      );
+      const { shop } = response.data;
+      // Генерируем accessToken в auth-service
+      const payload = { sub: shop.id, email: shop.email, role: 'shop' };
+      const accessToken = this.jwtService.sign(payload, {
+        secret: this.configService.get('ENV_KEY'),
+        expiresIn: '1h',
+      });
+      return {
+        message: 'Shop login successful',
+        accessToken,
+        shop: {
+          id: shop.id,
+          email: shop.email,
+          name: shop.name,
+          address: shop.address
+        }
+      };
+    } catch (error) {
+      this.logger.error(`Shop login error: ${error.message}`);
+      this.handleAuthError(error);
+    }
+  }
+
+  async shopRegistration(dto: ShopSignupDto): Promise<{ message: string }> {
+    // Проверка существования магазина
+    const shopExists = await this.checkShopExistsByEmail(dto.email);
+    if (shopExists) {
+      throw new BadRequestException('Магазин с таким email уже существует');
+    }
+    await this.generateAndSendShopVerificationCode(dto.email);
+    return { message: 'Verification code has been sent to your email' };
+  }
+
+  async shopVerifyCodeAndRegister(email: string, code: string, signup: ShopSignupDto): Promise<any> {
+    const verification = await this.verificationRepo.findOne({
+      where: { email },
+      order: { createdAt: 'DESC' },
+    });
+    if (!verification || verification.code !== code) {
+      throw new Error('Error verification code');
+    }
+    await this.verificationRepo.delete({ email });
+    const { code: _, ...signupWithoutCode } = signup;
+    try {
+      this.logger.log(`Attempt shop registration for: ${signup.email}`);
+      const response = await firstValueFrom(
+        this.httpService.post(
+          `${this.configService.get('SHOP_SERVICE_URL') || 'http://shop-service:3000'}/shops/registration`,
+          signupWithoutCode,
+          { headers: this.getServiceHeaders() }
+        )
+      );
+      const { accessToken, shop } = response.data;
+      this.logger.log(`Successful shop registration: ${shop.email}`);
+      return {
+        message: 'Shop registration successful!',
+        accessToken,
+        shop: {
+          id: shop.id,
+          email: shop.email,
+          name: shop.name,
+          address: shop.address
+        }
+      };
+    } catch (error) {
+      this.logger.error(`Shop registration error for: ${signup.email}: ${error.message}`);
+      this.handleAuthError(error);
+    }
+  }
+
+  private async checkShopExistsByEmail(email: string): Promise<boolean> {
+    try {
+      const response: AxiosResponse = await firstValueFrom(
+        this.httpService.get(
+          `${this.configService.get('SHOP_SERVICE_URL') || 'http://shop-service:3000'}/shops`,
+          { headers: this.getServiceHeaders() }
+        )
+      );
+      const shops = response.data;
+      return Array.isArray(shops) && shops.some((s: any) => s.email === email);
+    } catch (error) {
+      this.logger.error(`Ошибка при проверке магазина по email: ${email}: ${error.message}`);
+      return false;
+    }
+  }
+
+  private async generateAndSendShopVerificationCode(email: string) {
+    const code = crypto.randomInt(100000, 999999).toString();
+    this.logger.warn(`КОД ДЛЯ МАГАЗИНА - ${code}`);
+    await this.verificationRepo.save({ email, code });
+    try {
+      await this.mailerService.sendMail({
+        to: email,
+        subject: 'Код для регистрации магазина',
+        html: `<h2>Добро пожаловать в Flower-shop!</h2><p>Ваш код подтверждения для регистрации магазина: <b>${code}</b></p>`
+      });
+      this.logger.log(`Письмо успешно отправлено на ${email}`);
+    } catch (error) {
+      this.logger.error(`Ошибка при отправке письма на ${email}: ${error.message}`, error.stack);
+      throw new Error('Ошибка при отправке письма: ' + error.message);
     }
   }
 }

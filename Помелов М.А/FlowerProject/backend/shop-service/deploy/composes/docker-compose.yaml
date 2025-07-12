@@ -1,0 +1,54 @@
+version: '3.9'
+
+services:
+  shopdb:
+    image: postgres:14
+    container_name: shopdb
+    environment:
+      POSTGRES_USER: shop_user
+      POSTGRES_PASSWORD: shop_password
+      POSTGRES_DB: shopdb
+    volumes:
+      - shopdb_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shop_user -d shopdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  shop-service:
+    build:
+      context: ../..
+      dockerfile: deploy/composes/Dockerfile
+    container_name: shop-service
+    ports:
+      - "3003:3000"
+    env_file:
+      - ../environments/dev.env
+    environment:
+      DB_HOST: shopdb
+      DB_PORT: 5432
+      DB_USERNAME: shop_user
+      DB_PASSWORD: shop_password
+      DB_NAME: shopdb
+    networks:
+      - app_network
+    depends_on:
+      shopdb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  shopdb_data: 

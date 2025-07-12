@@ -14,9 +14,9 @@ services:
       - app_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U users_user -d usersdb"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      interval: 15s
+      timeout: 10s
+      retries: 10
 
   users-service:
     build:
@@ -40,9 +40,9 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      interval: 15s
+      timeout: 10s
+      retries: 10
 
   auth-service:
     build:
@@ -62,9 +62,55 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+
+  shopdb:
+    image: postgres:14
+    container_name: shopdb
+    environment:
+      POSTGRES_USER: shop_user
+      POSTGRES_PASSWORD: shop_password
+      POSTGRES_DB: shopdb
+    volumes:
+      - shopdb_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shop_user -d shopdb"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+  shop-service:
+    build:
+      context: ./shop-service
+      dockerfile: deploy/composes/Dockerfile
+    container_name: shop-service
+    ports:
+      - "3003:3000"
+    env_file:
+      - ./shop-service/deploy/environments/dev.env
+    environment:
+      DB_HOST: shopdb
+      DB_PORT: 5432
+      DB_USERNAME: shop_user
+      DB_PASSWORD: shop_password
+      DB_NAME: shopdb
+    networks:
+      - app_network
+    depends_on:
+      shopdb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
 
   api-gateway:
     build:
@@ -80,11 +126,13 @@ services:
         condition: service_healthy
       auth-service:
         condition: service_healthy
+      shop-service:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/ || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      test: ["CMD-SHELL", "wget --no-verbose --tries=2 --spider http://localhost:3000/ || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
     environment:
       - ENV_TOKEN=ya29.asdgv_sadashldkjhasdiufrekjhkjhdaksjhduHOIUhiluGHiglUUU
 
@@ -94,3 +142,4 @@ networks:
 
 volumes:
   usersdb_data:
+  shopdb_data:

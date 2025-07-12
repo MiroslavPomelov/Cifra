@@ -1,4 +1,4 @@
-import { IsOptional, IsString, MinLength, IsNotEmpty, MaxLength, IsDate, IsNumber, IsArray } from 'class-validator';
+import { IsOptional, IsString, MinLength, IsNotEmpty, MaxLength, IsDate, IsNumber, IsArray, Matches } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import { CreateUserDto } from './create-user.dto';
 import { PartialType } from '@nestjs/mapped-types';
@@ -14,18 +14,21 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsOptional()
   @IsString()
   @MinLength(6)
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,100}$/, { message: 'Пароль должен содержать только латинские буквы и цифры, минимум одну букву и одну цифру, без пробелов' })
   password?: string;
 
   @IsOptional()
   @IsString()
   @MinLength(3)
   @MaxLength(50)
+  @Matches(/^[A-Za-zА-Яа-яЁё\- ]+$/, { message: 'Имя должно содержать только буквы, дефис или пробел' })
   firstName?: string;
 
   @IsOptional()
   @IsString()
   @MinLength(3)
   @MaxLength(50)
+  @Matches(/^[A-Za-zА-Яа-яЁё\- ]+$/, { message: 'Фамилия должна содержать только буквы, дефис или пробел' })
   lastName?: string;
 
   @IsOptional()
@@ -47,6 +50,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsString()
   @IsNotEmpty()
   @MaxLength(30)
+  @Matches(/^[A-Za-zА-Яа-яЁё\- ]+$/, { message: 'Город должен содержать только буквы, дефис или пробел' })
   city?: string;
 
   @IsOptional()

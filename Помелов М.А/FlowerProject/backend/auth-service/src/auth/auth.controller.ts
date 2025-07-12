@@ -4,6 +4,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { User, UserRequest } from './decorators/user.decorator';
 import { SigninDto } from './dto/signin.dto';
 import { SignupDto } from './dto/signup.dto';
+import { ShopSignupDto } from './dto/shop-signup.dto';
+import { ShopSigninDto } from './dto/shop-signin.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -40,6 +42,22 @@ export class AuthController {
   async validatetoken(@Headers('authorization') auth: string) {
     const token = auth?.replace('Bearer ', '');
     return this.authService.validateToken(token);
+  }
+
+  @Post('shops/registration')
+  async shopRegistration(@Body() dto: ShopSignupDto) {
+    return this.authService.shopRegistration(dto);
+  }
+
+  @Post('shops/verify')
+  async shopVerify(@Body() dto: ShopSignupDto) {
+    const { email, code } = dto;
+    return this.authService.shopVerifyCodeAndRegister(email, code, dto);
+  }
+
+  @Post('shops/login')
+  async shopLogin(@Body() dto: ShopSigninDto) {
+    return this.authService.shopLogin(dto);
   }
 
   /**

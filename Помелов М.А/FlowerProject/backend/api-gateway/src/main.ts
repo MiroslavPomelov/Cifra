@@ -8,6 +8,7 @@ async function bootstrap() {
   // Отключил парсинг body для прокси маршрутов
   app.use('/auth/*', bodyParser.raw({ type: '*/*' }));
   app.use('/users/*', bodyParser.raw({ type: '*/*' }));
+  app.use('/shops/*', bodyParser.raw({ type: '*/*' }));
   
   // Вкл CORS
   app.enableCors({

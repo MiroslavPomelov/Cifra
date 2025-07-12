@@ -1,0 +1,16 @@
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateShopDto } from './create-shop.dto';
+import { IsEmail, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+ 
+export class UpdateShopDto extends PartialType(CreateShopDto) {
+  @IsEmail()
+  @IsOptional()
+  @MaxLength(100)
+  email?: string;
+
+  @IsString()
+  @IsOptional()
+  @MinLength(6)
+  @MaxLength(100)
+  password?: string;
+} 

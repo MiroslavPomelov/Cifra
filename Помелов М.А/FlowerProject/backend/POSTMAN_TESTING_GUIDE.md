@@ -604,3 +604,115 @@ if (pm.response.json().accessToken) {
 - **Лучшая документация** - интерфейсы служат документацией API
 - **Упрощение тестирования** - четко определенная структура ответов
 - **Улучшение разработки** - IDE предоставляет автодополнение и подсказки 
+
+## Тестирование маршрутов Shop Service через Auth Service
+
+### 1. Регистрация магазина (отправка кода на email)
+**POST** `{{base_url}}/auth/shop/registration`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Body (raw JSON):**
+```json
+{
+  "email": "shop@example.com",
+  "password": "shopPassword123",
+  "name": "Магазин Роз",
+  "address": "г. Москва, ул. Цветочная, 1"
+}
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "message": "Verification code has been sent to your email"
+}
+```
+
+---
+
+### 2. Подтверждение регистрации магазина (верификация кода)
+**POST** `{{base_url}}/auth/shops/verify`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Body (raw JSON):**
+```json
+{
+  "email": "shop@example.com",
+  "password": "shopPassword123",
+  "name": "Магазин Роз",
+  "address": "г. Москва, ул. Цветочная, 1",
+  "code": "123456"
+}
+```
+> **code** — это код, который пришёл на email.
+
+**Ожидаемый ответ:**
+```json
+{
+  "message": "Shop registration successful!",
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "shop": {
+    "id": 1,
+    "email": "shop@example.com",
+    "name": "Магазин Роз",
+    "address": "г. Москва, ул. Цветочная, 1"
+  }
+}
+```
+
+---
+
+### 3. Вход магазина (логин)
+**POST** `{{base_url}}/auth/shops/login`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Body (raw JSON):**
+```json
+{
+  "email": "shop@example.com",
+  "password": "shopPassword123"
+}
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "message": "Shop login successful",
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "shop": {
+    "id": 1,
+    "email": "shop@example.com",
+    "name": "Магазин Роз",
+    "address": "г. Москва, ул. Цветочная, 1"
+  }
+}
+```
+
+---
+
+### 4. Использование токена магазина
+
+- После успешной регистрации (verify) или логина (login) скопируйте `accessToken` из ответа.
+- Сохраните его в переменную Postman, например, `shop_token`.
+- Для защищённых маршрутов магазина используйте заголовок:
+  ```
+  Authorization: Bearer {{shop_token}}
+  ```
+
+---
+
+**Примечание:**
+- Регистрация магазина — двухэтапная: сначала отправка кода, потом подтверждение.
+- Токен магазина валиден для всех защищённых маршрутов, где требуется роль "shop". 

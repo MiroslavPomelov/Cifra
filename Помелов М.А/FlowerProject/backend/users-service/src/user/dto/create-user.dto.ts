@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { Type, Transform, plainToClass } from 'class-transformer';
-import { IsEmail, IsString, IsNotEmpty, MinLength, MaxLength, IsPhoneNumber, IsBoolean, IsIn, IsDate, IsNumber, Min, IsOptional, IsArray } from 'class-validator';
+import { IsEmail, IsString, IsNotEmpty, MinLength, MaxLength, IsPhoneNumber, IsBoolean, IsIn, IsDate, IsNumber, Min, IsOptional, IsArray, Matches } from 'class-validator';
 import { UserBasket } from '../interfaces/user.basket';
 import { validateAndTransformDto } from '../utils/dto-validation.util';
 
@@ -16,16 +16,19 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Password is required' })
   @MinLength(6, { message: 'Password must be at least 6 characters' })
   @MaxLength(100, { message: 'Password must not exceed 100 characters' })
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,100}$/, { message: 'Password must contain only Latin letters and digits, at least one letter and one digit, no spaces' })
   password: string;
 
   @IsString({ message: 'First name must be a string' })
   @IsNotEmpty({ message: 'First name is required' })
   @MaxLength(50, { message: 'First name must not exceed 50 characters' })
+  @Matches(/^[A-Za-zА-Яа-яЁё\- ]+$/, { message: 'First name must contain only letters, hyphen or space' })
   firstName: string;
 
   @IsString({ message: 'Last name must be a string' })
   @IsNotEmpty({ message: 'Last name is required' })
   @MaxLength(50, { message: 'Last name must not exceed 50 characters' })
+  @Matches(/^[A-Za-zА-Яа-яЁё\- ]+$/, { message: 'Last name must contain only letters, hyphen or space' })
   lastName: string;
 
   @Type(() => Date)
@@ -50,6 +53,7 @@ export class CreateUserDto {
   @IsString({ message: 'City must be a string' })
   @IsNotEmpty({ message: 'City is required' })
   @MaxLength(30, { message: 'City must not exceed 30 characters' })
+  @Matches(/^[A-Za-zА-Яа-яЁё\- ]+$/, { message: 'City must contain only letters, hyphen or space' })
   city: string;
 
   @IsBoolean({ message: 'Consent to personal data processing must be a boolean value' })
