@@ -716,3 +716,265 @@ Content-Type: application/json
 **Примечание:**
 - Регистрация магазина — двухэтапная: сначала отправка кода, потом подтверждение.
 - Токен магазина валиден для всех защищённых маршрутов, где требуется роль "shop". 
+
+# Тестирование маршрутов Product Service через API Gateway
+
+## Переменные
+- `base_url` — http://localhost:3001 (порт gateway)
+- `shop_token` — JWT магазина (см. регистрацию/логин магазина выше)
+- `envservicetoken` — межсервисный токен (см. dev.env gateway)
+
+## 1. Получить все продукты
+**GET** `{{base_url}}/products`
+
+**Ожидаемый ответ:**
+```json
+[
+  {
+    "id": 1,
+    "name": "Розы 25 шт.",
+    "description": "Красивый букет роз",
+    "price": 2500,
+    "imageUrl": "https://example.com/rose.jpg",
+    "shopId": 1,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+]
+```
+
+## 2. Получить продукт по id
+**GET** `{{base_url}}/products/1`
+
+**Ожидаемый ответ:**
+```json
+{
+  "id": 1,
+  "name": "Розы 25 шт.",
+  "description": "Красивый букет роз",
+  "price": 2500,
+  "imageUrl": "https://example.com/rose.jpg",
+  "shopId": 1,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+## 3. Получить все продукты магазина
+**GET** `{{base_url}}/products/shop/1`
+
+**Ожидаемый ответ:**
+```json
+[
+  {
+    "id": 1,
+    "name": "Розы 25 шт.",
+    "description": "Красивый букет роз",
+    "price": 2500,
+    "imageUrl": "https://example.com/rose.jpg",
+    "shopId": 1,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+]
+```
+
+## 4. Получить продукты по массиву id (межсервисный)
+**POST** `{{base_url}}/products/by-ids`
+
+**Headers:**
+```
+envservicetoken: {{envservicetoken}}
+Content-Type: application/json
+```
+**Body (raw JSON):**
+```json
+{
+  "ids": [1,2,3]
+}
+```
+**Ожидаемый ответ:**
+```json
+[
+  { "id": 1, "name": "Розы 25 шт.", ... },
+  { "id": 2, "name": "Тюльпаны", ... }
+]
+```
+
+## 5. Создать продукт (только для магазина)
+**POST** `{{base_url}}/products`
+
+**Headers:**
+```
+Authorization: Bearer {{shop_token}}
+Content-Type: application/json
+```
+**Body (raw JSON):**
+```json
+{
+  "name": "Тюльпаны",
+  "description": "Весенний букет",
+  "price": 1200,
+  "imageUrl": "https://example.com/tulip.jpg"
+}
+```
+**Ожидаемый ответ:**
+```json
+{
+  "id": 2,
+  "name": "Тюльпаны",
+  "description": "Весенний букет",
+  "price": 1200,
+  "imageUrl": "https://example.com/tulip.jpg",
+  "shopId": 1,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+## 6. Обновить продукт (только для магазина)
+**PUT** `{{base_url}}/products/2`
+
+**Headers:**
+```
+Authorization: Bearer {{shop_token}}
+Content-Type: application/json
+```
+**Body (raw JSON):**
+```json
+{
+  "name": "Тюльпаны 51 шт.",
+  "price": 2500
+}
+```
+**Ожидаемый ответ:**
+```json
+{
+  "id": 2,
+  "name": "Тюльпаны 51 шт.",
+  "description": "Весенний букет",
+  "price": 2500,
+  "imageUrl": "https://example.com/tulip.jpg",
+  "shopId": 1,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+## 7. Удалить продукт (только для магазина)
+**DELETE** `{{base_url}}/products/2`
+
+**Headers:**
+```
+Authorization: Bearer {{shop_token}}
+```
+**Ожидаемый ответ:**
+```json
+{
+  "message": "Product deleted successfully"
+}
+```
+
+## 8. Ошибки и автоматизация
+- Для неавторизованных/чужих магазинов — 403 Forbidden
+- Для несуществующего продукта — 404 Not Found
+- Для невалидных данных — 400 Bad Request
+
+## 9. Автоматизация сохранения shop_token
+Добавьте в раздел "Tests" для логина/регистрации магазина:
+```javascript
+if (pm.response.code === 200) {
+    const response = pm.response.json();
+    if (response.accessToken) {
+        pm.collectionVariables.set("shop_token", response.accessToken);
+        console.log("Shop токен сохранен:", response.accessToken);
+    }
+}
+```
+
+## 10. Пример структуры запроса в Postman
+- Method: POST
+- URL: {{base_url}}/products
+- Headers:
+    - Content-Type: application/json
+    - Authorization: Bearer {{shop_token}}
+- Body (raw, JSON):
+```json
+{
+  "name": "Тюльпаны",
+  "description": "Весенний букет",
+  "price": 1200,
+  "imageUrl": "https://example.com/tulip.jpg"
+}
+```
+
+## Примечания
+- Все методы доступны только через gateway
+- Для защищённых методов используйте shop_token
+- Для межсервисных — envservicetoken
+- Для тестирования используйте Postman или curl с нужными заголовками 
+
+# Важно для product-service
+
+**Для всех защищённых методов product-service (создание, обновление, удаление продукта) используйте только JWT токен магазина!**
+
+- Токен пользователя (без поля "role": "shop") не подойдёт — будет 401 Unauthorized.
+- Получить shop-токен можно через регистрацию или логин магазина (см. ниже).
+- Проверьте payload токена на jwt.io — там должно быть:
+  ```json
+  {
+    "sub": <shopId>,
+    "email": "shop@example.com",
+    "role": "shop",
+    ...
+  }
+  ```
+
+## Пример получения shop-токена
+
+### 1. Логин магазина
+```
+POST {{base_url}}/auth/shops/login
+Headers:
+  Content-Type: application/json
+Body (raw, JSON):
+{
+  "email": "shop@example.com",
+  "password": "shopPassword123"
+}
+```
+**В ответе будет:**
+```json
+{
+  "message": "Shop login successful",
+  "accessToken": "...",
+  "shop": { ... }
+}
+```
+
+### 2. Используйте этот токен для product-service
+```
+Authorization: Bearer {{shop_token}}
+```
+
+---
+
+# Пример запроса на добавление продукта (product-service)
+
+```
+POST {{base_url}}/products
+Headers:
+  Content-Type: application/json
+  Authorization: Bearer {{shop_token}}
+Body (raw, JSON):
+{
+  "name": "Тюльпаны",
+  "description": "Весенний букет",
+  "price": 1200,
+  "imageUrl": "https://example.com/tulip.jpg"
+}
+```
+
+---
+
+# Остальные примеры для product-service см. ниже по тексту (раздел "Тестирование маршрутов Product Service через API Gateway") 

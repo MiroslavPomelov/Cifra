@@ -1,0 +1,54 @@
+version: '3.9'
+
+services:
+  productdb:
+    image: postgres:14
+    container_name: productdb
+    environment:
+      POSTGRES_USER: product_user
+      POSTGRES_PASSWORD: product_password
+      POSTGRES_DB: productdb
+    volumes:
+      - productdb_data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U product_user -d productdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  product-service:
+    build:
+      context: ../..
+      dockerfile: deploy/composes/Dockerfile
+    container_name: product-service
+    ports:
+      - "3004:3000"
+    env_file:
+      - ../environments/dev.env
+    environment:
+      DB_HOST: productdb
+      DB_PORT: 5432
+      DB_USERNAME: product_user
+      DB_PASSWORD: product_password
+      DB_NAME: productdb
+    networks:
+      - app_network
+    depends_on:
+      productdb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  productdb_data: 

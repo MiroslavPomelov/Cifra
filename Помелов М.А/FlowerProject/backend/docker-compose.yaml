@@ -66,7 +66,6 @@ services:
       timeout: 10s
       retries: 10
 
-
   shopdb:
     image: postgres:14
     container_name: shopdb
@@ -112,6 +111,51 @@ services:
       timeout: 10s
       retries: 10
 
+  productdb:
+    image: postgres:14
+    container_name: productdb
+    environment:
+      POSTGRES_USER: product_user
+      POSTGRES_PASSWORD: product_password
+      POSTGRES_DB: productdb
+    volumes:
+      - productdb_data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U product_user -d productdb"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: deploy/composes/Dockerfile
+    container_name: product-service
+    ports:
+      - "3004:3000"
+    env_file:
+      - ./product-service/deploy/environments/dev.env
+    environment:
+      DB_HOST: productdb
+      DB_PORT: 5432
+      DB_USERNAME: product_user
+      DB_PASSWORD: product_password
+      DB_NAME: productdb
+    networks:
+      - app_network
+    depends_on:
+      productdb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
   api-gateway:
     build:
       context: ./api-gateway
@@ -128,6 +172,8 @@ services:
         condition: service_healthy
       shop-service:
         condition: service_healthy
+      product-service:
+        condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=2 --spider http://localhost:3000/ || exit 1"]
       interval: 15s
@@ -143,3 +189,4 @@ networks:
 volumes:
   usersdb_data:
   shopdb_data:
+  productdb_data:
