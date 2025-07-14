@@ -61,7 +61,7 @@ export class ProductService {
     this.logger.log(`Удалён продукт: ${product.name} (ID: ${id})`);
   }
 
-  async findByIds(ids: number[]): Promise<Product[]> {
-    return this.productRepository.findByIds(ids);
-  }
+  // async findByIds(ids: number[]): Promise<Product[]> {
+  //   return this.productRepository.findByIds(ids);
+  // }
 } 

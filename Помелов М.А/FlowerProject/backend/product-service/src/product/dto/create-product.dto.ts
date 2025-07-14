@@ -19,4 +19,10 @@ export class CreateProductDto {
   @IsOptional()
   @MaxLength(255)
   imageUrl?: string;
+
+  // Подумать нужно или нет?
+  @IsNumber()
+  @IsPositive()
+  @IsOptional()
+  shopId?: number;
 } 

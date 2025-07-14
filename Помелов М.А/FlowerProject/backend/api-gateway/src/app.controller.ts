@@ -53,14 +53,14 @@ export class AppController {
   ) {
     const url = `${targetUrl}${req.url}`;
     const method = req.method.toLowerCase();
-    // Не передавать data для GET-запросов
+    // Для Get не нада
     const data = (method !== 'get' && req.body) ? req.body : undefined;
     const headers = {
       ...req.headers,
       'Content-Type': 'application/json',
       'envservicetoken': process.env.ENV_TOKEN || 'ya29.asdgv_sadashldkjhasdiufrekjhkjhdaksjhduHOIUhiluGHiglUUU',
     };
-    // Удаляем content-length, чтобы не было зависания
+    // Удаляю content-length
     delete headers['content-length'];
     delete headers['Content-Length'];
     console.log('API-GATEWAY: proxyRequest to', url, 'with headers:', headers);

@@ -18,7 +18,7 @@ export class ShopService {
   ) {}
 
   async create(createShopDto: CreateShopDto): Promise<Shop> {
-    // Проверка на уникальность по имени (пример)
+    // Проверка на уникальность по имени 
     const existing = await this.shopRepository.findOne({ where: { name: createShopDto.name } });
     if (existing) {
       this.logger.warn(`Попытка создать магазин с уже существующим именем: ${createShopDto.name}`);
