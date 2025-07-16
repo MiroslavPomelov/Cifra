@@ -182,6 +182,15 @@ services:
     environment:
       - ENV_TOKEN=ya29.asdgv_sadashldkjhasdiufrekjhkjhdaksjhduHOIUhiluGHiglUUU
 
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app_network
+    restart: always
+
 networks:
   app_network:
     driver: bridge
