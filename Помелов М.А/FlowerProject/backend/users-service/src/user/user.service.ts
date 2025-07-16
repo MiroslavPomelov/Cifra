@@ -18,36 +18,85 @@ export class UserService {
     private readonly userRepository: Repository<User>,
     @Inject(CACHE_MANAGER)
     private cacheManager: Cache,
-  ) {}
+  ) { }
+
+  // async create(createUserDto: CreateUserDto): Promise<User> {
+  //   await this.checkEmailExists(createUserDto.email);
+
+  //   const hashedPassword = await bcrypt.hash(createUserDto.password, this.SALT_ROUNDS);
+  //   const user = this.userRepository.create({
+  //     ...createUserDto,
+  //     password_hash: hashedPassword,
+  //     isActive: createUserDto.isActive !== undefined ? createUserDto.isActive : false,
+  //   });
+
+  //   this.logger.log(`Создан новый пользователь: ${user.email}`);
+  //   return this.userRepository.save(user);
+  // }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    await this.checkEmailExists(createUserDto.email);
-    
-    const hashedPassword = await bcrypt.hash(createUserDto.password, this.SALT_ROUNDS);
-    const user = this.userRepository.create({
-      ...createUserDto,
-      password_hash: hashedPassword,
-      isActive: createUserDto.isActive !== undefined ? createUserDto.isActive : false,
-    });
+    try {
+      await this.checkEmailExists(createUserDto.email);
 
-    this.logger.log(`Создан новый пользователь: ${user.email}`);
-    return this.userRepository.save(user);
+      const hashedPassword = await bcrypt.hash(createUserDto.password, this.SALT_ROUNDS);
+      const user = this.userRepository.create({
+        ...createUserDto,
+        password_hash: hashedPassword,
+        isActive: createUserDto.isActive ?? false,
+      });
+
+      const savedUser = await this.userRepository.save(user);
+      this.logger.log(`User created: ${savedUser.email}`);
+
+      // Инвалидируем кэш списка пользователей
+      await this.clearUsersCache();
+
+      return savedUser;
+    } catch (error) {
+      this.logger.error(`Error creating user: ${error.message}`, error.stack);
+      throw error;
+    }
   }
+
+  // async findAll(): Promise<User[]> {
+  //   const cacheKey = 'users:all';
+  //   let users = await this.cacheManager.get<User[]>(cacheKey);
+  //   if (users) {
+  //     this.logger.log(`Users list retrieved from Redis: ${cacheKey}`);
+  //     return users;
+  //   }
+  //   users = await this.userRepository.find({
+  //     where: { isActive: true },
+  //     order: { registrationDate: 'DESC' }
+  //   });
+  //   await this.cacheManager.set(cacheKey, users, 60);
+  //   this.logger.log(`Users list cached in Redis: ${cacheKey}`);
+  //   return users;
+  // }
 
   async findAll(): Promise<User[]> {
     const cacheKey = 'users:all';
-    let users = await this.cacheManager.get<User[]>(cacheKey);
-    if (users) {
-      this.logger.log(`Users list retrieved from Redis: ${cacheKey}`);
+
+    try {
+      const cachedUsers = await this.cacheManager.get<User[]>(cacheKey);
+      if (cachedUsers) {
+        this.logger.debug(`Returning ${cachedUsers.length} users from cache`);
+        return cachedUsers;
+      }
+
+      const users = await this.userRepository.find({
+        where: { isActive: true },
+        order: { registrationDate: 'DESC' },
+      });
+
+      await this.cacheManager.set(cacheKey, users, 60 * 60 * 1000);
+      this.logger.log(`Cached ${users.length} active users`);
+
       return users;
+    } catch (error) {
+      this.logger.error(`Error fetching users: ${error.message}`);
+      throw error;
     }
-    users = await this.userRepository.find({
-      where: { isActive: true },
-      order: { registrationDate: 'DESC' }
-    });
-    await this.cacheManager.set(cacheKey, users, 60);
-    this.logger.log(`Users list cached in Redis: ${cacheKey}`);
-    return users;
   }
 
   async findOne(id: number): Promise<User> {
@@ -63,25 +112,43 @@ export class UserService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
     // Кэшируем результат
-    await this.cacheManager.set(cacheKey, user, 60); // ttl в секундах
+    await this.cacheManager.set(cacheKey, user, 60 * 60); // ttl в секундах
     this.logger.log(`User cached in Redis: ${cacheKey}`);
     return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    this.validateUpdateFields(updateUserDto);
-    
-    const user = await this.findOne(id);
-    const { password, ...updateData } = updateUserDto;
+  // async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  //   this.validateUpdateFields(updateUserDto);
 
-    if (password) {
-      user.password_hash = await bcrypt.hash(password, this.SALT_ROUNDS);
+  //   const user = await this.findOne(id);
+  //   const { password, ...updateData } = updateUserDto;
+
+  //   if (password) {
+  //     user.password_hash = await bcrypt.hash(password, this.SALT_ROUNDS);
+  //   }
+
+  //   // Обновляем разрешенные поля
+  //   Object.assign(user, this.sanitizeUpdateData(updateData));
+
+  //   return this.userRepository.save(user);
+  // }
+
+    async update(id: number, updateData: Partial<User>): Promise<User> {
+    try {
+      const result = await this.userRepository.update(id, updateData);
+      if (result.affected === 0) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
+
+      // Инвалидируем кэш для этого пользователя и списка
+      await this.clearUserCache(id);
+      await this.clearUsersCache();
+
+      return this.findOne(id); // Вернет обновленного пользователя с кэшированием
+    } catch (error) {
+      this.logger.error(`Error updating user ${id}: ${error.message}`);
+      throw error;
     }
-
-    // Обновляем разрешенные поля
-    Object.assign(user, this.sanitizeUpdateData(updateData));
-
-    return this.userRepository.save(user);
   }
 
   async activate(id: number): Promise<User> {
@@ -102,17 +169,44 @@ export class UserService {
 
     user.isActive = false;
     await this.userRepository.save(user);
-    
+
     this.logger.log(`Пользователь деактивирован: ${user.email}`);
     return user;
   }
 
+  // async findByEmail(email: string): Promise<User | null> {
+  //   return this.userRepository.findOne({
+  //     where: { email, isActive: true },
+  //     select: ['id', 'email', 'password_hash', 'isActive']
+  //   });
+  // }
+
   async findByEmail(email: string): Promise<User | null> {
-    return this.userRepository.findOne({
-      where: { email, isActive: true },
-      select: ['id', 'email', 'password_hash', 'isActive']
-    });
+  const cacheKey = `user:email:${email}`; // Уникальный ключ для кэша
+  
+  // 1. Пытаемся получить данные из кэша
+  const cachedUser = await this.cacheManager.get<User>(cacheKey);
+  if (cachedUser) {
+    this.logger.debug(`User ${email} found in cache`);
+    return cachedUser;
   }
+
+  // 2. Если нет в кэше - запрашиваем из БД
+  const user = await this.userRepository.findOne({
+    where: { email, isActive: true },
+    select: ['id', 'email', 'password_hash', 'isActive']
+  });
+
+  // 3. Если пользователь найден - кэшируем
+  if (user) {
+    await this.cacheManager.set(cacheKey, user, 60 * 5); // TTL 5 минут
+    this.logger.debug(`User ${email} cached`);
+  }
+
+  return user;
+}
+
+
 
   async findOneWithFavourites(id: number): Promise<User> {
     const user = await this.userRepository.findOne({
@@ -148,15 +242,20 @@ export class UserService {
     return user;
   }
 
-  async remove(id: number): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { id } });
-    if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
+  async remove(id: number): Promise<void> {
+    try {
+      const result = await this.userRepository.delete(id);
+      if (result.affected === 0) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
 
-    this.logger.log(`Удален пользователь: ${user.email}`);
-    await this.userRepository.remove(user);
-    return user;
+      // Инвалидируем кэш
+      await this.clearUserCache(id);
+      await this.clearUsersCache();
+    } catch (error) {
+      this.logger.error(`Error deleting user ${id}: ${error.message}`);
+      throw error;
+    }
   }
 
   // Приватные методы для улучшения читаемости
@@ -187,7 +286,7 @@ export class UserService {
     const allowedFields = [
       'password', 'firstName', 'lastName', 'birthDate', 'city', 'phone', 'personalData'
     ];
-    
+
     const receivedFields = Object.keys(updateUserDto);
     const extraFields = receivedFields.filter(field => !allowedFields.includes(field));
 
@@ -207,4 +306,21 @@ export class UserService {
 
     return sanitized;
   }
+
+  private async clearUserCache(userId: number): Promise<void> {
+    try {
+      await this.cacheManager.del(`user:${userId}`);
+    } catch (error) {
+      this.logger.warn(`Failed to clear cache for user ${userId}: ${error.message}`);
+    }
+  }
+
+  private async clearUsersCache(): Promise<void> {
+    try {
+      await this.cacheManager.del('users:all');
+    } catch (error) {
+      this.logger.warn('Failed to clear users cache', error.stack);
+    }
+  }
+
 }

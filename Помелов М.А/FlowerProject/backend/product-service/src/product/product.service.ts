@@ -15,30 +15,76 @@ export class ProductService {
     private readonly productRepository: Repository<Product>,
     @Inject('CACHE_MANAGER')
     private cacheManager: Cache,
-  ) {}
+  ) { }
+
+  // async create(createProductDto: CreateProductDto, shopId: number): Promise<Product> {
+  //   this.logger.log('DTO на входе:', JSON.stringify(createProductDto));
+  //   const product = this.productRepository.create({ ...createProductDto, shopId });
+  //   this.logger.log(`Создан новый продукт: ${product.name} (shopId: ${shopId})`);
+  //   const saved = await this.productRepository.save(product);
+  //   this.logger.log('Сохранённый продукт:', JSON.stringify(saved));
+  //   // npm install cache-manager @nestjs/cache-manager cache-manager-redis-store redis
+  //   await this.cacheManager.del('products:all');
+  //   return saved;
+  // }
 
   async create(createProductDto: CreateProductDto, shopId: number): Promise<Product> {
-    this.logger.log('DTO на входе:', JSON.stringify(createProductDto));
-    const product = this.productRepository.create({ ...createProductDto, shopId });
-    this.logger.log(`Создан новый продукт: ${product.name} (shopId: ${shopId})`);
-    const saved = await this.productRepository.save(product);
-    this.logger.log('Сохранённый продукт:', JSON.stringify(saved));
-    // npm install cache-manager @nestjs/cache-manager cache-manager-redis-store redis
-    await this.cacheManager.del('products:all');
-    return saved;
+    try {
+      this.logger.log(`Создание продукта для магазина ${shopId}`, JSON.stringify(createProductDto));
+
+      const product = this.productRepository.create({ ...createProductDto, shopId });
+      const savedProduct = await this.productRepository.save(product);
+
+      this.logger.log(`Продукт "${savedProduct.name}" успешно создан (ID: ${savedProduct.id})`);
+
+      // Инвалидируем кэш, чтобы при следующем запросе данные обновились
+      await this.clearProductsCache();
+
+      return savedProduct;
+    } catch (error) {
+      this.logger.error(`Ошибка при создании продукта: ${error.message}`, error.stack);
+      throw error;
+    }
   }
+
+  // async findAll(): Promise<Product[]> {
+  //   const cacheKey = 'products:all';
+  //   let products = await this.cacheManager.get<Product[]>(cacheKey);
+
+
+  //   if (products) {
+  //     this.logger.log(`Список продуктов получен из кэша: ${cacheKey}`);
+  //     return products;
+  //   }
+  //   products = await this.productRepository.find();
+  //   this.logger.log(`Получено продуктов: ${products.length}`);
+  //   await this.cacheManager.set(cacheKey, products, 60);
+  //   return products;
+  // }
 
   async findAll(): Promise<Product[]> {
     const cacheKey = 'products:all';
-    let products = await this.cacheManager.get<Product[]>(cacheKey);
-    if (products) {
-      this.logger.log(`Список продуктов получен из кэша: ${cacheKey}`);
+
+    try {
+      // Проверяем кэш
+      const cachedProducts = await this.cacheManager.get<Product[]>(cacheKey);
+      if (cachedProducts) {
+        this.logger.log('Данные получены из кэша Redis');
+        return cachedProducts;
+      }
+
+      // Если в кэше нет, запрашиваем из БД
+      const products = await this.productRepository.find();
+      this.logger.log(`Получено ${products.length} продуктов из базы данных`);
+
+      // Сохраняем в кэш на 600 секунд
+      await this.cacheManager.set(cacheKey, products, 60 * 60 * 1000);
+
       return products;
+    } catch (error) {
+      this.logger.error(`Ошибка при получении продуктов: ${error.message}`, error.stack);
+      throw error;
     }
-    products = await this.productRepository.find();
-    this.logger.log(`Получено продуктов: ${products.length}`);
-    await this.cacheManager.set(cacheKey, products, 60);
-    return products;
   }
 
   async findByShop(shopId: number): Promise<Product[]> {
@@ -78,4 +124,13 @@ export class ProductService {
   // async findByIds(ids: number[]): Promise<Product[]> {
   //   return this.productRepository.findByIds(ids);
   // }
+
+   private async clearProductsCache(): Promise<void> {
+    try {
+      await this.cacheManager.del('products:all');
+      this.logger.log('Кэш продуктов успешно очищен');
+    } catch (error) {
+      this.logger.error(`Ошибка при очистке кэша: ${error.message}`, error.stack);
+    }
+  }
 } 
