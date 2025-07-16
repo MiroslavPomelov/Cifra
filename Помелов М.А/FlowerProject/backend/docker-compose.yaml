@@ -33,11 +33,15 @@ services:
       DB_USERNAME: users_user
       DB_PASSWORD: users_password
       DB_NAME: usersdb
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     networks:
       - app_network
     depends_on:
       usersdb:
         condition: service_healthy
+      redis:
+        condition: service_started
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
       interval: 15s
@@ -55,11 +59,15 @@ services:
       - ./auth-service/deploy/environments/dev.env
     environment:
       USERS_SERVICE_URL: http://users-service:3000
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     networks:
       - app_network
     depends_on:
       users-service:
         condition: service_healthy
+      redis:
+        condition: service_started
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
       interval: 15s
@@ -100,11 +108,15 @@ services:
       DB_USERNAME: shop_user
       DB_PASSWORD: shop_password
       DB_NAME: shopdb
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     networks:
       - app_network
     depends_on:
       shopdb:
         condition: service_healthy
+      redis:
+        condition: service_started
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
       interval: 15s
@@ -145,11 +157,15 @@ services:
       DB_USERNAME: product_user
       DB_PASSWORD: product_password
       DB_NAME: productdb
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     networks:
       - app_network
     depends_on:
       productdb:
         condition: service_healthy
+      redis:
+        condition: service_started
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
       interval: 15s

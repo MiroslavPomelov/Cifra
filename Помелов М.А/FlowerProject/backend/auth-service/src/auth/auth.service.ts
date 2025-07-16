@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, BadRequestException, Logger } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException, Logger, Inject } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { AxiosResponse } from 'axios';
 import { HttpService } from '@nestjs/axios';
@@ -14,6 +14,7 @@ import { Repository } from 'typeorm';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ShopSignupDto } from './dto/shop-signup.dto';
 import { ShopSigninDto } from './dto/shop-signin.dto';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +26,9 @@ export class AuthService {
     private readonly mailerService: MailerService,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    @Inject('CACHE_MANAGER')
+    private cacheManager: Cache,
   ) { }
 
   async login(signin: SigninDto): Promise<AuthResponse> {
@@ -150,9 +153,16 @@ export class AuthService {
 
 // Отправка кода на email
   private async generateAndSendVerificationCode(email: string) {
-    const code = crypto.randomInt(100000, 999999).toString();
+    const cacheKey = `verification:code:${email}`;
+    let code = await this.cacheManager.get<string>(cacheKey);
+    if (code) {
+      this.logger.warn(`Код подтверждения для ${email} уже отправлен недавно (кэш)`);
+      return;
+    }
+    code = crypto.randomInt(100000, 999999).toString();
     this.logger.warn(`КОД - ${code}`);
     await this.verificationRepo.save({ email, code });
+    await this.cacheManager.set(cacheKey, code, 180); // 3 минуты
     try {
       await this.mailerService.sendMail({
         to: email,
@@ -175,6 +185,7 @@ export class AuthService {
       throw new Error('Error verification code');
     }
     await this.verificationRepo.delete({ email });
+    await this.cacheManager.del(`verification:code:${email}`);
     const { code: _, ...signupWithoutCode } = signup;
     try {
       this.logger.log(`Attempt registration for: ${signup.email}`);

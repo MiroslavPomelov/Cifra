@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException, Logger, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, Logger, BadRequestException, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Shop } from './entities/shop.entity';
@@ -6,6 +6,7 @@ import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class ShopService {
@@ -15,6 +16,8 @@ export class ShopService {
     @InjectRepository(Shop)
     private readonly shopRepository: Repository<Shop>,
     private readonly jwtService: JwtService,
+    @Inject('CACHE_MANAGER')
+    private cacheManager: Cache,
   ) {}
 
   async create(createShopDto: CreateShopDto): Promise<Shop> {
@@ -26,12 +29,21 @@ export class ShopService {
     }
     const shop = this.shopRepository.create(createShopDto);
     this.logger.log(`Создан новый магазин: ${shop.name}`);
-    return this.shopRepository.save(shop);
+    const saved = await this.shopRepository.save(shop);
+    await this.cacheManager.del('shops:all');
+    return saved;
   }
 
   async findAll(): Promise<Shop[]> {
-    const shops = await this.shopRepository.find();
+    const cacheKey = 'shops:all';
+    let shops = await this.cacheManager.get<Shop[]>(cacheKey);
+    if (shops) {
+      this.logger.log(`Список магазинов получен из кэша: ${cacheKey}`);
+      return shops;
+    }
+    shops = await this.shopRepository.find();
     this.logger.log(`Получено магазинов: ${shops.length}`);
+    await this.cacheManager.set(cacheKey, shops, 60);
     return shops;
   }
 
@@ -49,6 +61,7 @@ export class ShopService {
     const shop = await this.findOne(id);
     Object.assign(shop, updateShopDto);
     this.logger.log(`Обновлён магазин: ${shop.name} (ID: ${id})`);
+    await this.cacheManager.del('shops:all');
     return this.shopRepository.save(shop);
   }
 
@@ -56,6 +69,7 @@ export class ShopService {
     const shop = await this.findOne(id);
     await this.shopRepository.remove(shop);
     this.logger.log(`Удалён магазин: ${shop.name} (ID: ${id})`);
+    await this.cacheManager.del('shops:all');
     return shop;
   }
 
