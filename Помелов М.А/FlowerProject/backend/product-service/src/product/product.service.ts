@@ -39,6 +39,8 @@ export class ProductService {
 
       // Инвалидируем кэш, чтобы при следующем запросе данные обновились
       await this.clearProductsCache();
+      await this.clearProductCache(savedProduct.id);
+      await this.clearProductsByShopCache(shopId);
 
       return savedProduct;
     } catch (error) {
@@ -88,14 +90,49 @@ export class ProductService {
   }
 
   async findByShop(shopId: number): Promise<Product[]> {
-    return this.productRepository.find({ where: { shopId } });
+    const cacheKey = `products:shop:${shopId}`;
+    let products: Product[] | undefined;
+    try {
+      products = await this.cacheManager.get<Product[]>(cacheKey);
+      if (products) {
+        this.logger.log(`Products for shop ${shopId} retrieved from cache`);
+        return products;
+      }
+    } catch (error) {
+      this.logger.warn(`Redis get error for ${cacheKey}: ${error.message}`);
+    }
+    products = await this.productRepository.find({ where: { shopId } });
+    try {
+      await this.cacheManager.set(cacheKey, products, 60 * 10);
+      this.logger.log(`Products for shop ${shopId} cached`);
+    } catch (error) {
+      this.logger.warn(`Redis set error for ${cacheKey}: ${error.message}`);
+    }
+    return products;
   }
 
   async findById(id: number): Promise<Product> {
-    const product = await this.productRepository.findOne({ where: { id } });
+    const cacheKey = `product:${id}`;
+    let product: Product | undefined;
+    try {
+      product = await this.cacheManager.get<Product>(cacheKey);
+      if (product) {
+        this.logger.log(`Product retrieved from cache: ${cacheKey}`);
+        return product;
+      }
+    } catch (error) {
+      this.logger.warn(`Redis get error for ${cacheKey}: ${error.message}`);
+    }
+    product = await this.productRepository.findOne({ where: { id } });
     if (!product) {
-      this.logger.warn(`Продукт с ID ${id} не найден`);
+      this.logger.warn(`Product with ID ${id} not found`);
       throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    try {
+      await this.cacheManager.set(cacheKey, product, 60 * 60);
+      this.logger.log(`Product cached: ${cacheKey}`);
+    } catch (error) {
+      this.logger.warn(`Redis set error for ${cacheKey}: ${error.message}`);
     }
     return product;
   }
@@ -107,7 +144,9 @@ export class ProductService {
     }
     Object.assign(product, updateProductDto);
     this.logger.log(`Обновлён продукт: ${product.name} (ID: ${id})`);
-    await this.cacheManager.del('products:all');
+    await this.clearProductsCache();
+    await this.clearProductCache(id);
+    await this.clearProductsByShopCache(shopId);
     return this.productRepository.save(product);
   }
 
@@ -118,7 +157,9 @@ export class ProductService {
     }
     await this.productRepository.remove(product);
     this.logger.log(`Удалён продукт: ${product.name} (ID: ${id})`);
-    await this.cacheManager.del('products:all');
+    await this.clearProductsCache();
+    await this.clearProductCache(id);
+    await this.clearProductsByShopCache(shopId);
   }
 
   // async findByIds(ids: number[]): Promise<Product[]> {
@@ -131,6 +172,22 @@ export class ProductService {
       this.logger.log('Кэш продуктов успешно очищен');
     } catch (error) {
       this.logger.error(`Ошибка при очистке кэша: ${error.message}`, error.stack);
+    }
+  }
+
+  private async clearProductCache(productId: number): Promise<void> {
+    try {
+      await this.cacheManager.del(`product:${productId}`);
+    } catch (error) {
+      this.logger.warn(`Failed to clear cache for product ${productId}: ${error.message}`);
+    }
+  }
+
+  private async clearProductsByShopCache(shopId: number): Promise<void> {
+    try {
+      await this.cacheManager.del(`products:shop:${shopId}`);
+    } catch (error) {
+      this.logger.warn(`Failed to clear products cache for shop ${shopId}: ${error.message}`);
     }
   }
 } 

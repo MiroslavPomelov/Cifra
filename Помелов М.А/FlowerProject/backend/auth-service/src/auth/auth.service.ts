@@ -29,7 +29,9 @@ export class AuthService {
     private readonly jwtService: JwtService,
     @Inject('CACHE_MANAGER')
     private cacheManager: Cache,
-  ) { }
+  ) {
+    this.logger.log(`[DEBUG] ENV_TOKEN used for interservice auth: ${this.configService.get('ENV_TOKEN')}`);
+  }
 
   async login(signin: SigninDto): Promise<AuthResponse> {
     try {
@@ -70,7 +72,7 @@ export class AuthService {
       this.logger.debug(`Validation Token: ${token.substring(0, 20)}...`);
       const payload = await this.jwtService.verifyAsync<JwtPayload>(
         token,
-        { secret: this.configService.get('ENV_KEY') }
+        { secret: this.configService.get('JWT_SECRET') }
       );
       this.logger.debug(`Token is valid for user: ${payload.email}`);
       return {
@@ -121,7 +123,7 @@ export class AuthService {
       lastName: user.lastName
     };
     return this.jwtService.sign(payload, {
-      secret: this.configService.get('ENV_KEY'),
+      secret: this.configService.get('JWT_SECRET'),
       expiresIn: '1h'
     });
   }
@@ -154,15 +156,24 @@ export class AuthService {
 // Отправка кода на email
   private async generateAndSendVerificationCode(email: string) {
     const cacheKey = `verification:code:${email}`;
-    let code = await this.cacheManager.get<string>(cacheKey);
-    if (code) {
-      this.logger.warn(`Код подтверждения для ${email} уже отправлен недавно (кэш)`);
-      return;
+    let code: string | undefined;
+    try {
+      code = await this.cacheManager.get<string>(cacheKey);
+      if (code) {
+        this.logger.warn(`Код подтверждения для ${email} уже отправлен недавно (кэш)`);
+        return;
+      }
+    } catch (error) {
+      this.logger.warn(`Redis get error for ${cacheKey}: ${error.message}`);
     }
     code = crypto.randomInt(100000, 999999).toString();
     this.logger.warn(`КОД - ${code}`);
     await this.verificationRepo.save({ email, code });
-    await this.cacheManager.set(cacheKey, code, 180); // 3 минуты
+    try {
+      await this.cacheManager.set(cacheKey, code, 180); // 3 минуты
+    } catch (error) {
+      this.logger.warn(`Redis set error for ${cacheKey}: ${error.message}`);
+    }
     try {
       await this.mailerService.sendMail({
         to: email,
@@ -185,7 +196,11 @@ export class AuthService {
       throw new Error('Error verification code');
     }
     await this.verificationRepo.delete({ email });
-    await this.cacheManager.del(`verification:code:${email}`);
+    try {
+      await this.cacheManager.del(`verification:code:${email}`);
+    } catch (error) {
+      this.logger.warn(`Redis del error for verification:code:${email}: ${error.message}`);
+    }
     const { code: _, ...signupWithoutCode } = signup;
     try {
       this.logger.log(`Attempt registration for: ${signup.email}`);
@@ -237,7 +252,7 @@ export class AuthService {
       // Генерируем accessToken в auth-service
       const payload = { sub: shop.id, email: shop.email, role: 'shop' };
       const accessToken = this.jwtService.sign(payload, {
-        secret: this.configService.get('ENV_KEY'),
+        secret: this.configService.get('JWT_SECRET'),
         expiresIn: '1h',
       });
       return {

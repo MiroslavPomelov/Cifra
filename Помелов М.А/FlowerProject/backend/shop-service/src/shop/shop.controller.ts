@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, BadRequestException, Req, Logger, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, BadRequestException, Req, Logger, UseGuards, ForbiddenException } from '@nestjs/common';
 import { ShopService } from './shop.service';
 import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ServiceAuthGuard } from './guards/service-auth.guard';
+import { JwtShopGuard } from './guards/jwt-shop.guard';
 
 @UseGuards(ServiceAuthGuard)
 @Controller('shops')
@@ -41,8 +42,12 @@ export class ShopController {
     }
   }
 
+  @UseGuards(JwtShopGuard)
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id', ParseIntPipe) id: number, @Req() req) {
+    if (req.shopId !== id) {
+      throw new ForbiddenException('Нет доступа к данным другого магазина');
+    }
     try {
       return await this.shopService.findOne(id);
     } catch (error) {
@@ -50,8 +55,12 @@ export class ShopController {
     }
   }
 
+  @UseGuards(JwtShopGuard)
   @Patch(':id')
-  async update(@Param('id', ParseIntPipe) id: number, @Body() updateShopDto: UpdateShopDto) {
+  async update(@Param('id', ParseIntPipe) id: number, @Body() updateShopDto: UpdateShopDto, @Req() req) {
+    if (req.shopId !== id) {
+      throw new ForbiddenException('Нет доступа к изменению другого магазина');
+    }
     try {
       return await this.shopService.update(id, updateShopDto);
     } catch (error) {
@@ -59,8 +68,12 @@ export class ShopController {
     }
   }
 
+  @UseGuards(JwtShopGuard)
   @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id', ParseIntPipe) id: number, @Req() req) {
+    if (req.shopId !== id) {
+      throw new ForbiddenException('Нет доступа к удалению другого магазина');
+    }
     try {
       return await this.shopService.remove(id);
     } catch (error) {

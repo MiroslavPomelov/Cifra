@@ -10,23 +10,24 @@ export class ServiceAuthGuard implements CanActivate {
 
     canActivate(context: ExecutionContext): boolean {
         const request = context.switchToHttp().getRequest();
-        
         // Пропускаем публичные endpoints
         if (this.isPublicEndpoint(request.url)) {
             return true;
         }
-        
+        // Если есть пользовательский JWT — пропускаем (пусть работают JwtAuthGuard и UserSelfGuard)
+        const authHeader = request.headers['authorization'];
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            this.logger.debug('User JWT detected, skipping ServiceAuthGuard');
+            return true;
+        }
+        // Проверяем межсервисный токен
         const token = request.headers['envservicetoken'];
         const validToken = this.configService.get('ENV_TOKEN');
-
         this.logger.debug(`Request URL: ${request.url}, Token: ${token}`);
-
-        
         if (token !== validToken) {
             this.logger.warn('Не валидный(межсервисный) токен');
             throw new UnauthorizedException('Не валидный токен');
         }
-
         return true;
     }
 

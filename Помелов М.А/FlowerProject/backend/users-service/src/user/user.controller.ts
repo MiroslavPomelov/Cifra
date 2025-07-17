@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { SigninDto } from './dto/signin.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { UserSelfGuard } from './guards/user-self.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('users')
 @Controller('users')
@@ -46,6 +48,7 @@ export class UserController {
     return await this.userService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard, UserSelfGuard)
   @Get(':id')
   @ApiOperation({ summary: 'Получить пользователя по ID' })
   @ApiResponse({ status: 200, description: 'Пользователь найден' })
@@ -54,6 +57,7 @@ export class UserController {
     return await this.userService.findOne(id);
   }
 
+  @UseGuards(JwtAuthGuard, UserSelfGuard)
   @Patch(':id')
   @ApiOperation({ summary: 'Обновить пользователя' })
   @ApiResponse({ status: 200, description: 'Пользователь обновлён' })
@@ -67,6 +71,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard, UserSelfGuard)
   @Delete(':id')
   @ApiOperation({ summary: 'Удалить пользователя' })
   @ApiResponse({ status: 200, description: 'Пользователь удалён' })
@@ -74,6 +79,7 @@ export class UserController {
     return await this.userService.remove(id);
   }
 
+  @UseGuards(JwtAuthGuard, UserSelfGuard)
   @Patch(':id/activate')
   @ApiOperation({ summary: 'Активировать пользователя' })
   @ApiResponse({ status: 200, description: 'Пользователь активирован' })
@@ -81,6 +87,7 @@ export class UserController {
     return await this.userService.activate(id);
   }
 
+  @UseGuards(JwtAuthGuard, UserSelfGuard)
   @Patch(':id/deactivate')
   @ApiOperation({ summary: 'Деактивировать пользователя' })
   @ApiResponse({ status: 200, description: 'Пользователь деактивирован' })

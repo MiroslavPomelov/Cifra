@@ -26,7 +26,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('ENV_KEY'),
+        secret: configService.get('JWT_SECRET'),
         signOptions: { expiresIn: '1h' },
       }),
       inject: [ConfigService],
