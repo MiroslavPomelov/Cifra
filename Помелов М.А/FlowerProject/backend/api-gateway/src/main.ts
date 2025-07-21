@@ -37,7 +37,7 @@ async function bootstrap() {
     next();
   });
   
-  // Вкл CORS
+  // Вкл CORS навсякий
   app.enableCors({
     origin: true,
     credentials: true,

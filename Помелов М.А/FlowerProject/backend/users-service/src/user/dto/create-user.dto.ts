@@ -78,7 +78,7 @@ export class CreateUserDto {
   @Min(0, { message: 'Bonus cannot be negative' })
   bonus: number;
 
-  // Статический метод для валидации и трансформации
+  // метод для валидации
   static fromRequest(data: any): CreateUserDto {
     return validateAndTransformDto(CreateUserDto, data, [
       'email', 'password', 'firstName', 'lastName',

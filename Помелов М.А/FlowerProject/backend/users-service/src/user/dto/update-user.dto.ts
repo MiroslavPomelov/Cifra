@@ -73,7 +73,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsNumber()
   bonus?: number;
 
-  // Статический метод для валидации и трансформации
+  // метод для валидации 
   static fromRequest(data: any): UpdateUserDto {
     return validateAndTransformDto(UpdateUserDto, data, [
       'password', 'firstName', 'lastName',

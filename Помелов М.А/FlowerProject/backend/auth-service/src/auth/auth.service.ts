@@ -153,8 +153,11 @@ export class AuthService {
     throw new BadRequestException(`Authentication failed: ${error.message}`);
   }
 
-// Отправка кода на email
+  // Отправка кода на email
   private async generateAndSendVerificationCode(email: string) {
+    const lastSentTimeNum = await this.cacheManager.get(`email_cooldown:${email}`) || 0;
+    const lastSentTime = Number(lastSentTimeNum);
+
     const cacheKey = `verification:code:${email}`;
     let code: string | undefined;
     try {
@@ -174,13 +177,24 @@ export class AuthService {
     } catch (error) {
       this.logger.warn(`Redis set error for ${cacheKey}: ${error.message}`);
     }
+
     try {
+      if (Date.now() - lastSentTime < 60000) {
+        throw new Error('Повторный код можно запросить только через 1 минуту');
+      }
+
+      this.logger.debug(`GOGOGOGOGOOG`);
+      this.logger.debug("CHECK" + typeof (lastSentTime));
+      this.logger.debug(lastSentTime);
+      this.logger.debug(Date.now() - lastSentTime);
+
       await this.mailerService.sendMail({
         to: email,
         subject: 'Код для регистрации',
         html: `<h2>Добро пожаловать в Flower-shop!</h2><p>Ваш код подтверждения: <b>${code}</b></p>`
       });
-      this.logger.log(`Письмо успешно отправлено на ${email}`);
+      this.logger.log(`Письмо успешно отправлено на ваш ${email}`);
+      await this.cacheManager.set(`email_cooldown:${email}`, Date.now(), 60);
     } catch (error) {
       this.logger.error(`Ошибка при отправке письма на ${email}: ${error.message}`, error.stack);
       throw new Error('Ошибка при отправке письма: ' + error.message);
