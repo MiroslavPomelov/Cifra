@@ -5,7 +5,7 @@ import { AppController } from './app.controller';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CacheModule } from '@nestjs/cache-manager';
-import * as redisStore from 'cache-manager-redis-store';
+import * as redisStore from 'cache-manager-ioredis';
 
 @Module({
   imports: [
@@ -34,11 +34,14 @@ import * as redisStore from 'cache-manager-redis-store';
     }),
     CacheModule.registerAsync({
       isGlobal: true,
-      useFactory: () => ({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
         store: redisStore,
-        host: process.env.REDIS_HOST || 'localhost',
-        port: process.env.REDIS_PORT ? +process.env.REDIS_PORT : 6379,
+        url: `redis://${configService.get('REDIS_HOST', 'localhost')}:${configService.get('REDIS_PORT', '6379')}`,
         ttl: 60,
+        db: 0,
+        keyPrefix: '',
       }),
     }),
     TypeOrmModule.forRootAsync({

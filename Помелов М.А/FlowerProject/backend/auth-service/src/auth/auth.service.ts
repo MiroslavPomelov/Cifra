@@ -14,11 +14,13 @@ import { Repository } from 'typeorm';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ShopSignupDto } from './dto/shop-signup.dto';
 import { ShopSigninDto } from './dto/shop-signin.dto';
-import { Cache } from 'cache-manager';
+// import { Cache } from 'cache-manager';
+const { createClient } = require('redis');
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
+  private redisClient;
 
   constructor(
     @InjectRepository(VerificationCode)
@@ -27,10 +29,18 @@ export class AuthService {
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
-    @Inject('CACHE_MANAGER')
-    private cacheManager: Cache,
+    // @Inject('CACHE_MANAGER')
+    // private cacheManager: Cache,
   ) {
     this.logger.log(`[DEBUG] ENV_TOKEN used for interservice auth: ${this.configService.get('ENV_TOKEN')}`);
+    this.redisClient = createClient({
+      url: `redis://${this.configService.get('REDIS_HOST')}:${this.configService.get('REDIS_PORT')}`
+    });
+    this.redisClient.connect().then(() => {
+      this.logger.log('[DEBUG] Connected to Redis via node-redis');
+    }).catch((err) => {
+      this.logger.error('[DEBUG] Redis connection error: ' + err.message);
+    });
   }
 
   async login(signin: SigninDto): Promise<AuthResponse> {
@@ -155,46 +165,35 @@ export class AuthService {
 
   // Отправка кода на email
   private async generateAndSendVerificationCode(email: string) {
-    const lastSentTimeNum = await this.cacheManager.get(`email_cooldown:${email}`) || 0;
-    const lastSentTime = Number(lastSentTimeNum);
+    const cooldownKey = `email_cooldown:${email}`;
+    const codeKey = `verification:code:${email}`;
 
-    const cacheKey = `verification:code:${email}`;
+    // Проверка cooldown через node-redis
+    const isCooldown = await this.redisClient.get(cooldownKey);
+    if (isCooldown) {
+      throw new BadRequestException('Повторный код можно запросить только через 1 минуту');
+    }
+    await this.redisClient.set(cooldownKey, 1, { EX: 60 });
+
+    // Проверка, не отправлен ли уже код (например, если пользователь не ввёл старый)
     let code: string | undefined;
-    try {
-      code = await this.cacheManager.get<string>(cacheKey);
-      if (code) {
-        this.logger.warn(`Код подтверждения для ${email} уже отправлен недавно (кэш)`);
-        return;
-      }
-    } catch (error) {
-      this.logger.warn(`Redis get error for ${cacheKey}: ${error.message}`);
+    code = await this.redisClient.get(codeKey);
+    if (code) {
+      this.logger.warn(`Код подтверждения для ${email} уже отправлен недавно (кэш)`);
+      return;
     }
     code = crypto.randomInt(100000, 999999).toString();
     this.logger.warn(`КОД - ${code}`);
     await this.verificationRepo.save({ email, code });
-    try {
-      await this.cacheManager.set(cacheKey, code, 180); // 3 минуты
-    } catch (error) {
-      this.logger.warn(`Redis set error for ${cacheKey}: ${error.message}`);
-    }
+    await this.redisClient.set(codeKey, code, { EX: 180 }); // 3 минуты
 
     try {
-      if (Date.now() - lastSentTime < 60000) {
-        throw new Error('Повторный код можно запросить только через 1 минуту');
-      }
-
-      this.logger.debug(`GOGOGOGOGOOG`);
-      this.logger.debug("CHECK" + typeof (lastSentTime));
-      this.logger.debug(lastSentTime);
-      this.logger.debug(Date.now() - lastSentTime);
-
       await this.mailerService.sendMail({
         to: email,
         subject: 'Код для регистрации',
         html: `<h2>Добро пожаловать в Flower-shop!</h2><p>Ваш код подтверждения: <b>${code}</b></p>`
       });
       this.logger.log(`Письмо успешно отправлено на ваш ${email}`);
-      await this.cacheManager.set(`email_cooldown:${email}`, Date.now(), 60);
     } catch (error) {
       this.logger.error(`Ошибка при отправке письма на ${email}: ${error.message}`, error.stack);
       throw new Error('Ошибка при отправке письма: ' + error.message);
@@ -211,7 +210,7 @@ export class AuthService {
     }
     await this.verificationRepo.delete({ email });
     try {
-      await this.cacheManager.del(`verification:code:${email}`);
+      await this.redisClient.del(`verification:code:${email}`);
     } catch (error) {
       this.logger.warn(`Redis del error for verification:code:${email}: ${error.message}`);
     }
@@ -349,9 +348,27 @@ export class AuthService {
   }
 
   private async generateAndSendShopVerificationCode(email: string) {
-    const code = crypto.randomInt(100000, 999999).toString();
+    const cooldownKey = `shop_email_cooldown:${email}`;
+    const codeKey = `shop_verification:code:${email}`;
+
+    // Проверка cooldown через node-redis
+    const isCooldown = await this.redisClient.get(cooldownKey);
+    if (isCooldown) {
+      throw new BadRequestException('Повторный код для магазина можно запросить только через 1 минуту');
+    }
+    await this.redisClient.set(cooldownKey, 1, { EX: 60 });
+
+    // Проверка, не отправлен ли уже код
+    let code = await this.redisClient.get(codeKey);
+    if (code) {
+      this.logger.warn(`Код подтверждения для магазина ${email} уже отправлен недавно (кэш)`);
+      return;
+    }
+    code = crypto.randomInt(100000, 999999).toString();
     this.logger.warn(`КОД ДЛЯ МАГАЗИНА - ${code}`);
     await this.verificationRepo.save({ email, code });
+    await this.redisClient.set(codeKey, code, { EX: 180 }); // 3 минуты
+
     try {
       await this.mailerService.sendMail({
         to: email,

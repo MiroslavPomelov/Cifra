@@ -46,6 +46,14 @@ services:
       timeout: 5s
       retries: 3
 
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app_network
+
   auth-service:
     build:
       context: ../..
@@ -62,6 +70,8 @@ services:
     depends_on:
       users-service:
         condition: service_healthy
+      redis:
+        condition: service_started
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
       interval: 10s
