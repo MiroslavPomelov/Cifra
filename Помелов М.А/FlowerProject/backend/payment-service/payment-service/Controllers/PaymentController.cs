@@ -4,11 +4,12 @@ using System.Diagnostics;
 
 namespace payment_service.Controllers
 {
-    public class HomeController : Controller
+    [Route("payment")]
+    public class PaymentController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<PaymentController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public PaymentController(ILogger<PaymentController> logger)
         {
             _logger = logger;
         }
@@ -27,6 +28,11 @@ namespace payment_service.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpPost("/pay")]
+        public Pay(){
+            
         }
     }
 }
