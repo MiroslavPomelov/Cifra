@@ -42,7 +42,8 @@ export class ShopController {
     }
   }
 
-  @UseGuards(JwtShopGuard)
+  // Подумать нужно ли ограничивать доступ к конкретному магазину
+  // @UseGuards(JwtShopGuard)
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number, @Req() req) {
     if (req.shopId !== id) {
