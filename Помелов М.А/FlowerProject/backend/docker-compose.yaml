@@ -207,6 +207,28 @@ services:
       - app_network
     restart: always
 
+  nginx-service:
+    build:
+      context: ./nginx-service
+      dockerfile: Dockerfile
+    container_name: nginx-service
+    ports:
+      - "8080:80"
+    networks:
+      - app_network
+    depends_on:
+      - api-gateway
+
+  payment-service:
+    build:
+      context: ./payment-service/payment-service
+      dockerfile: Dockerfile
+    container_name: payment-service
+    ports:
+      - "3005:80"
+    networks:
+      - app_network
+
 networks:
   app_network:
     driver: bridge

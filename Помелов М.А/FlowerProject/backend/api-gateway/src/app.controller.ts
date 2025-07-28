@@ -46,6 +46,11 @@ export class AppController {
     await this.proxyRequest(req, res, 'http://product-service:3000');
   }
 
+  @All(['payment', 'payment/', 'payment/*'])
+  async proxyPayment(@Req() req: Request, @Res() res: Response) {
+    await this.proxyRequest(req, res, 'http://payment-service:80');
+  }
+
   private async proxyRequest(
     req: Request,
     res: Response,

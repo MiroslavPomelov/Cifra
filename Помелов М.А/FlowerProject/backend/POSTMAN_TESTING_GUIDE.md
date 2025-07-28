@@ -978,3 +978,110 @@ Body (raw, JSON):
 ---
 
 # Остальные примеры для product-service см. ниже по тексту (раздел "Тестирование маршрутов Product Service через API Gateway") 
+
+# Тестирование маршрутов Payment Service через Postman
+
+## Переменные
+- `base_url` — http://localhost:80 (порт gateway)
+- `shop_token` — JWT магазина (см. регистрацию/логин магазина выше)
+
+## 1. Создать платёж
+**POST** `{{base_url}}/payment`
+
+**Headers:**
+```
+Authorization: Bearer {{shop_token}}
+Content-Type: application/json
+```
+
+**Body (raw JSON):**
+```json
+{
+  "orderId": 123,
+  "amount": 2500,
+  "currency": "RUB",
+  "description": "Оплата букета Розы 25 шт."
+}
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "paymentId": 1,
+  "orderId": 123,
+  "amount": 2500,
+  "currency": "RUB",
+  "status": "created",
+  "createdAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+## 2. Получить информацию о платеже по ID
+**GET** `{{base_url}}/payment/1`
+
+**Headers:**
+```
+Authorization: Bearer {{shop_token}}
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "paymentId": 1,
+  "orderId": 123,
+  "amount": 2500,
+  "currency": "RUB",
+  "status": "created",
+  "createdAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+## 3. Получить все платежи магазина
+**GET** `{{base_url}}/payment/shop/1`
+
+**Headers:**
+```
+Authorization: Bearer {{shop_token}}
+```
+
+**Ожидаемый ответ:**
+```json
+[
+  {
+    "paymentId": 1,
+    "orderId": 123,
+    "amount": 2500,
+    "currency": "RUB",
+    "status": "created",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  ...
+]
+```
+
+## 4. Ошибки
+- Если не передан токен или он невалиден — 401 Unauthorized
+- Если платёж не найден — 404 Not Found
+- Если невалидные данные — 400 Bad Request
+
+## 5. Примечания
+- Все методы доступны только через API Gateway
+- Для защищённых методов используйте shop_token
+- Для тестирования используйте Postman или curl с нужными заголовками
+
+---
+
+**Пример запроса на создание платежа:**
+```
+POST {{base_url}}/payment
+Headers:
+  Content-Type: application/json
+  Authorization: Bearer {{shop_token}}
+Body (raw, JSON):
+{
+  "orderId": 123,
+  "amount": 2500,
+  "currency": "RUB",
+  "description": "Оплата букета Розы 25 шт."
+}
+``` 

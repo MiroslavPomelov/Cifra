@@ -1,17 +1,13 @@
-FROM node:alpine
+FROM nginx:alpine
 
-# Устанавливаем wget для healthcheck
-RUN apk add --no-cache wget
+# Копируем конфиг
+COPY nginx-static/default.conf /etc/nginx/conf.d/default.conf
 
-WORKDIR /usr/src/app
-COPY package.json ./
+# Копируем build фронтенда (SPA) из локальной папки build
+COPY build/ /usr/share/nginx/html/
 
-RUN npm install --legacy-peer-deps
-COPY . .
-
-RUN npm run build
-
-CMD [ "npm", "run", "start:prod" ]
+# (опционально) Копируем дополнительные статические файлы
+COPY nginx-static/ /usr/share/nginx/html/
 
 
 

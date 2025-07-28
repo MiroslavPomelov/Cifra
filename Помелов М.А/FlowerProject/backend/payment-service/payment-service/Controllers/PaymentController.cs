@@ -1,38 +1,43 @@
 using Microsoft.AspNetCore.Mvc;
-using payment_service.Models;
-using System.Diagnostics;
+using System;
 
 namespace payment_service.Controllers
 {
-    [Route("payment")]
+    [ApiController]
+    [Route("[controller]")]
     public class PaymentController : Controller
     {
-        private readonly ILogger<PaymentController> _logger;
-
-        public PaymentController(ILogger<PaymentController> logger)
+        // POST /payment
+        [HttpPost]
+        public IActionResult Pay([FromBody] PaymentRequestDto request)
         {
-            _logger = logger;
+            // Всегда возвращаем успешную оплату
+            return Ok(new PaymentResponseDto
+            {
+                Success = true,
+                Message = "Оплата прошла успешно",
+                PaymentId = Guid.NewGuid().ToString()
+            });
         }
+    }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+    // DTO для запроса
+    public class PaymentRequestDto
+    {
+        public decimal Amount { get; set; }
+        public string OrderId { get; set; }
+        public string CardNumber { get; set; }
+        public string CardHolder { get; set; }
+        public string Expiry { get; set; }
+        public string Cvc { get; set; }
+        // ... любые другие поля, которые нужны для теста
+    }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        [HttpPost("/pay")]
-        public Pay(){
-            
-        }
+    // DTO для ответа
+    public class PaymentResponseDto
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public string PaymentId { get; set; }
     }
 }
