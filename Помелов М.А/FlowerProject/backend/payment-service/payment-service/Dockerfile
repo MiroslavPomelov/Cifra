@@ -1,14 +1,24 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
-COPY . .
-RUN dotnet restore
-RUN dotnet publish -c Release -o /app/publish
+# Используем конкретную версию alpine для стабильности
+FROM node:alpine
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+# Создаем и переходим в рабочую директорию
 WORKDIR /app
-COPY --from=build /app/publish .
 
-ENV ASPNETCORE_URLS=http://0.0.0.0:3000
+# 1. Сначала копируем ТОЛЬКО файлы зависимостей
+COPY package.json package-lock.json ./
+
+# 2. Устанавливаем зависимости (с очисткой кэша)
+RUN npm install --production --legacy-peer-deps \
+    && npm cache clean --force
+
+# 3. Копируем остальные файлы проекта
+COPY . .
+
+# 4. Сборка проекта (если нужно)
+RUN npm run build
+
+# Открываем порт
 EXPOSE 3000
 
-ENTRYPOINT ["dotnet", "payment-service.dll"]
+# Команда запуска
+CMD ["node", "dist/main.js"]
