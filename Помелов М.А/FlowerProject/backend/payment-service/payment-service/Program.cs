@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+
 namespace payment_service
 {
     public class Program
@@ -6,29 +8,16 @@ namespace payment_service
         {
             var builder = WebApplication.CreateBuilder(args);
 
-          
-            builder.WebHost.ConfigureKestrel(options => 
-            {
-                options.ListenAnyIP(3000); 
-            });
-
-           
+            // Добавляем health checks
             builder.Services.AddHealthChecks();
 
-           
+            // Добавляем контроллеры
             builder.Services.AddControllers();
 
             var app = builder.Build();
 
-          
-            app.MapHealthChecks("/health", new HealthCheckOptions
-            {
-                ResponseWriter = async (context, report) => 
-                {
-                    context.Response.ContentType = "application/json";
-                    await context.Response.WriteAsync("true"); 
-                }
-            });
+            // Настраиваем health check endpoint
+            app.MapHealthChecks("/health");
 
             app.UseRouting();
             app.MapControllers();

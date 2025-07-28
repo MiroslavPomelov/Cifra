@@ -1,0 +1,78 @@
+### Проверка здоровья сервиса
+GET http://localhost:3005/payment/health
+Content-Type: application/json
+
+### Валидация карты - успешная
+POST http://localhost:3005/payment/validate-card
+Content-Type: application/json
+
+{
+  "cardNumber": "4111111111111111",
+  "cvc": "123",
+  "expiry": "12/25",
+  "cardHolder": "IVAN IVANOV"
+}
+
+### Валидация карты - ошибка
+POST http://localhost:3005/payment/validate-card
+Content-Type: application/json
+
+{
+  "cardNumber": "123",
+  "cvc": "12",
+  "expiry": "13/20",
+  "cardHolder": ""
+}
+
+### Создание платежа - успешный
+POST http://localhost:3005/payment
+Content-Type: application/json
+
+{
+  "amount": 2500.50,
+  "orderId": "ORDER-123",
+  "cardNumber": "4111111111111111",
+  "cardHolder": "IVAN IVANOV",
+  "expiry": "12/25",
+  "cvc": "123",
+  "currency": "RUB",
+  "description": "Оплата букета Розы 25 шт.",
+  "email": "customer@example.com"
+}
+
+### Создание платежа - ошибка валидации
+POST http://localhost:3005/payment
+Content-Type: application/json
+
+{
+  "amount": 0,
+  "orderId": "ORDER-123",
+  "cardNumber": "123",
+  "cardHolder": "IVAN IVANOV",
+  "expiry": "12/20",
+  "cvc": "12"
+}
+
+### Получение статуса платежа
+GET http://localhost:3005/payment/550e8400-e29b-41d4-a716-446655440000
+Content-Type: application/json
+
+### Тестирование через API Gateway
+GET http://localhost:80/payment/health
+Content-Type: application/json
+
+### Создание платежа через API Gateway
+POST http://localhost:80/payment
+Content-Type: application/json
+
+{
+  "amount": 1500.00,
+  "orderId": "ORDER-456",
+  "cardNumber": "5555555555554444",
+  "cardHolder": "PETR PETROV",
+  "expiry": "12/26",
+  "cvc": "123",
+  "currency": "RUB",
+  "description": "Оплата букета Тюльпаны 15 шт.",
+  "email": "petr@example.com"
+} 

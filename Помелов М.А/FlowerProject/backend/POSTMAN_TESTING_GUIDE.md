@@ -985,103 +985,247 @@ Body (raw, JSON):
 - `base_url` — http://localhost:80 (порт gateway)
 - `shop_token` — JWT магазина (см. регистрацию/логин магазина выше)
 
-## 1. Создать платёж
-**POST** `{{base_url}}/payment`
+## 1. Проверка здоровья сервиса
+**GET** `{{base_url}}/payment/health`
 
 **Headers:**
 ```
-Authorization: Bearer {{shop_token}}
+Content-Type: application/json
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "status": "healthy",
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
+```
+
+## 2. Валидация данных карты
+**POST** `{{base_url}}/payment/validate-card`
+
+**Headers:**
+```
 Content-Type: application/json
 ```
 
 **Body (raw JSON):**
 ```json
 {
-  "orderId": 123,
-  "amount": 2500,
-  "currency": "RUB",
-  "description": "Оплата букета Розы 25 шт."
+  "cardNumber": "4111111111111111",
+  "cvc": "123",
+  "expiry": "12/25",
+  "cardHolder": "IVAN IVANOV"
 }
+```
+
+**Ожидаемый ответ (успешная валидация):**
+```json
+{
+  "isValid": true,
+  "errors": [],
+  "cardType": null,
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
+```
+
+**Ожидаемый ответ (ошибка валидации):**
+```json
+{
+  "isValid": false,
+  "errors": [
+    "Неверная длина номера карты",
+    "Неверный формат срока действия (MM/YY)"
+  ],
+  "cardType": null,
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
+```
+
+## 3. Создать платёж с данными карты
+**POST** `{{base_url}}/payment`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Body (raw JSON):**
+```json
+{
+  "amount": 2500.50,
+  "orderId": "ORDER-123",
+  "cardNumber": "4111111111111111",
+  "cardHolder": "IVAN IVANOV",
+  "expiry": "12/25",
+  "cvc": "123",
+  "currency": "RUB",
+  "description": "Оплата букета Розы 25 шт.",
+  "email": "customer@example.com"
+}
+```
+
+**Ожидаемый ответ (успешный платеж):**
+```json
+{
+  "success": true,
+  "message": "Оплата прошла успешно!",
+  "paymentId": "550e8400-e29b-41d4-a716-446655440000",
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
+```
+
+**Ожидаемый ответ (неуспешный платеж):**
+```json
+{
+  "success": false,
+  "message": "Ошибка обработки платежа",
+  "paymentId": null,
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
+```
+
+## 4. Получить статус платежа по ID
+**GET** `{{base_url}}/payment/{paymentId}`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Пример запроса:**
+```
+GET {{base_url}}/payment/550e8400-e29b-41d4-a716-446655440000
 ```
 
 **Ожидаемый ответ:**
 ```json
 {
-  "paymentId": 1,
-  "orderId": 123,
-  "amount": 2500,
-  "currency": "RUB",
-  "status": "created",
-  "createdAt": "2024-01-01T00:00:00.000Z"
+  "paymentId": "550e8400-e29b-41d4-a716-446655440000",
+  "status": "completed",
+  "timestamp": "2024-01-01T00:00:00.000Z"
 }
 ```
 
-## 2. Получить информацию о платеже по ID
-**GET** `{{base_url}}/payment/1`
+## 5. Примеры ошибок
 
-**Headers:**
-```
-Authorization: Bearer {{shop_token}}
-```
-
-**Ожидаемый ответ:**
+### Неверный номер карты
+**POST** `{{base_url}}/payment`
 ```json
 {
-  "paymentId": 1,
-  "orderId": 123,
-  "amount": 2500,
-  "currency": "RUB",
-  "status": "created",
-  "createdAt": "2024-01-01T00:00:00.000Z"
+  "amount": 100,
+  "orderId": "ORDER-123",
+  "cardNumber": "123",
+  "cardHolder": "IVAN IVANOV",
+  "expiry": "12/25",
+  "cvc": "123"
 }
 ```
 
-## 3. Получить все платежи магазина
-**GET** `{{base_url}}/payment/shop/1`
-
-**Headers:**
-```
-Authorization: Bearer {{shop_token}}
-```
-
-**Ожидаемый ответ:**
+**Ответ:**
 ```json
-[
-  {
-    "paymentId": 1,
-    "orderId": 123,
-    "amount": 2500,
-    "currency": "RUB",
-    "status": "created",
-    "createdAt": "2024-01-01T00:00:00.000Z"
-  },
-  ...
-]
+{
+  "success": false,
+  "message": "Неверный номер карты",
+  "paymentId": null,
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
 ```
 
-## 4. Ошибки
-- Если не передан токен или он невалиден — 401 Unauthorized
-- Если платёж не найден — 404 Not Found
-- Если невалидные данные — 400 Bad Request
+### Неверный CVC
+**POST** `{{base_url}}/payment`
+```json
+{
+  "amount": 100,
+  "orderId": "ORDER-123",
+  "cardNumber": "4111111111111111",
+  "cardHolder": "IVAN IVANOV",
+  "expiry": "12/25",
+  "cvc": "12"
+}
+```
 
-## 5. Примечания
-- Все методы доступны только через API Gateway
-- Для защищённых методов используйте shop_token
+**Ответ:**
+```json
+{
+  "success": false,
+  "message": "Неверный CVC код",
+  "paymentId": null,
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
+```
+
+### Просроченная карта
+**POST** `{{base_url}}/payment`
+```json
+{
+  "amount": 100,
+  "orderId": "ORDER-123",
+  "cardNumber": "4111111111111111",
+  "cardHolder": "IVAN IVANOV",
+  "expiry": "12/20",
+  "cvc": "123"
+}
+```
+
+**Ответ:**
+```json
+{
+  "success": false,
+  "message": "Неверный срок действия карты",
+  "paymentId": null,
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
+```
+
+## 6. Правила валидации
+
+### Номер карты
+- Должен содержать от 13 до 19 цифр
+- Обязательное поле
+
+### CVC код
+- Должен содержать 3-4 цифры
+- Обязательное поле
+
+### Срок действия
+- Формат: MM/YY (например, 12/25)
+- Месяц: 01-12
+- Год: не должен быть в прошлом
+- Обязательное поле
+
+### Сумма
+- Должна быть больше нуля
+- Поддерживает десятичные значения
+
+### Дополнительные поля
+- `currency` - валюта (по умолчанию "RUB")
+- `description` - описание платежа
+- `email` - email клиента
+
+## 7. Примечания
+- Все методы доступны через API Gateway
+- Сервис симулирует обработку платежей (90% успешных, 10% неуспешных)
+- Статусы платежей: "completed", "pending", "failed", "processing"
 - Для тестирования используйте Postman или curl с нужными заголовками
 
 ---
 
-**Пример запроса на создание платежа:**
+**Пример полного запроса на создание платежа:**
 ```
 POST {{base_url}}/payment
 Headers:
   Content-Type: application/json
-  Authorization: Bearer {{shop_token}}
 Body (raw, JSON):
 {
-  "orderId": 123,
-  "amount": 2500,
+  "amount": 2500.50,
+  "orderId": "ORDER-123",
+  "cardNumber": "4111111111111111",
+  "cardHolder": "IVAN IVANOV",
+  "expiry": "12/25",
+  "cvc": "123",
   "currency": "RUB",
-  "description": "Оплата букета Розы 25 шт."
+  "description": "Оплата букета Розы 25 шт.",
+  "email": "customer@example.com"
 }
 ``` 

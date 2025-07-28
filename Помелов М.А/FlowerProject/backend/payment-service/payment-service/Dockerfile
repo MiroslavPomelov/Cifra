@@ -1,24 +1,34 @@
-# Используем конкретную версию alpine для стабильности
-FROM node:alpine
+# Используем официальный образ .NET 8.0 SDK для сборки
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
 
-# Создаем и переходим в рабочую директорию
+# Копируем файлы проекта
+COPY ["payment-service.csproj", "./"]
+RUN dotnet restore "payment-service.csproj"
+
+# Копируем остальные файлы проекта
+COPY . .
+RUN dotnet build "payment-service.csproj" -c Release -o /app/build
+
+# Публикуем приложение
+FROM build AS publish
+RUN dotnet publish "payment-service.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+# Финальный образ с runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 
-# 1. Сначала копируем ТОЛЬКО файлы зависимостей
-COPY package.json package-lock.json ./
+# Устанавливаем wget для healthcheck
+RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
 
-# 2. Устанавливаем зависимости (с очисткой кэша)
-RUN npm install --production --legacy-peer-deps \
-    && npm cache clean --force
-
-# 3. Копируем остальные файлы проекта
-COPY . .
-
-# 4. Сборка проекта (если нужно)
-RUN npm run build
+# Копируем опубликованное приложение
+COPY --from=publish /app/publish .
 
 # Открываем порт
 EXPOSE 3000
 
+# Устанавливаем переменную окружения для порта
+ENV ASPNETCORE_URLS=http://+:3000
+
 # Команда запуска
-CMD ["node", "dist/main.js"]
+ENTRYPOINT ["dotnet", "payment-service.dll"]
