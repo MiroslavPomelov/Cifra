@@ -225,9 +225,14 @@ services:
       dockerfile: Dockerfile
     container_name: payment-service
     ports:
-      - "3005:80"
+      - "3005:3000"
     networks:
       - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
 
 networks:
   app_network:

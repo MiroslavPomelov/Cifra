@@ -15,13 +15,13 @@ namespace payment_service.Controllers
             return Ok(new PaymentResponseDto
             {
                 Success = true,
-                Message = "Оплата прошла успешно",
+                Message = "Оплата прошла успешно!",
                 PaymentId = Guid.NewGuid().ToString()
             });
         }
     }
 
-    // DTO для запроса
+    // Запрос
     public class PaymentRequestDto
     {
         public decimal Amount { get; set; }
@@ -30,10 +30,9 @@ namespace payment_service.Controllers
         public string CardHolder { get; set; }
         public string Expiry { get; set; }
         public string Cvc { get; set; }
-        // ... любые другие поля, которые нужны для теста
     }
 
-    // DTO для ответа
+    // Ответ
     public class PaymentResponseDto
     {
         public bool Success { get; set; }

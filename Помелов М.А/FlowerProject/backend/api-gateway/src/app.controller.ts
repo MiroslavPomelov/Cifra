@@ -41,14 +41,12 @@ export class AppController {
   @All(['products', 'products/', 'products/*'])
   @UseGuards(AuthGuard)
   async proxyProducts(@Req() req: Request, @Res() res: Response) {
-    // Для публичных методов (GET) guard не нужен, но для простоты можно оставить
-    // Если нужно разделить — добавить отдельный @All для GET без guard
     await this.proxyRequest(req, res, 'http://product-service:3000');
   }
 
   @All(['payment', 'payment/', 'payment/*'])
   async proxyPayment(@Req() req: Request, @Res() res: Response) {
-    await this.proxyRequest(req, res, 'http://payment-service:80');
+    await this.proxyRequest(req, res, 'http://payment-service:3000');
   }
 
   private async proxyRequest(
