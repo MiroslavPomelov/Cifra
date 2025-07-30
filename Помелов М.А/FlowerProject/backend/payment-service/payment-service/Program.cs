@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using payment_service.Data;
 
@@ -11,10 +13,7 @@ namespace payment_service
 
             builder.Services.AddDbContext<PaymentDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PaymentDB")));
 
-            // Добавляем health checks
             builder.Services.AddHealthChecks();
-
-            // Добавляем контроллеры
             builder.Services.AddControllers();
 
             var app = builder.Build();

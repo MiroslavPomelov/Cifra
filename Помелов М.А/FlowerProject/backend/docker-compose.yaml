@@ -232,6 +232,7 @@ services:
       - app_network
     environment:
       - ASPNETCORE_URLS=http://+:3000
+      - ConnectionStrings__PaymentDB=Host=paymentdb;Port=5432;Database=paymentdb;Username=payment_user;Password=payment_password
     depends_on:
       paymentdb:
         condition: service_healthy
