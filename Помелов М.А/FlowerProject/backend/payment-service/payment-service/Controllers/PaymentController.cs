@@ -1,14 +1,23 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic; // Added for List<string>
+using System.Collections.Generic; 
+using payment_service.Data;
+using payment_service.Models;
 
 namespace payment_service.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PaymentController : Controller
+    public class PaymentController : ControllerBase
     {
+        private readonly PaymentDbContext _context;
+
+        public PaymentController(PaymentDbContext context)
+        {
+            _context = context;
+        }
+
         private static readonly List<PaymentResponseDto> payments = new List<PaymentResponseDto>(); 
 
         // GET /payment/health
@@ -108,6 +117,10 @@ namespace payment_service.Controllers
             };
 
             payments.Add(paymentResponse);
+
+            await _context.Payments.AddAsync(payment);
+            await _context.SaveChangesAsync();
+
             return Ok(paymentResponse);
         }
 
