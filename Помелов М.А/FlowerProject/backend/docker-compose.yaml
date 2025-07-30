@@ -238,6 +238,8 @@ services:
       timeout: 10s
       retries: 10
 
+      
+
 networks:
   app_network:
     driver: bridge

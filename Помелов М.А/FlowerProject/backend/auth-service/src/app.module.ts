@@ -14,7 +14,7 @@ import * as redisStore from 'cache-manager-ioredis';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         transport: {
-          host: 'smtp.gmail.com', // или другой SMTP сервер
+          host: 'smtp.gmail.com', 
           port: 587,
           secure: false,
           auth: {

@@ -9,6 +9,8 @@ namespace payment_service.Controllers
     [Route("[controller]")]
     public class PaymentController : Controller
     {
+        private static readonly List<PaymentResponseDto> payments = new List<PaymentResponseDto>(); 
+
         // GET /payment/health
         [HttpGet("health")]
         public IActionResult Health()
@@ -16,11 +18,28 @@ namespace payment_service.Controllers
             return Ok(new { status = "healthy", timestamp = DateTime.UtcNow });
         }
 
+
+
+
+        // Все транзакции оплаы
+        // GET /payment
+        [HttpGet]
+        public IActionResult GetAllPayments()
+        {
+            Console.WriteLine($"Total payments: {payments.Count}");
+            if (payments.Count == 0)
+            {
+                return NotFound(new { message = "Не нашлось платежей" });
+            }
+            
+            return Ok(payments);
+        }
+
         // POST /payment
         [HttpPost]
         public IActionResult Pay([FromBody] PaymentRequestDto request)
         {
-            // Валидация входных данных
+            // Валидация
             if (!ModelState.IsValid)
             {
                 return BadRequest(new PaymentResponseDto
@@ -31,7 +50,7 @@ namespace payment_service.Controllers
                 });
             }
 
-            // Валидация номера карты (простая проверка длины)
+            // Валидация номер карты
             if (string.IsNullOrEmpty(request.CardNumber) || request.CardNumber.Length < 13 || request.CardNumber.Length > 19)
             {
                 return BadRequest(new PaymentResponseDto
@@ -75,16 +94,21 @@ namespace payment_service.Controllers
                 });
             }
 
-            // Симуляция обработки платежа
+            // Типа платежка
             var paymentId = Guid.NewGuid().ToString();
             var success = SimulatePaymentProcessing(request);
 
-            return Ok(new PaymentResponseDto
+
+            var paymentResponse = new PaymentResponseDto
             {
                 Success = success,
                 Message = success ? "Оплата прошла успешно!" : "Ошибка обработки платежа",
-                PaymentId = success ? paymentId : null
-            });
+                PaymentId = success ? paymentId : null,
+                Status = success ? "created" : "failed"
+            };
+
+            payments.Add(paymentResponse);
+            return Ok(paymentResponse);
         }
 
         // GET /payment/{paymentId}
@@ -106,6 +130,8 @@ namespace payment_service.Controllers
                 Timestamp = DateTime.UtcNow
             });
         }
+
+
 
         // POST /payment/validate-card
         [HttpPost("validate-card")]
@@ -158,24 +184,26 @@ namespace payment_service.Controllers
 
         private bool SimulatePaymentProcessing(PaymentRequestDto request)
         {
-            // Симуляция различных сценариев
+            // Для рандома чтобы не всегда
             var random = new Random();
             
-            // 90% успешных платежей
+            // 90% проходят все ок спецом
             if (random.Next(1, 101) <= 90)
             {
                 return true;
             }
 
-            // 10% неуспешных платежей
+            // 10% типа не прошла
             return false;
         }
 
         private string SimulatePaymentStatus(string paymentId)
         {
-            // Симуляция статуса платежа
+            // Типа платежка
             var random = new Random();
             var statuses = new[] { "completed", "pending", "failed", "processing" };
+
+           
             return statuses[random.Next(statuses.Length)];
         }
 
@@ -207,7 +235,7 @@ namespace payment_service.Controllers
         }
     }
 
-    // Запрос на платеж
+   
     public class PaymentRequestDto
     {
         [Required(ErrorMessage = "Сумма обязательна")]
@@ -232,22 +260,23 @@ namespace payment_service.Controllers
         [StringLength(4, MinimumLength = 3, ErrorMessage = "CVC код должен содержать 3-4 цифры")]
         public string? Cvc { get; set; }
 
-        // Дополнительные поля
+   
         public string? Currency { get; set; } = "RUB";
         public string? Description { get; set; }
         public string? Email { get; set; }
     }
 
-    // Ответ на платеж
+  
     public class PaymentResponseDto
     {
         public bool Success { get; set; }
         public string? Message { get; set; }
         public string? PaymentId { get; set; }
+        public string? Status { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
     }
 
-    // Запрос на валидацию карты
+ 
     public class CardValidationRequestDto
     {
         public string? CardNumber { get; set; }
@@ -256,7 +285,7 @@ namespace payment_service.Controllers
         public string? CardHolder { get; set; }
     }
 
-    // Ответ на валидацию карты
+
     public class CardValidationResponseDto
     {
         public bool IsValid { get; set; }
