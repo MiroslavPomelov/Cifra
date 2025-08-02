@@ -1,6 +1,5 @@
-using Microsoft.EntityFrameworkCore;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
 using payment_service.Data;
 
 namespace payment_service
@@ -11,12 +10,32 @@ namespace payment_service
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<PaymentDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PaymentDB")));
+            // Добавляем Entity Framework
+            builder.Services.AddDbContext<PaymentDbContext>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("PaymentDB")));
 
+            // Добавляем health checks
             builder.Services.AddHealthChecks();
+
+            // Добавляем контроллеры
             builder.Services.AddControllers();
 
             var app = builder.Build();
+
+            // Автоматическое создание базы данных
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<PaymentDbContext>();
+                try
+                {
+                    context.Database.EnsureCreated();
+                    Console.WriteLine("База данных успешно создана или уже существует");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ошибка при создании базы данных: {ex.Message}");
+                }
+            }
 
             // Настраиваем health check endpoint
             app.MapHealthChecks("/health");

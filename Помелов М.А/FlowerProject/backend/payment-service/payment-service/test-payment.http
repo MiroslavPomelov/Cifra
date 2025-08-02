@@ -30,7 +30,6 @@ Content-Type: application/json
 
 {
   "amount": 2500.50,
-  "orderId": "ORDER-123",
   "cardNumber": "4111111111111111",
   "cardHolder": "IVAN IVANOV",
   "expiry": "12/25",
@@ -46,18 +45,29 @@ Content-Type: application/json
 
 {
   "amount": 0,
-  "orderId": "ORDER-123",
   "cardNumber": "123",
   "cardHolder": "IVAN IVANOV",
   "expiry": "12/20",
   "cvc": "12"
 }
 
-### Получение статуса платежа
+### Получение всех платежей
+GET http://localhost:3005/payment
+Content-Type: application/json
+
+### Получение статистики платежей
+GET http://localhost:3005/payment/statistics
+Content-Type: application/json
+
+### Получение платежа по ID (замените {paymentId} на реальный ID)
 GET http://localhost:3005/payment/550e8400-e29b-41d4-a716-446655440000
 Content-Type: application/json
 
-### Тестирование через API Gateway
+### Удаление платежа по ID (замените {paymentId} на реальный ID)
+DELETE http://localhost:3005/payment/550e8400-e29b-41d4-a716-446655440000
+Content-Type: application/json
+
+### Тестирование через API Gateway - проверка здоровья
 GET http://localhost:80/payment/health
 Content-Type: application/json
 
@@ -67,7 +77,6 @@ Content-Type: application/json
 
 {
   "amount": 1500.00,
-  "orderId": "ORDER-456",
   "cardNumber": "5555555555554444",
   "cardHolder": "PETR PETROV",
   "expiry": "12/26",
@@ -75,4 +84,12 @@ Content-Type: application/json
   "currency": "RUB",
   "description": "Оплата букета Тюльпаны 15 шт.",
   "email": "petr@example.com"
-} 
+}
+
+### Получение всех платежей через API Gateway
+GET http://localhost:80/payment
+Content-Type: application/json
+
+### Получение статистики через API Gateway
+GET http://localhost:80/payment/statistics
+Content-Type: application/json 

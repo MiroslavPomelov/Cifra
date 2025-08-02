@@ -5,6 +5,8 @@ using payment_service.Models;
 using System;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace payment_service.Controllers
 {
@@ -19,8 +21,6 @@ namespace payment_service.Controllers
             _context = context;
         }
 
-        private static readonly List<PaymentResponseDto> payments = new List<PaymentResponseDto>(); 
-
         // GET /payment/health
         [HttpGet("health")]
         public IActionResult Health()
@@ -28,246 +28,287 @@ namespace payment_service.Controllers
             return Ok(new { status = "healthy", timestamp = DateTime.UtcNow });
         }
 
-
-
-
-        // Все транзакции оплаы
-        // GET /payment
+        // GET /payment - получить все платежи
         [HttpGet]
-        public IActionResult GetAllPayments()
+        public async Task<IActionResult> GetAllPayments()
         {
-            Console.WriteLine($"Total payments: {payments.Count}");
-            if (payments.Count == 0)
+            try
             {
-                return NotFound(new { message = "Не нашлось платежей" });
+                var payments = await _context.Payments
+                    .OrderByDescending(p => p.CreatedAt)
+                    .Select(p => new PaymentResponseDto
+                    {
+                        Success = p.Status == "completed" || p.Status == "created",
+                        PaymentId = p.PaymentId.ToString(),
+                        Status = p.Status,
+                        Message = p.Status == "completed" ? "Payment completed successfully" : p.Status,
+                        Amount = p.Amount,
+                        Currency = p.Currency,
+                        Description = p.Description,
+                        Email = p.Email,
+                        Timestamp = p.CreatedAt
+                    })
+                    .ToListAsync();
+
+                if (!payments.Any())
+                {
+                    return NotFound(new { message = "Платежи не найдены" });
+                }
+
+                return Ok(payments);
             }
-            
-            return Ok(payments);
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Ошибка при получении платежей", error = ex.Message });
+            }
         }
 
-        // POST /payment
-        // [HttpPost]
-        // public IActionResult Pay([FromBody] PaymentRequestDto request)
-        // {
-           
-        //     if (!ModelState.IsValid)
-        //     {
-        //         return BadRequest(new PaymentResponseDto
-        //         {
-        //             Success = false,
-        //             Message = "Неверные данные платежа",
-        //             PaymentId = null
-        //         });
-        //     }
-
-           
-        //     if (string.IsNullOrEmpty(request.CardNumber) || request.CardNumber.Length < 13 || request.CardNumber.Length > 19)
-        //     {
-        //         return BadRequest(new PaymentResponseDto
-        //         {
-        //             Success = false,
-        //             Message = "Неверный номер карты",
-        //             PaymentId = null
-        //         });
-        //     }
-
-        //     // Валидация CVC
-        //     if (string.IsNullOrEmpty(request.Cvc) || request.Cvc.Length < 3 || request.Cvc.Length > 4)
-        //     {
-        //         return BadRequest(new PaymentResponseDto
-        //         {
-        //             Success = false,
-        //             Message = "Неверный CVC код",
-        //             PaymentId = null
-        //         });
-        //     }
-
-        //     // Валидация срока действия
-        //     if (string.IsNullOrEmpty(request.Expiry) || !IsValidExpiry(request.Expiry))
-        //     {
-        //         return BadRequest(new PaymentResponseDto
-        //         {
-        //             Success = false,
-        //             Message = "Неверный срок действия карты",
-        //             PaymentId = null
-        //         });
-        //     }
-
-        //     // Валидация суммы
-        //     if (request.Amount <= 0)
-        //     {
-        //         return BadRequest(new PaymentResponseDto
-        //         {
-        //             Success = false,
-        //             Message = "Сумма должна быть больше нуля",
-        //             PaymentId = null
-        //         });
-        //     }
-
-        //     // Типа платежка
-        //     var paymentId = Guid.NewGuid().ToString();
-        //     var success = SimulatePaymentProcessing(request);
-
-
-        //     var paymentResponse = new PaymentResponseDto
-        //     {
-        //         Success = success,
-        //         Message = success ? "Оплата прошла успешно!" : "Ошибка обработки платежа",
-        //         PaymentId = success ? paymentId : null,
-        //         Status = success ? "created" : "failed"
-        //     };
-
-        //     payments.Add(paymentResponse);
-
-        //     await _context.Payments.AddAsync(paymentResponse);
-        //     await _context.SaveChangesAsync();
-
-        //     return Ok(paymentResponse);
-        // }
-
-
-
-
-
-       [HttpPost]
-public async Task<IActionResult> Pay([FromBody] PaymentRequestDto request)
-{
-    if (!ModelState.IsValid)
-    {
-        return BadRequest(ModelState);
-    }
-
-    var payment = new Payment
-    {
-        PaymentId = Guid.NewGuid(),
-        Amount = request.Amount,
-        Status = "created",
-        CardNumber = request.CardNumber,
-        CardHolder = request.CardHolder,
-        Expiry = request.Expiry,
-        Cvc = request.Cvc,
-        Currency = request.Currency ?? "RUB",
-        Description = request.Description ?? string.Empty,
-        Email = request.Email ?? string.Empty,
-        CreatedAt = DateTime.UtcNow
-    };
-
-    await _context.Payments.AddAsync(payment);
-    await _context.SaveChangesAsync();
-
-    var response = new PaymentResponseDto
-    {
-        Success = true,
-        PaymentId = payment.PaymentId.ToString(), // Явное преобразование Guid в string
-        Status = payment.Status,
-        Message = "Payment processed successfully",
-        Timestamp = DateTime.UtcNow
-    };
-
-    return Ok(response);
-}
-
-
-
-
-
-
-
-
-        // GET /payment/{paymentId}
+        // GET /payment/{paymentId} - получить платеж по ID
         [HttpGet("{paymentId}")]
-        public IActionResult GetPaymentStatus(string paymentId)
+        public async Task<IActionResult> GetPaymentById(string paymentId)
         {
-            if (string.IsNullOrEmpty(paymentId))
+            try
             {
-                return BadRequest(new { message = "ID платежа обязателен" });
+                if (!Guid.TryParse(paymentId, out Guid paymentGuid))
+                {
+                    return BadRequest(new { message = "Неверный формат ID платежа" });
+                }
+
+                var payment = await _context.Payments
+                    .FirstOrDefaultAsync(p => p.PaymentId == paymentGuid);
+
+                if (payment == null)
+                {
+                    return NotFound(new { message = "Платеж не найден" });
+                }
+
+                var response = new PaymentResponseDto
+                {
+                    Success = payment.Status == "completed" || payment.Status == "created",
+                    PaymentId = payment.PaymentId.ToString(),
+                    Status = payment.Status,
+                    Message = payment.Status == "completed" ? "Payment completed successfully" : payment.Status,
+                    Amount = payment.Amount,
+                    Currency = payment.Currency,
+                    Description = payment.Description,
+                    Email = payment.Email,
+                    Timestamp = payment.CreatedAt
+                };
+
+                return Ok(response);
             }
-
-            // Симуляция получения статуса платежа
-            var status = SimulatePaymentStatus(paymentId);
-
-            return Ok(new
+            catch (Exception ex)
             {
-                PaymentId = paymentId,
-                Status = status,
-                Timestamp = DateTime.UtcNow
-            });
+                return StatusCode(500, new { message = "Ошибка при получении платежа", error = ex.Message });
+            }
         }
 
+        // POST /payment - создать новый платеж
+        [HttpPost]
+        public async Task<IActionResult> CreatePayment([FromBody] PaymentRequestDto request)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(new { message = "Неверные данные платежа", errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)) });
+                }
 
+                // Валидация номера карты
+                if (string.IsNullOrEmpty(request.CardNumber) || request.CardNumber.Length < 13 || request.CardNumber.Length > 19)
+                {
+                    return BadRequest(new { message = "Неверный номер карты" });
+                }
 
-        // POST /payment/validate-card
+                // Валидация CVC
+                if (string.IsNullOrEmpty(request.Cvc) || request.Cvc.Length < 3 || request.Cvc.Length > 4)
+                {
+                    return BadRequest(new { message = "Неверный CVC код" });
+                }
+
+                // Валидация срока действия
+                if (string.IsNullOrEmpty(request.Expiry) || !IsValidExpiry(request.Expiry))
+                {
+                    return BadRequest(new { message = "Неверный срок действия карты" });
+                }
+
+                // Валидация суммы
+                if (request.Amount <= 0)
+                {
+                    return BadRequest(new { message = "Сумма должна быть больше нуля" });
+                }
+
+                // Симуляция обработки платежа
+                var success = SimulatePaymentProcessing(request);
+                var status = success ? "completed" : "failed";
+
+                var payment = new Payment
+                {
+                    PaymentId = Guid.NewGuid(),
+                    Amount = request.Amount,
+                    Status = status,
+                    CardNumber = MaskCardNumber(request.CardNumber), // Маскируем номер карты для безопасности
+                    CardHolder = request.CardHolder,
+                    Expiry = request.Expiry,
+                    Cvc = "***", // Не сохраняем CVC
+                    Currency = request.Currency ?? "RUB",
+                    Description = request.Description ?? string.Empty,
+                    Email = request.Email ?? string.Empty,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await _context.Payments.AddAsync(payment);
+                await _context.SaveChangesAsync();
+
+                var response = new PaymentResponseDto
+                {
+                    Success = success,
+                    PaymentId = payment.PaymentId.ToString(),
+                    Status = payment.Status,
+                    Message = success ? "Платеж обработан успешно!" : "Ошибка обработки платежа",
+                    Amount = payment.Amount,
+                    Currency = payment.Currency,
+                    Description = payment.Description,
+                    Email = payment.Email,
+                    Timestamp = payment.CreatedAt
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Ошибка при создании платежа", error = ex.Message });
+            }
+        }
+
+        // POST /payment/validate-card - валидация данных карты
         [HttpPost("validate-card")]
         public IActionResult ValidateCard([FromBody] CardValidationRequestDto request)
         {
-            var validationResult = new CardValidationResponseDto
+            try
             {
-                IsValid = true,
-                Errors = new List<string>()
-            };
+                var validationResult = new CardValidationResponseDto
+                {
+                    IsValid = true,
+                    Errors = new List<string>(),
+                    Timestamp = DateTime.UtcNow
+                };
 
-            // Проверка номера карты
-            if (string.IsNullOrEmpty(request.CardNumber))
-            {
-                validationResult.IsValid = false;
-                validationResult.Errors.Add("Номер карты обязателен");
-            }
-            else if (request.CardNumber.Length < 13 || request.CardNumber.Length > 19)
-            {
-                validationResult.IsValid = false;
-                validationResult.Errors.Add("Неверная длина номера карты");
-            }
+                // Проверка номера карты
+                if (string.IsNullOrEmpty(request.CardNumber))
+                {
+                    validationResult.IsValid = false;
+                    validationResult.Errors.Add("Номер карты обязателен");
+                }
+                else if (request.CardNumber.Length < 13 || request.CardNumber.Length > 19)
+                {
+                    validationResult.IsValid = false;
+                    validationResult.Errors.Add("Неверная длина номера карты");
+                }
 
-            // Проверка CVC
-            if (string.IsNullOrEmpty(request.Cvc))
-            {
-                validationResult.IsValid = false;
-                validationResult.Errors.Add("CVC код обязателен");
-            }
-            else if (request.Cvc.Length < 3 || request.Cvc.Length > 4)
-            {
-                validationResult.IsValid = false;
-                validationResult.Errors.Add("Неверная длина CVC кода");
-            }
+                // Проверка CVC
+                if (string.IsNullOrEmpty(request.Cvc))
+                {
+                    validationResult.IsValid = false;
+                    validationResult.Errors.Add("CVC код обязателен");
+                }
+                else if (request.Cvc.Length < 3 || request.Cvc.Length > 4)
+                {
+                    validationResult.IsValid = false;
+                    validationResult.Errors.Add("Неверная длина CVC кода");
+                }
 
-            // Проверка срока действия
-            if (string.IsNullOrEmpty(request.Expiry))
-            {
-                validationResult.IsValid = false;
-                validationResult.Errors.Add("Срок действия обязателен");
-            }
-            else if (!IsValidExpiry(request.Expiry))
-            {
-                validationResult.IsValid = false;
-                validationResult.Errors.Add("Неверный формат срока действия (MM/YY)");
-            }
+                // Проверка срока действия
+                if (string.IsNullOrEmpty(request.Expiry))
+                {
+                    validationResult.IsValid = false;
+                    validationResult.Errors.Add("Срок действия обязателен");
+                }
+                else if (!IsValidExpiry(request.Expiry))
+                {
+                    validationResult.IsValid = false;
+                    validationResult.Errors.Add("Неверный формат срока действия (MM/YY)");
+                }
 
-            return Ok(validationResult);
+                // Определение типа карты
+                if (validationResult.IsValid && !string.IsNullOrEmpty(request.CardNumber))
+                {
+                    validationResult.CardType = DetermineCardType(request.CardNumber);
+                }
+
+                return Ok(validationResult);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Ошибка при валидации карты", error = ex.Message });
+            }
+        }
+
+        // GET /payment/statistics - статистика платежей
+        [HttpGet("statistics")]
+        public async Task<IActionResult> GetPaymentStatistics()
+        {
+            try
+            {
+                var totalPayments = await _context.Payments.CountAsync();
+                var successfulPayments = await _context.Payments.CountAsync(p => p.Status == "completed");
+                var failedPayments = await _context.Payments.CountAsync(p => p.Status == "failed");
+                var totalAmount = await _context.Payments.Where(p => p.Status == "completed").SumAsync(p => p.Amount);
+
+                var statistics = new
+                {
+                    TotalPayments = totalPayments,
+                    SuccessfulPayments = successfulPayments,
+                    FailedPayments = failedPayments,
+                    SuccessRate = totalPayments > 0 ? (double)successfulPayments / totalPayments * 100 : 0,
+                    TotalAmount = totalAmount,
+                    AverageAmount = successfulPayments > 0 ? totalAmount / successfulPayments : 0,
+                    Timestamp = DateTime.UtcNow
+                };
+
+                return Ok(statistics);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Ошибка при получении статистики", error = ex.Message });
+            }
+        }
+
+        // DELETE /payment/{paymentId} - удалить платеж (для административных целей)
+        [HttpDelete("{paymentId}")]
+        public async Task<IActionResult> DeletePayment(string paymentId)
+        {
+            try
+            {
+                if (!Guid.TryParse(paymentId, out Guid paymentGuid))
+                {
+                    return BadRequest(new { message = "Неверный формат ID платежа" });
+                }
+
+                var payment = await _context.Payments
+                    .FirstOrDefaultAsync(p => p.PaymentId == paymentGuid);
+
+                if (payment == null)
+                {
+                    return NotFound(new { message = "Платеж не найден" });
+                }
+
+                _context.Payments.Remove(payment);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Платеж успешно удален" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Ошибка при удалении платежа", error = ex.Message });
+            }
         }
 
         private bool SimulatePaymentProcessing(PaymentRequestDto request)
         {
-            // Для рандома чтобы не всегда
             var random = new Random();
-            
-            // 90% проходят все ок спецом
-            if (random.Next(1, 101) <= 90)
-            {
-                return true;
-            }
-
-            // 10% типа не прошла
-            return false;
-        }
-
-        private string SimulatePaymentStatus(string paymentId)
-        {
-            // Типа платежка
-            var random = new Random();
-            var statuses = new[] { "completed", "pending", "failed", "processing" };
-
-           
-            return statuses[random.Next(statuses.Length)];
+            // 90% успешных платежей
+            return random.Next(1, 101) <= 90;
         }
 
         private bool IsValidExpiry(string expiry)
@@ -296,46 +337,73 @@ public async Task<IActionResult> Pay([FromBody] PaymentRequestDto request)
                 return false;
             }
         }
+
+        private string MaskCardNumber(string cardNumber)
+        {
+            if (string.IsNullOrEmpty(cardNumber) || cardNumber.Length < 4)
+                return cardNumber;
+
+            return cardNumber.Substring(0, 4) + "****" + cardNumber.Substring(cardNumber.Length - 4);
+        }
+
+        private string DetermineCardType(string cardNumber)
+        {
+            if (string.IsNullOrEmpty(cardNumber))
+                return "Unknown";
+
+            if (cardNumber.StartsWith("4"))
+                return "Visa";
+            if (cardNumber.StartsWith("5"))
+                return "MasterCard";
+            if (cardNumber.StartsWith("34") || cardNumber.StartsWith("37"))
+                return "American Express";
+            if (cardNumber.StartsWith("6"))
+                return "Discover";
+
+            return "Unknown";
+        }
     }
 
-   
-public class PaymentRequestDto
-{
-    [Required(ErrorMessage = "Сумма обязательна")]
-    [Range(0.01, double.MaxValue, ErrorMessage = "Сумма должна быть больше нуля")]
-    public decimal Amount { get; set; }
+    // DTO классы
+    public class PaymentRequestDto
+    {
+        [Required(ErrorMessage = "Сумма обязательна")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Сумма должна быть больше нуля")]
+        public decimal Amount { get; set; }
 
-    [Required(ErrorMessage = "Номер карты обязателен")]
-    [StringLength(19, MinimumLength = 13, ErrorMessage = "Номер карты должен содержать от 13 до 19 цифр")]
-    public string CardNumber { get; set; }
+        [Required(ErrorMessage = "Номер карты обязателен")]
+        [StringLength(19, MinimumLength = 13, ErrorMessage = "Номер карты должен содержать от 13 до 19 цифр")]
+        public string CardNumber { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Имя держателя карты обязательно")]
-    public string CardHolder { get; set; }
+        [Required(ErrorMessage = "Имя держателя карты обязательно")]
+        public string CardHolder { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Срок действия обязателен")]
-    [RegularExpression(@"^(0[1-9]|1[0-2])\/([0-9]{2})$", ErrorMessage = "Формат срока действия: MM/YY")]
-    public string Expiry { get; set; }
+        [Required(ErrorMessage = "Срок действия обязателен")]
+        [RegularExpression(@"^(0[1-9]|1[0-2])\/([0-9]{2})$", ErrorMessage = "Формат срока действия: MM/YY")]
+        public string Expiry { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "CVC код обязателен")]
-    [StringLength(4, MinimumLength = 3, ErrorMessage = "CVC код должен содержать 3-4 цифры")]
-    public string Cvc { get; set; }
+        [Required(ErrorMessage = "CVC код обязателен")]
+        [StringLength(4, MinimumLength = 3, ErrorMessage = "CVC код должен содержать 3-4 цифры")]
+        public string Cvc { get; set; } = string.Empty;
 
-    public string Currency { get; set; } = "RUB";
-    public string Description { get; set; }
-    public string Email { get; set; }
-}
+        public string Currency { get; set; } = "RUB";
+        public string Description { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+    }
 
-  
-public class PaymentResponseDto
-{
-     public bool Success { get; set; }
-    public string PaymentId { get; set; } = string.Empty;
-    public string Status { get; set; } = string.Empty;
-    public string Message { get; set; } = string.Empty;
-    public DateTime Timestamp { get; set; }
-}
+    public class PaymentResponseDto
+    {
+        public bool Success { get; set; }
+        public string PaymentId { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+        public decimal Amount { get; set; }
+        public string Currency { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public DateTime Timestamp { get; set; }
+    }
 
- 
     public class CardValidationRequestDto
     {
         public string? CardNumber { get; set; }
@@ -344,12 +412,11 @@ public class PaymentResponseDto
         public string? CardHolder { get; set; }
     }
 
-
     public class CardValidationResponseDto
     {
         public bool IsValid { get; set; }
         public List<string> Errors { get; set; } = new List<string>();
         public string? CardType { get; set; }
-        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+        public DateTime Timestamp { get; set; }
     }
 }

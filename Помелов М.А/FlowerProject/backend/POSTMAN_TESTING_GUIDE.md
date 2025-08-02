@@ -1085,7 +1085,32 @@ Content-Type: application/json
 }
 ```
 
-## 4. Получить статус платежа по ID
+## 4. Получить все платежи
+**GET** `{{base_url}}/payment`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Ожидаемый ответ:**
+```json
+[
+  {
+    "success": true,
+    "paymentId": "550e8400-e29b-41d4-a716-446655440000",
+    "status": "completed",
+    "message": "Payment completed successfully",
+    "amount": 2500.50,
+    "currency": "RUB",
+    "description": "Оплата букета Розы 25 шт.",
+    "email": "customer@example.com",
+    "timestamp": "2024-01-01T00:00:00.000Z"
+  }
+]
+```
+
+## 5. Получить платеж по ID
 **GET** `{{base_url}}/payment/{paymentId}`
 
 **Headers:**
@@ -1101,13 +1126,60 @@ GET {{base_url}}/payment/550e8400-e29b-41d4-a716-446655440000
 **Ожидаемый ответ:**
 ```json
 {
+  "success": true,
   "paymentId": "550e8400-e29b-41d4-a716-446655440000",
   "status": "completed",
+  "message": "Payment completed successfully",
+  "amount": 2500.50,
+  "currency": "RUB",
+  "description": "Оплата букета Розы 25 шт.",
+  "email": "customer@example.com",
   "timestamp": "2024-01-01T00:00:00.000Z"
 }
 ```
 
-## 5. Примеры ошибок
+## 6. Получить статистику платежей
+**GET** `{{base_url}}/payment/statistics`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "totalPayments": 10,
+  "successfulPayments": 9,
+  "failedPayments": 1,
+  "successRate": 90.0,
+  "totalAmount": 15000.50,
+  "averageAmount": 1666.72,
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
+```
+
+## 7. Удалить платеж (административная функция)
+**DELETE** `{{base_url}}/payment/{paymentId}`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Пример запроса:**
+```
+DELETE {{base_url}}/payment/550e8400-e29b-41d4-a716-446655440000
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "message": "Платеж успешно удален"
+}
+```
+
+## 8. Примеры ошибок
 
 ### Неверный номер карты
 **POST** `{{base_url}}/payment`
@@ -1178,7 +1250,7 @@ GET {{base_url}}/payment/550e8400-e29b-41d4-a716-446655440000
 }
 ```
 
-## 6. Правила валидации
+## 9. Правила валидации
 
 ### Номер карты
 - Должен содержать от 13 до 19 цифр
@@ -1203,7 +1275,7 @@ GET {{base_url}}/payment/550e8400-e29b-41d4-a716-446655440000
 - `description` - описание платежа
 - `email` - email клиента
 
-## 7. Примечания
+## 10. Примечания
 - Все методы доступны через API Gateway
 - Сервис симулирует обработку платежей (90% успешных, 10% неуспешных)
 - Статусы платежей: "completed", "pending", "failed", "processing"
