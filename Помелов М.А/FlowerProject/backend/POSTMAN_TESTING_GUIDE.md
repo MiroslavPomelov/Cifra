@@ -1,5 +1,32 @@
 # Руководство по тестированию API через Postman
 
+## Архитектура проекта
+
+### Микросервисы
+Проект построен на микросервисной архитектуре со следующими сервисами:
+
+- **API Gateway** (порт 80) - единая точка входа для всех запросов
+- **Auth Service** (порт 3002) - аутентификация и авторизация
+- **Users Service** (порт 3001) - управление пользователями
+- **Shop Service** (порт 3003) - управление магазинами
+- **Product Service** (порт 3004) - управление продуктами
+- **Order Service** (порт 3006) - управление заказами (.NET Core)
+- **Payment Service** (порт 3005) - обработка платежей (.NET Core)
+
+### Redis Кэширование
+Все сервисы используют Redis для кэширования данных:
+
+- **Auth Service**: кэширование кодов верификации email
+- **Users Service**: кэширование списков пользователей и отдельных пользователей
+- **Shop Service**: кэширование списков магазинов и отдельных магазинов
+- **Product Service**: кэширование списков продуктов и отдельных продуктов
+- **Order Service**: кэширование списков заказов, отдельных заказов и статистики
+- **Payment Service**: кэширование списков платежей, отдельных платежей и статистики
+
+### Базы данных
+- **PostgreSQL**: основная база данных для всех сервисов
+- **Redis**: кэширование и сессии
+
 ## Настройка Postman
 
 ### 1. Создание коллекции
@@ -1301,3 +1328,610 @@ Body (raw, JSON):
   "email": "customer@example.com"
 }
 ``` 
+
+---
+
+# Тестирование маршрутов Order Service через Postman
+
+## Переменные
+- `base_url` — http://localhost:80 (порт gateway)
+- `auth_token` — JWT пользователя (см. регистрацию/логин пользователя выше)
+
+## 1. Проверка здоровья сервиса
+**GET** `{{base_url}}/order/health`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "status": "healthy",
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
+```
+
+## 2. Получить все заказы
+**GET** `{{base_url}}/order`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Ожидаемый ответ:**
+```json
+[
+  {
+    "orderId": "550e8400-e29b-41d4-a716-446655440000",
+    "userId": 1,
+    "shopId": 1,
+    "totalAmount": 4500.00,
+    "status": "pending",
+    "customerName": "Иван Иванов",
+    "customerEmail": "ivan@example.com",
+    "customerPhone": "+7 (999) 123-45-67",
+    "deliveryAddress": "ул. Пушкина, д. 10, кв. 5, Москва",
+    "deliveryNotes": "Доставить до 18:00",
+    "estimatedDeliveryDate": "2024-01-15T18:00:00.000Z",
+    "actualDeliveryDate": null,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "orderItems": [
+      {
+        "orderItemId": "660e8400-e29b-41d4-a716-446655440001",
+        "productId": 1,
+        "productName": "Букет \"Весенний рассвет\"",
+        "productDescription": "Красивый весенний букет из тюльпанов и нарциссов",
+        "unitPrice": 2200.00,
+        "quantity": 1,
+        "totalPrice": 2200.00,
+        "productImage": "https://example.com/spring-bouquet.jpg"
+      }
+    ]
+  }
+]
+```
+
+## 3. Получить заказ по ID
+**GET** `{{base_url}}/order/{{orderId}}`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "orderId": "550e8400-e29b-41d4-a716-446655440000",
+  "userId": 1,
+  "shopId": 1,
+  "totalAmount": 4500.00,
+  "status": "pending",
+  "customerName": "Иван Иванов",
+  "customerEmail": "ivan@example.com",
+  "customerPhone": "+7 (999) 123-45-67",
+  "deliveryAddress": "ул. Пушкина, д. 10, кв. 5, Москва",
+  "deliveryNotes": "Доставить до 18:00",
+  "estimatedDeliveryDate": "2024-01-15T18:00:00.000Z",
+  "actualDeliveryDate": null,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "orderItems": [
+    {
+      "orderItemId": "660e8400-e29b-41d4-a716-446655440001",
+      "productId": 1,
+      "productName": "Букет \"Весенний рассвет\"",
+      "productDescription": "Красивый весенний букет из тюльпанов и нарциссов",
+      "unitPrice": 2200.00,
+      "quantity": 1,
+      "totalPrice": 2200.00,
+      "productImage": "https://example.com/spring-bouquet.jpg"
+    }
+  ]
+}
+```
+
+## 4. Получить заказы пользователя
+**GET** `{{base_url}}/order/user/1`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Ожидаемый ответ:**
+```json
+[
+  {
+    "orderId": "550e8400-e29b-41d4-a716-446655440000",
+    "userId": 1,
+    "shopId": 1,
+    "totalAmount": 4500.00,
+    "status": "pending",
+    "customerName": "Иван Иванов",
+    "customerEmail": "ivan@example.com",
+    "customerPhone": "+7 (999) 123-45-67",
+    "deliveryAddress": "ул. Пушкина, д. 10, кв. 5, Москва",
+    "deliveryNotes": "Доставить до 18:00",
+    "estimatedDeliveryDate": "2024-01-15T18:00:00.000Z",
+    "actualDeliveryDate": null,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "orderItems": [
+      {
+        "orderItemId": "660e8400-e29b-41d4-a716-446655440001",
+        "productId": 1,
+        "productName": "Букет \"Весенний рассвет\"",
+        "productDescription": "Красивый весенний букет из тюльпанов и нарциссов",
+        "unitPrice": 2200.00,
+        "quantity": 1,
+        "totalPrice": 2200.00,
+        "productImage": "https://example.com/spring-bouquet.jpg"
+      }
+    ]
+  }
+]
+```
+
+## 5. Получить заказы магазина
+**GET** `{{base_url}}/order/shop/1`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Ожидаемый ответ:**
+```json
+[
+  {
+    "orderId": "550e8400-e29b-41d4-a716-446655440000",
+    "userId": 1,
+    "shopId": 1,
+    "totalAmount": 4500.00,
+    "status": "pending",
+    "customerName": "Иван Иванов",
+    "customerEmail": "ivan@example.com",
+    "customerPhone": "+7 (999) 123-45-67",
+    "deliveryAddress": "ул. Пушкина, д. 10, кв. 5, Москва",
+    "deliveryNotes": "Доставить до 18:00",
+    "estimatedDeliveryDate": "2024-01-15T18:00:00.000Z",
+    "actualDeliveryDate": null,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "orderItems": [
+      {
+        "orderItemId": "660e8400-e29b-41d4-a716-446655440001",
+        "productId": 1,
+        "productName": "Букет \"Весенний рассвет\"",
+        "productDescription": "Красивый весенний букет из тюльпанов и нарциссов",
+        "unitPrice": 2200.00,
+        "quantity": 1,
+        "totalPrice": 2200.00,
+        "productImage": "https://example.com/spring-bouquet.jpg"
+      }
+    ]
+  }
+]
+```
+
+## 6. Создать новый заказ
+**POST** `{{base_url}}/order`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Body (raw JSON):**
+```json
+{
+  "userId": 1,
+  "shopId": 1,
+  "totalAmount": 4500.00,
+  "deliveryAddress": "ул. Пушкина, д. 10, кв. 5, Москва",
+  "customerName": "Иван Иванов",
+  "customerPhone": "+7 (999) 123-45-67",
+  "customerEmail": "ivan@example.com",
+  "deliveryNotes": "Доставить до 18:00",
+  "estimatedDeliveryDate": "2024-01-15T18:00:00.000Z",
+  "orderItems": [
+    {
+      "productId": 1,
+      "productName": "Букет \"Весенний рассвет\"",
+      "productDescription": "Красивый весенний букет из тюльпанов и нарциссов",
+      "unitPrice": 2200.00,
+      "quantity": 1,
+      "productImage": "https://example.com/spring-bouquet.jpg"
+    },
+    {
+      "productId": 2,
+      "productName": "Букет \"Розовое настроение\"",
+      "productDescription": "Романтичный букет из роз",
+      "unitPrice": 1800.00,
+      "quantity": 1,
+      "productImage": "https://example.com/rose-bouquet.jpg"
+    }
+  ]
+}
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "orderId": "550e8400-e29b-41d4-a716-446655440000",
+  "userId": 1,
+  "shopId": 1,
+  "totalAmount": 4500.00,
+  "status": "pending",
+  "customerName": "Иван Иванов",
+  "customerEmail": "ivan@example.com",
+  "customerPhone": "+7 (999) 123-45-67",
+  "deliveryAddress": "ул. Пушкина, д. 10, кв. 5, Москва",
+  "deliveryNotes": "Доставить до 18:00",
+  "estimatedDeliveryDate": "2024-01-15T18:00:00.000Z",
+  "actualDeliveryDate": null,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "orderItems": [
+    {
+      "orderItemId": "660e8400-e29b-41d4-a716-446655440001",
+      "productId": 1,
+      "productName": "Букет \"Весенний рассвет\"",
+      "productDescription": "Красивый весенний букет из тюльпанов и нарциссов",
+      "unitPrice": 2200.00,
+      "quantity": 1,
+      "totalPrice": 2200.00,
+      "productImage": "https://example.com/spring-bouquet.jpg"
+    },
+    {
+      "orderItemId": "660e8400-e29b-41d4-a716-446655440002",
+      "productId": 2,
+      "productName": "Букет \"Розовое настроение\"",
+      "productDescription": "Романтичный букет из роз",
+      "unitPrice": 1800.00,
+      "quantity": 1,
+      "totalPrice": 1800.00,
+      "productImage": "https://example.com/rose-bouquet.jpg"
+    }
+  ]
+}
+```
+
+## 7. Обновить статус заказа
+**PUT** `{{base_url}}/order/{{orderId}}/status`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Body (raw JSON):**
+```json
+{
+  "status": "confirmed"
+}
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "message": "Статус заказа успешно обновлен",
+  "status": "confirmed"
+}
+```
+
+## 8. Удалить заказ
+**DELETE** `{{base_url}}/order/{{orderId}}`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "message": "Заказ успешно удален"
+}
+```
+
+## 9. Получить статистику заказов
+**GET** `{{base_url}}/order/statistics`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Ожидаемый ответ:**
+```json
+{
+  "totalOrders": 10,
+  "pendingOrders": 3,
+  "confirmedOrders": 2,
+  "processingOrders": 2,
+  "shippedOrders": 1,
+  "deliveredOrders": 1,
+  "cancelledOrders": 1,
+  "totalRevenue": 15000.50,
+  "averageOrderValue": 1666.72,
+  "timestamp": "2024-01-01T00:00:00.000Z"
+}
+```
+
+## 10. Статусы заказов
+
+- `pending` - ожидает подтверждения
+- `confirmed` - подтвержден
+- `processing` - в обработке
+- `shipped` - отправлен
+- `delivered` - доставлен
+- `cancelled` - отменен
+
+## 11. Примеры ошибок
+
+### Неверный формат ID заказа
+**GET** `{{base_url}}/order/invalid-id`
+
+**Ответ:**
+```json
+{
+  "message": "Неверный формат ID заказа"
+}
+```
+
+### Заказ не найден
+**GET** `{{base_url}}/order/550e8400-e29b-41d4-a716-446655440999`
+
+**Ответ:**
+```json
+{
+  "message": "Заказ не найден"
+}
+```
+
+### Неверный статус заказа
+**PUT** `{{base_url}}/order/{{orderId}}/status`
+```json
+{
+  "status": "invalid_status"
+}
+```
+
+**Ответ:**
+```json
+{
+  "message": "Неверный статус заказа"
+}
+```
+
+### Нельзя удалить заказ в текущем статусе
+**DELETE** `{{base_url}}/order/{{orderId}}`
+
+**Ответ (если заказ не в статусе pending или cancelled):**
+```json
+{
+  "message": "Нельзя удалить заказ в текущем статусе"
+}
+```
+
+## 12. Автоматизация в Postman
+
+### Сохранение orderId после создания заказа
+Добавьте в раздел "Tests" для создания заказа:
+```javascript
+if (pm.response.code === 201) {
+    const response = pm.response.json();
+    if (response.orderId) {
+        pm.collectionVariables.set("orderId", response.orderId);
+        console.log("Order ID сохранен:", response.orderId);
+    }
+}
+```
+
+### Проверка статуса ответа
+```javascript
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+pm.test("Response has correct structure", function () {
+    const jsonData = pm.response.json();
+    pm.expect(jsonData).to.have.property('orderId');
+    pm.expect(jsonData).to.have.property('status');
+});
+```
+
+## 13. Интеграция с другими сервисами
+
+Order Service может интегрироваться с:
+- **Users Service** - для получения информации о пользователях
+- **Product Service** - для получения информации о продуктах
+- **Shop Service** - для получения информации о магазинах
+- **Payment Service** - для обработки платежей
+
+## 14. Примечания
+- Все методы доступны через API Gateway
+- Заказы создаются со статусом "pending" по умолчанию
+- При статусе "delivered" автоматически устанавливается actualDeliveryDate
+- Удаление возможно только для заказов в статусе "pending" или "cancelled"
+- Для тестирования используйте Postman или curl с нужными заголовками
+
+---
+
+**Пример полного запроса на создание заказа:**
+```
+POST {{base_url}}/order
+Headers:
+  Content-Type: application/json
+Body (raw, JSON):
+{
+  "userId": 1,
+  "shopId": 1,
+  "totalAmount": 4500.00,
+  "deliveryAddress": "ул. Пушкина, д. 10, кв. 5, Москва",
+  "customerName": "Иван Иванов",
+  "customerPhone": "+7 (999) 123-45-67",
+  "customerEmail": "ivan@example.com",
+  "deliveryNotes": "Доставить до 18:00",
+  "estimatedDeliveryDate": "2024-01-15T18:00:00.000Z",
+  "orderItems": [
+    {
+      "productId": 1,
+      "productName": "Букет \"Весенний рассвет\"",
+      "productDescription": "Красивый весенний букет из тюльпанов и нарциссов",
+      "unitPrice": 2200.00,
+      "quantity": 1,
+      "productImage": "https://example.com/spring-bouquet.jpg"
+    }
+  ]
+}
+```
+
+## 15. Тестирование Redis Кэширования
+
+### Проверка работы кэша
+
+#### 1. Тест кэширования списков
+1. Выполните запрос `GET {{base_url}}/users` (или любой другой список)
+2. Запомните время ответа
+3. Повторите запрос несколько раз
+4. Время ответа должно быть значительно меньше при повторных запросах
+
+#### 2. Тест кэширования отдельных элементов
+1. Выполните запрос `GET {{base_url}}/users/1` (или любой другой элемент)
+2. Запомните время ответа
+3. Повторите запрос несколько раз
+4. Время ответа должно быть значительно меньше при повторных запросах
+
+#### 3. Тест инвалидации кэша
+1. Выполните запрос `GET {{base_url}}/users` и запомните время
+2. Создайте нового пользователя: `POST {{base_url}}/users`
+3. Сразу выполните `GET {{base_url}}/users` снова
+4. Время ответа должно быть больше (кэш инвалидирован)
+
+### Мониторинг Redis
+
+#### Подключение к Redis CLI
+```bash
+# Подключение к Redis контейнеру
+docker exec -it redis redis-cli
+
+# Просмотр всех ключей
+KEYS *
+
+# Просмотр ключей конкретного сервиса
+KEYS users:*
+KEYS products:*
+KEYS orders:*
+KEYS payments:*
+
+# Просмотр TTL ключа
+TTL users:all
+
+# Просмотр значения ключа
+GET users:all
+```
+
+#### Проверка статистики кэша
+```bash
+# Статистика Redis
+INFO memory
+INFO stats
+
+# Количество ключей по паттернам
+DBSIZE
+KEYS * | wc -l
+```
+
+### Время жизни кэша (TTL)
+
+#### NestJS сервисы:
+- **Списки**: 5-10 минут
+- **Отдельные элементы**: 10-15 минут
+- **Статистика**: 15-30 минут
+
+#### .NET сервисы:
+- **Списки**: 5 минут
+- **Отдельные элементы**: 10 минут
+- **Статистика**: 15 минут
+
+### Ключи кэша
+
+#### Users Service:
+- `users:all` - список всех пользователей
+- `user:{id}` - отдельный пользователь
+- `user:email:{email}` - пользователь по email
+
+#### Product Service:
+- `products:all` - список всех продуктов
+- `product:{id}` - отдельный продукт
+- `products:shop:{shopId}` - продукты магазина
+
+#### Shop Service:
+- `shops:all` - список всех магазинов
+- `shop:{id}` - отдельный магазин
+- `shop:email:{email}` - магазин по email
+
+#### Order Service:
+- `orders:all` - список всех заказов
+- `order:{id}` - отдельный заказ
+- `orders:statistics` - статистика заказов
+
+#### Payment Service:
+- `payments:all` - список всех платежей
+- `payment:{id}` - отдельный платеж
+- `payments:statistics` - статистика платежей
+
+### Автоматическая инвалидация кэша
+
+При выполнении операций создания, обновления или удаления данных автоматически инвалидируются соответствующие кэши:
+
+- **Создание**: инвалидируется кэш списков и статистики
+- **Обновление**: инвалидируется кэш списков, статистики и конкретного элемента
+- **Удаление**: инвалидируется кэш списков, статистики и конкретного элемента
+
+### Отладка кэширования
+
+#### Включение логирования Redis
+Добавьте в переменные окружения:
+```
+REDIS_LOG_LEVEL=debug
+```
+
+#### Проверка подключения к Redis
+```bash
+# Проверка доступности Redis
+docker exec -it redis redis-cli ping
+
+# Проверка подключения из сервиса
+docker exec -it users-service wget -qO- http://redis:6379
+```
+
+### Производительность
+
+#### Ожидаемые улучшения:
+- **Первый запрос**: 100-500ms (загрузка из БД)
+- **Повторные запросы**: 10-50ms (загрузка из кэша)
+- **Улучшение производительности**: 80-90%
+
+#### Мониторинг производительности:
+```bash
+# Время ответа API
+curl -w "@curl-format.txt" -o /dev/null -s "http://localhost:80/users"
+
+# Создайте файл curl-format.txt:
+#      time_namelookup:  %{time_namelookup}\n
+#         time_connect:  %{time_connect}\n
+#      time_appconnect:  %{time_appconnect}\n
+#     time_pretransfer:  %{time_pretransfer}\n
+#        time_redirect:  %{time_redirect}\n
+#   time_starttransfer:  %{time_starttransfer}\n
+#                      ----------\n
+#           time_total:  %{time_total}\n
+```

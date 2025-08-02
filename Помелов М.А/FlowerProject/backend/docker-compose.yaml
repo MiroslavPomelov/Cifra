@@ -235,9 +235,13 @@ services:
     environment:
       - ASPNETCORE_URLS=http://+:3000
       - ConnectionStrings__PaymentDB=Host=paymentdb;Port=5432;Database=paymentdb;Username=payment_user;Password=payment_password
+      - Redis__Host=redis
+      - Redis__Port=6379
     depends_on:
       paymentdb:
         condition: service_healthy
+      redis:
+        condition: service_started
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
       interval: 15s
@@ -294,9 +298,13 @@ services:
     environment:
       - ASPNETCORE_URLS=http://+:3000
       - ConnectionStrings__OrderDB=Host=orderdb;Port=5432;Database=orderdb;Username=order_user;Password=order_password
+      - Redis__Host=redis
+      - Redis__Port=6379
     depends_on:
       orderdb:
         condition: service_healthy
+      redis:
+        condition: service_started
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
       interval: 15s

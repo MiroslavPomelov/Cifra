@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 
 namespace payment_service.Controllers
 {
@@ -15,10 +17,12 @@ namespace payment_service.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly PaymentDbContext _context;
+        private readonly IDistributedCache _cache;
 
-        public PaymentController(PaymentDbContext context)
+        public PaymentController(PaymentDbContext context, IDistributedCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         // GET /payment/health
@@ -34,6 +38,16 @@ namespace payment_service.Controllers
         {
             try
             {
+                const string cacheKey = "payments:all";
+                
+                // Пытаемся получить данные из кэша
+                var cachedData = await _cache.GetStringAsync(cacheKey);
+                if (!string.IsNullOrEmpty(cachedData))
+                {
+                    var cachedPayments = JsonSerializer.Deserialize<List<PaymentResponseDto>>(cachedData);
+                    return Ok(cachedPayments);
+                }
+
                 var payments = await _context.Payments
                     .OrderByDescending(p => p.CreatedAt)
                     .Select(p => new PaymentResponseDto
@@ -55,6 +69,13 @@ namespace payment_service.Controllers
                     return NotFound(new { message = "Платежи не найдены" });
                 }
 
+                // Кэшируем результат на 5 минут
+                var cacheOptions = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                };
+                await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(payments), cacheOptions);
+
                 return Ok(payments);
             }
             catch (Exception ex)
@@ -72,6 +93,16 @@ namespace payment_service.Controllers
                 if (!Guid.TryParse(paymentId, out Guid paymentGuid))
                 {
                     return BadRequest(new { message = "Неверный формат ID платежа" });
+                }
+
+                var cacheKey = $"payment:{paymentId}";
+                
+                // Пытаемся получить данные из кэша
+                var cachedData = await _cache.GetStringAsync(cacheKey);
+                if (!string.IsNullOrEmpty(cachedData))
+                {
+                    var cachedPayment = JsonSerializer.Deserialize<PaymentResponseDto>(cachedData);
+                    return Ok(cachedPayment);
                 }
 
                 var payment = await _context.Payments
@@ -94,6 +125,13 @@ namespace payment_service.Controllers
                     Email = payment.Email,
                     Timestamp = payment.CreatedAt
                 };
+
+                // Кэшируем результат на 10 минут
+                var cacheOptions = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+                };
+                await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(response), cacheOptions);
 
                 return Ok(response);
             }
@@ -159,6 +197,9 @@ namespace payment_service.Controllers
 
                 await _context.Payments.AddAsync(payment);
                 await _context.SaveChangesAsync();
+
+                // Инвалидируем кэш списка платежей
+                await _cache.RemoveAsync("payments:all");
 
                 var response = new PaymentResponseDto
                 {
@@ -250,6 +291,16 @@ namespace payment_service.Controllers
         {
             try
             {
+                const string cacheKey = "payments:statistics";
+                
+                // Пытаемся получить данные из кэша
+                var cachedData = await _cache.GetStringAsync(cacheKey);
+                if (!string.IsNullOrEmpty(cachedData))
+                {
+                    var cachedStatistics = JsonSerializer.Deserialize<object>(cachedData);
+                    return Ok(cachedStatistics);
+                }
+
                 var totalPayments = await _context.Payments.CountAsync();
                 var successfulPayments = await _context.Payments.CountAsync(p => p.Status == "completed");
                 var failedPayments = await _context.Payments.CountAsync(p => p.Status == "failed");
@@ -265,6 +316,13 @@ namespace payment_service.Controllers
                     AverageAmount = successfulPayments > 0 ? totalAmount / successfulPayments : 0,
                     Timestamp = DateTime.UtcNow
                 };
+
+                // Кэшируем результат на 15 минут
+                var cacheOptions = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15)
+                };
+                await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(statistics), cacheOptions);
 
                 return Ok(statistics);
             }
@@ -295,6 +353,11 @@ namespace payment_service.Controllers
 
                 _context.Payments.Remove(payment);
                 await _context.SaveChangesAsync();
+
+                // Инвалидируем кэш
+                await _cache.RemoveAsync("payments:all");
+                await _cache.RemoveAsync("payments:statistics");
+                await _cache.RemoveAsync($"payment:{paymentId}");
 
                 return Ok(new { message = "Платеж успешно удален" });
             }

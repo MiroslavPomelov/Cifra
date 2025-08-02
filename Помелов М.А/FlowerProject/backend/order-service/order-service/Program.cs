@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using order_service.Data;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 
 namespace order_service
 {
@@ -16,6 +17,13 @@ namespace order_service
 
             // Добавляем health checks
             builder.Services.AddHealthChecks();
+
+            // Добавляем Redis кэширование
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = $"{builder.Configuration["Redis:Host"]}:{builder.Configuration["Redis:Port"]}";
+                options.InstanceName = "OrderService_";
+            });
 
             // Добавляем контроллеры
             builder.Services.AddControllers();

@@ -6,11 +6,22 @@ import { APP_GUARD } from '@nestjs/core';
 import { UserModule } from './user/user.module';
 import { ServiceAuthGuard } from './user/guards/user-auth.guard';
 import { AppController } from './app.controller';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: './deploy/environments/dev.env',
+    }),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: () => ({
+        store: redisStore,
+        host: process.env.REDIS_HOST || 'localhost',
+        port: process.env.REDIS_PORT ? +process.env.REDIS_PORT : 6379,
+        ttl: 60,
+      }),
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
 
 namespace order_service.Controllers
 {
@@ -15,10 +17,12 @@ namespace order_service.Controllers
     public class OrderController : ControllerBase
     {
         private readonly OrderDbContext _context;
+        private readonly IDistributedCache _cache;
 
-        public OrderController(OrderDbContext context)
+        public OrderController(OrderDbContext context, IDistributedCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         // GET /order/health
@@ -34,6 +38,16 @@ namespace order_service.Controllers
         {
             try
             {
+                const string cacheKey = "orders:all";
+                
+                // Пытаемся получить данные из кэша
+                var cachedData = await _cache.GetStringAsync(cacheKey);
+                if (!string.IsNullOrEmpty(cachedData))
+                {
+                    var cachedOrders = JsonSerializer.Deserialize<List<OrderResponseDto>>(cachedData);
+                    return Ok(cachedOrders);
+                }
+
                 var orders = await _context.Orders
                     .Include(o => o.OrderItems)
                     .OrderByDescending(o => o.CreatedAt)
@@ -72,6 +86,13 @@ namespace order_service.Controllers
                     return NotFound(new { message = "Заказы не найдены" });
                 }
 
+                // Кэшируем результат на 5 минут
+                var cacheOptions = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+                };
+                await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(orders), cacheOptions);
+
                 return Ok(orders);
             }
             catch (Exception ex)
@@ -89,6 +110,16 @@ namespace order_service.Controllers
                 if (!Guid.TryParse(orderId, out Guid orderGuid))
                 {
                     return BadRequest(new { message = "Неверный формат ID заказа" });
+                }
+
+                var cacheKey = $"order:{orderId}";
+                
+                // Пытаемся получить данные из кэша
+                var cachedData = await _cache.GetStringAsync(cacheKey);
+                if (!string.IsNullOrEmpty(cachedData))
+                {
+                    var cachedOrder = JsonSerializer.Deserialize<OrderResponseDto>(cachedData);
+                    return Ok(cachedOrder);
                 }
 
                 var order = await _context.Orders
@@ -128,6 +159,13 @@ namespace order_service.Controllers
                         ProductImage = oi.ProductImage
                     }).ToList()
                 };
+
+                // Кэшируем результат на 10 минут
+                var cacheOptions = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+                };
+                await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(response), cacheOptions);
 
                 return Ok(response);
             }
@@ -293,6 +331,10 @@ namespace order_service.Controllers
                 _context.Orders.Add(order);
                 await _context.SaveChangesAsync();
 
+                // Инвалидируем кэш
+                await _cache.RemoveAsync("orders:all");
+                await _cache.RemoveAsync("orders:statistics");
+
                 var response = new OrderResponseDto
                 {
                     OrderId = order.OrderId.ToString(),
@@ -365,6 +407,11 @@ namespace order_service.Controllers
 
                 await _context.SaveChangesAsync();
 
+                // Инвалидируем кэш
+                await _cache.RemoveAsync("orders:all");
+                await _cache.RemoveAsync("orders:statistics");
+                await _cache.RemoveAsync($"order:{orderId}");
+
                 return Ok(new { message = "Статус заказа успешно обновлен", status = order.Status });
             }
             catch (Exception ex)
@@ -399,6 +446,11 @@ namespace order_service.Controllers
                 _context.Orders.Remove(order);
                 await _context.SaveChangesAsync();
 
+                // Инвалидируем кэш
+                await _cache.RemoveAsync("orders:all");
+                await _cache.RemoveAsync("orders:statistics");
+                await _cache.RemoveAsync($"order:{orderId}");
+
                 return Ok(new { message = "Заказ успешно удален" });
             }
             catch (Exception ex)
@@ -413,6 +465,16 @@ namespace order_service.Controllers
         {
             try
             {
+                const string cacheKey = "orders:statistics";
+                
+                // Пытаемся получить данные из кэша
+                var cachedData = await _cache.GetStringAsync(cacheKey);
+                if (!string.IsNullOrEmpty(cachedData))
+                {
+                    var cachedStatistics = JsonSerializer.Deserialize<OrderStatisticsDto>(cachedData);
+                    return Ok(cachedStatistics);
+                }
+
                 var totalOrders = await _context.Orders.CountAsync();
                 var pendingOrders = await _context.Orders.CountAsync(o => o.Status == "pending");
                 var confirmedOrders = await _context.Orders.CountAsync(o => o.Status == "confirmed");
@@ -442,6 +504,13 @@ namespace order_service.Controllers
                     AverageOrderValue = averageOrderValue,
                     Timestamp = DateTime.UtcNow
                 };
+
+                // Кэшируем результат на 15 минут
+                var cacheOptions = new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15)
+                };
+                await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(statistics), cacheOptions);
 
                 return Ok(statistics);
             }
