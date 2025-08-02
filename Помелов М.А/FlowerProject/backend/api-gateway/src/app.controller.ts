@@ -49,6 +49,12 @@ export class AppController {
     await this.proxyRequest(req, res, 'http://payment-service:3000');
   }
 
+  @All(['order', 'order/', 'order/*'])
+  @UseGuards(AuthGuard)
+  async proxyOrder(@Req() req: Request, @Res() res: Response) {
+    await this.proxyRequest(req, res, 'http://order-service:3000');
+  }
+
   private async proxyRequest(
     req: Request,
     res: Response,

@@ -1,0 +1,114 @@
+### Health Check
+GET http://localhost:3000/order/health
+
+### Получить все заказы
+GET http://localhost:3000/order
+
+### Получить заказ по ID
+GET http://localhost:3000/order/{{orderId}}
+
+### Получить заказы пользователя
+GET http://localhost:3000/order/user/1
+
+### Получить заказы магазина
+GET http://localhost:3000/order/shop/1
+
+### Создать новый заказ
+POST http://localhost:3000/order
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "shopId": 1,
+  "totalAmount": 4500.00,
+  "deliveryAddress": "ул. Пушкина, д. 10, кв. 5, Москва",
+  "customerName": "Иван Иванов",
+  "customerPhone": "+7 (999) 123-45-67",
+  "customerEmail": "ivan@example.com",
+  "deliveryNotes": "Доставить до 18:00",
+  "estimatedDeliveryDate": "2024-01-15T18:00:00Z",
+  "orderItems": [
+    {
+      "productId": 1,
+      "productName": "Букет \"Весенний рассвет\"",
+      "productDescription": "Красивый весенний букет из тюльпанов и нарциссов",
+      "unitPrice": 2200.00,
+      "quantity": 1,
+      "productImage": "https://example.com/spring-bouquet.jpg"
+    },
+    {
+      "productId": 2,
+      "productName": "Букет \"Розовое настроение\"",
+      "productDescription": "Романтичный букет из роз",
+      "unitPrice": 1800.00,
+      "quantity": 1,
+      "productImage": "https://example.com/rose-bouquet.jpg"
+    }
+  ]
+}
+
+### Обновить статус заказа
+PUT http://localhost:3000/order/{{orderId}}/status
+Content-Type: application/json
+
+{
+  "status": "confirmed"
+}
+
+### Удалить заказ
+DELETE http://localhost:3000/order/{{orderId}}
+
+### Получить статистику заказов
+GET http://localhost:3000/order/statistics
+
+### Тестовые данные для создания заказа с одним товаром
+POST http://localhost:3000/order
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "shopId": 1,
+  "totalAmount": 2200.00,
+  "deliveryAddress": "ул. Ленина, д. 15, кв. 12, Санкт-Петербург",
+  "customerName": "Мария Петрова",
+  "customerPhone": "+7 (911) 987-65-43",
+  "customerEmail": "maria@example.com",
+  "deliveryNotes": "Позвонить за час до доставки",
+  "estimatedDeliveryDate": "2024-01-16T14:00:00Z",
+  "orderItems": [
+    {
+      "productId": 1,
+      "productName": "Букет \"Весенний рассвет\"",
+      "productDescription": "Красивый весенний букет из тюльпанов и нарциссов",
+      "unitPrice": 2200.00,
+      "quantity": 1,
+      "productImage": "https://example.com/spring-bouquet.jpg"
+    }
+  ]
+}
+
+### Тестовые данные для создания заказа с несколькими товарами одного типа
+POST http://localhost:3000/order
+Content-Type: application/json
+
+{
+  "userId": 2,
+  "shopId": 1,
+  "totalAmount": 3600.00,
+  "deliveryAddress": "пр. Мира, д. 25, кв. 8, Екатеринбург",
+  "customerName": "Алексей Сидоров",
+  "customerPhone": "+7 (922) 555-44-33",
+  "customerEmail": "alex@example.com",
+  "deliveryNotes": "Доставить в подарок",
+  "estimatedDeliveryDate": "2024-01-17T16:00:00Z",
+  "orderItems": [
+    {
+      "productId": 2,
+      "productName": "Букет \"Розовое настроение\"",
+      "productDescription": "Романтичный букет из роз",
+      "unitPrice": 1800.00,
+      "quantity": 2,
+      "productImage": "https://example.com/rose-bouquet.jpg"
+    }
+  ]
+} 

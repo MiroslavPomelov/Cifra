@@ -26,7 +26,8 @@ async function bootstrap() {
   app.use('/auth/*', bodyParser.raw({ type: '*/*' }));
   app.use('/users/*', bodyParser.raw({ type: '*/*' }));
   app.use('/shops/*', bodyParser.raw({ type: '*/*' }));
-   app.use('/payment/*', bodyParser.raw({ type: '*/*' }));
+  app.use('/payment/*', bodyParser.raw({ type: '*/*' }));
+  app.use('/order/*', bodyParser.raw({ type: '*/*' }));
   app.use('/products/*', dynamicBodyParser);
   // Удалить потом
   app.use('/products/*', (req, res, next) => {

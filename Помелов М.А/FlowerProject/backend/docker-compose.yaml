@@ -192,6 +192,8 @@ services:
         condition: service_healthy
       payment-service:
         condition: service_healthy
+      order-service:
+        condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=2 --spider http://localhost:3000/ || exit 1"]
       interval: 15s
@@ -259,6 +261,46 @@ services:
       test: ["CMD-SHELL", "pg_isready -U payment_user -d paymentdb"]
       interval: 15s
       timeout: 10s
+      retries: 10
+
+  orderdb:
+    image: postgres:14
+    container_name: orderdb
+    environment:
+      POSTGRES_USER: order_user
+      POSTGRES_PASSWORD: order_password
+      POSTGRES_DB: orderdb
+    volumes:
+      - orderdb_data:/var/lib/postgresql/data
+    ports:
+      - "5437:5432"
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U order_user -d orderdb"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+  order-service:
+    build:
+      context: ./order-service/order-service
+      dockerfile: Dockerfile
+    container_name: order-service
+    ports:
+      - "3006:3000"
+    networks:
+      - app_network
+    environment:
+      - ASPNETCORE_URLS=http://+:3000
+      - ConnectionStrings__OrderDB=Host=orderdb;Port=5432;Database=orderdb;Username=order_user;Password=order_password
+    depends_on:
+      orderdb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
+      interval: 15s
+      timeout: 10s
       retries: 10  
 
 networks:
@@ -270,3 +312,4 @@ volumes:
   shopdb_data:
   productdb_data:
   paymentdb_data:
+  orderdb_data:
