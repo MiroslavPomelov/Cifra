@@ -19,7 +19,7 @@ namespace order_service.Models
         public decimal TotalAmount { get; set; }
         
         [Required]
-        public string Status { get; set; } = "pending"; // pending, confirmed, processing, shipped, delivered, cancelled
+        public string Status { get; set; } = "pending"; // Статусы - pending, confirmed, processing, delivered, cancelled
         
         [Required]
         public string DeliveryAddress { get; set; } = string.Empty;

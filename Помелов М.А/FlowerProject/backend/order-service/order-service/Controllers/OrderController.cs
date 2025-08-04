@@ -114,7 +114,7 @@ namespace order_service.Controllers
 
                 var cacheKey = $"order:{orderId}";
                 
-                // Пытаемся получить данные из кэша
+                // получить данные из кэша
                 var cachedData = await _cache.GetStringAsync(cacheKey);
                 if (!string.IsNullOrEmpty(cachedData))
                 {
@@ -160,7 +160,7 @@ namespace order_service.Controllers
                     }).ToList()
                 };
 
-                // Кэшируем результат на 10 минут
+                // Кэшируем результат на 10 мин
                 var cacheOptions = new DistributedCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
@@ -467,7 +467,7 @@ namespace order_service.Controllers
             {
                 const string cacheKey = "orders:statistics";
                 
-                // Пытаемся получить данные из кэша
+                //получить данные из кэша
                 var cachedData = await _cache.GetStringAsync(cacheKey);
                 if (!string.IsNullOrEmpty(cachedData))
                 {

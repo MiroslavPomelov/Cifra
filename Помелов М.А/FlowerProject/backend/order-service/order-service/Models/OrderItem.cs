@@ -32,7 +32,7 @@ namespace order_service.Models
         
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         
-        // Навигационное свойство
+
         public Order Order { get; set; } = null!;
     }
 } 

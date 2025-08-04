@@ -185,7 +185,7 @@ namespace payment_service.Controllers
                     PaymentId = Guid.NewGuid(),
                     Amount = request.Amount,
                     Status = status,
-                    CardNumber = MaskCardNumber(request.CardNumber), // Маскируем номер карты для безопасности
+                    CardNumber = MaskCardNumber(request.CardNumber), // Маскируем картy
                     CardHolder = request.CardHolder,
                     Expiry = request.Expiry,
                     Cvc = "***", // Не сохраняем CVC
