@@ -1,10 +1,12 @@
 import React from 'react'
 import AuthButton from '../components/AuthButton'
+import AuthForm from './components/AuthForm';
 
 const AuthPage = () => {
   return (
     <div>
-      <AuthButton/>
+
+      <AuthForm />
     </div>
   )
 }
