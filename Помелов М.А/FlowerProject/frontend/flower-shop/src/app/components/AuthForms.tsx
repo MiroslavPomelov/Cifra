@@ -36,6 +36,8 @@ const ViewOffIcon = () => (
   </svg>
 );
 import FlowerBackground from './FlowerBackground';
+import { API_CONFIG } from '../../config/api';
+import { api, AuthResponse } from '../../config/axios';
 
 // Анимации
 const containerVariants = {
@@ -101,7 +103,6 @@ const AuthForms: React.FC = () => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
   const toast = useToast();
@@ -174,39 +175,21 @@ const AuthForms: React.FC = () => {
   const handleLogin = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(loginData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast({
-          title: 'Успешный вход!',
-          description: 'Добро пожаловать в мир цветов!',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        });
-        // Здесь можно сохранить токен и перенаправить пользователя
-        localStorage.setItem('token', data.accessToken);
-      } else {
-        toast({
-          title: 'Ошибка входа',
-          description: data.message || 'Неверный email или пароль',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
+      const response = await api.post<AuthResponse>(API_CONFIG.AUTH.LOGIN, loginData);
+      
       toast({
-        title: 'Ошибка соединения',
-        description: 'Не удалось подключиться к серверу',
+        title: 'Успешный вход!',
+        description: 'Добро пожаловать в мир цветов!',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      localStorage.setItem('token', response.data.accessToken);
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Неверный email или пароль';
+      toast({
+        title: 'Ошибка входа',
+        description: errorMessage,
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -219,43 +202,26 @@ const AuthForms: React.FC = () => {
   const handleRegister = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/auth/registration', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(registerData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast({
-          title: 'Код подтверждения отправлен!',
-          description: 'Проверьте вашу почту и введите код',
-          status: 'success',
-          duration: 5000,
-          isClosable: true,
-        });
-        setIsRegistering(false);
-        setIsVerifying(true);
-        setVerifyData({
-          ...registerData,
-          code: ''
-        });
-      } else {
-        toast({
-          title: 'Ошибка регистрации',
-          description: data.message || 'Не удалось отправить код',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
+      await api.post(API_CONFIG.AUTH.REGISTRATION, registerData);
+      
       toast({
-        title: 'Ошибка соединения',
-        description: 'Не удалось подключиться к серверу',
+        title: 'Код подтверждения отправлен!',
+        description: 'Проверьте вашу почту и введите код',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+      setIsRegistering(false);
+      setIsVerifying(true);
+      setVerifyData({
+        ...registerData,
+        code: ''
+      });
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Не удалось отправить код';
+      toast({
+        title: 'Ошибка регистрации',
+        description: errorMessage,
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -268,40 +234,23 @@ const AuthForms: React.FC = () => {
   const handleVerify = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/auth/verify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(verifyData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast({
-          title: 'Регистрация завершена!',
-          description: 'Добро пожаловать в мир цветов!',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        });
-        localStorage.setItem('token', data.accessToken);
-        setIsVerifying(false);
-        setIsLogin(true);
-      } else {
-        toast({
-          title: 'Ошибка верификации',
-          description: data.message || 'Неверный код подтверждения',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
+      const response = await api.post<AuthResponse>(API_CONFIG.AUTH.VERIFY, verifyData);
+      
       toast({
-        title: 'Ошибка соединения',
-        description: 'Не удалось подключиться к серверу',
+        title: 'Регистрация завершена!',
+        description: 'Добро пожаловать в мир цветов!',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      localStorage.setItem('token', response.data.accessToken);
+      setIsVerifying(false);
+      setIsLogin(true);
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Неверный код подтверждения';
+      toast({
+        title: 'Ошибка верификации',
+        description: errorMessage,
         status: 'error',
         duration: 3000,
         isClosable: true,

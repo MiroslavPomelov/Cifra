@@ -23,6 +23,8 @@ import {
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import FlowerBackground from './FlowerBackground';
+import { API_CONFIG } from '../../config/api';
+import { api, AuthResponse } from '../../config/axios';
 
 // Простые иконки для показа/скрытия пароля
 const ViewIcon = () => (
@@ -176,38 +178,21 @@ const OptimizedAuthForms: React.FC = () => {
   const handleLogin = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(loginData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast({
-          title: 'Успешный вход!',
-          description: 'Добро пожаловать в мир цветов!',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        });
-        localStorage.setItem('token', data.accessToken);
-      } else {
-        toast({
-          title: 'Ошибка входа',
-          description: data.message || 'Неверный email или пароль',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
+      const response = await api.post<AuthResponse>(API_CONFIG.AUTH.LOGIN, loginData);
+      
       toast({
-        title: 'Ошибка соединения',
-        description: 'Не удалось подключиться к серверу',
+        title: 'Успешный вход!',
+        description: 'Добро пожаловать в мир цветов!',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      localStorage.setItem('token', response.data.accessToken);
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Неверный email или пароль';
+      toast({
+        title: 'Ошибка входа',
+        description: errorMessage,
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -220,45 +205,29 @@ const OptimizedAuthForms: React.FC = () => {
   const handleRegister = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:80/auth/registration', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(registerData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast({
-          title: 'Код подтверждения отправлен!',
-          description: 'Проверьте вашу почту и введите код',
-          status: 'success',
-          duration: 5000,
-          isClosable: true,
-        });
-        setIsRegistering(false);
-        setIsVerifying(true);
-        const { confirmPassword, ...dataWithoutConfirm } = registerData;
-        setVerifyData({
-          ...dataWithoutConfirm,
-          code: '',
-          personalData: true // Устанавливаем true для верификации
-        });
-      } else {
-        toast({
-          title: 'Ошибка регистрации',
-          description: data.message || 'Не удалось отправить код',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
+      // Исключаем confirmPassword из данных, отправляемых на сервер
+      const { confirmPassword, ...dataWithoutConfirm } = registerData;
+      await api.post(API_CONFIG.AUTH.REGISTRATION, dataWithoutConfirm);
+      
       toast({
-        title: 'Ошибка соединения',
-        description: 'Не удалось подключиться к серверу',
+        title: 'Код подтверждения отправлен!',
+        description: 'Проверьте вашу почту и введите код',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+      setIsRegistering(false);
+      setIsVerifying(true);
+      setVerifyData({
+        ...dataWithoutConfirm,
+        code: '',
+        personalData: true // Устанавливаем true для верификации
+      });
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Не удалось отправить код';
+      toast({
+        title: 'Ошибка регистрации',
+        description: errorMessage,
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -271,40 +240,23 @@ const OptimizedAuthForms: React.FC = () => {
   const handleVerify = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/auth/verify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(verifyData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast({
-          title: 'Регистрация завершена!',
-          description: 'Добро пожаловать в мир цветов!',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        });
-        localStorage.setItem('token', data.accessToken);
-        setIsVerifying(false);
-        setIsLogin(true);
-      } else {
-        toast({
-          title: 'Ошибка верификации',
-          description: data.message || 'Неверный код подтверждения',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
+      const response = await api.post<AuthResponse>(API_CONFIG.AUTH.VERIFY, verifyData);
+      
       toast({
-        title: 'Ошибка соединения',
-        description: 'Не удалось подключиться к серверу',
+        title: 'Регистрация завершена!',
+        description: 'Добро пожаловать в мир цветов!',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      localStorage.setItem('token', response.data.accessToken);
+      setIsVerifying(false);
+      setIsLogin(true);
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Неверный код подтверждения';
+      toast({
+        title: 'Ошибка верификации',
+        description: errorMessage,
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -416,15 +368,16 @@ const OptimizedAuthForms: React.FC = () => {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <Text textAlign="center" color="gray.300" textDecoration={'underline'}>
+          <Text textAlign="center" color="gray.300" >
             Нет аккаунта?{' '}
             <Button
               variant="link"
               color={primaryColor}
               onClick={switchToRegister}
               _hover={{ color: secondaryColor }}
+              textDecoration={'underline'}
             >
-              Зарегистрироваться
+            Зарегистрироваться
             </Button>
           </Text>
         </motion.div>
@@ -685,13 +638,14 @@ const OptimizedAuthForms: React.FC = () => {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <Text textAlign="center" color="gray.300" textDecoration={'underline'}>
+          <Text textAlign="center" color="gray.300" >
             Уже есть аккаунт?{' '}
             <Button
               variant="link"
               color={primaryColor}
               onClick={switchToLogin}
               _hover={{ color: secondaryColor }}
+              textDecoration={'underline'}
             >
               Войти
             </Button>

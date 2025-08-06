@@ -1,97 +1,161 @@
-import { Controller, Get, UseGuards, All, Req, Res } from '@nestjs/common';
+import { Controller, Get, UseGuards, All, Req, Res, Logger } from '@nestjs/common';
 import { AuthGuard } from './auth/guards/auth.guard';
-import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { Request, Response } from 'express';
+import axios from 'axios';
+import { ServiceConfigService } from './services/service-config.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly httpService: HttpService) { }
+  private readonly logger = new Logger(AppController.name);
+
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly serviceConfigService: ServiceConfigService,
+  ) { }
 
   @Get()
   getHello(): string {
     return 'API Gateway is running!';
   }
 
+  @Get('health')
+  getHealth(): { status: string; timestamp: string; services: any } {
+    const services = this.serviceConfigService.getAllServices();
+    return {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      services: Object.keys(services).map(key => ({
+        name: key,
+        config: services[key],
+      })),
+    };
+  }
+
   @All(['users', 'users/', 'users/*'])
   @UseGuards(AuthGuard)
   async proxyUsers(@Req() req: Request, @Res() res: Response) {
-    await this.proxyRequest(req, res, 'http://users-service:3000');
+    const targetUrl = this.serviceConfigService.getInternalUrl('users');
+    if (!targetUrl) {
+      return res.status(503).json({ message: 'Users service not available' });
+    }
+    await this.proxyRequest(req, res, targetUrl, 'users');
   }
 
   @All(['auth', 'auth/', 'auth/*'])
   async proxyAuth(@Req() req: Request, @Res() res: Response) {
-    await this.proxyRequest(req, res, 'http://auth-service:3000');
+    const targetUrl = this.serviceConfigService.getInternalUrl('auth');
+    if (!targetUrl) {
+      return res.status(503).json({ message: 'Auth service not available' });
+    }
+    await this.proxyRequest(req, res, targetUrl, 'auth');
   }
 
   @All(['shops', 'shops/', 'shops/*'])
-  @UseGuards(AuthGuard) // защищённые операции с магазинами требуют токен
+  @UseGuards(AuthGuard)
   async proxyShops(@Req() req: Request, @Res() res: Response) {
-    console.log('API-GATEWAY: proxyShops called');
-    console.log('API-GATEWAY: Incoming headers:', req.headers);
-    try {
-      await this.proxyRequest(req, res, 'http://shop-service:3000');
-      console.log('API-GATEWAY: proxyShops success');
-    } catch (error) {
-      console.error('API-GATEWAY: proxyShops error:', error);
-      throw error;
+    const targetUrl = this.serviceConfigService.getInternalUrl('shops');
+    if (!targetUrl) {
+      return res.status(503).json({ message: 'Shop service not available' });
     }
+    this.logger.debug(`API-GATEWAY: proxyShops called for ${req.method} ${req.url}`);
+    await this.proxyRequest(req, res, targetUrl, 'shops');
   }
 
   @All(['products', 'products/', 'products/*'])
   @UseGuards(AuthGuard)
   async proxyProducts(@Req() req: Request, @Res() res: Response) {
-    await this.proxyRequest(req, res, 'http://product-service:3000');
+    const targetUrl = this.serviceConfigService.getInternalUrl('products');
+    if (!targetUrl) {
+      return res.status(503).json({ message: 'Product service not available' });
+    }
+    await this.proxyRequest(req, res, targetUrl, 'products');
   }
 
   @All(['payment', 'payment/', 'payment/*'])
   async proxyPayment(@Req() req: Request, @Res() res: Response) {
-    await this.proxyRequest(req, res, 'http://payment-service:3000');
+    const targetUrl = this.serviceConfigService.getInternalUrl('payment');
+    if (!targetUrl) {
+      return res.status(503).json({ message: 'Payment service not available' });
+    }
+    await this.proxyRequest(req, res, targetUrl, 'payment');
   }
 
   @All(['order', 'order/', 'order/*'])
   @UseGuards(AuthGuard)
   async proxyOrder(@Req() req: Request, @Res() res: Response) {
-    await this.proxyRequest(req, res, 'http://order-service:3000');
+    const targetUrl = this.serviceConfigService.getInternalUrl('order');
+    if (!targetUrl) {
+      return res.status(503).json({ message: 'Order service not available' });
+    }
+    await this.proxyRequest(req, res, targetUrl, 'order');
   }
 
   private async proxyRequest(
     req: Request,
     res: Response,
-    targetUrl: string
+    targetUrl: string,
+    serviceName: string
   ) {
     const url = `${targetUrl}${req.url}`;
     const method = req.method.toLowerCase();
-    // Для Get не нада
     const data = (method !== 'get' && req.body) ? req.body : undefined;
+    
     const headers = {
       ...req.headers,
       'Content-Type': 'application/json',
       'envservicetoken': process.env.ENV_TOKEN || 'ya29.asdgv_sadashldkjhasdiufrekjhkjhdaksjhduHOIUhiluGHiglUUU',
+      'X-Gateway-Service': serviceName,
+      'X-Gateway-Timestamp': new Date().toISOString(),
     };
-    // Удаляю content-length
+    
+    // Удаляем content-length для корректной работы
     delete headers['content-length'];
     delete headers['Content-Length'];
-    console.log('API-GATEWAY: proxyRequest to', url, 'with headers:', headers);
+    
+    this.logger.debug(`API-GATEWAY: ${serviceName} - ${method.toUpperCase()} ${url}`);
+    
     try {
-      const response = await firstValueFrom(
-        this.httpService.request({
-          url,
-          method,
-          ...(data !== undefined ? { data } : {}),
-          headers,
-        })
-      );
-      console.log('API-GATEWAY: proxyRequest success, status:', response.status);
+      const response = await axios({
+        method,
+        url,
+        data,
+        headers,
+        timeout: 30000, // 30 секунд таймаут
+        validateStatus: () => true, // Принимаем все статусы для обработки ошибок
+      });
+      
+      this.logger.debug(`API-GATEWAY: ${serviceName} - Success (${response.status})`);
       res.status(response.status).json(response.data);
     } catch (error) {
-      console.error('API-GATEWAY: proxyRequest error:', error);
-      const backendData = error.response?.data;
-      if (backendData && (backendData.message || backendData.error)) {
-        res.status(error.response?.status || 500).json(backendData);
+      this.logger.error(`API-GATEWAY: ${serviceName} - Error: ${error.message}`);
+      
+      if (error.response) {
+        // Сервер ответил с ошибкой
+        const backendData = error.response.data;
+        if (backendData && (backendData.message || backendData.error)) {
+          res.status(error.response.status).json(backendData);
+        } else {
+          res.status(error.response.status).json({
+            message: `${serviceName} service error`,
+            status: error.response.status,
+            timestamp: new Date().toISOString(),
+          });
+        }
+      } else if (error.request) {
+        // Запрос был отправлен, но ответ не получен
+        res.status(503).json({
+          message: `${serviceName} service unavailable`,
+          error: 'No response from service',
+          timestamp: new Date().toISOString(),
+        });
       } else {
-        res.status(error.response?.status || 500).json({
-          message: 'Proxy error',
+        // Ошибка при настройке запроса
+        res.status(500).json({
+          message: 'Internal gateway error',
+          error: error.message,
+          service: serviceName,
+          timestamp: new Date().toISOString(),
         });
       }
     }
