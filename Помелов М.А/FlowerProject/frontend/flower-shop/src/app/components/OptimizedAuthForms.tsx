@@ -110,7 +110,7 @@ const OptimizedAuthForms: React.FC = () => {
   const bgColor = 'rgba(255, 255, 255, 0.1)';
   const borderColor = 'rgba(255, 255, 255, 0.3)';
   const primaryColor = 'pink.400';
-  const secondaryColor = 'purple.400';
+  const secondaryColor = 'pink.500';
   const accentColor = 'rose.300';
 
   // Состояния форм
@@ -385,33 +385,33 @@ const OptimizedAuthForms: React.FC = () => {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-  <Flex justifyContent="center">
-    <Button
-      colorScheme="blackAlpha"
-      size="lg"
-      onClick={handleLogin}
-      isLoading={isLoading}
-      loadingText="Вход..."
-      bgGradient="linear(to-r, #7928CA, #D53F8C)" // Темные оттенки розового и фиолетового
-      color="white"
-      _hover={{
-        bgGradient: "linear(to-r, #6B21A8, #B83280)", // Еще темнее при наведении
-        transform: "translateY(-2px)",
-        boxShadow: "0 8px 25px rgba(107, 33, 168, 0.4)", // Фиолетовая тень
-      }}
-      _active={{
-        bgGradient: "linear(to-r, #5B1B8E, #9C2C6F)", // Самые темные при нажатии
-        transform: "translateY(0)",
-      }}
-      transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-      minW="200px"
-      fontWeight="semibold"
-      letterSpacing="wide"
-    >
-      Войти
-    </Button>
-  </Flex>
-</motion.div>
+          <Flex justifyContent="center">
+            <Button
+              colorScheme="blackAlpha"
+              size="lg"
+              onClick={handleLogin}
+              isLoading={isLoading}
+              loadingText="Вход..."
+              bgGradient="linear(to-r, #7928CA, #D53F8C)" // Темные оттенки розового и фиолетового
+              color="white"
+              _hover={{
+                bgGradient: "linear(to-r, #6B21A8, #B83280)", // Еще темнее при наведении
+                transform: "translateY(-2px)",
+                boxShadow: "0 8px 25px rgba(80, 33, 130, 0.4)", // Фиолетовая тень
+              }}
+              _active={{
+                bgGradient: "linear(to-r, #5B1B8E, #9C2C6F)", // Самые темные при нажатии
+                transform: "translateY(0)",
+              }}
+              transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+              minW="200px"
+              fontWeight="semibold"
+              letterSpacing="wide"
+            >
+              Войти
+            </Button>
+          </Flex>
+        </motion.div>
 
         <motion.div variants={itemVariants}>
           <Text textAlign="center" color="gray.300">
@@ -622,6 +622,7 @@ const OptimizedAuthForms: React.FC = () => {
               <option value="Москва">Москва</option>
               <option value="Санкт-Петербург">Санкт-Петербург</option>
               <option value="Новосибирск">Новосибирск</option>
+              <option value="Ростов-на-Дону">Калининград</option>
               <option value="Екатеринбург">Екатеринбург</option>
               <option value="Казань">Казань</option>
               <option value="Нижний Новгород">Нижний Новгород</option>
@@ -830,7 +831,7 @@ const OptimizedAuthForms: React.FC = () => {
                 bgClip="text"
                 textAlign="center"
               >
-                🌸 Flower Shop
+                ❃ Flower Shop
               </Text>
               <motion.div
                 style={{
@@ -857,13 +858,17 @@ const OptimizedAuthForms: React.FC = () => {
             </Box>
           </motion.div>
 
+
           <Badge
-            colorScheme="pink"
+            bgGradient='linear(to-l, #fd5bacff, #8e48d3ff )'
             variant="subtle"
-            px={3}
-            py={1}
+            px={4}
+            py={1.5}
             borderRadius="full"
             fontSize="sm"
+            color={'white'}
+            fontWeight="semibold"
+            letterSpacing="wide"
           >
             Мир прекрасных цветов
           </Badge>
@@ -890,9 +895,9 @@ const OptimizedAuthForms: React.FC = () => {
               right: 0,
               bottom: 0,
               borderRadius: '2xl',
-              padding: '0.5px',
-              background: 'linear-gradient(49deg, #660000, #336600, #330066)',
-      WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+              padding: '0.8px',
+              background: 'linear-gradient(49deg, #830202ff, #8b0f8fff, #48038dff, #fd75c4ff)',
+              WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
               WebkitMaskComposite: 'xor',
               maskComposite: 'exclude',
               zIndex: 0
