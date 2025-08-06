@@ -76,7 +76,7 @@ interface LoginFormData {
 interface RegisterFormData {
   email: string;
   password: string;
-  confirmPassword: string;
+  confirmPassword?: string;
   firstName: string;
   lastName: string;
   birthDate: string;
@@ -112,6 +112,7 @@ const OptimizedAuthForms: React.FC = () => {
   const primaryColor = 'pink.400';
   const secondaryColor = 'pink.500';
   const accentColor = 'rose.300';
+  const fonColorForm = 'gray.200';
 
   // Состояния форм
   const [loginData, setLoginData] = useState<LoginFormData>({
@@ -122,7 +123,6 @@ const OptimizedAuthForms: React.FC = () => {
   const [registerData, setRegisterData] = useState<RegisterFormData>({
     email: '',
     password: '',
-    confirmPassword: '',
     firstName: '',
     lastName: '',
     birthDate: '',
@@ -220,7 +220,7 @@ const OptimizedAuthForms: React.FC = () => {
   const handleRegister = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:3000/auth/registration', {
+      const response = await fetch('http://localhost:80/auth/registration', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -339,6 +339,7 @@ const OptimizedAuthForms: React.FC = () => {
           <FormControl isRequired>
             <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Email</FormLabel>
             <Input
+            color={fonColorForm}
               type="email"
               value={loginData.email}
               onChange={handleLoginEmailChange}
@@ -359,6 +360,7 @@ const OptimizedAuthForms: React.FC = () => {
             <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Пароль</FormLabel>
             <InputGroup>
               <Input
+              color={fonColorForm}
                 type={showPassword ? 'text' : 'password'}
                 value={loginData.password}
                 onChange={handleLoginPasswordChange}
@@ -414,7 +416,7 @@ const OptimizedAuthForms: React.FC = () => {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <Text textAlign="center" color="gray.300">
+          <Text textAlign="center" color="gray.300" textDecoration={'underline'}>
             Нет аккаунта?{' '}
             <Button
               variant="link"
@@ -451,6 +453,7 @@ const OptimizedAuthForms: React.FC = () => {
             <FormControl isRequired>
               <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Имя</FormLabel>
               <Input
+                color={fonColorForm}
                 value={registerData.firstName}
                 onChange={handleRegisterFieldChange('firstName')}
                 placeholder="Иван"
@@ -468,6 +471,7 @@ const OptimizedAuthForms: React.FC = () => {
             <FormControl isRequired>
               <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Фамилия</FormLabel>
               <Input
+              color={fonColorForm}
                 value={registerData.lastName}
                 onChange={handleRegisterFieldChange('lastName')}
                 placeholder="Иванов"
@@ -487,6 +491,7 @@ const OptimizedAuthForms: React.FC = () => {
           <FormControl isRequired>
             <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Email</FormLabel>
             <Input
+            color={fonColorForm}
               type="email"
               value={registerData.email}
               onChange={handleRegisterFieldChange('email')}
@@ -507,6 +512,7 @@ const OptimizedAuthForms: React.FC = () => {
             <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Пароль</FormLabel>
             <InputGroup>
               <Input
+              color={fonColorForm}
                 type={showPassword ? 'text' : 'password'}
                 value={registerData.password}
                 onChange={handleRegisterFieldChange('password')}
@@ -537,6 +543,7 @@ const OptimizedAuthForms: React.FC = () => {
             <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Повторите пароль</FormLabel>
             <InputGroup>
               <Input
+              color={fonColorForm}
                 type={showPassword ? 'text' : 'password'}
                 value={registerData.confirmPassword}
                 onChange={handleRegisterFieldChange('confirmPassword')}
@@ -572,6 +579,7 @@ const OptimizedAuthForms: React.FC = () => {
             <FormControl isRequired>
               <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Дата рождения</FormLabel>
               <Input
+              color={fonColorForm}
                 type="date"
                 value={registerData.birthDate}
                 onChange={handleRegisterFieldChange('birthDate')}
@@ -589,6 +597,7 @@ const OptimizedAuthForms: React.FC = () => {
             <FormControl isRequired>
               <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Телефон</FormLabel>
               <Input
+              color={fonColorForm}
                 value={registerData.phone}
                 onChange={handleRegisterFieldChange('phone')}
                 placeholder="+7 (999) 123-45-67"
@@ -608,6 +617,7 @@ const OptimizedAuthForms: React.FC = () => {
           <FormControl isRequired>
             <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Город</FormLabel>
             <Select
+            color={"pink.400"}
               value={registerData.city}
               onChange={handleRegisterFieldChange('city')}
               placeholder="Выберите город"
@@ -675,7 +685,7 @@ const OptimizedAuthForms: React.FC = () => {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <Text textAlign="center" color="gray.300">
+          <Text textAlign="center" color="gray.300" textDecoration={'underline'}>
             Уже есть аккаунт?{' '}
             <Button
               variant="link"
