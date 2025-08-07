@@ -185,8 +185,8 @@ const AuthForms: React.FC = () => {
         isClosable: true,
       });
       localStorage.setItem('token', response.data.accessToken);
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Неверный email или пароль';
+    } catch (error: unknown) {
+      const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Неверный email или пароль';
       toast({
         title: 'Ошибка входа',
         description: errorMessage,
@@ -217,8 +217,8 @@ const AuthForms: React.FC = () => {
         ...registerData,
         code: ''
       });
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Не удалось отправить код';
+    } catch (error: unknown) {
+      const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Не удалось отправить код';
       toast({
         title: 'Ошибка регистрации',
         description: errorMessage,
@@ -246,8 +246,8 @@ const AuthForms: React.FC = () => {
       localStorage.setItem('token', response.data.accessToken);
       setIsVerifying(false);
       setIsLogin(true);
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 'Неверный код подтверждения';
+    } catch (error: unknown) {
+      const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Неверный код подтверждения';
       toast({
         title: 'Ошибка верификации',
         description: errorMessage,

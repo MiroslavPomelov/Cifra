@@ -39,10 +39,14 @@ async function bootstrap() {
     next();
   });
   
-  // Вкл CORS навсякий
+  // Вкл CORS на всякий
   app.enableCors({
     origin: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
     credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   });
   
   await app.listen(process.env.PORT ?? 3000);

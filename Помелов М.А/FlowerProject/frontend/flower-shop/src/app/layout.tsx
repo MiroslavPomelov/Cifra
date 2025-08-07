@@ -1,6 +1,7 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import ChakraWrapper from './components/ChakraWrapper'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -9,7 +10,6 @@ export const metadata: Metadata = {
   description: 'Добро пожаловать в мир прекрасных цветов. Заказывайте свежие букеты с доставкой по всей России.',
   keywords: 'цветы, букеты, доставка цветов, цветочный магазин, розы, тюльпаны',
   authors: [{ name: 'Flower Shop Team' }],
-  viewport: 'width=device-width, initial-scale=1',
   robots: 'index, follow',
   openGraph: {
     title: 'Flower Shop - Мир прекрасных цветов',
@@ -17,6 +17,11 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'ru_RU',
   },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 }
 
 export default function RootLayout({
@@ -35,7 +40,9 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        {children}
+        <ChakraWrapper>
+          {children}
+        </ChakraWrapper>
       </body>
     </html>
   );

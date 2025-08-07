@@ -52,7 +52,7 @@ export class AppController {
   }
 
   @All(['shops', 'shops/', 'shops/*'])
-  @UseGuards(AuthGuard)
+  // Убрал @UseGuards(AuthGuard) для публичного доступа
   async proxyShops(@Req() req: Request, @Res() res: Response) {
     const targetUrl = this.serviceConfigService.getInternalUrl('shops');
     if (!targetUrl) {
@@ -63,7 +63,7 @@ export class AppController {
   }
 
   @All(['products', 'products/', 'products/*'])
-  @UseGuards(AuthGuard)
+  // Убрал @UseGuards(AuthGuard) для публичного доступа
   async proxyProducts(@Req() req: Request, @Res() res: Response) {
     const targetUrl = this.serviceConfigService.getInternalUrl('products');
     if (!targetUrl) {

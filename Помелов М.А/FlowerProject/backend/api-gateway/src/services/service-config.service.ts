@@ -23,14 +23,14 @@ export class ServiceConfigService {
       internalUrl: 'http://shop-service:3000',
       externalUrl: 'http://localhost:80',
       port: 3003,
-      requiresAuth: true,
+      requiresAuth: false, // Изменено для публичного доступа
     },
     products: {
       name: 'product-service',
       internalUrl: 'http://product-service:3000',
       externalUrl: 'http://localhost:80',
       port: 3004,
-      requiresAuth: true,
+      requiresAuth: false, // Изменено для публичного доступа
     },
     payment: {
       name: 'payment-service',

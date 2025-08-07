@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException, Logger, BadRequestException, ForbiddenException, Inject } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, Logger, BadRequestException, ForbiddenException, Inject, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
@@ -153,13 +153,26 @@ export class ProductService {
   async remove(id: number, shopId: number): Promise<void> {
     const product = await this.findById(id);
     if (product.shopId !== shopId) {
-      throw new ForbiddenException('Нет доступа к удалению этого продукта');
+      throw new UnauthorizedException('You can only delete your own products');
     }
     await this.productRepository.remove(product);
     this.logger.log(`Удалён продукт: ${product.name} (ID: ${id})`);
     await this.clearProductsCache();
     await this.clearProductCache(id);
     await this.clearProductsByShopCache(shopId);
+  }
+
+  async findFeatured(): Promise<Product[]> {
+    // Возвращаем первые 8 продуктов как избранные
+    const products = await this.productRepository.find({
+      take: 8,
+      order: {
+        createdAt: 'DESC'
+      }
+    });
+    
+    this.logger.log(`Found ${products.length} featured products`);
+    return products;
   }
 
   // async findByIds(ids: number[]): Promise<Product[]> {

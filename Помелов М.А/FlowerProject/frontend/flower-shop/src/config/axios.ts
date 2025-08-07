@@ -47,7 +47,7 @@ apiClient.interceptors.response.use(
 );
 
 // Типы для API ответов
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data: T;
   message?: string;
   status?: number;
@@ -68,23 +68,23 @@ export interface ErrorResponse {
 // Helper функции для работы с API
 export const api = {
   // GET запрос
-  get: <T = any>(url: string, config = {}) => 
+  get: <T = unknown>(url: string, config = {}) => 
     apiClient.get<T, AxiosResponse<T>>(url, config),
   
   // POST запрос
-  post: <T = any>(url: string, data = {}, config = {}) => 
+  post: <T = unknown>(url: string, data = {}, config = {}) => 
     apiClient.post<T, AxiosResponse<T>>(url, data, config),
   
   // PUT запрос
-  put: <T = any>(url: string, data = {}, config = {}) => 
+  put: <T = unknown>(url: string, data = {}, config = {}) => 
     apiClient.put<T, AxiosResponse<T>>(url, data, config),
   
   // DELETE запрос
-  delete: <T = any>(url: string, config = {}) => 
+  delete: <T = unknown>(url: string, config = {}) => 
     apiClient.delete<T, AxiosResponse<T>>(url, config),
   
   // PATCH запрос
-  patch: <T = any>(url: string, data = {}, config = {}) => 
+  patch: <T = unknown>(url: string, data = {}, config = {}) => 
     apiClient.patch<T, AxiosResponse<T>>(url, data, config),
 };
 

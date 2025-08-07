@@ -16,6 +16,10 @@ export class ProductController {
     return this.productService.findAll();
   }
 
+  @Get('featured')
+  async findFeatured() {
+    return this.productService.findFeatured();
+  }
 
   @Get(':id')
   async findById(@Param('id') id: number) {
