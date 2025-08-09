@@ -54,6 +54,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         border="1px solid rgba(255, 255, 255, 0.1)"
         position="relative"
         overflow="hidden"
+        height="480px"
+        display="flex"
+        flexDirection="column"
         _before={{
           content: '""',
           position: 'absolute',
@@ -88,11 +91,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         {/* Изображение продукта */}
         <Box
           position="relative"
-          mb={6}
+          mb={4}
           display="flex"
           justifyContent="center"
           alignItems="center"
-          height="200px"
+          height="150px"
+          flex="0 0 auto"
           zIndex={1}
         >
           <motion.div
@@ -108,49 +112,52 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </Box>
 
         {/* Информация о продукте */}
-        <VStack spacing={4} align="stretch" position="relative" zIndex={1}>
-          <Text
-            fontSize="sm"
-            color="pink.300"
-            fontWeight="medium"
-            textTransform="uppercase"
-            letterSpacing="wide"
-          >
-            {category}
-          </Text>
+        <VStack spacing={4} align="stretch" position="relative" zIndex={1} flex="1" justify="space-between">
+          {/* Основная информация */}
+          <VStack spacing={2} align="stretch">
+            <Text
+              fontSize="sm"
+              color="pink.300"
+              fontWeight="medium"
+              textTransform="uppercase"
+              letterSpacing="wide"
+            >
+              {category}
+            </Text>
 
-          <Text
-            fontSize="lg"
-            fontWeight="semibold"
-            color="white"
-            lineHeight="1.4"
-            noOfLines={2}
-          >
-            {product.name}
-          </Text>
+            <Text
+              fontSize="lg"
+              fontWeight="semibold"
+              color="white"
+              lineHeight="1.4"
+              noOfLines={2}
+              minHeight="2.4em"
+            >
+              {product.name}
+            </Text>
 
-          {/* Описание */}
-          {product.description && (
+            {/* Описание */}
             <Text
               fontSize="sm"
               color="gray.300"
               lineHeight="1.4"
               noOfLines={2}
+              minHeight="2.4em"
             >
-              {product.description}
+              {product.description || 'Прекрасная цветочная композиция'}
             </Text>
-          )}
 
-          {/* Цена */}
-          <HStack spacing={3} align="baseline">
-            <Text
-              fontSize="2xl"
-              fontWeight="bold"
-              color="white"
-            >
-              {product.price.toLocaleString()} ₽
-            </Text>
-          </HStack>
+            {/* Цена */}
+            <HStack spacing={3} align="baseline">
+              <Text
+                fontSize="xl"
+                fontWeight="bold"
+                color="white"
+              >
+                {product.price.toLocaleString()} ₽
+              </Text>
+            </HStack>
+          </VStack>
 
           {/* Кнопка действия */}
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
