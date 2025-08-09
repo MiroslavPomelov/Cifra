@@ -60,6 +60,13 @@ export interface AuthResponse {
   };
 }
 
+export interface CreateProductPayload {
+  name: string;
+  description?: string;
+  price: number;
+  imageUrl?: string;
+}
+
 // API Service class
 class ApiService {
   private baseURL: string;
@@ -99,6 +106,50 @@ class ApiService {
     }
   }
 
+  async createProduct(data: CreateProductPayload): Promise<Product> {
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      const response = await axios.post(`${this.baseURL}/products`, data, {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : '',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error creating product:', error);
+      throw error;
+    }
+  }
+
+  async updateProduct(id: number, data: Partial<CreateProductPayload>): Promise<Product> {
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      const response = await axios.put(`${this.baseURL}/products/${id}`, data, {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : '',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error updating product:', error);
+      throw error;
+    }
+  }
+
+  async deleteProduct(id: number): Promise<void> {
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      await axios.delete(`${this.baseURL}/products/${id}`, {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : '',
+        },
+      });
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      throw error;
+    }
+  }
+
   // Shops
   async getShops(): Promise<Shop[]> {
     try {
@@ -123,7 +174,14 @@ class ApiService {
   // Shop Authentication
   async registerShop(data: ShopRegistrationData): Promise<{ message: string }> {
     try {
-      const response = await axios.post(`${this.baseURL}/auth/shops/registration`, data);
+      // Отправляем только разрешённые полям DTO auth-service (email, password, name, address)
+      const payload = {
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        address: data.address,
+      };
+      const response = await axios.post(`${this.baseURL}/auth/shops/registration`, payload);
       return response.data;
     } catch (error) {
       console.error('Error registering shop:', error);
@@ -133,7 +191,15 @@ class ApiService {
 
   async verifyShop(data: ShopVerificationData): Promise<AuthResponse> {
     try {
-      const response = await axios.post(`${this.baseURL}/auth/shops/verify`, data);
+      // Отправляем только разрешённые поля (email, password, name, address, code)
+      const payload = {
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        address: data.address,
+        code: data.code,
+      };
+      const response = await axios.post(`${this.baseURL}/auth/shops/verify`, payload);
       return response.data;
     } catch (error) {
       console.error('Error verifying shop:', error);

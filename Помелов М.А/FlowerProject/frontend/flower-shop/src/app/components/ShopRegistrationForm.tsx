@@ -528,3 +528,4 @@ const ShopRegistrationForm: React.FC<ShopRegistrationFormProps> = ({ isOpen, onC
 };
 
 export default ShopRegistrationForm;
+

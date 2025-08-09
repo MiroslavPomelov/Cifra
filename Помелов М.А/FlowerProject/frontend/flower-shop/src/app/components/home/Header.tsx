@@ -9,6 +9,11 @@ import {
   HStack,
   VStack,
   IconButton,
+  Avatar,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
   useDisclosure,
   Drawer,
   DrawerBody,
@@ -23,6 +28,28 @@ const Header: React.FC = () => {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [authName, setAuthName] = useState<string | null>(null);
+  const [authEmail, setAuthEmail] = useState<string | null>(null);
+  const [authRole, setAuthRole] = useState<'user' | 'shop' | null>(null);
+  
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem('token');
+      localStorage.removeItem('shop');
+    } catch {}
+    setAuthName(null);
+    setAuthEmail(null);
+    setAuthRole(null);
+    router.push('/home');
+  };
+
+  const handleProfile = () => {
+    if (authRole === 'shop') {
+      router.push('/shop/dashboard');
+    } else {
+      router.push('/home');
+    }
+  };
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -31,6 +58,61 @@ const Header: React.FC = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Простая функция декодирования JWT без зависимостей
+  function parseJwt(token: string): any | null {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join(''),
+      );
+      return JSON.parse(jsonPayload);
+    } catch {
+      return null;
+    }
+  }
+
+  // Инициализация отображаемого имени из localStorage (token + shop)
+  React.useEffect(() => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    if (!token) {
+      setAuthName(null);
+      setAuthEmail(null);
+      setAuthRole(null);
+      return;
+    }
+    const payload = parseJwt(token);
+    if (payload) {
+      const email: string | undefined = payload.email;
+      const role: string | undefined = payload.role;
+      setAuthEmail(email ?? null);
+      if (role === 'shop') {
+        setAuthRole('shop');
+        // Пытаемся взять имя магазина из localStorage
+        try {
+          const shopRaw = localStorage.getItem('shop');
+          if (shopRaw) {
+            const shop = JSON.parse(shopRaw);
+            setAuthName(shop?.name || email?.split('@')[0] || 'Магазин');
+          } else {
+            setAuthName(email?.split('@')[0] || 'Магазин');
+          }
+        } catch {
+          setAuthName(email?.split('@')[0] || 'Магазин');
+        }
+      } else {
+        setAuthRole('user');
+        const firstName: string | undefined = payload.firstName;
+        const lastName: string | undefined = payload.lastName;
+        const fullName = [firstName, lastName].filter(Boolean).join(' ').trim();
+        setAuthName(fullName || email?.split('@')[0] || 'Пользователь');
+      }
+    }
   }, []);
 
   const bgColor = isScrolled 
@@ -111,37 +193,62 @@ const Header: React.FC = () => {
             ))}
           </HStack>
 
-          {/* Кнопки действий */}
+          {/* Кнопки действий / Профиль */}
           <HStack spacing={4} display={{ base: 'none', md: 'flex' }}>
-            <motion.div whileHover={{ scale: 1.05 }}>
-              <Button
-                variant="ghost"
-                color="white"
-                _hover={{
-                  bg: 'rgba(255, 255, 255, 0.1)',
-                  color: 'pink.300',
-                }}
-                transition="all 0.3s ease"
-                onClick={() => router.push('/login')}
-              >
-                Войти
-              </Button>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }}>
-              <Button
-                bgGradient="linear(to-r, pink.400, purple.500)"
-                color="white"
-                _hover={{
-                  bgGradient: "linear(to-r, pink.500, purple.600)",
-                  transform: 'translateY(-2px)',
-                  boxShadow: '0 8px 25px rgba(236, 72, 153, 0.3)',
-                }}
-                transition="all 0.3s ease"
-                onClick={() => router.push('/login')}
-              >
-                Регистрация
-              </Button>
-            </motion.div>
+            {authName ? (
+              <Menu placement="bottom-end" autoSelect={false}>
+                <MenuButton as={Button} variant="ghost" p={0} _hover={{ bg: 'rgba(255,255,255,0.06)' }}>
+                  <HStack spacing={3} color="white" px={3} py={1.5}>
+                    <Avatar name={authName} size="sm" bg="pink.400" color="white" />
+                    <VStack spacing={0} align="start">
+                      <Text fontSize="sm" fontWeight="semibold" noOfLines={1} maxW="180px">
+                        {authName}
+                      </Text>
+                      {authRole === 'shop' && (
+                        <Text fontSize="xs" color="pink.300">Магазин</Text>
+                      )}
+                    </VStack>
+                  </HStack>
+                </MenuButton>
+                <MenuList bg="rgba(0, 0, 0, 0.9)" border="1px solid rgba(255,255,255,0.08)" backdropFilter="blur(10px)">
+                  <MenuItem onClick={handleProfile} _hover={{ bg: 'rgba(255,255,255,0.06)' }} color="white">
+                    Профиль
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout} _hover={{ bg: 'rgba(255,255,255,0.06)' }} color="white">
+                    Выйти
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            ) : (
+              <>
+                <motion.div whileHover={{ scale: 1.05 }}>
+                  <Button
+                    variant="ghost"
+                    color="white"
+                    _hover={{ bg: 'rgba(255, 255, 255, 0.1)', color: 'pink.300' }}
+                    transition="all 0.3s ease"
+                    onClick={() => router.push('/login')}
+                  >
+                    Войти
+                  </Button>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05 }}>
+                  <Button
+                    bgGradient="linear(to-r, pink.400, purple.500)"
+                    color="white"
+                    _hover={{
+                      bgGradient: 'linear(to-r, pink.500, purple.600)',
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 8px 25px rgba(236, 72, 153, 0.3)',
+                    }}
+                    transition="all 0.3s ease"
+                    onClick={() => router.push('/login')}
+                  >
+                    Регистрация
+                  </Button>
+                </motion.div>
+              </>
+            )}
           </HStack>
 
           {/* Мобильное меню */}
@@ -190,30 +297,66 @@ const Header: React.FC = () => {
                       {item.name}
                     </Text>
                   ))}
-                  <Button
-                    variant="ghost"
-                    color="white"
-                    _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
-                    onClick={() => {
-                      router.push('/login');
-                      onClose();
-                    }}
-                  >
-                    Войти
-                  </Button>
-                  <Button
-                    bgGradient="linear(to-r, pink.400, purple.500)"
-                    color="white"
-                    _hover={{
-                      bgGradient: "linear(to-r, pink.500, purple.600)",
-                    }}
-                    onClick={() => {
-                      router.push('/login');
-                      onClose();
-                    }}
-                  >
-                    Регистрация
-                  </Button>
+                  {authName ? (
+                    <>
+                      <HStack spacing={3} color="white">
+                        <Avatar name={authName} size="sm" bg="pink.400" color="white" />
+                        <VStack spacing={0} align="start">
+                          <Text fontSize="md" fontWeight="semibold">{authName}</Text>
+                          {authRole === 'shop' && (
+                            <Text fontSize="xs" color="pink.300">Магазин</Text>
+                          )}
+                        </VStack>
+                      </HStack>
+                      <Button
+                        variant="ghost"
+                        color="white"
+                        _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
+                        onClick={() => {
+                          handleProfile();
+                          onClose();
+                        }}
+                      >
+                        Профиль
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        color="white"
+                        _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
+                        onClick={() => {
+                          handleLogout();
+                          onClose();
+                        }}
+                      >
+                        Выйти
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        variant="ghost"
+                        color="white"
+                        _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
+                        onClick={() => {
+                          router.push('/login');
+                          onClose();
+                        }}
+                      >
+                        Войти
+                      </Button>
+                      <Button
+                        bgGradient="linear(to-r, pink.400, purple.500)"
+                        color="white"
+                        _hover={{ bgGradient: 'linear(to-r, pink.500, purple.600)' }}
+                        onClick={() => {
+                          router.push('/login');
+                          onClose();
+                        }}
+                      >
+                        Регистрация
+                      </Button>
+                    </>
+                  )}
                 </VStack>
               </DrawerBody>
             </DrawerContent>

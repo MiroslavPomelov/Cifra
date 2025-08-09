@@ -370,3 +370,4 @@ const ShopRegistrationPage: React.FC = () => {
 };
 
 export default ShopRegistrationPage;
+
