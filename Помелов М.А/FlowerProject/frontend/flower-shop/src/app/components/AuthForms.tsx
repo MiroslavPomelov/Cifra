@@ -181,10 +181,17 @@ const AuthForms: React.FC = () => {
         title: 'Успешный вход!',
         description: 'Добро пожаловать в мир цветов!',
         status: 'success',
-        duration: 3000,
+        duration: 2000,
         isClosable: true,
       });
+      
       localStorage.setItem('token', response.data.accessToken);
+      
+      // Перенаправляем на главную страницу
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 2000);
+      
     } catch (error: unknown) {
       const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Неверный email или пароль';
       toast({
@@ -243,9 +250,41 @@ const AuthForms: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
+      
+      // Сохраняем токен
       localStorage.setItem('token', response.data.accessToken);
+      
+      // Автоматически входим в систему
+      try {
+        const loginResponse = await api.post<AuthResponse>(API_CONFIG.AUTH.LOGIN, {
+          email: verifyData.email,
+          password: verifyData.password
+        });
+        
+        if (loginResponse.data.accessToken) {
+          localStorage.setItem('token', loginResponse.data.accessToken);
+          
+          toast({
+            title: 'Автоматический вход выполнен!',
+            description: 'Перенаправляем на главную страницу...',
+            status: 'success',
+            duration: 2000,
+            isClosable: true,
+          });
+          
+          // Перенаправляем на главную страницу
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 2000);
+        }
+      } catch (loginError) {
+        console.error('Ошибка автоматического входа:', loginError);
+        // Если автоматический вход не удался, просто закрываем форму
+        setIsVerifying(false);
+        setIsLogin(true);
+      }
+      
       setIsVerifying(false);
-      setIsLogin(true);
     } catch (error: unknown) {
       const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Неверный код подтверждения';
       toast({

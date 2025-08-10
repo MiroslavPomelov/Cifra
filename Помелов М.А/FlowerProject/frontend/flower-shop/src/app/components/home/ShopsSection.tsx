@@ -190,6 +190,7 @@ const ShopsSection: React.FC = () => {
                 columns={{ base: 1, md: 2, lg: 3 }}
                 spacing={8}
                 w="full"
+                alignItems="stretch"
               >
                 {shops.map((shop, index) => (
                   <motion.div
@@ -206,6 +207,7 @@ const ShopsSection: React.FC = () => {
                       borderRadius="xl"
                       overflow="hidden"
                       transition="all 0.3s ease"
+                      height="100%"
                       _hover={{
                         transform: 'translateY(-5px)',
                         boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',

@@ -19,6 +19,15 @@ import ShopRegistrationForm from '../ShopRegistrationForm';
 const Footer: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   
+  const scrollToSection = (href: string) => {
+    if (href.startsWith('#')) {
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+  
   const footerLinks = {
     company: [
       { name: 'О нас', href: '#about' },
@@ -92,87 +101,6 @@ const Footer: React.FC = () => {
 
       <Container maxW="7xl" position="relative" zIndex={1}>
         <VStack spacing={12} py={16}>
-          {/* Призыв к действию для регистрации магазина */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <Box
-              bg="rgba(236, 72, 153, 0.1)"
-              borderRadius="2xl"
-              p={8}
-              border="1px solid rgba(236, 72, 153, 0.2)"
-              textAlign="center"
-              position="relative"
-              overflow="hidden"
-            >
-              <motion.div
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  width: '100px',
-                  height: '100px',
-                  background: 'radial-gradient(circle, rgba(236, 72, 153, 0.1), transparent)',
-                  borderRadius: '50%',
-                  filter: 'blur(20px)',
-                  transform: 'translate(-50%, -50%)',
-                }}
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.3, 0.6, 0.3],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-              <VStack spacing={4} position="relative" zIndex={1}>
-                <HStack spacing={2}>
-                  <FaStore color="#ec4899" size={24} />
-                  <Text
-                    fontSize="2xl"
-                    fontWeight="bold"
-                    bgGradient="linear(to-r, pink.400, purple.500)"
-                    bgClip="text"
-                  >
-                    Откройте свой магазин
-                  </Text>
-                </HStack>
-                <Text color="gray.300" fontSize="lg" maxW="500px">
-                  Присоединяйтесь к нашей платформе и начните продавать цветы онлайн. 
-                  Простая регистрация, удобное управление, больше клиентов!
-                </Text>
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    onClick={onOpen}
-                    size="lg"
-                    bgGradient="linear(to-r, pink.400, purple.500)"
-                    color="white"
-                    _hover={{
-                      bgGradient: "linear(to-r, pink.500, purple.600)",
-                      transform: 'translateY(-2px)',
-                      boxShadow: '0 8px 25px rgba(236, 72, 153, 0.3)',
-                    }}
-                    _active={{
-                      transform: 'translateY(0)',
-                    }}
-                    leftIcon={<FaStore />}
-                    px={8}
-                    py={6}
-                    fontSize="lg"
-                    fontWeight="semibold"
-                  >
-                    Зарегистрировать магазин
-                  </Button>
-                </motion.div>
-              </VStack>
-            </Box>
-          </motion.div>
-
           {/* Основной контент футера */}
           <SimpleGrid
             columns={{ base: 1, md: 2, lg: 5 }}
@@ -234,16 +162,17 @@ const Footer: React.FC = () => {
                 </Text>
                 <VStack align="start" spacing={2}>
                   {footerLinks.company.map((link) => (
-                    <Link
+                    <Text
                       key={link.name}
-                      href={link.href}
                       color="gray.400"
                       fontSize="sm"
+                      cursor="pointer"
                       _hover={{ color: 'pink.300' }}
                       transition="color 0.3s ease"
+                      onClick={() => scrollToSection(link.href)}
                     >
                       {link.name}
-                    </Link>
+                    </Text>
                   ))}
                 </VStack>
               </VStack>
@@ -262,16 +191,17 @@ const Footer: React.FC = () => {
                 </Text>
                 <VStack align="start" spacing={2}>
                   {footerLinks.services.map((link) => (
-                    <Link
+                    <Text
                       key={link.name}
-                      href={link.href}
                       color="gray.400"
                       fontSize="sm"
+                      cursor="pointer"
                       _hover={{ color: 'pink.300' }}
                       transition="color 0.3s ease"
+                      onClick={() => scrollToSection(link.href)}
                     >
                       {link.name}
-                    </Link>
+                    </Text>
                   ))}
                 </VStack>
               </VStack>
@@ -290,16 +220,17 @@ const Footer: React.FC = () => {
                 </Text>
                 <VStack align="start" spacing={2}>
                   {footerLinks.support.map((link) => (
-                    <Link
+                    <Text
                       key={link.name}
-                      href={link.href}
                       color="gray.400"
                       fontSize="sm"
+                      cursor="pointer"
                       _hover={{ color: 'pink.300' }}
                       transition="color 0.3s ease"
+                      onClick={() => scrollToSection(link.href)}
                     >
                       {link.name}
-                    </Link>
+                    </Text>
                   ))}
                 </VStack>
               </VStack>
@@ -318,16 +249,17 @@ const Footer: React.FC = () => {
                 </Text>
                 <VStack align="start" spacing={2}>
                   {footerLinks.partners.map((link) => (
-                    <Link
+                    <Text
                       key={link.name}
-                      href={link.href}
                       color="gray.400"
                       fontSize="sm"
+                      cursor="pointer"
                       _hover={{ color: 'pink.300' }}
                       transition="color 0.3s ease"
+                      onClick={() => scrollToSection(link.href)}
                     >
                       {link.name}
-                    </Link>
+                    </Text>
                   ))}
                   {/* Специальная ссылка для регистрации магазина */}
                   <Button
@@ -373,16 +305,17 @@ const Footer: React.FC = () => {
                 </Text>
                 <HStack spacing={4} flexWrap="wrap" justify={{ base: 'center', md: 'start' }}>
                   {footerLinks.legal.map((link) => (
-                    <Link
+                    <Text
                       key={link.name}
-                      href={link.href}
                       color="gray.500"
                       fontSize="xs"
+                      cursor="pointer"
                       _hover={{ color: 'pink.300' }}
                       transition="color 0.3s ease"
+                      onClick={() => scrollToSection(link.href)}
                     >
                       {link.name}
-                    </Link>
+                    </Text>
                   ))}
                 </HStack>
               </VStack>

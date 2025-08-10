@@ -67,7 +67,31 @@ export interface CreateProductPayload {
   imageUrl?: string;
 }
 
-// API Service class
+export interface UserProfileData {
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  address?: string;
+}
+
+export interface UserOrder {
+  id: string;
+  orderNumber: string;
+  status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
+  totalAmount: number;
+  orderDate: string;
+  deliveryAddress: string;
+  items: Array<{
+    id: number;
+    productName: string;
+    quantity: number;
+    price: number;
+    imageUrl?: string;
+  }>;
+  shopName: string;
+}
+
+
 class ApiService {
   private baseURL: string;
 
@@ -213,6 +237,52 @@ class ApiService {
       return response.data;
     } catch (error) {
       console.error('Error logging in shop:', error);
+      throw error;
+    }
+  }
+
+  // User profile methods
+  async getUserProfile(userId: number, token: string): Promise<UserProfileData> {
+    try {
+      const response = await axios.get(`${this.baseURL}/users/${userId}/profile`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      throw error;
+    }
+  }
+
+  async updateUserProfile(userId: number, data: UserProfileData, token: string): Promise<UserProfileData> {
+    try {
+      const response = await axios.put(`${this.baseURL}/users/${userId}/profile`, data, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+      throw error;
+    }
+  }
+
+  async getUserOrders(userId: number, token: string): Promise<UserOrder[]> {
+    try {
+      const response = await axios.get(`${this.baseURL}/users/${userId}/orders`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching user orders:', error);
       throw error;
     }
   }

@@ -9,6 +9,7 @@ import {
   Button,
   Flex,
   useColorModeValue,
+  useToast,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { Product } from '../../../services/api';
@@ -18,6 +19,8 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const toast = useToast();
+
   // Определяем категорию на основе названия или описания
   const getCategory = () => {
     const name = product.name.toLowerCase();
@@ -36,6 +39,70 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     if (name.includes('орхидея') || name.includes('орхид')) return '🌺';
     if (name.includes('подсолнух') || name.includes('нарцисс')) return '🌻';
     return '🌸';
+  };
+
+  // Функция добавления товара в корзину
+  const addToCart = () => {
+    try {
+      console.log('Добавление товара в корзину:', product);
+      
+      // Получаем текущую корзину из localStorage
+      const savedCart = localStorage.getItem('cart');
+      let currentCart = savedCart ? JSON.parse(savedCart) : [];
+      
+      console.log('Текущая корзина:', currentCart);
+
+      // Проверяем, есть ли уже такой товар в корзине
+      const existingItemIndex = currentCart.findIndex((item: any) => item.id === product.id);
+      console.log('Индекс существующего товара:', existingItemIndex);
+
+      if (existingItemIndex !== -1) {
+        // Если товар уже есть, увеличиваем количество
+        currentCart[existingItemIndex].quantity += 1;
+        console.log('Увеличено количество товара:', currentCart[existingItemIndex]);
+      } else {
+        // Если товара нет, добавляем новый
+        const newItem = {
+          id: product.id,
+          name: product.name,
+          price: parseFloat(product.price),
+          quantity: 1,
+          imageUrl: product.imageUrl || '',
+          shopName: 'Магазин цветов', // Можно получить из API
+        };
+        currentCart.push(newItem);
+        console.log('Добавлен новый товар:', newItem);
+      }
+
+      // Сохраняем обновленную корзину
+      localStorage.setItem('cart', JSON.stringify(currentCart));
+      console.log('Корзина сохранена в localStorage:', currentCart);
+
+      // Уведомляем другие компоненты об обновлении корзины
+      window.dispatchEvent(new Event('cartUpdated'));
+      console.log('Событие cartUpdated отправлено');
+
+      // Показываем уведомление пользователю
+      toast({
+        title: 'Товар добавлен в корзину',
+        description: `${product.name} успешно добавлен в корзину`,
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+        position: 'top-right',
+      });
+
+    } catch (error) {
+      console.error('Ошибка добавления товара в корзину:', error);
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось добавить товар в корзину',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top-right',
+      });
+    }
   };
 
   const category = getCategory();
@@ -154,7 +221,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 fontWeight="bold"
                 color="white"
               >
-                {product.price.toLocaleString()} ₽
+                {parseFloat(product.price).toLocaleString()} ₽
               </Text>
             </HStack>
           </VStack>
@@ -175,6 +242,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               }}
               fontWeight="semibold"
               letterSpacing="wide"
+              onClick={addToCart}
             >
               В корзину
             </Button>

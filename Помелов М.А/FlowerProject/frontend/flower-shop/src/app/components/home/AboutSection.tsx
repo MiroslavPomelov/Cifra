@@ -281,6 +281,7 @@ const AboutSection: React.FC = () => {
                 columns={{ base: 1, md: 2, lg: 4 }}
                 spacing={8}
                 w="full"
+                alignItems="stretch"
               >
                 {features.map((feature, index) => (
                   <motion.div
@@ -327,6 +328,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ feature }) => {
         border="1px solid rgba(255, 255, 255, 0.1)"
         position="relative"
         overflow="hidden"
+        height="100%"
         _before={{
           content: '""',
           position: 'absolute',

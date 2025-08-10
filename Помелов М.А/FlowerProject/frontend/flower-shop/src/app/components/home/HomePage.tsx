@@ -22,12 +22,20 @@ const HomePage: React.FC = () => {
       
       <Container maxW="full" px={0} position="relative" zIndex={1}>
         <Header />
-        <Hero />
-        <FeaturedProducts />
-        <Categories />
-        <ShopsSection />
-        <AboutSection />
-        <Footer />
+        <Box id="home">
+          <Hero />
+        </Box>
+        <Box id="catalog">
+          <FeaturedProducts />
+          <Categories />
+        </Box>
+        <Box id="about">
+          <ShopsSection />
+          <AboutSection />
+        </Box>
+        <Box id="contact">
+          <Footer />
+        </Box>
       </Container>
     </Box>
   );

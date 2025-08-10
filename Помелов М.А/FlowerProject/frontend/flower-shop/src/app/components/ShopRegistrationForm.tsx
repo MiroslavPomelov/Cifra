@@ -131,6 +131,35 @@ const ShopRegistrationForm: React.FC<ShopRegistrationFormProps> = ({ isOpen, onC
         isClosable: true,
       });
       
+      // Автоматически входим в систему магазина
+      try {
+        const loginResponse = await apiService.loginShop({
+          email: formData.email,
+          password: formData.password
+        });
+        
+        if (loginResponse.accessToken) {
+          localStorage.setItem('token', loginResponse.accessToken);
+          
+          toast({
+            title: 'Автоматический вход выполнен!',
+            description: 'Перенаправляем на главную страницу...',
+            status: 'success',
+            duration: 2000,
+            isClosable: true,
+          });
+          
+          // Перенаправляем на главную страницу
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 2000);
+        }
+      } catch (loginError) {
+        console.error('Ошибка автоматического входа магазина:', loginError);
+        // Если автоматический вход не удался, просто показываем успех
+        setStep('success');
+      }
+      
       setStep('success');
     } catch (error: any) {
       setError(error.response?.data?.message || 'Ошибка при верификации');

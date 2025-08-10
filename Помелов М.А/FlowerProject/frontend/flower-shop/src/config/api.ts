@@ -1,9 +1,9 @@
-// API Configuration
+
 export const API_CONFIG = {
-  // Base URL for API Gateway
+  // Это база
   BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:80',
   
-  // Auth endpoints
+  // Auth 
   AUTH: {
     LOGIN: '/auth/login',
     REGISTRATION: '/auth/registration',
@@ -11,42 +11,45 @@ export const API_CONFIG = {
     VALIDATE_TOKEN: '/auth/validatetoken',
   },
   
-  // Users endpoints
+  // Users 
   USERS: {
     BASE: '/users',
+    PROFILE: (id: number) => `/users/${id}/profile`,
+    UPDATE_PROFILE: (id: number) => `/users/${id}/profile`,
+    ORDERS: (id: number) => `/users/${id}/orders`,
     WITH_FAVOURITES: (id: number) => `/users/${id}/with-favourites`,
     FAVOURITES: (id: number) => `/users/${id}/favourites`,
     FAVOURITES_CHECK: (userId: number, productId: number) => `/users/${userId}/favourites/check/${productId}`,
   },
   
-  // Shops endpoints
+  // Shops 
   SHOPS: {
     BASE: '/shops',
   },
   
-  // Products endpoints
+  // Products 
   PRODUCTS: {
     BASE: '/products',
   },
   
-  // Payment endpoints
+  // Payment 
   PAYMENT: {
     PROCESS: '/payment/process',
     STATUS: (id: string) => `/payment/status/${id}`,
   },
   
-  // Order endpoints
+  // Order 
   ORDER: {
     BASE: '/order',
   },
 };
 
-// Helper function to build full API URL
+
 export const buildApiUrl = (endpoint: string): string => {
   return `${API_CONFIG.BASE_URL}${endpoint}`;
 };
 
-// Helper function to get auth headers
+
 export const getAuthHeaders = (token?: string) => {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',

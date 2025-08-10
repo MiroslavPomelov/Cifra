@@ -65,25 +65,25 @@ export interface ErrorResponse {
   timestamp?: string;
 }
 
-// Helper функции для работы с API
+
 export const api = {
-  // GET запрос
+
   get: <T = unknown>(url: string, config = {}) => 
     apiClient.get<T, AxiosResponse<T>>(url, config),
   
-  // POST запрос
+
   post: <T = unknown>(url: string, data = {}, config = {}) => 
     apiClient.post<T, AxiosResponse<T>>(url, data, config),
   
-  // PUT запрос
+
   put: <T = unknown>(url: string, data = {}, config = {}) => 
     apiClient.put<T, AxiosResponse<T>>(url, data, config),
   
-  // DELETE запрос
+
   delete: <T = unknown>(url: string, config = {}) => 
     apiClient.delete<T, AxiosResponse<T>>(url, config),
   
-  // PATCH запрос
+
   patch: <T = unknown>(url: string, data = {}, config = {}) => 
     apiClient.patch<T, AxiosResponse<T>>(url, data, config),
 };
