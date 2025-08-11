@@ -19,10 +19,10 @@ const Hero: React.FC = () => {
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setIsReducedMotion(mediaQuery.matches);
-    
+
     const handleChange = (e: MediaQueryListEvent) => setIsReducedMotion(e.matches);
     mediaQuery.addEventListener('change', handleChange);
-    
+
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
@@ -138,8 +138,8 @@ const Hero: React.FC = () => {
                   maxW="600px"
                   lineHeight="1.6"
                 >
-                  Подарите себе и близким незабываемые эмоции с нашими 
-                  эксклюзивными букетами. Каждый цветок — это история любви, 
+                  Подарите себе и близким незабываемые эмоции с нашими
+                  эксклюзивными букетами. Каждый цветок — это история любви,
                   радости и вдохновения.
                 </Text>
               </motion.div>
@@ -223,113 +223,113 @@ const Hero: React.FC = () => {
               position="relative"
               display={{ base: 'none', lg: 'block' }}
             >
-                             {/* Упрощенные анимированные цветы */}
-               {!isReducedMotion ? (
-                 <>
-                   <motion.div
-                     style={{
-                       position: 'absolute',
-                       top: '15%',
-                       right: '25%',
-                       fontSize: '3rem',
-                       willChange: 'transform',
-                     }}
-                     animate={{
-                       y: [0, -10, 0],
-                       rotate: [0, 3, 0],
-                     }}
-                     transition={{
-                       duration: 4,
-                       repeat: Infinity,
-                       ease: "easeInOut",
-                     }}
-                   >
-                     🌸
-                   </motion.div>
+              {/* Упрощенные анимированные цветы */}
+              {!isReducedMotion ? (
+                <>
+                  <motion.div
+                    style={{
+                      position: 'absolute',
+                      top: '15%',
+                      right: '25%',
+                      fontSize: '3rem',
+                      willChange: 'transform',
+                    }}
+                    animate={{
+                      y: [0, -10, 0],
+                      rotate: [0, 3, 0],
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  >
+                    🌸
+                  </motion.div>
 
-                   <motion.div
-                     style={{
-                       position: 'absolute',
-                       bottom: '20%',
-                       right: '15%',
-                       fontSize: '2.5rem',
-                       willChange: 'transform',
-                     }}
-                     animate={{
-                       y: [0, 10, 0],
-                       rotate: [0, -3, 0],
-                     }}
-                     transition={{
-                       duration: 5,
-                       repeat: Infinity,
-                       ease: "easeInOut",
-                       delay: 2,
-                     }}
-                   >
-                     🌺
-                   </motion.div>
-                 </>
-               ) : (
-                 <>
-                   <Box
-                     position="absolute"
-                     top="15%"
-                     right="25%"
-                     fontSize="3rem"
-                     opacity={0.3}
-                   >
-                     🌸
-                   </Box>
-                   <Box
-                     position="absolute"
-                     bottom="20%"
-                     right="15%"
-                     fontSize="2.5rem"
-                     opacity={0.2}
-                   >
-                     🌺
-                   </Box>
-                 </>
-               )}
+                  <motion.div
+                    style={{
+                      position: 'absolute',
+                      bottom: '20%',
+                      right: '15%',
+                      fontSize: '2.5rem',
+                      willChange: 'transform',
+                    }}
+                    animate={{
+                      y: [0, 10, 0],
+                      rotate: [0, -3, 0],
+                    }}
+                    transition={{
+                      duration: 5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: 2,
+                    }}
+                  >
+                    🌺
+                  </motion.div>
+                </>
+              ) : (
+                <>
+                  <Box
+                    position="absolute"
+                    top="15%"
+                    right="25%"
+                    fontSize="3rem"
+                    opacity={0.3}
+                  >
+                    🌸
+                  </Box>
+                  <Box
+                    position="absolute"
+                    bottom="20%"
+                    right="15%"
+                    fontSize="2.5rem"
+                    opacity={0.2}
+                  >
+                    🌺
+                  </Box>
+                </>
+              )}
 
-                             {/* Центральный элемент */}
-               <Box
-                 w="300px"
-                 h="300px"
-                 mx="auto"
-                 position="relative"
-                 display="flex"
-                 alignItems="center"
-                 justifyContent="center"
-               >
-                 {!isReducedMotion ? (
-                   <motion.div
-                     animate={{
-                       scale: [1, 1.05, 1],
-                       rotate: [0, 3, 0],
-                     }}
-                     transition={{
-                       duration: 8,
-                       repeat: Infinity,
-                       ease: "easeInOut",
-                     }}
-                     style={{
-                       fontSize: '6rem',
-                       filter: 'drop-shadow(0 8px 16px rgba(236, 72, 153, 0.2))',
-                       willChange: 'transform',
-                     }}
-                   >
-                     💐
-                   </motion.div>
-                 ) : (
-                   <Box
-                     fontSize="6rem"
-                     filter="drop-shadow(0 8px 16px rgba(236, 72, 153, 0.2))"
-                   >
-                     💐
-                   </Box>
-                 )}
-               </Box>
+              {/* Центральный элемент */}
+              <Box
+                w="300px"
+                h="300px"
+                mx="auto"
+                position="relative"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                {!isReducedMotion ? (
+                  <motion.div
+                    animate={{
+                      scale: [1, 1.05, 1],
+                      rotate: [0, 3, 0],
+                    }}
+                    transition={{
+                      duration: 8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    style={{
+                      fontSize: '6rem',
+                      filter: 'drop-shadow(0 8px 16px rgba(236, 72, 153, 0.2))',
+                      willChange: 'transform',
+                    }}
+                  >
+                    💐
+                  </motion.div>
+                ) : (
+                  <Box
+                    fontSize="6rem"
+                    filter="drop-shadow(0 8px 16px rgba(236, 72, 153, 0.2))"
+                  >
+                    💐
+                  </Box>
+                )}
+              </Box>
             </Box>
           </motion.div>
         </Flex>
