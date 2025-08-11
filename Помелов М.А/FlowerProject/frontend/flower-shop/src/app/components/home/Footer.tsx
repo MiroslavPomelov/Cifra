@@ -11,6 +11,7 @@ import {
   useColorModeValue,
   Button,
   useDisclosure,
+  Image
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { FaStore } from 'react-icons/fa';
@@ -18,7 +19,7 @@ import ShopRegistrationForm from '../ShopRegistrationForm';
 
 const Footer: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  
+
   const scrollToSection = (href: string) => {
     if (href.startsWith('#')) {
       const element = document.querySelector(href);
@@ -27,7 +28,7 @@ const Footer: React.FC = () => {
       }
     }
   };
-  
+
   const footerLinks = {
     company: [
       { name: 'О нас', href: '#about' },
@@ -61,11 +62,14 @@ const Footer: React.FC = () => {
     ],
   };
 
+
+
+
   const socialLinks = [
-    { name: 'Instagram', icon: '📷', href: '#instagram' },
-    { name: 'Facebook', icon: '📘', href: '#facebook' },
-    { name: 'Twitter', icon: '🐦', href: '#twitter' },
-    { name: 'YouTube', icon: '📺', href: '#youtube' },
+    { name: 'WhatsApp', icon: <Image src="whatsapp_icon.png" boxSize="20px" alt="VK"/>, href: '#WhatsApp' },
+    { name: 'ICQ',  icon: <Image src="icq_icon.png" boxSize="20px" alt="VK"/>, href: '#icq'},
+    { name: 'Telegram', icon: <Image src="telegram_icon.png" boxSize="20px" alt="VK"/>, href: '#telegram' },
+    { name: 'VK', icon: <Image src="vk_icon.png" boxSize="20px" alt="VK"/>, href: '#VK' },
   ];
 
   return (
@@ -124,7 +128,7 @@ const Footer: React.FC = () => {
                   ❃ Flower Shop
                 </Text>
                 <Text color="gray.400" fontSize="sm" lineHeight="1.6">
-                  Мы создаем красоту и дарим радость через цветы. 
+                  Мы создаем красоту и дарим радость через цветы.
                   Каждый букет — это произведение искусства.
                 </Text>
                 <HStack spacing={4}>
@@ -301,8 +305,26 @@ const Footer: React.FC = () => {
             >
               <VStack align={{ base: 'center', md: 'start' }} spacing={2}>
                 <Text color="gray.400" fontSize="sm">
-                  © 2024 Flower Shop. Все права защищены.
+                  © 2025 Flower Shop. Все права защищены.
                 </Text>
+
+                <HStack spacing={1} align="baseline">
+                  <Text color="gray.400" fontSize="sm">
+                    Сайт был создан
+                  </Text>
+                  <Link
+                    href="https://t.me/miroslavpo"
+                    color="pink.300"
+                    textDecoration="underline"
+                    textDecorationColor="gray.400"
+                    textDecorationThickness="1px"
+                    fontSize="sm"
+                    _hover={{ color: 'pink.400' }}
+                  >
+                    Miroslav P.
+                  </Link>
+                </HStack>
+
                 <HStack spacing={4} flexWrap="wrap" justify={{ base: 'center', md: 'start' }}>
                   {footerLinks.legal.map((link) => (
                     <Text
@@ -331,7 +353,34 @@ const Footer: React.FC = () => {
                 <Text color="gray.400" fontSize="sm" textAlign={{ base: 'center', md: 'right' }}>
                   Следите за нами в социальных сетях
                 </Text>
-                <HStack spacing={4}>
+
+                <HStack
+                  spacing={2}
+                  align="center" // Выравниваем по центру по вертикали
+                  justify={{ base: 'center', md: 'flex-end' }}
+                >
+                  <Image
+                    src="lady_bag.png"
+                    alt="Иконка"
+                    boxSize="20px"
+                    display="inline-block"
+                  />
+                  <Text
+                    color="gray.400"
+                    textDecoration="underline"
+                    textDecorationColor="gray.400"
+                    textDecorationThickness="1px"
+                    fontSize="sm"
+                    display="inline-flex"
+                    alignItems="center"
+                  >
+                    <a href="https://goo.gl/search/милые+котики">
+                      Нашли ошибку?
+                    </a>
+                  </Text>
+                </HStack>
+
+                <HStack spacing={4} align="baseline">
                   {socialLinks.map((social) => (
                     <motion.div
                       key={social.name}
