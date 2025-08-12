@@ -25,14 +25,14 @@ namespace payment_service.Controllers
             _cache = cache;
         }
 
-        // GET /payment/health
+        // такой маршгрут бдет GET /payment/health
         [HttpGet("health")]
         public IActionResult Health()
         {
             return Ok(new { status = "healthy", timestamp = DateTime.UtcNow });
         }
 
-        // GET /payment - получить все платежи
+        // такой маршгрут бдет GET /payment - получить все платежи
         [HttpGet]
         public async Task<IActionResult> GetAllPayments()
         {
@@ -40,7 +40,7 @@ namespace payment_service.Controllers
             {
                 const string cacheKey = "payments:all";
                 
-                // Пытаемся получить данные из кэша
+                // Данные из кэша
                 var cachedData = await _cache.GetStringAsync(cacheKey);
                 if (!string.IsNullOrEmpty(cachedData))
                 {
@@ -69,7 +69,7 @@ namespace payment_service.Controllers
                     return NotFound(new { message = "Платежи не найдены" });
                 }
 
-                // Кэшируем результат на 5 минут
+                // Кэширую
                 var cacheOptions = new DistributedCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
@@ -84,7 +84,7 @@ namespace payment_service.Controllers
             }
         }
 
-        // GET /payment/{paymentId} - получить платеж по ID
+        // такой маршгрут бдет GET /payment/{paymentId} - получить платеж по ID
         [HttpGet("{paymentId}")]
         public async Task<IActionResult> GetPaymentById(string paymentId)
         {
@@ -97,7 +97,7 @@ namespace payment_service.Controllers
 
                 var cacheKey = $"payment:{paymentId}";
                 
-                // Пытаемся получить данные из кэша
+                // Данные из кэша
                 var cachedData = await _cache.GetStringAsync(cacheKey);
                 if (!string.IsNullOrEmpty(cachedData))
                 {
@@ -126,7 +126,7 @@ namespace payment_service.Controllers
                     Timestamp = payment.CreatedAt
                 };
 
-                // Кэшируем результат на 10 минут
+                // Кэширую
                 var cacheOptions = new DistributedCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
@@ -141,7 +141,7 @@ namespace payment_service.Controllers
             }
         }
 
-        // POST /payment - создать новый платеж
+        // такой маршгрут бдет POST /payment - создать новый платеж
         [HttpPost]
         public async Task<IActionResult> CreatePayment([FromBody] PaymentRequestDto request)
         {
@@ -185,7 +185,7 @@ namespace payment_service.Controllers
                     PaymentId = Guid.NewGuid(),
                     Amount = request.Amount,
                     Status = status,
-                    CardNumber = MaskCardNumber(request.CardNumber), // Маскируем картy
+                    CardNumber = MaskCardNumber(request.CardNumber), 
                     CardHolder = request.CardHolder,
                     Expiry = request.Expiry,
                     Cvc = "***", // Не сохраняем CVC
@@ -198,7 +198,7 @@ namespace payment_service.Controllers
                 await _context.Payments.AddAsync(payment);
                 await _context.SaveChangesAsync();
 
-                // Инвалидируем кэш списка платежей
+               
                 await _cache.RemoveAsync("payments:all");
 
                 var response = new PaymentResponseDto
@@ -222,7 +222,7 @@ namespace payment_service.Controllers
             }
         }
 
-        // POST /payment/validate-card - валидация данных карты
+        // такой маршгрут бдет POST /payment/validate-card - валидация данных карты
         [HttpPost("validate-card")]
         public IActionResult ValidateCard([FromBody] CardValidationRequestDto request)
         {
@@ -235,7 +235,7 @@ namespace payment_service.Controllers
                     Timestamp = DateTime.UtcNow
                 };
 
-                // Проверка номера карты
+                // Проверка карты
                 if (string.IsNullOrEmpty(request.CardNumber))
                 {
                     validationResult.IsValid = false;
@@ -271,7 +271,6 @@ namespace payment_service.Controllers
                     validationResult.Errors.Add("Неверный формат срока действия (MM/YY)");
                 }
 
-                // Определение типа карты
                 if (validationResult.IsValid && !string.IsNullOrEmpty(request.CardNumber))
                 {
                     validationResult.CardType = DetermineCardType(request.CardNumber);
@@ -285,7 +284,7 @@ namespace payment_service.Controllers
             }
         }
 
-        // GET /payment/statistics - статистика платежей
+        // такой маршгрут бдет GET /payment/statistics - статистика платежей
         [HttpGet("statistics")]
         public async Task<IActionResult> GetPaymentStatistics()
         {
@@ -293,7 +292,7 @@ namespace payment_service.Controllers
             {
                 const string cacheKey = "payments:statistics";
                 
-                // Пытаемся получить данные из кэша
+                // такой маршгрут бдет Пытаемся получить данные из кэша
                 var cachedData = await _cache.GetStringAsync(cacheKey);
                 if (!string.IsNullOrEmpty(cachedData))
                 {
@@ -317,7 +316,6 @@ namespace payment_service.Controllers
                     Timestamp = DateTime.UtcNow
                 };
 
-                // Кэшируем результат на 15 минут
                 var cacheOptions = new DistributedCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15)
@@ -332,7 +330,7 @@ namespace payment_service.Controllers
             }
         }
 
-        // DELETE /payment/{paymentId} - удалить платеж (для административных целей)
+        // такой маршгрут бдет DELETE /payment/{paymentId} - удалить платеж (для административных целей)
         [HttpDelete("{paymentId}")]
         public async Task<IActionResult> DeletePayment(string paymentId)
         {
@@ -354,7 +352,6 @@ namespace payment_service.Controllers
                 _context.Payments.Remove(payment);
                 await _context.SaveChangesAsync();
 
-                // Инвалидируем кэш
                 await _cache.RemoveAsync("payments:all");
                 await _cache.RemoveAsync("payments:statistics");
                 await _cache.RemoveAsync($"payment:{paymentId}");
@@ -370,7 +367,7 @@ namespace payment_service.Controllers
         private bool SimulatePaymentProcessing(PaymentRequestDto request)
         {
             var random = new Random();
-            // 90% успешных платежей
+
             return random.Next(1, 101) <= 90;
         }
 
@@ -427,7 +424,7 @@ namespace payment_service.Controllers
         }
     }
 
-    // DTO классы
+    // DTO потом вынести отдельно
     public class PaymentRequestDto
     {
         [Required(ErrorMessage = "Сумма обязательна")]
