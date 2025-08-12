@@ -28,8 +28,9 @@ import {
   InputRightElement,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import { FaEye, FaEyeSlash, FaStore } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaStore, FaHome } from 'react-icons/fa';
 import { apiService, ShopRegistrationData, ShopVerificationData } from '../../services/api';
+import { useRouter } from 'next/navigation';
 
 // Иконки для показа/скрытия пароля
 const ViewIcon = () => (
@@ -64,6 +65,7 @@ const ShopRegistrationForm: React.FC<ShopRegistrationFormProps> = ({ isOpen, onC
   const [verificationCode, setVerificationCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const toast = useToast();
+  const router = useRouter();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -357,25 +359,46 @@ const ShopRegistrationForm: React.FC<ShopRegistrationFormProps> = ({ isOpen, onC
                   />
                 </FormControl>
 
-                <Button
-                  onClick={handleRegistration}
-                  isLoading={loading}
-                  loadingText="Отправляем код..."
-                  w="full"
-                  size="lg"
-                  bgGradient="linear(to-r, pink.400, purple.500)"
-                  color="white"
-                  _hover={{
-                    bgGradient: "linear(to-r, pink.500, purple.600)",
-                    transform: 'translateY(-2px)',
-                    boxShadow: '0 8px 25px rgba(236, 72, 153, 0.3)',
-                  }}
-                  _active={{
-                    transform: 'translateY(0)',
-                  }}
-                >
-                  Зарегистрировать магазин
-                </Button>
+                <HStack spacing={4} w="full">
+                  <Button
+                    onClick={handleRegistration}
+                    isLoading={loading}
+                    loadingText="Отправляем код..."
+                    w="full"
+                    size="lg"
+                    bgGradient="linear(to-r, pink.400, purple.500)"
+                    color="white"
+                    _hover={{
+                      bgGradient: "linear(to-r, pink.500, purple.600)",
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 8px 25px rgba(236, 72, 153, 0.3)',
+                    }}
+                    _active={{
+                      transform: 'translateY(0)',
+                    }}
+                  >
+                    Зарегистрировать магазин
+                  </Button>
+                  <Button
+                    onClick={() => router.push('/')}
+                    leftIcon={<FaHome />}
+                    variant="outline"
+                    colorScheme="gray"
+                    size="lg"
+                    border="1px solid rgba(255, 255, 255, 0.1)"
+                    color="gray.400"
+                    _hover={{
+                      bg: "rgba(255, 255, 255, 0.05)",
+                      borderColor: "rgba(255, 255, 255, 0.2)",
+                      color: "gray.300",
+                    }}
+                    _active={{
+                      transform: 'translateY(0)',
+                    }}
+                  >
+                    На главную
+                  </Button>
+                </HStack>
               </VStack>
             )}
 
@@ -485,14 +508,34 @@ const ShopRegistrationForm: React.FC<ShopRegistrationFormProps> = ({ isOpen, onC
                     Подтвердить
                   </Button>
 
-                  <Button
-                    variant="ghost"
-                    color="gray.400"
-                    size="sm"
-                    onClick={() => setStep('register')}
-                  >
-                    Назад к регистрации
-                  </Button>
+                  <HStack spacing={3} w="full">
+                    <Button
+                      variant="ghost"
+                      color="gray.400"
+                      size="sm"
+                      onClick={() => setStep('register')}
+                      flex={1}
+                    >
+                      Назад к регистрации
+                    </Button>
+                    <Button
+                      onClick={() => router.push('/')}
+                      leftIcon={<FaHome />}
+                      variant="outline"
+                      colorScheme="gray"
+                      size="sm"
+                      border="1px solid rgba(255, 255, 255, 0.1)"
+                      color="gray.400"
+                      _hover={{
+                        bg: "rgba(255, 255, 255, 0.05)",
+                        borderColor: "rgba(255, 255, 255, 0.2)",
+                        color: "gray.300",
+                      }}
+                      flex={1}
+                    >
+                      На главную
+                    </Button>
+                  </HStack>
                 </VStack>
               </VStack>
             )}
@@ -530,23 +573,42 @@ const ShopRegistrationForm: React.FC<ShopRegistrationFormProps> = ({ isOpen, onC
                   </Text>
                 </VStack>
 
-                <Button
-                  onClick={handleClose}
-                  w="full"
-                  size="lg"
-                  bgGradient="linear(to-r, green.400, green.500)"
-                  color="white"
-                  _hover={{
-                    bgGradient: "linear(to-r, green.500, green.600)",
-                    transform: 'translateY(-2px)',
-                    boxShadow: '0 8px 25px rgba(72, 187, 120, 0.3)',
-                  }}
-                  _active={{
-                    transform: 'translateY(0)',
-                  }}
-                >
-                  Закрыть
-                </Button>
+                <HStack spacing={4} w="full">
+                  <Button
+                    onClick={handleClose}
+                    w="full"
+                    size="lg"
+                    bgGradient="linear(to-r, green.400, green.500)"
+                    color="white"
+                    _hover={{
+                      bgGradient: "linear(to-r, green.500, green.600)",
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 8px 25px rgba(72, 187, 120, 0.3)',
+                    }}
+                    _active={{
+                      transform: 'translateY(0)',
+                    }}
+                  >
+                    Закрыть
+                  </Button>
+                  <Button
+                    onClick={() => router.push('/')}
+                    leftIcon={<FaHome />}
+                    variant="outline"
+                    colorScheme="gray"
+                    size="lg"
+                    border="1px solid rgba(255, 255, 255, 0.1)"
+                    color="gray.400"
+                    _hover={{
+                      bg: "rgba(255, 255, 255, 0.05)",
+                      borderColor: "rgba(255, 255, 255, 0.2)",
+                      color: "gray.300",
+                    }}
+                    w="full"
+                  >
+                    На главную
+                  </Button>
+                </HStack>
               </VStack>
             )}
           </motion.div>

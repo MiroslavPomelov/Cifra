@@ -9,6 +9,10 @@ export const API_CONFIG = {
     REGISTRATION: '/auth/registration',
     VERIFY: '/auth/verify',
     VALIDATE_TOKEN: '/auth/validatetoken',
+    // Эндпоинты для магазинов
+    SHOP_LOGIN: '/auth/shops/login',
+    SHOP_REGISTRATION: '/auth/shops/registration',
+    SHOP_VERIFY: '/auth/shops/verify',
   },
   
   // Users 

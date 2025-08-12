@@ -25,6 +25,8 @@ import { motion } from 'framer-motion';
 import FlowerBackground from './FlowerBackground';
 import { API_CONFIG } from '../../config/api';
 import { api, AuthResponse } from '../../config/axios';
+import { FaHome } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 
 // Простые иконки для показа/скрытия пароля
 const ViewIcon = () => (
@@ -103,17 +105,19 @@ const OptimizedAuthForms: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isRegistering, setIsRegistering] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [isShopMode, setIsShopMode] = useState(false); // Новое состояние для режима магазина
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const toast = useToast();
-
+  const router = useRouter();
+  
   // Цвета для цветочной темы
-  const bgColor = 'rgba(255, 255, 255, 0.1)';
-  const borderColor = 'rgba(255, 255, 255, 0.3)';
-  const primaryColor = 'pink.400';
-  const secondaryColor = 'pink.500';
-  const accentColor = 'rose.300';
+  const bgColor = useColorModeValue('white', 'gray.800');
+  const borderColor = useColorModeValue('pink.200', 'pink.600');
+  const primaryColor = 'pink.500';
+  const secondaryColor = 'purple.500';
+  const accentColor = 'rose.400';
   const fonColorForm = 'gray.200';
 
   // Состояния форм
@@ -178,11 +182,13 @@ const OptimizedAuthForms: React.FC = () => {
   const handleLogin = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await api.post<AuthResponse>(API_CONFIG.AUTH.LOGIN, loginData);
+      // Выбираем правильный эндпоинт в зависимости от режима
+      const endpoint = isShopMode ? API_CONFIG.AUTH.SHOP_LOGIN : API_CONFIG.AUTH.LOGIN;
+      const response = await api.post<AuthResponse>(endpoint, loginData);
       
       toast({
         title: 'Успешный вход!',
-        description: 'Добро пожаловать в мир цветов!',
+        description: isShopMode ? 'Добро пожаловать в панель управления магазином!' : 'Добро пожаловать в мир цветов!',
         status: 'success',
         duration: 2000,
         isClosable: true,
@@ -190,10 +196,20 @@ const OptimizedAuthForms: React.FC = () => {
       
       localStorage.setItem('token', response.data.accessToken);
       
-      // Перенаправляем на главную страницу
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 2000);
+      // Если это магазин, сохраняем информацию о роли
+      if (isShopMode) {
+        localStorage.setItem('userRole', 'shop');
+        // Перенаправляем на панель магазина
+        setTimeout(() => {
+          window.location.href = '/shop/dashboard';
+        }, 2000);
+      } else {
+        localStorage.setItem('userRole', 'user');
+        // Перенаправляем на главную страницу
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 2000);
+      }
       
     } catch (error: unknown) {
       const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Неверный email или пароль';
@@ -207,14 +223,17 @@ const OptimizedAuthForms: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [loginData, toast]);
+  }, [loginData, toast, isShopMode]);
 
   const handleRegister = useCallback(async () => {
     setIsLoading(true);
     try {
       // Исключаем confirmPassword из данных, отправляемых на сервер
       const { confirmPassword, ...dataWithoutConfirm } = registerData;
-      await api.post(API_CONFIG.AUTH.REGISTRATION, dataWithoutConfirm);
+      
+      // Выбираем правильный эндпоинт в зависимости от режима
+      const endpoint = isShopMode ? API_CONFIG.AUTH.SHOP_REGISTRATION : API_CONFIG.AUTH.REGISTRATION;
+      await api.post(endpoint, dataWithoutConfirm);
       
       toast({
         title: 'Код подтверждения отправлен!',
@@ -242,16 +261,18 @@ const OptimizedAuthForms: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [registerData, toast]);
+  }, [registerData, toast, isShopMode]);
 
   const handleVerify = useCallback(async () => {
     setIsLoading(true);
     try {
-      const response = await api.post<AuthResponse>(API_CONFIG.AUTH.VERIFY, verifyData);
+      // Выбираем правильный эндпоинт в зависимости от режима
+      const endpoint = isShopMode ? API_CONFIG.AUTH.SHOP_VERIFY : API_CONFIG.AUTH.VERIFY;
+      const response = await api.post<AuthResponse>(endpoint, verifyData);
       
       toast({
         title: 'Регистрация завершена!',
-        description: 'Добро пожаловать в мир цветов!',
+        description: isShopMode ? 'Магазин успешно зарегистрирован!' : 'Добро пожаловать в мир цветов!',
         status: 'success',
         duration: 3000,
         isClosable: true,
@@ -262,7 +283,8 @@ const OptimizedAuthForms: React.FC = () => {
       
       // Автоматически входим в систему
       try {
-        const loginResponse = await api.post<AuthResponse>(API_CONFIG.AUTH.LOGIN, {
+        const loginEndpoint = isShopMode ? API_CONFIG.AUTH.SHOP_LOGIN : API_CONFIG.AUTH.LOGIN;
+        const loginResponse = await api.post<AuthResponse>(loginEndpoint, {
           email: verifyData.email,
           password: verifyData.password
         });
@@ -270,18 +292,35 @@ const OptimizedAuthForms: React.FC = () => {
         if (loginResponse.data.accessToken) {
           localStorage.setItem('token', loginResponse.data.accessToken);
           
-          toast({
-            title: 'Автоматический вход выполнен!',
-            description: 'Перенаправляем на главную страницу...',
-            status: 'success',
-            duration: 2000,
-            isClosable: true,
-          });
-          
-          // Перенаправляем на главную страницу
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 2000);
+          if (isShopMode) {
+            localStorage.setItem('userRole', 'shop');
+            toast({
+              title: 'Автоматический вход выполнен!',
+              description: 'Перенаправляем в панель управления...',
+              status: 'success',
+              duration: 2000,
+              isClosable: true,
+            });
+            
+            // Перенаправляем на панель магазина
+            setTimeout(() => {
+              window.location.href = '/shop/dashboard';
+            }, 2000);
+          } else {
+            localStorage.setItem('userRole', 'user');
+            toast({
+              title: 'Автоматический вход выполнен!',
+              description: 'Перенаправляем на главную страницу...',
+              status: 'success',
+              duration: 2000,
+              isClosable: true,
+            });
+            
+            // Перенаправляем на главную страницу
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 2000);
+          }
         }
       } catch (loginError) {
         console.error('Ошибка автоматического входа:', loginError);
@@ -303,7 +342,7 @@ const OptimizedAuthForms: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [verifyData, toast]);
+  }, [verifyData, toast, isShopMode]);
 
   const switchToRegister = useCallback(() => setIsLogin(false), []);
   const switchToLogin = useCallback(() => setIsLogin(true), []);
@@ -322,8 +361,40 @@ const OptimizedAuthForms: React.FC = () => {
       <VStack spacing={6} align="stretch">
         <motion.div variants={itemVariants}>
           <Heading size="lg" textAlign="center" color={primaryColor}>
-            Добро пожаловать в мир цветов
+            {isShopMode ? 'Вход для магазина' : 'Добро пожаловать в мир цветов'}
           </Heading>
+        </motion.div>
+
+        {/* Переключатель режимов */}
+        <motion.div variants={itemVariants}>
+          <HStack spacing={4} justify="center">
+            <Button
+              size="sm"
+              variant={!isShopMode ? "solid" : "outline"}
+              colorScheme="pink"
+              onClick={() => setIsShopMode(false)}
+              _hover={{
+                transform: 'translateY(-2px)',
+                boxShadow: '0 4px 12px rgba(236, 72, 153, 0.3)',
+              }}
+              transition="all 0.3s"
+            >
+              👤 Пользователь
+            </Button>
+            <Button
+              size="sm"
+              variant={isShopMode ? "solid" : "outline"}
+              colorScheme="purple"
+              onClick={() => setIsShopMode(true)}
+              _hover={{
+                transform: 'translateY(-2px)',
+                boxShadow: '0 4px 12px rgba(147, 51, 234, 0.3)',
+              }}
+              transition="all 0.3s"
+            >
+              🏪 Магазин
+            </Button>
+          </HStack>
         </motion.div>
 
         <motion.div variants={itemVariants}>
@@ -371,6 +442,8 @@ const OptimizedAuthForms: React.FC = () => {
                   onClick={togglePasswordVisibility}
                   variant="ghost"
                   size="sm"
+                  color="white"
+                  _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
                 />
               </InputRightElement>
             </InputGroup>
@@ -380,49 +453,46 @@ const OptimizedAuthForms: React.FC = () => {
         <motion.div variants={itemVariants}>
           <Flex justifyContent="center">
             <Button
-              colorScheme="blackAlpha"
+              colorScheme="pink"
               size="lg"
               onClick={handleLogin}
               isLoading={isLoading}
               loadingText="Вход..."
-              bgGradient="linear(to-r, #7928CA, #D53F8C)" // Темные оттенки розового и фиолетового
-              color="white"
+              bgGradient={`linear(to-r, ${primaryColor}, ${secondaryColor})`}
               _hover={{
-                bgGradient: "linear(to-r, #6B21A8, #B83280)", // Еще темнее при наведении
-                transform: "translateY(-2px)",
-                boxShadow: "0 8px 25px rgba(80, 33, 130, 0.4)", // Фиолетовая тень
+                bgGradient: `linear(to-r, ${secondaryColor}, ${primaryColor})`,
+                transform: 'translateY(-2px)',
+                boxShadow: `0 8px 25px rgba(236, 72, 153, 0.3)`,
               }}
               _active={{
-                bgGradient: "linear(to-r, #5B1B8E, #9C2C6F)", // Самые темные при нажатии
-                transform: "translateY(0)",
+                transform: 'translateY(0)',
               }}
-              transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-              minW="200px"
-              fontWeight="semibold"
-              letterSpacing="wide"
+              transition="all 0.3s"
             >
-              Войти
+              {isShopMode ? 'Войти в магазин' : 'Войти'}
             </Button>
           </Flex>
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <Text textAlign="center" color="gray.300" >
-            Нет аккаунта?{' '}
+          <Text textAlign="center" color="gray.300">
+            {isShopMode ? 'Нет аккаунта магазина?' : 'Нет аккаунта?'}{' '}
             <Button
               variant="link"
               color={primaryColor}
-              onClick={switchToRegister}
+              onClick={() => {
+                setIsLogin(false);
+                setIsShopMode(isShopMode); // Сохраняем текущий режим
+              }}
               _hover={{ color: secondaryColor }}
-              textDecoration={'underline'}
             >
-            Зарегистрироваться
+              {isShopMode ? 'Зарегистрировать магазин' : 'Зарегистрироваться'}
             </Button>
           </Text>
         </motion.div>
       </VStack>
     </motion.div>
-  ), [loginData, showPassword, isLoading, handleLogin, handleLoginEmailChange, handleLoginPasswordChange, togglePasswordVisibility, switchToRegister, primaryColor, secondaryColor, borderColor]);
+  ), [loginData, showPassword, isLoading, handleLogin, handleLoginEmailChange, handleLoginPasswordChange, togglePasswordVisibility, switchToRegister, primaryColor, secondaryColor, borderColor, isShopMode]);
 
   const RegisterForm = useMemo(() => (
     <motion.div
@@ -433,22 +503,56 @@ const OptimizedAuthForms: React.FC = () => {
       <VStack spacing={6} align="stretch">
         <motion.div variants={itemVariants}>
           <Heading size="lg" textAlign="center" color={primaryColor}>
-            Создайте аккаунт
+            {isShopMode ? 'Регистрация магазина' : 'Создайте аккаунт'}
           </Heading>
           <Text textAlign="center" color="gray.300" fontSize="sm">
-            Присоединяйтесь к миру прекрасных цветов
+            {isShopMode ? 'Присоединяйтесь к нашей сети цветочных магазинов' : 'Присоединяйтесь к миру прекрасных цветов'}
           </Text>
+        </motion.div>
+
+        {/* Переключатель режимов */}
+        <motion.div variants={itemVariants}>
+          <HStack spacing={4} justify="center">
+            <Button
+              size="sm"
+              variant={!isShopMode ? "solid" : "outline"}
+              colorScheme="pink"
+              onClick={() => setIsShopMode(false)}
+              _hover={{
+                transform: 'translateY(-2px)',
+                boxShadow: '0 4px 12px rgba(236, 72, 153, 0.3)',
+              }}
+              transition="all 0.3s"
+            >
+              👤 Пользователь
+            </Button>
+            <Button
+              size="sm"
+              variant={isShopMode ? "solid" : "outline"}
+              colorScheme="purple"
+              onClick={() => setIsShopMode(true)}
+              _hover={{
+                transform: 'translateY(-2px)',
+                boxShadow: '0 4px 12px rgba(147, 51, 234, 0.3)',
+              }}
+              transition="all 0.3s"
+            >
+              🏪 Магазин
+            </Button>
+          </HStack>
         </motion.div>
 
         <HStack spacing={4}>
           <motion.div variants={itemVariants} style={{ flex: 1 }}>
             <FormControl isRequired>
-              <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Имя</FormLabel>
+              <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">
+                {isShopMode ? 'Название магазина' : 'Имя'}
+              </FormLabel>
               <Input
                 color={fonColorForm}
                 value={registerData.firstName}
                 onChange={handleRegisterFieldChange('firstName')}
-                placeholder="Иван"
+                placeholder={isShopMode ? "Цветочный рай" : "Иван"}
                 borderColor={borderColor}
                 bg="rgba(255, 255, 255, 0.1)"
                 _focus={{
@@ -461,12 +565,14 @@ const OptimizedAuthForms: React.FC = () => {
           </motion.div>
           <motion.div variants={itemVariants} style={{ flex: 1 }}>
             <FormControl isRequired>
-              <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Фамилия</FormLabel>
+              <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">
+                {isShopMode ? 'Описание' : 'Фамилия'}
+              </FormLabel>
               <Input
               color={fonColorForm}
                 value={registerData.lastName}
                 onChange={handleRegisterFieldChange('lastName')}
-                placeholder="Иванов"
+                placeholder={isShopMode ? "Краткое описание магазина" : "Иванов"}
                 borderColor={borderColor}
                 bg="rgba(255, 255, 255, 0.1)"
                 _focus={{
@@ -483,7 +589,7 @@ const OptimizedAuthForms: React.FC = () => {
           <FormControl isRequired>
             <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Email</FormLabel>
             <Input
-            color={fonColorForm}
+              color={fonColorForm}
               type="email"
               value={registerData.email}
               onChange={handleRegisterFieldChange('email')}
@@ -504,7 +610,7 @@ const OptimizedAuthForms: React.FC = () => {
             <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Пароль</FormLabel>
             <InputGroup>
               <Input
-              color={fonColorForm}
+                color={fonColorForm}
                 type={showPassword ? 'text' : 'password'}
                 value={registerData.password}
                 onChange={handleRegisterFieldChange('password')}
@@ -524,117 +630,130 @@ const OptimizedAuthForms: React.FC = () => {
                   onClick={togglePasswordVisibility}
                   variant="ghost"
                   size="sm"
+                  color="white"
+                  _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
                 />
               </InputRightElement>
             </InputGroup>
           </FormControl>
         </motion.div>
 
-        <motion.div variants={itemVariants}>
-          <FormControl isRequired isInvalid={Boolean(registerData.confirmPassword && registerData.password !== registerData.confirmPassword)}>
-            <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Повторите пароль</FormLabel>
-            <InputGroup>
-              <Input
-              color={fonColorForm}
-                type={showPassword ? 'text' : 'password'}
-                value={registerData.confirmPassword}
-                onChange={handleRegisterFieldChange('confirmPassword')}
-                placeholder="Повторите пароль"
-                borderColor={registerData.confirmPassword && registerData.password !== registerData.confirmPassword ? 'red.300' : borderColor}
-                bg="rgba(255, 255, 255, 0.1)"
-                _focus={{
-                  borderColor: registerData.confirmPassword && registerData.password !== registerData.confirmPassword ? 'red.500' : primaryColor,
-                  boxShadow: `0 0 0 1px ${registerData.confirmPassword && registerData.password !== registerData.confirmPassword ? 'red.500' : primaryColor}`,
-                  bg: "rgba(255, 255, 255, 0.15)",
-                }}
-              />
-              <InputRightElement>
-                <IconButton
-                  aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
-                  icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
-                  onClick={togglePasswordVisibility}
-                  variant="ghost"
-                  size="sm"
+        {/* Показываем дополнительные поля только для пользователей */}
+        {!isShopMode && (
+          <>
+            <HStack spacing={4}>
+              <motion.div variants={itemVariants} style={{ flex: 1 }}>
+                <FormControl isRequired>
+                  <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Дата рождения</FormLabel>
+                  <Input
+                    color={fonColorForm}
+                    type="date"
+                    value={registerData.birthDate}
+                    onChange={handleRegisterFieldChange('birthDate')}
+                    borderColor={borderColor}
+                    bg="rgba(255, 255, 255, 0.1)"
+                    _focus={{
+                      borderColor: primaryColor,
+                      boxShadow: `0 0 0 1px ${primaryColor}`,
+                      bg: "rgba(255, 255, 255, 0.15)",
+                    }}
+                  />
+                </FormControl>
+              </motion.div>
+              <motion.div variants={itemVariants} style={{ flex: 1 }}>
+                <FormControl isRequired>
+                  <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Телефон</FormLabel>
+                  <Input
+                    color={fonColorForm}
+                    value={registerData.phone}
+                    onChange={handleRegisterFieldChange('phone')}
+                    placeholder="+7 (999) 123-45-67"
+                    borderColor={borderColor}
+                    bg="rgba(255, 255, 255, 0.1)"
+                    _focus={{
+                      borderColor: primaryColor,
+                      boxShadow: `0 0 0 1px ${primaryColor}`,
+                      bg: "rgba(255, 255, 255, 0.15)",
+                    }}
+                  />
+                </FormControl>
+              </motion.div>
+            </HStack>
+
+            <motion.div variants={itemVariants}>
+              <FormControl isRequired>
+                <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Город</FormLabel>
+                <Select
+                  color={fonColorForm}
+                  value={registerData.city}
+                  onChange={handleRegisterFieldChange('city')}
+                  placeholder="Выберите город"
+                  borderColor={borderColor}
+                  bg="rgba(255, 255, 255, 0.1)"
+                  _focus={{
+                    borderColor: primaryColor,
+                    boxShadow: `0 0 0 1px ${primaryColor}`,
+                    bg: "rgba(255, 255, 255, 0.15)",
+                  }}
+                >
+                  <option value="Москва">Москва</option>
+                  <option value="Санкт-Петербург">Санкт-Петербург</option>
+                  <option value="Новосибирск">Новосибирск</option>
+                  <option value="Екатеринбург">Екатеринбург</option>
+                  <option value="Казань">Казань</option>
+                  <option value="Нижний Новгород">Нижний Новгород</option>
+                  <option value="Челябинск">Челябинск</option>
+                  <option value="Самара">Самара</option>
+                  <option value="Уфа">Уфа</option>
+                  <option value="Ростов-на-Дону">Ростов-на-Дону</option>
+                </Select>
+              </FormControl>
+            </motion.div>
+          </>
+        )}
+
+        {/* Показываем поля для магазина */}
+        {isShopMode && (
+          <>
+            <motion.div variants={itemVariants}>
+              <FormControl isRequired>
+                <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Адрес магазина</FormLabel>
+                <Input
+                  color={fonColorForm}
+                  value={registerData.city}
+                  onChange={handleRegisterFieldChange('city')}
+                  placeholder="г. Москва, ул. Цветочная, 15"
+                  borderColor={borderColor}
+                  bg="rgba(255, 255, 255, 0.1)"
+                  _focus={{
+                    borderColor: primaryColor,
+                    boxShadow: `0 0 0 1px ${primaryColor}`,
+                    bg: "rgba(255, 255, 255, 0.15)",
+                  }}
                 />
-              </InputRightElement>
-            </InputGroup>
-            {registerData.confirmPassword && registerData.password !== registerData.confirmPassword && (
-              <Text color="red.500" fontSize="sm" mt={1}>
-                Пароли не совпадают
-              </Text>
-            )}
-          </FormControl>
-        </motion.div>
+              </FormControl>
+            </motion.div>
 
-        <HStack spacing={4}>
-          <motion.div variants={itemVariants} style={{ flex: 1 }}>
-            <FormControl isRequired>
-              <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Дата рождения</FormLabel>
-              <Input
-              color={fonColorForm}
-                type="date"
-                value={registerData.birthDate}
-                onChange={handleRegisterFieldChange('birthDate')}
-                borderColor={borderColor}
-                bg="rgba(255, 255, 255, 0.1)"
-                _focus={{
-                  borderColor: primaryColor,
-                  boxShadow: `0 0 0 1px ${primaryColor}`,
-                  bg: "rgba(255, 255, 255, 0.15)",
-                }}
-              />
-            </FormControl>
-          </motion.div>
-          <motion.div variants={itemVariants} style={{ flex: 1 }}>
-            <FormControl isRequired>
-              <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Телефон</FormLabel>
-              <Input
-              color={fonColorForm}
-                value={registerData.phone}
-                onChange={handleRegisterFieldChange('phone')}
-                placeholder="+7 (999) 123-45-67"
-                borderColor={borderColor}
-                bg="rgba(255, 255, 255, 0.1)"
-                _focus={{
-                  borderColor: primaryColor,
-                  boxShadow: `0 0 0 1px ${primaryColor}`,
-                  bg: "rgba(255, 255, 255, 0.15)",
-                }}
-              />
-            </FormControl>
-          </motion.div>
-        </HStack>
-
-        <motion.div variants={itemVariants}>
-          <FormControl isRequired>
-            <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Город</FormLabel>
-            <Select
-            color={"pink.400"}
-              value={registerData.city}
-              onChange={handleRegisterFieldChange('city')}
-              placeholder="Выберите город"
-              borderColor={borderColor}
-              bg="rgba(255, 255, 255, 0.1)"
-              _focus={{
-                borderColor: primaryColor,
-                boxShadow: `0 0 0 1px ${primaryColor}`,
-                bg: "rgba(255, 255, 255, 0.15)",
-              }}
-            >
-              <option value="Москва">Москва</option>
-              <option value="Санкт-Петербург">Санкт-Петербург</option>
-              <option value="Новосибирск">Новосибирск</option>
-              <option value="Ростов-на-Дону">Калининград</option>
-              <option value="Екатеринбург">Екатеринбург</option>
-              <option value="Казань">Казань</option>
-              <option value="Нижний Новгород">Нижний Новгород</option>
-              <option value="Челябинск">Челябинск</option>
-              <option value="Самара">Самара</option>
-              <option value="Уфа">Уфа</option>
-              <option value="Ростов-на-Дону">Ростов-на-Дону</option>
-            </Select>
-          </FormControl>
-        </motion.div>
+            <motion.div variants={itemVariants}>
+              <FormControl isRequired>
+                <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Телефон магазина</FormLabel>
+                <Input
+                  color={fonColorForm}
+                  value={registerData.phone}
+                  onChange={handleRegisterFieldChange('phone')}
+                  placeholder="+7 (495) 123-45-67"
+                  borderColor={borderColor}
+                  bg="rgba(255, 255, 255, 0.1)"
+                  _focus={{
+                    borderColor: primaryColor,
+                    boxShadow: `0 0 0 1px ${primaryColor}`,
+                    bg: "rgba(255, 255, 255, 0.15)",
+                  }}
+                />
+              </FormControl>
+            </motion.div>
+          </>
+        )}
 
         <motion.div variants={itemVariants}>
           <Checkbox
@@ -643,12 +762,13 @@ const OptimizedAuthForms: React.FC = () => {
             colorScheme="pink"
           >
             <Text fontSize="sm" color="gray.300">
-              Я согласен на обработку персональных данных
+              {isShopMode 
+                ? 'Я согласен на обработку персональных данных магазина'
+                : 'Я согласен на обработку персональных данных'
+              }
             </Text>
           </Checkbox>
         </motion.div>
-
-
 
         <motion.div variants={itemVariants}>
           <Flex justifyContent="center">
@@ -658,7 +778,7 @@ const OptimizedAuthForms: React.FC = () => {
               onClick={handleRegister}
               isLoading={isLoading}
               loadingText="Отправка..."
-              isDisabled={!Boolean(registerData.personalData) || registerData.password !== registerData.confirmPassword || registerData.password.length < 6}
+              isDisabled={!Boolean(registerData.personalData)}
               bgGradient={`linear(to-r, ${primaryColor}, ${secondaryColor})`}
               _hover={{
                 bgGradient: `linear(to-r, ${secondaryColor}, ${primaryColor})`,
@@ -669,30 +789,31 @@ const OptimizedAuthForms: React.FC = () => {
                 transform: 'translateY(0)',
               }}
               transition="all 0.3s"
-              minW="200px"
             >
-              Зарегистрироваться
+              {isShopMode ? 'Зарегистрировать магазин' : 'Зарегистрироваться'}
             </Button>
           </Flex>
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <Text textAlign="center" color="gray.300" >
-            Уже есть аккаунт?{' '}
+          <Text textAlign="center" color="gray.300">
+            {isShopMode ? 'Уже есть аккаунт магазина?' : 'Уже есть аккаунт?'}{' '}
             <Button
               variant="link"
               color={primaryColor}
-              onClick={switchToLogin}
+              onClick={() => {
+                setIsLogin(true);
+                setIsShopMode(isShopMode); // Сохраняем текущий режим
+              }}
               _hover={{ color: secondaryColor }}
-              textDecoration={'underline'}
             >
-              Войти
+              {isShopMode ? 'Войти в магазин' : 'Войти'}
             </Button>
           </Text>
         </motion.div>
       </VStack>
     </motion.div>
-  ), [registerData, showPassword, isLoading, handleRegister, handleRegisterFieldChange, handlePersonalDataChange, togglePasswordVisibility, switchToLogin, primaryColor, secondaryColor, borderColor]);
+  ), [registerData, showPassword, isLoading, handleRegister, handleRegisterFieldChange, handlePersonalDataChange, togglePasswordVisibility, switchToLogin, primaryColor, secondaryColor, borderColor, isShopMode]);
 
   const VerifyForm = useMemo(() => (
     <motion.div
@@ -703,7 +824,7 @@ const OptimizedAuthForms: React.FC = () => {
       <VStack spacing={6} align="stretch">
         <motion.div variants={itemVariants}>
           <Heading size="lg" textAlign="center" color={primaryColor}>
-            Подтверждение email
+            {isShopMode ? 'Подтверждение email магазина' : 'Подтверждение email'}
           </Heading>
           <Text textAlign="center" color="gray.300" fontSize="sm">
             Введите код, отправленный на {verifyData.email}
@@ -714,6 +835,7 @@ const OptimizedAuthForms: React.FC = () => {
           <FormControl isRequired>
             <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Код подтверждения</FormLabel>
             <Input
+              color={fonColorForm}
               value={verifyData.code}
               onChange={handleVerifyFieldChange('code')}
               placeholder="123456"
@@ -750,9 +872,8 @@ const OptimizedAuthForms: React.FC = () => {
                 transform: 'translateY(0)',
               }}
               transition="all 0.3s"
-              minW="200px"
             >
-              Подтвердить
+              {isShopMode ? 'Подтвердить магазин' : 'Подтвердить'}
             </Button>
           </Flex>
         </motion.div>
@@ -763,7 +884,11 @@ const OptimizedAuthForms: React.FC = () => {
             <Button
               variant="link"
               color={primaryColor}
-              onClick={switchToVerify}
+              onClick={() => {
+                setIsVerifying(false);
+                setIsRegistering(true);
+                setIsShopMode(isShopMode); // Сохраняем текущий режим
+              }}
               _hover={{ color: secondaryColor }}
             >
               Отправить повторно
@@ -772,7 +897,7 @@ const OptimizedAuthForms: React.FC = () => {
         </motion.div>
       </VStack>
     </motion.div>
-  ), [verifyData, isLoading, handleVerify, handleVerifyFieldChange, switchToVerify, primaryColor, secondaryColor, borderColor]);
+  ), [verifyData, isLoading, handleVerify, handleVerifyFieldChange, primaryColor, secondaryColor, borderColor, isShopMode]);
 
   return (
     <Box
@@ -817,6 +942,32 @@ const OptimizedAuthForms: React.FC = () => {
       />
 
       <Container maxW="lg" position="relative" zIndex={1}>
+        {/* Иконка дома в левом углу */}
+        <Box position="absolute" top={4} left={4} zIndex={2}>
+          <IconButton
+            aria-label="На главную"
+            icon={<FaHome />}
+            onClick={() => router.push('/')}
+            size="sm"
+            variant="ghost"
+            color="white"
+            _hover={{
+              bg: "rgba(255, 255, 255, 0.15)",
+              color: secondaryColor,
+              transform: "scale(1.05)"
+            }}
+            _active={{
+              transform: "scale(0.95)"
+            }}
+            transition="all 0.2s ease"
+            borderRadius="full"
+            backdropFilter="blur(8px)"
+            bg="rgba(255, 255, 255, 0.08)"
+            border="1px solid rgba(255, 255, 255, 0.12)"
+            boxShadow="0 2px 8px rgba(0, 0, 0, 0.1)"
+          />
+        </Box>
+
         <Flex direction="column" align="center" mb={8}>
           <motion.div
             initial={{ scale: 0 }}

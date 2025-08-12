@@ -26,7 +26,8 @@ import {
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { apiService, CreateProductPayload, Product, Shop } from '../../../services/api';
-import { FaPlus, FaTrash, FaSave, FaSync } from 'react-icons/fa';
+import { FaPlus, FaTrash, FaSave, FaSync, FaHome } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 
 function parseJwt(token: string): any | null {
   try {
@@ -50,6 +51,7 @@ const ShopDashboardPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [form, setForm] = useState<CreateProductPayload>({ name: '', description: '', price: 0, imageUrl: '' });
+  const router = useRouter();
 
   // Инициализация магазина из localStorage и загрузка товаров
   useEffect(() => {
@@ -124,9 +126,20 @@ const ShopDashboardPage: React.FC = () => {
       <Container maxW="7xl" py={10}>
         <VStack align="stretch" spacing={8}>
           <VStack align="start" spacing={1}>
-            <Text fontSize="3xl" fontWeight="bold" bgGradient="linear(to-r, pink.400, purple.500)" bgClip="text">
-              Кабинет магазина
-            </Text>
+            <HStack justify="space-between" w="full">
+              <Text fontSize="3xl" fontWeight="bold" bgGradient="linear(to-r, pink.400, purple.500)" bgClip="text">
+                Кабинет магазина
+              </Text>
+              <Button 
+                leftIcon={<FaHome />} 
+                onClick={() => router.push('/')} 
+                colorScheme="pink" 
+                variant="outline"
+                size="md"
+              >
+                На главную
+              </Button>
+            </HStack>
             {shop && (
               <HStack>
                 <Badge colorScheme="pink">ID: {shop.id}</Badge>

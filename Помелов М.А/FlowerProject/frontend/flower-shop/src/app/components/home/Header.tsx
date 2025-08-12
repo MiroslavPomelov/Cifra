@@ -41,6 +41,7 @@ const Header: React.FC = () => {
     try {
       localStorage.removeItem('token');
       localStorage.removeItem('shop');
+      localStorage.removeItem('userRole'); // Очищаем роль пользователя
     } catch {}
     setAuthName(null);
     setAuthEmail(null);
@@ -143,12 +144,15 @@ const Header: React.FC = () => {
       setAuthRole(null);
       return;
     }
+    
     const payload = parseJwt(token);
     if (payload) {
       const email: string | undefined = payload.email;
-      const role: string | undefined = payload.role;
-      setAuthEmail(email ?? null);
-      if (role === 'shop') {
+      
+      // Проверяем роль из localStorage
+      const userRole = localStorage.getItem('userRole');
+      
+      if (userRole === 'shop') {
         setAuthRole('shop');
         // Пытаемся взять имя магазина из localStorage
         try {
@@ -169,6 +173,8 @@ const Header: React.FC = () => {
         const fullName = [firstName, lastName].filter(Boolean).join(' ').trim();
         setAuthName(fullName || email?.split('@')[0] || 'Пользователь');
       }
+      
+      setAuthEmail(email ?? null);
     }
   }, []);
 
@@ -182,6 +188,46 @@ const Header: React.FC = () => {
       if (e.key === 'cart') {
         console.log('Header: Обнаружено изменение корзины в localStorage');
         loadCart();
+      }
+      // Также слушаем изменения роли пользователя
+      if (e.key === 'userRole' || e.key === 'token') {
+        console.log('Header: Обнаружено изменение роли пользователя');
+        // Перезагружаем данные пользователя
+        const token = localStorage.getItem('token');
+        if (token) {
+          const payload = parseJwt(token);
+          if (payload) {
+            const email: string | undefined = payload.email;
+            const userRole = localStorage.getItem('userRole');
+            
+            if (userRole === 'shop') {
+              setAuthRole('shop');
+              try {
+                const shopRaw = localStorage.getItem('shop');
+                if (shopRaw) {
+                  const shop = JSON.parse(shopRaw);
+                  setAuthName(shop?.name || email?.split('@')[0] || 'Магазин');
+                } else {
+                  setAuthName(email?.split('@')[0] || 'Магазин');
+                }
+              } catch {
+                setAuthName(email?.split('@')[0] || 'Магазин');
+              }
+            } else {
+              setAuthRole('user');
+              const firstName: string | undefined = payload.firstName;
+              const lastName: string | undefined = payload.lastName;
+              const fullName = [firstName, lastName].filter(Boolean).join(' ').trim();
+              setAuthName(fullName || email?.split('@')[0] || 'Пользователь');
+            }
+            
+            setAuthEmail(email ?? null);
+          }
+        } else {
+          setAuthName(null);
+          setAuthEmail(null);
+          setAuthRole(null);
+        }
       }
     };
 
