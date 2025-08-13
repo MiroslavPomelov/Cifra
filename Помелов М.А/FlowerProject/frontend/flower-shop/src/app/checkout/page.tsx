@@ -29,6 +29,9 @@ import { motion } from 'framer-motion';
 import { FaArrowLeft, FaCreditCard, FaMapMarkerAlt, FaPhone, FaUser, FaEnvelope } from 'react-icons/fa';
 import { FiHome } from 'react-icons/fi';
 import { Icon } from '@chakra-ui/react';
+import { apiService } from '../../services/api';
+import { useOrders } from '../hooks/useOrders';
+import PaymentForm from './components/PaymentForm';
 
 interface CartItem {
   id: number;
@@ -37,6 +40,7 @@ interface CartItem {
   quantity: number;
   imageUrl: string;
   shopName: string;
+  shopId?: number;
 }
 
 interface CheckoutForm {
@@ -56,6 +60,10 @@ const CheckoutPage: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [userId, setUserId] = useState<number | null>(null);
+  const { createOrder: createLocalOrder } = useOrders(userId || 0);
+  const [paymentStep, setPaymentStep] = useState(false);
+  const [paymentId, setPaymentId] = useState<string | null>(null);
   const [form, setForm] = useState<CheckoutForm>({
     firstName: '',
     lastName: '',
@@ -81,6 +89,12 @@ const CheckoutPage: React.FC = () => {
       });
       router.push('/login');
       return;
+    }
+
+    // Декодируем JWT для получения ID пользователя
+    const payload = parseJwt(token);
+    if (payload && payload.sub) {
+      setUserId(payload.sub);
     }
 
     const savedCart = localStorage.getItem('cart');
@@ -120,7 +134,7 @@ const CheckoutPage: React.FC = () => {
     setForm(prev => ({ ...prev, [field]: value }));
   };
 
-  // Обработка отправки формы
+    // Обработка отправки формы
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -135,30 +149,87 @@ const CheckoutPage: React.FC = () => {
       return;
     }
 
+    // Если выбран способ оплаты картой, переходим к оплате
+    if (form.paymentMethod === 'card') {
+      setPaymentStep(true);
+      return;
+    }
+
+    // Для оплаты наличными сразу создаем заказ
+    await createOrder();
+  };
+
+  // Создание заказа
+  const createOrder = async () => {
     setSubmitting(true);
     
     try {
-      // Имитация отправки заказа
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Токен не найден');
+      }
+
+      // Декодируем JWT для получения ID пользователя
+      const payload = parseJwt(token);
+      if (!payload || !payload.sub) {
+        throw new Error('Неверный токен');
+      }
+
+      // Подготавливаем данные заказа
+      const orderData = {
+        userId: payload.sub,
+        items: cartItems.map(item => ({
+          productId: item.id,
+          productName: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          shopId: item.shopId || 1,
+          shopName: item.shopName || 'Цветочный магазин',
+        })),
+        totalAmount: finalTotal,
+        deliveryAddress: form.address,
+        customerName: `${form.firstName} ${form.lastName}`,
+        customerEmail: form.email,
+        customerPhone: form.phone,
+        deliveryNotes: form.deliveryNotes,
+        deliveryMethod: form.deliveryMethod,
+        paymentMethod: form.paymentMethod,
+      };
+
+      // Создаем заказ локально
+      const localOrder = createLocalOrder(orderData);
+      
+      // Пытаемся создать заказ через API
+      try {
+        const result = await apiService.createOrder(orderData, token);
+        toast({
+          title: 'Заказ оформлен успешно!',
+          description: `Заказ №${result.orderId} создан. Мы свяжемся с вами в ближайшее время.`,
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        });
+      } catch (apiError) {
+        toast({
+          title: 'Заказ создан!',
+          description: `Заказ №${localOrder.orderNumber} сохранен локально. В реальном приложении он будет отправлен на сервер.`,
+          status: 'info',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
       
       // Очищаем корзину после успешного заказа
       localStorage.removeItem('cart');
       window.dispatchEvent(new Event('cartUpdated'));
       
-      toast({
-        title: 'Заказ оформлен успешно!',
-        description: 'Спасибо за ваш заказ. Мы свяжемся с вами в ближайшее время.',
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
-      
-      // Перенаправляем на главную страницу
+      // Перенаправляем на профиль для просмотра заказа
       setTimeout(() => {
-        router.push('/');
+        router.push('/profile');
       }, 2000);
       
     } catch (error) {
+      console.error('Ошибка создания заказа:', error);
       toast({
         title: 'Ошибка оформления заказа',
         description: 'Произошла ошибка при оформлении заказа. Попробуйте еще раз.',
@@ -168,6 +239,42 @@ const CheckoutPage: React.FC = () => {
       });
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  // Обработка успешной оплаты
+  const handlePaymentSuccess = async (paymentId: string) => {
+    setPaymentId(paymentId);
+    
+    // После успешной оплаты создаем заказ
+    await createOrder();
+  };
+
+  // Обработка ошибки оплаты
+  const handlePaymentError = (error: string) => {
+    toast({
+      title: 'Ошибка оплаты',
+      description: error,
+      status: 'error',
+      duration: 5000,
+      isClosable: true,
+    });
+  };
+
+  // Функция для декодирования JWT
+  const parseJwt = (token: string): any | null => {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join(''),
+      );
+      return JSON.parse(jsonPayload);
+    } catch {
+      return null;
     }
   };
 
@@ -209,136 +316,147 @@ const CheckoutPage: React.FC = () => {
             </Heading>
           </HStack>
 
-          <HStack spacing={8} align="start">
-            {/* Форма оформления заказа */}
-            <VStack spacing={6} flex={1} align="stretch">
-              <Card>
-                <CardHeader>
-                  <Heading size="md" color="gray.700">
-                    <FaUser style={{ display: 'inline', marginRight: '8px' }} />
-                    Контактная информация
-                  </Heading>
-                </CardHeader>
-                <CardBody>
-                  <VStack spacing={4} align="stretch">
-                    <HStack spacing={4}>
-                      <FormControl isRequired>
-                        <FormLabel>Имя</FormLabel>
-                        <Input
-                          placeholder="Введите ваше имя"
-                          value={form.firstName}
-                          onChange={(e) => handleFormChange('firstName', e.target.value)}
-                        />
-                      </FormControl>
-                      <FormControl isRequired>
-                        <FormLabel>Фамилия</FormLabel>
-                        <Input
-                          placeholder="Введите вашу фамилию"
-                          value={form.lastName}
-                          onChange={(e) => handleFormChange('lastName', e.target.value)}
-                        />
-                      </FormControl>
-                    </HStack>
-                    
-                    <HStack spacing={4}>
-                      <FormControl isRequired>
-                        <FormLabel>Email</FormLabel>
-                        <Input
-                          type="email"
-                          placeholder="your@email.com"
-                          value={form.email}
-                          onChange={(e) => handleFormChange('email', e.target.value)}
-                        />
-                      </FormControl>
-                      <FormControl isRequired>
-                        <FormLabel>Телефон</FormLabel>
-                        <Input
-                          placeholder="+7 (999) 123-45-67"
-                          value={form.phone}
-                          onChange={(e) => handleFormChange('phone', e.target.value)}
-                        />
-                      </FormControl>
-                    </HStack>
-                  </VStack>
-                </CardBody>
-              </Card>
+                     <HStack spacing={8} align="start">
+             {/* Форма оформления заказа или оплаты */}
+             <VStack spacing={6} flex={1} align="stretch">
+                              {!paymentStep ? (
+                 <>
+                   <Card>
+                     <CardHeader>
+                       <Heading size="md" color="gray.700">
+                         <FaUser style={{ display: 'inline', marginRight: '8px' }} />
+                         Контактная информация
+                       </Heading>
+                     </CardHeader>
+                     <CardBody>
+                       <VStack spacing={4} align="stretch">
+                         <HStack spacing={4}>
+                           <FormControl isRequired>
+                             <FormLabel>Имя</FormLabel>
+                             <Input
+                               placeholder="Введите ваше имя"
+                               value={form.firstName}
+                               onChange={(e) => handleFormChange('firstName', e.target.value)}
+                             />
+                           </FormControl>
+                           <FormControl isRequired>
+                             <FormLabel>Фамилия</FormLabel>
+                             <Input
+                               placeholder="Введите вашу фамилию"
+                               value={form.lastName}
+                               onChange={(e) => handleFormChange('lastName', e.target.value)}
+                             />
+                           </FormControl>
+                         </HStack>
+                         
+                         <HStack spacing={4}>
+                           <FormControl isRequired>
+                             <FormLabel>Email</FormLabel>
+                             <Input
+                               type="email"
+                               placeholder="your@email.com"
+                               value={form.email}
+                               onChange={(e) => handleFormChange('email', e.target.value)}
+                             />
+                           </FormControl>
+                           <FormControl isRequired>
+                             <FormLabel>Телефон</FormLabel>
+                             <Input
+                               placeholder="+7 (999) 123-45-67"
+                               value={form.phone}
+                               onChange={(e) => handleFormChange('phone', e.target.value)}
+                             />
+                           </FormControl>
+                         </HStack>
+                       </VStack>
+                     </CardBody>
+                   </Card>
 
-              <Card>
-                <CardHeader>
-                  <Heading size="md" color="gray.700">
-                    <FaMapMarkerAlt style={{ display: 'inline', marginRight: '8px' }} />
-                    Адрес доставки
-                  </Heading>
-                </CardHeader>
-                <CardBody>
-                  <VStack spacing={4} align="stretch">
-                    <FormControl isRequired>
-                      <FormLabel>Адрес доставки</FormLabel>
-                      <Textarea
-                        placeholder="Введите полный адрес доставки"
-                        value={form.address}
-                        onChange={(e) => handleFormChange('address', e.target.value)}
-                        rows={3}
-                      />
-                    </FormControl>
-                    
-                    <FormControl>
-                      <FormLabel>Примечания к доставке</FormLabel>
-                      <Textarea
-                        placeholder="Дополнительная информация для курьера"
-                        value={form.deliveryNotes}
-                        onChange={(e) => handleFormChange('deliveryNotes', e.target.value)}
-                        rows={2}
-                      />
-                    </FormControl>
-                  </VStack>
-                </CardBody>
-              </Card>
+                   <Card>
+                     <CardHeader>
+                       <Heading size="md" color="gray.700">
+                         <FaMapMarkerAlt style={{ display: 'inline', marginRight: '8px' }} />
+                         Адрес доставки
+                       </Heading>
+                     </CardHeader>
+                     <CardBody>
+                       <VStack spacing={4} align="stretch">
+                         <FormControl isRequired>
+                           <FormLabel>Адрес доставки</FormLabel>
+                           <Textarea
+                             placeholder="Введите полный адрес доставки"
+                             value={form.address}
+                             onChange={(e) => handleFormChange('address', e.target.value)}
+                             rows={3}
+                           />
+                         </FormControl>
+                         
+                         <FormControl>
+                           <FormLabel>Примечания к доставке</FormLabel>
+                           <Textarea
+                             placeholder="Дополнительная информация для курьера"
+                             value={form.deliveryNotes}
+                             onChange={(e) => handleFormChange('deliveryNotes', e.target.value)}
+                             rows={2}
+                           />
+                         </FormControl>
+                       </VStack>
+                     </CardBody>
+                   </Card>
 
-              <Card>
-                <CardHeader>
-                  <Heading size="md" color="gray.700">
-                    🚚 Способ доставки
-                  </Heading>
-                </CardHeader>
-                <CardBody>
-                  <VStack spacing={4} align="stretch">
-                    <FormControl>
-                      <FormLabel>Выберите способ доставки</FormLabel>
-                      <Select
-                        value={form.deliveryMethod}
-                        onChange={(e) => handleFormChange('deliveryMethod', e.target.value)}
-                      >
-                        <option value="standard">Стандартная доставка (1-2 дня) - Бесплатно</option>
-                        <option value="express">Экспресс доставка (в день заказа) - 500 ₽</option>
-                      </Select>
-                    </FormControl>
-                  </VStack>
-                </CardBody>
-              </Card>
+                   <Card>
+                     <CardHeader>
+                       <Heading size="md" color="gray.700">
+                         🚚 Способ доставки
+                       </Heading>
+                     </CardHeader>
+                     <CardBody>
+                       <VStack spacing={4} align="stretch">
+                         <FormControl>
+                           <FormLabel>Выберите способ доставки</FormLabel>
+                           <Select
+                             value={form.deliveryMethod}
+                             onChange={(e) => handleFormChange('deliveryMethod', e.target.value)}
+                           >
+                             <option value="standard">Стандартная доставка (1-2 дня) - Бесплатно</option>
+                             <option value="express">Экспресс доставка (в день заказа) - 500 ₽</option>
+                           </Select>
+                         </FormControl>
+                       </VStack>
+                     </CardBody>
+                   </Card>
 
-              <Card>
-                <CardHeader>
-                  <Heading size="md" color="gray.700">
-                    <FaCreditCard style={{ display: 'inline', marginRight: '8px' }} />
-                    Способ оплаты
-                  </Heading>
-                </CardHeader>
-                <CardBody>
-                  <VStack spacing={4} align="stretch">
-                    <FormControl>
-                      <FormLabel>Выберите способ оплаты</FormLabel>
-                      <Select
-                        value={form.paymentMethod}
-                        onChange={(e) => handleFormChange('paymentMethod', e.target.value)}
-                      >
-                        <option value="card">Банковская карта</option>
-                        <option value="cash">Наличными при получении</option>
-                      </Select>
-                    </FormControl>
-                  </VStack>
-                </CardBody>
-              </Card>
+                   <Card>
+                     <CardHeader>
+                       <Heading size="md" color="gray.700">
+                         <FaCreditCard style={{ display: 'inline', marginRight: '8px' }} />
+                         Способ оплаты
+                       </Heading>
+                     </CardHeader>
+                     <CardBody>
+                       <VStack spacing={4} align="stretch">
+                         <FormControl>
+                           <FormLabel>Выберите способ оплаты</FormLabel>
+                           <Select
+                             value={form.paymentMethod}
+                             onChange={(e) => handleFormChange('paymentMethod', e.target.value)}
+                           >
+                             <option value="card">Банковская карта</option>
+                             <option value="cash">Наличными при получении</option>
+                           </Select>
+                         </FormControl>
+                       </VStack>
+                     </CardBody>
+                   </Card>
+                 </>
+               ) : (
+                 <PaymentForm
+                   amount={finalTotal}
+                   onPaymentSuccess={handlePaymentSuccess}
+                   onPaymentError={handlePaymentError}
+                   isLoading={submitting}
+                 />
+               )}
             </VStack>
 
             {/* Сводка заказа */}
@@ -408,18 +526,18 @@ const CheckoutPage: React.FC = () => {
                     </HStack>
                   </VStack>
 
-                  {/* Кнопка оформления */}
-                  <Button
-                    leftIcon={<FaCreditCard />}
-                    colorScheme="pink"
-                    size="lg"
-                    onClick={handleSubmit}
-                    isLoading={submitting}
-                    loadingText="Оформляем заказ..."
-                    width="100%"
-                  >
-                    Оформить заказ
-                  </Button>
+                                     {/* Кнопка оформления */}
+                   <Button
+                     leftIcon={<FaCreditCard />}
+                     colorScheme="pink"
+                     size="lg"
+                     onClick={handleSubmit}
+                     isLoading={submitting}
+                     loadingText="Оформляем заказ..."
+                     width="100%"
+                   >
+                     {paymentStep ? 'Вернуться к форме' : 'Перейти к оплате'}
+                   </Button>
 
                   <Text fontSize="xs" color="gray.500" textAlign="center">
                     Нажимая кнопку, вы соглашаетесь с условиями покупки

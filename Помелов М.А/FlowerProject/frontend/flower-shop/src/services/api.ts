@@ -272,17 +272,146 @@ class ApiService {
     }
   }
 
-  async getUserOrders(userId: number, token: string): Promise<UserOrder[]> {
+
+
+  // Create order method
+  async createOrder(orderData: {
+    userId: number;
+    items: Array<{
+      productId: number;
+      productName: string;
+      quantity: number;
+      price: number;
+      shopId: number;
+      shopName: string;
+    }>;
+    totalAmount: number;
+    deliveryAddress: string;
+    customerName: string;
+    customerEmail: string;
+    customerPhone: string;
+    deliveryNotes?: string;
+    deliveryMethod: string;
+    paymentMethod: string;
+  }, token: string): Promise<{ orderId: string; message: string }> {
     try {
-      const response = await axios.get(`${this.baseURL}/users/${userId}/orders`, {
+      // Преобразуем данные для order-service
+      const orderRequest = {
+        userId: orderData.userId,
+        shopId: orderData.items[0]?.shopId || 1,
+        totalAmount: orderData.totalAmount,
+        deliveryAddress: orderData.deliveryAddress,
+        customerName: orderData.customerName,
+        customerEmail: orderData.customerEmail,
+        customerPhone: orderData.customerPhone,
+        deliveryNotes: orderData.deliveryNotes,
+        estimatedDeliveryDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(), // +2 дня
+        orderItems: orderData.items.map(item => ({
+          productId: item.productId,
+          productName: item.productName,
+          productDescription: `${item.productName} от ${item.shopName}`,
+          unitPrice: item.price,
+          quantity: item.quantity,
+          productImage: '/api/placeholder/150/150'
+        }))
+      };
+
+      const response = await axios.post(`${this.baseURL}/order`, orderRequest, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
-      return response.data;
+      
+      return {
+        orderId: response.data.orderId,
+        message: 'Заказ создан успешно'
+      };
+    } catch (error) {
+      console.error('Error creating order:', error);
+      throw error;
+    }
+  }
+
+  // Get user orders
+  async getUserOrders(userId: number, token: string): Promise<UserOrder[]> {
+    try {
+      const response = await axios.get(`${this.baseURL}/order/user/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      // Преобразуем ответ от order-service в формат UserOrder
+      return response.data.map((order: any) => ({
+        id: order.orderId,
+        orderNumber: order.orderId,
+        status: order.status,
+        totalAmount: order.totalAmount,
+        orderDate: order.createdAt,
+        deliveryAddress: order.deliveryAddress,
+        shopName: 'Цветочный магазин', // Можно получать из shop-service
+        items: order.orderItems.map((item: any) => ({
+          id: item.productId,
+          productName: item.productName,
+          quantity: item.quantity,
+          price: item.unitPrice,
+          imageUrl: item.productImage || '/api/placeholder/150/150',
+        })),
+      }));
     } catch (error) {
       console.error('Error fetching user orders:', error);
+      throw error;
+    }
+  }
+
+  // Payment methods
+  async createPayment(paymentData: {
+    amount: number;
+    cardNumber: string;
+    cardHolder: string;
+    expiry: string;
+    cvc: string;
+    description: string;
+    email: string;
+  }, token: string): Promise<{ paymentId: string; success: boolean; message: string }> {
+    try {
+      const response = await axios.post(`${this.baseURL}/payment`, paymentData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      return {
+        paymentId: response.data.paymentId,
+        success: response.data.success,
+        message: response.data.message
+      };
+    } catch (error) {
+      console.error('Error creating payment:', error);
+      throw error;
+    }
+  }
+
+  async validateCard(cardData: {
+    cardNumber: string;
+    cardHolder: string;
+    expiry: string;
+    cvc: string;
+  }, token: string): Promise<{ isValid: boolean; errors: string[]; cardType?: string }> {
+    try {
+      const response = await axios.post(`${this.baseURL}/payment/validate-card`, cardData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      return response.data;
+    } catch (error) {
+      console.error('Error validating card:', error);
       throw error;
     }
   }

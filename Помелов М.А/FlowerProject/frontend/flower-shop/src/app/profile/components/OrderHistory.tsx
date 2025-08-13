@@ -20,6 +20,8 @@ import {
 import { motion } from 'framer-motion';
 import { FiPackage, FiCalendar, FiMapPin, FiDollarSign, FiRefreshCw } from 'react-icons/fi';
 import { apiService, UserOrder } from '../../../services/api';
+import { useOrders } from '../../hooks/useOrders';
+import OrderStatusBadge from './OrderStatusBadge';
 
 interface OrderItem {
   id: number;
@@ -38,126 +40,50 @@ interface OrderHistoryProps {
 
 const OrderHistory: React.FC<OrderHistoryProps> = ({ userId }) => {
   const toast = useToast();
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { orders, isLoading, loadOrders } = useOrders(userId);
 
   useEffect(() => {
-    loadOrders();
-  }, [userId]);
+    // Загружаем заказы из API
+    const loadOrdersFromAPI = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          return; // Используем локальные заказы
+        }
 
-  const loadOrders = async () => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('Токен не найден');
+        // Загружаем заказы через API
+        const userOrders = await apiService.getUserOrders(userId, token);
+        
+        // Если API работает, но заказов нет
+        if (userOrders.length === 0 && orders.length === 0) {
+          toast({
+            title: 'Нет заказов',
+            description: 'У вас пока нет заказов. Сделайте свой первый заказ!',
+            status: 'info',
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+      } catch (error) {
+        console.error('Ошибка загрузки заказов из API:', error);
+        // Если API недоступен, используем локальные заказы
+        if (orders.length === 0) {
+          toast({
+            title: 'Локальные данные',
+            description: 'Используются локальные данные (API недоступен). В реальном приложении заказы будут загружаться с сервера.',
+            status: 'info',
+            duration: 5000,
+            isClosable: true,
+          });
+        }
       }
+    };
 
-      // Загружаем заказы через API
-      const userOrders = await apiService.getUserOrders(userId, token);
-      setOrders(userOrders);
-    } catch (error) {
-      console.error('Ошибка загрузки заказов:', error);
-      
-      // Если API недоступен, показываем моковые данные для демонстрации
-      if (error instanceof Error && error.message.includes('Network Error')) {
-        const mockOrders: Order[] = [
-          {
-            id: '1',
-            orderNumber: 'ORD-001',
-            status: 'delivered',
-            totalAmount: 2500,
-            orderDate: '2024-01-15T10:30:00Z',
-            deliveryAddress: 'ул. Пушкина, д. 10, кв. 5, Москва',
-            shopName: 'Цветочный рай',
-            items: [
-              {
-                id: 1,
-                productName: 'Букет роз',
-                quantity: 1,
-                price: 1500,
-                imageUrl: '/api/placeholder/150/150',
-              },
-              {
-                id: 2,
-                productName: 'Тюльпаны',
-                quantity: 2,
-                price: 500,
-                imageUrl: '/api/placeholder/150/150',
-              },
-            ],
-          },
-          {
-            id: '2',
-            orderNumber: 'ORD-002',
-            status: 'shipped',
-            totalAmount: 1800,
-            orderDate: '2024-01-20T14:15:00Z',
-            deliveryAddress: 'ул. Ленина, д. 25, кв. 12, Санкт-Петербург',
-            shopName: 'Цветы и подарки',
-            items: [
-              {
-                id: 3,
-                productName: 'Орхидея',
-                quantity: 1,
-                price: 1800,
-                imageUrl: '/api/placeholder/150/150',
-              },
-            ],
-          },
-        ];
-        setOrders(mockOrders);
-        toast({
-          title: 'Демо режим',
-          description: 'Показаны демонстрационные данные (API недоступен)',
-          status: 'info',
-          duration: 5000,
-          isClosable: true,
-        });
-      } else {
-        setError('Не удалось загрузить историю заказов');
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    loadOrdersFromAPI();
+  }, [userId, orders.length, toast]);
 
-  const getStatusColor = (status: Order['status']) => {
-    switch (status) {
-      case 'pending':
-        return 'yellow';
-      case 'confirmed':
-        return 'blue';
-      case 'shipped':
-        return 'purple';
-      case 'delivered':
-        return 'green';
-      case 'cancelled':
-        return 'red';
-      default:
-        return 'gray';
-    }
-  };
 
-  const getStatusText = (status: Order['status']) => {
-    switch (status) {
-      case 'pending':
-        return 'Ожидает подтверждения';
-      case 'confirmed':
-        return 'Подтвержден';
-      case 'shipped':
-        return 'Отправлен';
-      case 'delivered':
-        return 'Доставлен';
-      case 'cancelled':
-        return 'Отменен';
-      default:
-        return 'Неизвестно';
-    }
-  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -257,15 +183,7 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({ userId }) => {
                           {order.shopName}
                         </Text>
                       </VStack>
-                      <Badge
-                        colorScheme={getStatusColor(order.status)}
-                        fontSize="sm"
-                        px={3}
-                        py={1}
-                        borderRadius="full"
-                      >
-                        {getStatusText(order.status)}
-                      </Badge>
+                      <OrderStatusBadge status={order.status} size="sm" />
                     </HStack>
 
                     <Divider />

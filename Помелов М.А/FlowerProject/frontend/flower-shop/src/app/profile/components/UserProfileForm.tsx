@@ -44,6 +44,23 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ userData, onUpdate })
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Функция для парсинга JWT токена
+  const parseJwt = (token: string): any | null => {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join(''),
+      );
+      return JSON.parse(jsonPayload);
+    } catch {
+      return null;
+    }
+  };
+
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
@@ -84,26 +101,70 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ userData, onUpdate })
         throw new Error('Токен не найден');
       }
 
-      // Обновляем данные через API
-      const updatedProfile = await apiService.updateUserProfile(
-        userData.id,
-        {
+      // Пытаемся обновить данные через API
+      try {
+        const updatedProfile = await apiService.updateUserProfile(
+          userData.id,
+          {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            phone: formData.phone,
+            address: formData.address,
+          },
+          token
+        );
+
+        // Вызываем callback для обновления родительского компонента
+        await onUpdate(updatedProfile);
+        setIsEditing(false);
+      } catch (apiError) {
+        console.warn('API недоступен, сохраняем локально:', apiError);
+        
+        // Fallback: сохраняем данные локально
+        const localProfile = {
           firstName: formData.firstName,
           lastName: formData.lastName,
           phone: formData.phone,
           address: formData.address,
-        },
-        token
-      );
+        };
 
-      // Вызываем callback для обновления родительского компонента
-      await onUpdate(updatedProfile);
-      setIsEditing(false);
+        // Обновляем JWT токен с новыми данными (если возможно)
+        try {
+          const payload = parseJwt(token);
+          if (payload) {
+            const updatedPayload = {
+              ...payload,
+              firstName: formData.firstName,
+              lastName: formData.lastName,
+              phone: formData.phone,
+              address: formData.address,
+            };
+            
+            // В реальном приложении здесь нужно было бы обновить токен через API
+            // Пока просто сохраняем данные локально
+            localStorage.setItem('userProfile', JSON.stringify(localProfile));
+          }
+        } catch (jwtError) {
+          console.warn('Не удалось обновить JWT:', jwtError);
+        }
+
+        // Вызываем callback с локальными данными
+        await onUpdate(localProfile);
+        setIsEditing(false);
+
+        toast({
+          title: 'Данные сохранены локально',
+          description: 'API недоступен. Данные сохранены в браузере.',
+          status: 'warning',
+          duration: 4000,
+          isClosable: true,
+        });
+      }
     } catch (error) {
       console.error('Ошибка сохранения:', error);
       toast({
         title: 'Ошибка',
-        description: 'Не удалось сохранить изменения',
+        description: 'Не удалось сохранить изменения. Проверьте подключение к интернету.',
         status: 'error',
         duration: 3000,
         isClosable: true,

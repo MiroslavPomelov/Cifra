@@ -111,8 +111,21 @@ const ProfilePage: React.FC = () => {
             user.address = profileData.address;
           }
         } catch (apiError) {
-          console.warn('Не удалось загрузить профиль через API, используем данные из JWT:', apiError);
-          // Продолжаем с данными из JWT
+          console.warn('Не удалось загрузить профиль через API, проверяем локальные данные:', apiError);
+          
+          // Проверяем локальные данные профиля
+          try {
+            const localProfile = localStorage.getItem('userProfile');
+            if (localProfile) {
+              const parsedProfile = JSON.parse(localProfile);
+              user.firstName = parsedProfile.firstName || user.firstName;
+              user.lastName = parsedProfile.lastName || user.lastName;
+              user.phone = parsedProfile.phone || user.phone;
+              user.address = parsedProfile.address || user.address;
+            }
+          } catch (localError) {
+            console.warn('Не удалось загрузить локальные данные профиля:', localError);
+          }
         }
       }
       
@@ -127,7 +140,7 @@ const ProfilePage: React.FC = () => {
 
   const handleProfileUpdate = async (updatedData: Partial<UserData>) => {
     try {
-      // Обновляем локальное состояние
+      // Обновляем локальное состояние с данными, возвращенными из API
       setUserData(prev => prev ? { ...prev, ...updatedData } : null);
       
       toast({
@@ -141,7 +154,7 @@ const ProfilePage: React.FC = () => {
       console.error('Ошибка обновления профиля:', error);
       toast({
         title: 'Ошибка',
-        description: 'Не удалось обновить профиль',
+        description: 'Не удалось обновить профиль. Попробуйте еще раз.',
         status: 'error',
         duration: 3000,
         isClosable: true,
