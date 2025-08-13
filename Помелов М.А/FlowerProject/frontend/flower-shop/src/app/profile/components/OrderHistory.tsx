@@ -16,6 +16,7 @@ import {
   Divider,
   Flex,
   useToast,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { FiPackage, FiCalendar, FiMapPin, FiDollarSign, FiRefreshCw } from 'react-icons/fi';
@@ -42,6 +43,11 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({ userId }) => {
   const toast = useToast();
   const [error, setError] = useState<string | null>(null);
   const { orders, isLoading, loadOrders } = useOrders(userId);
+
+  // Цвета для цветочной темы (как в форме входа)
+  const primaryColor = 'pink.500';
+  const secondaryColor = 'purple.500';
+  const borderColor = useColorModeValue('pink.200', 'pink.600');
 
   useEffect(() => {
     // Загружаем заказы из API
@@ -147,7 +153,12 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({ userId }) => {
       <VStack spacing={6} align="stretch">
         {/* Заголовок и кнопка обновления */}
         <HStack justify="space-between" align="center">
-          <Text fontSize="xl" fontWeight="bold" color="gray.800">
+          <Text 
+            fontSize="xl" 
+            fontWeight="bold" 
+            color="white"
+            textShadow="0 1px 2px rgba(0,0,0,0.5)"
+          >
             История заказов
           </Text>
           <Button
@@ -156,6 +167,16 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({ userId }) => {
             colorScheme="pink"
             onClick={loadOrders}
             isLoading={isLoading}
+            bgGradient={`linear(to-r, ${primaryColor}, ${secondaryColor})`}
+            _hover={{
+              bgGradient: `linear(to-r, ${secondaryColor}, ${primaryColor})`,
+              transform: 'translateY(-2px)',
+              boxShadow: `0 8px 25px rgba(236, 72, 153, 0.3)`,
+            }}
+            _active={{
+              transform: 'translateY(0)',
+            }}
+            transition="all 0.3s"
           >
             Обновить
           </Button>
@@ -170,85 +191,145 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({ userId }) => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4 }}
             >
-              <Card>
-                <CardBody>
-                  <VStack spacing={4} align="stretch">
-                    {/* Заголовок заказа */}
-                    <HStack justify="space-between" align="center">
-                      <VStack align="start" spacing={1}>
-                        <Text fontSize="lg" fontWeight="bold" color="gray.800">
-                          Заказ {order.orderNumber}
-                        </Text>
-                        <Text fontSize="sm" color="gray.600">
-                          {order.shopName}
-                        </Text>
-                      </VStack>
-                      <OrderStatusBadge status={order.status} size="sm" />
-                    </HStack>
-
-                    <Divider />
-
-                    {/* Детали заказа */}
-                    <HStack spacing={6} align="start">
-                      <VStack align="start" spacing={2} flex={1}>
-                        <HStack spacing={2}>
-                          <Icon as={FiCalendar} color="pink.500" />
-                          <Text fontSize="sm" color="gray.600">
-                            {formatDate(order.orderDate)}
-                          </Text>
-                        </HStack>
-                        <HStack spacing={2}>
-                          <Icon as={FiMapPin} color="pink.500" />
-                          <Text fontSize="sm" color="gray.600">
-                            {order.deliveryAddress}
-                          </Text>
-                        </HStack>
-                        <HStack spacing={2}>
-                          <Icon as={FiDollarSign} color="pink.500" />
-                          <Text fontSize="lg" fontWeight="bold" color="gray.800">
-                            {formatPrice(order.totalAmount)}
-                          </Text>
-                        </HStack>
-                      </VStack>
-                    </HStack>
-
-                    <Divider />
-
-                    {/* Товары в заказе */}
-                    <VStack spacing={3} align="stretch">
-                      <Text fontSize="md" fontWeight="semibold" color="gray.700">
-                        Товары в заказе:
+              <Box
+                bg="rgba(255, 255, 255, 0.05)"
+                backdropFilter="blur(10px)"
+                p={6}
+                borderRadius="xl"
+                border="1px solid"
+                borderColor="rgba(255, 255, 255, 0.1)"
+                boxShadow="0 8px 32px rgba(0, 0, 0, 0.1)"
+                _hover={{
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 12px 40px rgba(0, 0, 0, 0.15)',
+                }}
+                transition="all 0.3s ease"
+              >
+                <VStack spacing={4} align="stretch">
+                  {/* Заголовок заказа */}
+                  <HStack justify="space-between" align="center">
+                    <VStack align="start" spacing={1}>
+                      <Text 
+                        fontSize="lg" 
+                        fontWeight="bold" 
+                        color="white"
+                        textShadow="0 1px 2px rgba(0,0,0,0.5)"
+                      >
+                        Заказ {order.orderNumber}
                       </Text>
-                      {order.items.map((item) => (
-                        <HStack key={item.id} spacing={3} p={3} bg="gray.50" borderRadius="md">
-                          <Box
-                            w="50px"
-                            h="50px"
-                            bg="gray.200"
-                            borderRadius="md"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                          >
-                            <Icon as={FiPackage} color="gray.500" />
-                          </Box>
-                          <VStack align="start" spacing={1} flex={1}>
-                            <Text fontSize="sm" fontWeight="medium" color="gray.800">
-                              {item.productName}
-                            </Text>
-                            <Text fontSize="xs" color="gray.600">
-                              Количество: {item.quantity}
-                            </Text>
-                          </VStack>
-                          <Text fontSize="sm" fontWeight="semibold" color="gray.800">
-                            {formatPrice(item.price)}
-                          </Text>
-                        </HStack>
-                      ))}
+                      <Text 
+                        fontSize="sm" 
+                        color="gray.300"
+                        textShadow="0 1px 2px rgba(0,0,0,0.5)"
+                      >
+                        {order.shopName}
+                      </Text>
                     </VStack>
+                    <OrderStatusBadge status={order.status} size="sm" />
+                  </HStack>
+
+                  <Divider borderColor="rgba(255, 255, 255, 0.1)" />
+
+                  {/* Детали заказа */}
+                  <HStack spacing={6} align="start">
+                    <VStack align="start" spacing={2} flex={1}>
+                      <HStack spacing={2}>
+                        <Icon as={FiCalendar} color={primaryColor} />
+                        <Text 
+                          fontSize="sm" 
+                          color="gray.300"
+                          textShadow="0 1px 2px rgba(0,0,0,0.5)"
+                        >
+                          {formatDate(order.orderDate)}
+                        </Text>
+                      </HStack>
+                      <HStack spacing={2}>
+                        <Icon as={FiMapPin} color={primaryColor} />
+                        <Text 
+                          fontSize="sm" 
+                          color="gray.300"
+                          textShadow="0 1px 2px rgba(0,0,0,0.5)"
+                        >
+                          {order.deliveryAddress}
+                        </Text>
+                      </HStack>
+                      <HStack spacing={2}>
+                        <Icon as={FiDollarSign} color={primaryColor} />
+                        <Text 
+                          fontSize="lg" 
+                          fontWeight="bold" 
+                          color="white"
+                          textShadow="0 1px 2px rgba(0,0,0,0.5)"
+                        >
+                          {formatPrice(order.totalAmount)}
+                        </Text>
+                      </HStack>
+                    </VStack>
+                  </HStack>
+
+                  <Divider borderColor="rgba(255, 255, 255, 0.1)" />
+
+                  {/* Товары в заказе */}
+                  <VStack spacing={3} align="stretch">
+                    <Text 
+                      fontSize="md" 
+                      fontWeight="semibold" 
+                      color="white"
+                      textShadow="0 1px 2px rgba(0,0,0,0.5)"
+                    >
+                      Товары в заказе:
+                    </Text>
+                    {order.items.map((item) => (
+                      <HStack 
+                        key={item.id} 
+                        spacing={3} 
+                        p={3} 
+                        bg="rgba(255, 255, 255, 0.05)" 
+                        borderRadius="md"
+                        border="1px solid"
+                        borderColor="rgba(255, 255, 255, 0.05)"
+                      >
+                        <Box
+                          w="50px"
+                          h="50px"
+                          bg="rgba(255, 255, 255, 0.1)"
+                          borderRadius="md"
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Icon as={FiPackage} color={primaryColor} />
+                        </Box>
+                        <VStack align="start" spacing={1} flex={1}>
+                          <Text 
+                            fontSize="sm" 
+                            fontWeight="medium" 
+                            color="white"
+                            textShadow="0 1px 2px rgba(0,0,0,0.5)"
+                          >
+                            {item.productName}
+                          </Text>
+                          <Text 
+                            fontSize="xs" 
+                            color="gray.300"
+                            textShadow="0 1px 2px rgba(0,0,0,0.5)"
+                          >
+                            Количество: {item.quantity}
+                          </Text>
+                        </VStack>
+                        <Text 
+                          fontSize="sm" 
+                          fontWeight="semibold" 
+                          color="white"
+                          textShadow="0 1px 2px rgba(0,0,0,0.5)"
+                        >
+                          {formatPrice(item.price)}
+                        </Text>
+                      </HStack>
+                    ))}
                   </VStack>
-                </CardBody>
-              </Card>
+                </VStack>
+              </Box>
             </motion.div>
           ))}
         </VStack>

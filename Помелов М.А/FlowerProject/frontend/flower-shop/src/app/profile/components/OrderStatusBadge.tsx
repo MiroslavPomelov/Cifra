@@ -61,6 +61,16 @@ const OrderStatusBadge: React.FC<OrderStatusBadgeProps> = ({ status, size = 'md'
       display="flex"
       alignItems="center"
       gap={1}
+      bg="rgba(255, 255, 255, 0.1)"
+      backdropFilter="blur(10px)"
+      border="1px solid"
+      borderColor="rgba(255, 255, 255, 0.2)"
+      boxShadow="0 4px 12px rgba(0, 0, 0, 0.1)"
+      _hover={{
+        transform: 'scale(1.05)',
+        boxShadow: '0 6px 16px rgba(0, 0, 0, 0.15)',
+      }}
+      transition="all 0.3s ease"
     >
       <span>{config.icon}</span>
       {config.text}

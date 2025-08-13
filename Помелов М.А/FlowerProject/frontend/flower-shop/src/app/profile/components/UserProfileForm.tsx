@@ -14,6 +14,7 @@ import {
   CardBody,
   Divider,
   Icon,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { FiUser, FiMail, FiPhone, FiMapPin, FiSave } from 'react-icons/fi';
@@ -43,6 +44,12 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ userData, onUpdate })
   });
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Цвета для цветочной темы (как в форме входа)
+  const primaryColor = 'pink.500';
+  const secondaryColor = 'purple.500';
+  const borderColor = useColorModeValue('pink.200', 'pink.600');
+  const fonColorForm = 'gray.200';
 
   // Функция для парсинга JWT токена
   const parseJwt = (token: string): any | null => {
@@ -189,150 +196,208 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ userData, onUpdate })
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
-      <Card>
-        <CardBody>
-          <VStack spacing={6} align="stretch">
-            {/* Заголовок */}
-            <HStack justify="space-between" align="center">
-              <Text fontSize="xl" fontWeight="bold" color="gray.800">
-                Личные данные
-              </Text>
-              {!isEditing ? (
-                <Button
-                  leftIcon={<Icon as={FiUser} />}
-                  colorScheme="pink"
-                  variant="outline"
-                  onClick={handleEdit}
-                >
-                  Редактировать
-                </Button>
-              ) : (
-                <HStack spacing={3}>
-                  <Button
-                    variant="ghost"
-                    onClick={handleCancel}
-                    isDisabled={isLoading}
-                  >
-                    Отмена
-                  </Button>
-                  <Button
-                    leftIcon={<Icon as={FiSave} />}
-                    colorScheme="pink"
-                    onClick={handleSave}
-                    isLoading={isLoading}
-                    isDisabled={!isFormChanged()}
-                  >
-                    Сохранить
-                  </Button>
-                </HStack>
-              )}
+      <VStack spacing={6} align="stretch">
+        {/* Заголовок */}
+        <HStack justify="space-between" align="center">
+          <Text 
+            fontSize="xl" 
+            fontWeight="bold" 
+            color="white"
+            textShadow="0 1px 2px rgba(0,0,0,0.5)"
+          >
+            Личные данные
+          </Text>
+          {!isEditing ? (
+            <Button
+              leftIcon={<Icon as={FiUser} />}
+              colorScheme="pink"
+              variant="outline"
+              onClick={handleEdit}
+              bgGradient={`linear(to-r, ${primaryColor}, ${secondaryColor})`}
+              _hover={{
+                bgGradient: `linear(to-r, ${secondaryColor}, ${primaryColor})`,
+                transform: 'translateY(-2px)',
+                boxShadow: `0 8px 25px rgba(236, 72, 153, 0.3)`,
+              }}
+              _active={{
+                transform: 'translateY(0)',
+              }}
+              transition="all 0.3s"
+            >
+              Редактировать
+            </Button>
+          ) : (
+            <HStack spacing={3}>
+              <Button
+                variant="ghost"
+                onClick={handleCancel}
+                isDisabled={isLoading}
+                color="white"
+                _hover={{ bg: "rgba(255, 255, 255, 0.1)" }}
+              >
+                Отмена
+              </Button>
+              <Button
+                leftIcon={<Icon as={FiSave} />}
+                colorScheme="pink"
+                onClick={handleSave}
+                isLoading={isLoading}
+                isDisabled={!isFormChanged()}
+                bgGradient={`linear(to-r, ${primaryColor}, ${secondaryColor})`}
+                _hover={{
+                  bgGradient: `linear(to-r, ${secondaryColor}, ${primaryColor})`,
+                  transform: 'translateY(-2px)',
+                  boxShadow: `0 8px 25px rgba(236, 72, 153, 0.3)`,
+                }}
+                _active={{
+                  transform: 'translateY(0)',
+                }}
+                transition="all 0.3s"
+              >
+                Сохранить
+              </Button>
             </HStack>
+          )}
+        </HStack>
 
-            <Divider />
+        <Divider borderColor="rgba(255, 255, 255, 0.1)" />
 
-            {/* Форма */}
-            <VStack spacing={4} align="stretch">
-              {/* Имя и Фамилия */}
-              <HStack spacing={4}>
-                <FormControl isRequired>
-                  <FormLabel>
-                    <HStack spacing={2}>
-                      <Icon as={FiUser} color="pink.500" />
-                      <Text>Имя</Text>
-                    </HStack>
-                  </FormLabel>
-                  <Input
-                    value={formData.firstName}
-                    onChange={(e) => handleInputChange('firstName', e.target.value)}
-                    placeholder="Введите имя"
-                    isDisabled={!isEditing}
-                    bg={isEditing ? 'white' : 'gray.50'}
-                  />
-                </FormControl>
+        {/* Форма */}
+        <VStack spacing={4} align="stretch">
+          {/* Имя и Фамилия */}
+          <HStack spacing={4}>
+            <FormControl isRequired>
+              <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">
+                <HStack spacing={2}>
+                  <Icon as={FiUser} color={primaryColor} />
+                  <Text>Имя</Text>
+                </HStack>
+              </FormLabel>
+              <Input
+                value={formData.firstName}
+                onChange={(e) => handleInputChange('firstName', e.target.value)}
+                placeholder="Введите имя"
+                isDisabled={!isEditing}
+                color={fonColorForm}
+                borderColor={borderColor}
+                bg={isEditing ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.05)"}
+                _focus={{
+                  borderColor: primaryColor,
+                  boxShadow: `0 0 0 1px ${primaryColor}`,
+                  bg: "rgba(255, 255, 255, 0.15)",
+                }}
+              />
+            </FormControl>
 
-                <FormControl isRequired>
-                  <FormLabel>
-                    <HStack spacing={2}>
-                      <Icon as={FiUser} color="pink.500" />
-                      <Text>Фамилия</Text>
-                    </HStack>
-                  </FormLabel>
-                  <Input
-                    value={formData.lastName}
-                    onChange={(e) => handleInputChange('lastName', e.target.value)}
-                    placeholder="Введите фамилию"
-                    isDisabled={!isEditing}
-                    bg={isEditing ? 'white' : 'gray.50'}
-                  />
-                </FormControl>
+            <FormControl isRequired>
+              <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">
+                <HStack spacing={2}>
+                  <Icon as={FiUser} color={primaryColor} />
+                  <Text>Фамилия</Text>
+                </HStack>
+              </FormLabel>
+              <Input
+                value={formData.lastName}
+                onChange={(e) => handleInputChange('lastName', e.target.value)}
+                placeholder="Введите фамилию"
+                isDisabled={!isEditing}
+                color={fonColorForm}
+                borderColor={borderColor}
+                bg={isEditing ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.05)"}
+                _focus={{
+                  borderColor: primaryColor,
+                  boxShadow: `0 0 0 1px ${primaryColor}`,
+                  bg: "rgba(255, 255, 255, 0.15)",
+                }}
+              />
+            </FormControl>
+          </HStack>
+
+          {/* Email (только для чтения) */}
+          <FormControl>
+            <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">
+              <HStack spacing={2}>
+                <Icon as={FiMail} color={primaryColor} />
+                <Text>Email</Text>
               </HStack>
+            </FormLabel>
+            <Input
+              value={userData.email}
+              isDisabled={true}
+              color="gray.300"
+              borderColor={borderColor}
+              bg="rgba(255, 255, 255, 0.05)"
+            />
+            <Text fontSize="sm" color="gray.400" mt={1}>
+              Email нельзя изменить
+            </Text>
+          </FormControl>
 
-              {/* Email (только для чтения) */}
-              <FormControl>
-                <FormLabel>
-                  <HStack spacing={2}>
-                    <Icon as={FiMail} color="pink.500" />
-                    <Text>Email</Text>
-                  </HStack>
-                </FormLabel>
-                <Input
-                  value={userData.email}
-                  isDisabled={true}
-                  bg="gray.100"
-                  color="gray.600"
-                />
-                <Text fontSize="sm" color="gray.500" mt={1}>
-                  Email нельзя изменить
-                </Text>
-              </FormControl>
+          {/* Телефон */}
+          <FormControl>
+            <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">
+              <HStack spacing={2}>
+                <Icon as={FiPhone} color={primaryColor} />
+                <Text>Телефон</Text>
+              </HStack>
+            </FormLabel>
+            <Input
+              value={formData.phone}
+              onChange={(e) => handleInputChange('phone', e.target.value)}
+              placeholder="Введите номер телефона"
+              isDisabled={!isEditing}
+              color={fonColorForm}
+              borderColor={borderColor}
+              bg={isEditing ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.05)"}
+              type="tel"
+              _focus={{
+                borderColor: primaryColor,
+                boxShadow: `0 0 0 1px ${primaryColor}`,
+                bg: "rgba(255, 255, 255, 0.15)",
+              }}
+            />
+          </FormControl>
 
-              {/* Телефон */}
-              <FormControl>
-                <FormLabel>
-                  <HStack spacing={2}>
-                    <Icon as={FiPhone} color="pink.500" />
-                    <Text>Телефон</Text>
-                  </HStack>
-                </FormLabel>
-                <Input
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
-                  placeholder="Введите номер телефона"
-                  isDisabled={!isEditing}
-                  bg={isEditing ? 'white' : 'gray.50'}
-                  type="tel"
-                />
-              </FormControl>
+          {/* Адрес */}
+          <FormControl>
+            <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">
+              <HStack spacing={2}>
+                <Icon as={FiMapPin} color={primaryColor} />
+                <Text>Адрес доставки</Text>
+              </HStack>
+            </FormLabel>
+            <Input
+              value={formData.address}
+              onChange={(e) => handleInputChange('address', e.target.value)}
+              placeholder="Введите адрес доставки"
+              isDisabled={!isEditing}
+              color={fonColorForm}
+              borderColor={borderColor}
+              bg={isEditing ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.05)"}
+              _focus={{
+                borderColor: primaryColor,
+                boxShadow: `0 0 0 1px ${primaryColor}`,
+                bg: "rgba(255, 255, 255, 0.15)",
+              }}
+            />
+          </FormControl>
+        </VStack>
 
-              {/* Адрес */}
-              <FormControl>
-                <FormLabel>
-                  <HStack spacing={2}>
-                    <Icon as={FiMapPin} color="pink.500" />
-                    <Text>Адрес доставки</Text>
-                  </HStack>
-                </FormLabel>
-                <Input
-                  value={formData.address}
-                  onChange={(e) => handleInputChange('address', e.target.value)}
-                  placeholder="Введите адрес доставки"
-                  isDisabled={!isEditing}
-                  bg={isEditing ? 'white' : 'gray.50'}
-                />
-              </FormControl>
-            </VStack>
-
-            {/* Информация */}
-            {!isEditing && (
-              <Box bg="blue.50" p={4} borderRadius="md" border="1px solid" borderColor="blue.200">
-                <Text fontSize="sm" color="blue.700">
-                  💡 Нажмите "Редактировать" чтобы изменить свои данные
-                </Text>
-              </Box>
-            )}
-          </VStack>
-        </CardBody>
-      </Card>
+        {/* Информация */}
+        {!isEditing && (
+          <Box 
+            bg="rgba(59, 130, 246, 0.1)" 
+            p={4} 
+            borderRadius="md" 
+            border="1px solid" 
+            borderColor="rgba(59, 130, 246, 0.3)"
+          >
+            <Text fontSize="sm" color="blue.300">
+              💡 Нажмите "Редактировать" чтобы изменить свои данные
+            </Text>
+          </Box>
+        )}
+      </VStack>
     </motion.div>
   );
 };
