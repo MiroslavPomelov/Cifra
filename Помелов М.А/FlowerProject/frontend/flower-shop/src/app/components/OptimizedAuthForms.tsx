@@ -205,10 +205,27 @@ const OptimizedAuthForms: React.FC = () => {
         }, 2000);
       } else {
         localStorage.setItem('userRole', 'user');
-        // Перенаправляем на главную страницу
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 2000);
+        
+        // Проверяем, нужно ли перенаправить на оформление заказа
+        const pendingCheckout = localStorage.getItem('pendingCheckout');
+        if (pendingCheckout === 'true') {
+          localStorage.removeItem('pendingCheckout');
+          toast({
+            title: 'Продолжаем оформление заказа',
+            description: 'Теперь вы можете оформить заказ',
+            status: 'info',
+            duration: 2000,
+            isClosable: true,
+          });
+          setTimeout(() => {
+            window.location.href = '/checkout';
+          }, 2000);
+        } else {
+          // Перенаправляем на главную страницу
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 2000);
+        }
       }
       
     } catch (error: unknown) {
@@ -308,18 +325,35 @@ const OptimizedAuthForms: React.FC = () => {
             }, 2000);
           } else {
             localStorage.setItem('userRole', 'user');
-            toast({
-              title: 'Автоматический вход выполнен!',
-              description: 'Перенаправляем на главную страницу...',
-              status: 'success',
-              duration: 2000,
-              isClosable: true,
-            });
             
-            // Перенаправляем на главную страницу
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 2000);
+            // Проверяем, нужно ли перенаправить на оформление заказа
+            const pendingCheckout = localStorage.getItem('pendingCheckout');
+            if (pendingCheckout === 'true') {
+              localStorage.removeItem('pendingCheckout');
+              toast({
+                title: 'Автоматический вход выполнен!',
+                description: 'Продолжаем оформление заказа...',
+                status: 'success',
+                duration: 2000,
+                isClosable: true,
+              });
+              setTimeout(() => {
+                window.location.href = '/checkout';
+              }, 2000);
+            } else {
+              toast({
+                title: 'Автоматический вход выполнен!',
+                description: 'Перенаправляем на главную страницу...',
+                status: 'success',
+                duration: 2000,
+                isClosable: true,
+              });
+              
+              // Перенаправляем на главную страницу
+              setTimeout(() => {
+                window.location.href = '/';
+              }, 2000);
+            }
           }
         }
       } catch (loginError) {

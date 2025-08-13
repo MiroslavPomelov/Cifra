@@ -30,6 +30,7 @@ import {
 import { motion } from 'framer-motion';
 import { FaTrash, FaArrowLeft, FaCreditCard, FaShoppingBag } from 'react-icons/fa';
 import { FiHome } from 'react-icons/fi';
+import { useCart } from '../hooks/useCart';
 
 interface CartItem {
   id: number;
@@ -43,71 +44,11 @@ interface CartItem {
 const CartPage: React.FC = () => {
   const router = useRouter();
   const toast = useToast();
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const { cartItems, updateQuantity, removeFromCart, clearCart, getTotalAmount } = useCart();
   const [loading, setLoading] = useState(false);
 
-  // Загрузка корзины из localStorage (в реальном приложении это будет API)
-  useEffect(() => {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      try {
-        setCartItems(JSON.parse(savedCart));
-      } catch (error) {
-        console.error('Ошибка загрузки корзины:', error);
-      }
-    }
-  }, []);
-
-  // Сохранение корзины в localStorage
-  const saveCart = (items: CartItem[]) => {
-    localStorage.setItem('cart', JSON.stringify(items));
-    // Уведомляем другие компоненты об обновлении корзины
-    window.dispatchEvent(new Event('cartUpdated'));
-  };
-
-  // Обновление количества товара
-  const updateQuantity = (itemId: number, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      removeItem(itemId);
-      return;
-    }
-    
-    const updatedItems = cartItems.map(item =>
-      item.id === itemId ? { ...item, quantity: newQuantity } : item
-    );
-    setCartItems(updatedItems);
-    saveCart(updatedItems);
-  };
-
-  // Удаление товара из корзины
-  const removeItem = (itemId: number) => {
-    const updatedItems = cartItems.filter(item => item.id !== itemId);
-    setCartItems(updatedItems);
-    saveCart(updatedItems);
-    toast({
-      title: 'Товар удален',
-      description: 'Товар был удален из корзины',
-      status: 'info',
-      duration: 2000,
-      isClosable: true,
-    });
-  };
-
-  // Очистка корзины
-  const clearCart = () => {
-    setCartItems([]);
-    saveCart([]);
-    toast({
-      title: 'Корзина очищена',
-      description: 'Все товары были удалены из корзины',
-      status: 'info',
-      duration: 2000,
-      isClosable: true,
-    });
-  };
-
   // Расчет общей суммы
-  const totalAmount = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const totalAmount = getTotalAmount();
 
   // Переход к оформлению заказа
   const proceedToCheckout = () => {
@@ -119,6 +60,23 @@ const CartPage: React.FC = () => {
         duration: 3000,
         isClosable: true,
       });
+      return;
+    }
+    
+    // Проверяем авторизацию пользователя
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast({
+        title: 'Требуется авторизация',
+        description: 'Для оформления заказа необходимо войти в систему',
+        status: 'warning',
+        duration: 4000,
+        isClosable: true,
+      });
+      
+      // Сохраняем текущую корзину и перенаправляем на страницу входа
+      localStorage.setItem('pendingCheckout', 'true');
+      router.push('/login');
       return;
     }
     
@@ -146,8 +104,8 @@ const CartPage: React.FC = () => {
         shopName: 'Розовый сад'
       }
     ];
-    setCartItems(sampleItems);
-    saveCart(sampleItems);
+    localStorage.setItem('cart', JSON.stringify(sampleItems));
+    window.dispatchEvent(new Event('cartUpdated'));
     toast({
       title: 'Демо-товары добавлены',
       description: 'В корзину добавлены демонстрационные товары',
@@ -287,14 +245,14 @@ const CartPage: React.FC = () => {
                             </Text>
                           </VStack>
 
-                          <IconButton
-                            aria-label="Удалить товар"
-                            icon={<FaTrash />}
-                            colorScheme="red"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeItem(item.id)}
-                          />
+                                                      <IconButton
+                              aria-label="Удалить товар"
+                              icon={<FaTrash />}
+                              colorScheme="red"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removeFromCart(item.id)}
+                            />
                         </HStack>
                       </CardBody>
                     </Card>
@@ -339,7 +297,7 @@ const CartPage: React.FC = () => {
                       colorScheme="pink"
                       size="lg"
                       onClick={proceedToCheckout}
-                      isFullWidth
+                      width="100%"
                     >
                       Оформить заказ
                     </Button>

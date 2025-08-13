@@ -69,6 +69,20 @@ const CheckoutPage: React.FC = () => {
 
   // Загрузка корзины из localStorage
   useEffect(() => {
+    // Проверяем авторизацию пользователя
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast({
+        title: 'Требуется авторизация',
+        description: 'Для оформления заказа необходимо войти в систему',
+        status: 'warning',
+        duration: 4000,
+        isClosable: true,
+      });
+      router.push('/login');
+      return;
+    }
+
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {
       try {
@@ -402,7 +416,7 @@ const CheckoutPage: React.FC = () => {
                     onClick={handleSubmit}
                     isLoading={submitting}
                     loadingText="Оформляем заказ..."
-                    isFullWidth
+                    width="100%"
                   >
                     Оформить заказ
                   </Button>
