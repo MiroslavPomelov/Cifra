@@ -9,10 +9,14 @@ import {
   Button,
   Flex,
   useColorModeValue,
+  IconButton,
+  Tooltip,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { Product } from '../../../services/api';
 import { useCart } from '../../hooks/useCart';
+import { useFavourites } from '../../hooks/useFavourites';
 
 interface ProductCardProps {
   product: Product;
@@ -20,6 +24,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
+  const { isFavourite, toggleFavourite } = useFavourites();
 
   // Определяем категорию на основе названия или описания
   const getCategory = () => {
@@ -46,8 +51,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     addToCart(product);
   };
 
+  // Функция переключения избранного
+  const handleToggleFavourite = async () => {
+    await toggleFavourite(product);
+  };
+
   const category = getCategory();
   const emoji = getEmoji();
+  const favourite = isFavourite(product.id);
 
   return (
     <motion.div
@@ -81,19 +92,90 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           zIndex: 0
         }}
       >
-        {/* Бейджи */}
+        {/* Бейджи и кнопка избранного */}
         <Flex justify="space-between" mb={4} position="relative" zIndex={1}>
-          <Badge
-            bgGradient="linear(to-r, pink.400, purple.500)"
-            color="white"
-            px={3}
-            py={1}
-            borderRadius="full"
-            fontSize="xs"
-            fontWeight="semibold"
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.2 }}
           >
-            {category}
-          </Badge>
+            <Box
+              bg="linear-gradient(135deg, #ec4899, #8b5cf6)"
+              color="white"
+              px={3}
+              py={1.5}
+              borderRadius="full"
+              fontSize="xs"
+              fontWeight="bold"
+              boxShadow="0 2px 8px rgba(236, 72, 153, 0.4)"
+              transition="all 0.2s ease"
+              display="inline-block"
+              textAlign="center"
+              minW="fit-content"
+              position="relative"
+              overflow="hidden"
+              _before={{
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: '-100%',
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+                transition: 'left 0.5s ease',
+              }}
+              _hover={{
+                boxShadow: '0 4px 12px rgba(236, 72, 153, 0.6)',
+                _before: {
+                  left: '100%',
+                }
+              }}
+            >
+              {category}
+            </Box>
+          </motion.div>
+          
+          {/* Кнопка избранного */}
+          <Tooltip 
+            label={favourite ? "Убрать из избранного" : "Добавить в избранное"}
+            placement="top"
+            hasArrow
+          >
+            <IconButton
+              aria-label={favourite ? "Убрать из избранного" : "Добавить в избранное"}
+              icon={favourite ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <defs>
+                    <linearGradient id={`heartGradient-${product.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#ec4899" />
+                      <stop offset="100%" stopColor="#8b5cf6" />
+                    </linearGradient>
+                  </defs>
+                  <FaHeart size={20} fill={`url(#heartGradient-${product.id})`} />
+                </svg>
+              ) : <FaRegHeart size={20} />}
+              size="lg"
+              variant="ghost"
+              color={favourite ? "transparent" : "white"}
+              bg={favourite ? "transparent" : "transparent"}
+              _hover={{
+                bg: 'rgba(255, 255, 255, 0.1)',
+                transform: 'scale(1.1)',
+              }}
+              _active={{
+                transform: 'scale(0.95)',
+              }}
+              transition="all 0.2s ease"
+              onClick={handleToggleFavourite}
+              position="relative"
+              zIndex={2}
+              sx={{
+                '& svg': {
+                  filter: favourite ? 'drop-shadow(0 2px 8px rgba(236, 72, 153, 0.6))' : 'none',
+                }
+              }}
+            />
+          </Tooltip>
         </Flex>
 
         {/* Изображение продукта */}
@@ -183,7 +265,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               }}
               fontWeight="semibold"
               letterSpacing="wide"
-                              onClick={handleAddToCart}
+              onClick={handleAddToCart}
             >
               В корзину
             </Button>

@@ -547,30 +547,51 @@ class ApiService {
   // Favourite products methods
   async getFavouriteProducts(userId: number, token: string): Promise<any[]> {
     try {
+      console.log('🔍 API Service - getFavouriteProducts - URL:', `${this.baseURL}/users/${userId}/favourites`);
+      console.log('🔍 API Service - getFavouriteProducts - token length:', token?.length);
+      
       const response = await axios.get(`${this.baseURL}/users/${userId}/favourites`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
+      
+      console.log('🔍 API Service - getFavouriteProducts - response:', response);
       return response.data;
-    } catch (error) {
-      console.error('Error fetching favourite products:', error);
+    } catch (error: any) {
+      console.error('❌ API Service - getFavouriteProducts - error:', error);
+      if (error.response) {
+        console.error('❌ Error response data:', error.response.data);
+        console.error('❌ Error response status:', error.response.status);
+        console.error('❌ Error response headers:', error.response.headers);
+      }
       throw error;
     }
   }
 
   async addFavouriteProduct(userId: number, data: any, token: string): Promise<any> {
     try {
+      console.log('🔍 API Service - addFavouriteProduct - URL:', `${this.baseURL}/users/${userId}/favourites`);
+      console.log('🔍 API Service - addFavouriteProduct - data:', data);
+      console.log('🔍 API Service - addFavouriteProduct - token length:', token?.length);
+      
       const response = await axios.post(`${this.baseURL}/users/${userId}/favourites`, data, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
+      
+      console.log('🔍 API Service - addFavouriteProduct - response:', response);
       return response.data;
-    } catch (error) {
-      console.error('Error adding favourite product:', error);
+    } catch (error: any) {
+      console.error('❌ API Service - addFavouriteProduct - error:', error);
+      if (error.response) {
+        console.error('❌ Error response data:', error.response.data);
+        console.error('❌ Error response status:', error.response.status);
+        console.error('❌ Error response headers:', error.response.headers);
+      }
       throw error;
     }
   }
@@ -592,30 +613,50 @@ class ApiService {
 
   async removeFavouriteProduct(userId: number, favouriteId: number, token: string): Promise<{ message: string }> {
     try {
+      console.log('🔍 API Service - removeFavouriteProduct - URL:', `${this.baseURL}/users/${userId}/favourites/${favouriteId}`);
+      console.log('🔍 API Service - removeFavouriteProduct - token length:', token?.length);
+      
       await axios.delete(`${this.baseURL}/users/${userId}/favourites/${favouriteId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
+      
+      console.log('🔍 API Service - removeFavouriteProduct - success');
       return { message: 'Product removed from favourites' };
-    } catch (error) {
-      console.error('Error removing favourite product:', error);
+    } catch (error: any) {
+      console.error('❌ API Service - removeFavouriteProduct - error:', error);
+      if (error.response) {
+        console.error('❌ Error response data:', error.response.data);
+        console.error('❌ Error response status:', error.response.status);
+        console.error('❌ Error response headers:', error.response.headers);
+      }
       throw error;
     }
   }
 
   async checkIfFavourite(userId: number, productId: number, token: string): Promise<{ isFavourite: boolean }> {
     try {
+      console.log('🔍 API Service - checkIfFavourite - URL:', `${this.baseURL}/users/${userId}/favourites/check/${productId}`);
+      console.log('🔍 API Service - checkIfFavourite - token length:', token?.length);
+      
       const response = await axios.get(`${this.baseURL}/users/${userId}/favourites/check/${productId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
+      
+      console.log('🔍 API Service - checkIfFavourite - response:', response);
       return response.data;
-    } catch (error) {
-      console.error('Error checking if product is favourite:', error);
+    } catch (error: any) {
+      console.error('❌ API Service - checkIfFavourite - error:', error);
+      if (error.response) {
+        console.error('❌ Error response data:', error.response.data);
+        console.error('❌ Error response status:', error.response.status);
+        console.error('❌ Error response headers:', error.response.headers);
+      }
       throw error;
     }
   }

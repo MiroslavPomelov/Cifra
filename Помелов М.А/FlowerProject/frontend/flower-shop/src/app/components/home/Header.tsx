@@ -310,6 +310,23 @@ const Header: React.FC = () => {
                     >
                       Профиль
                     </MenuItem>
+                    {authRole === 'user' && (
+                      <MenuItem 
+                        onClick={() => router.push('/favourites')} 
+                        _hover={{ 
+                          bg: 'rgba(236, 72, 153, 0.1)', 
+                          color: 'pink.600',
+                          transform: 'translateX(4px)'
+                        }} 
+                        color="gray.700"
+                        fontWeight="medium"
+                        transition="all 0.2s ease"
+                        px={4}
+                        py={3}
+                      >
+                        Избранное
+                      </MenuItem>
+                    )}
                     <MenuItem 
                       onClick={handleLogout} 
                       _hover={{ 
@@ -548,6 +565,19 @@ const Header: React.FC = () => {
                       >
                         Профиль
                       </Button>
+                      {authRole === 'user' && (
+                        <Button
+                          variant="ghost"
+                          color="white"
+                          _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
+                          onClick={() => {
+                            router.push('/favourites');
+                            onClose();
+                          }}
+                        >
+                          Избранное
+                        </Button>
+                      )}
                       <Button
                         variant="ghost"
                         color="white"
