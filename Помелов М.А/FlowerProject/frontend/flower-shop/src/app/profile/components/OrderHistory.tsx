@@ -19,7 +19,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import { FiPackage, FiCalendar, FiMapPin, FiDollarSign, FiRefreshCw } from 'react-icons/fi';
+import { FiPackage, FiCalendar, FiMapPin, FiDollarSign, FiRefreshCw, FiServer } from 'react-icons/fi';
 import { apiService, UserOrder } from '../../../services/api';
 import { useOrders } from '../../hooks/useOrders';
 import OrderStatusBadge from './OrderStatusBadge';
@@ -41,8 +41,7 @@ interface OrderHistoryProps {
 
 const OrderHistory: React.FC<OrderHistoryProps> = ({ userId }) => {
   const toast = useToast();
-  const [error, setError] = useState<string | null>(null);
-  const { orders, isLoading, loadOrders } = useOrders(userId);
+  const { orders, isLoading, error, loadOrders } = useOrders(userId);
 
   // Цвета для цветочной темы (как в форме входа)
   const primaryColor = 'pink.500';
@@ -50,46 +49,17 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({ userId }) => {
   const borderColor = useColorModeValue('pink.200', 'pink.600');
 
   useEffect(() => {
-    // Загружаем заказы из API
-    const loadOrdersFromAPI = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          return; // Используем локальные заказы
-        }
-
-        // Загружаем заказы через API
-        const userOrders = await apiService.getUserOrders(userId, token);
-        
-        // Если API работает, но заказов нет
-        if (userOrders.length === 0 && orders.length === 0) {
-          toast({
-            title: 'Нет заказов',
-            description: 'У вас пока нет заказов. Сделайте свой первый заказ!',
-            status: 'info',
-            duration: 3000,
-            isClosable: true,
-          });
-        }
-      } catch (error) {
-        console.error('Ошибка загрузки заказов из API:', error);
-        // Если API недоступен, используем локальные заказы
-        if (orders.length === 0) {
-          toast({
-            title: 'Локальные данные',
-            description: 'Используются локальные данные (API недоступен). В реальном приложении заказы будут загружаться с сервера.',
-            status: 'info',
-            duration: 5000,
-            isClosable: true,
-          });
-        }
-      }
-    };
-
-    loadOrdersFromAPI();
-  }, [userId, orders.length, toast]);
-
-
+    // Показываем информацию о загрузке заказов
+    if (orders.length > 0) {
+      toast({
+        title: 'Заказы загружены',
+        description: `Загружено ${orders.length} заказов с сервера`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }, [orders.length, toast]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -112,17 +82,32 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({ userId }) => {
   if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" py={10}>
-        <Spinner size="xl" color="pink.500" />
+        <VStack spacing={4}>
+          <Spinner size="xl" color="pink.500" />
+          <Text color="white" fontSize="sm">
+            Загружаем заказы с сервера...
+          </Text>
+        </VStack>
       </Box>
     );
   }
 
   if (error) {
     return (
-      <Alert status="error">
-        <AlertIcon />
-        {error}
-      </Alert>
+      <VStack spacing={4} align="stretch">
+        <Alert status="error">
+          <AlertIcon />
+          {error}
+        </Alert>
+        <Button
+          leftIcon={<Icon as={FiRefreshCw} />}
+          onClick={loadOrders}
+          colorScheme="pink"
+          variant="outline"
+        >
+          Попробовать снова
+        </Button>
+      </VStack>
     );
   }
 
@@ -153,14 +138,20 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({ userId }) => {
       <VStack spacing={6} align="stretch">
         {/* Заголовок и кнопка обновления */}
         <HStack justify="space-between" align="center">
-          <Text 
-            fontSize="xl" 
-            fontWeight="bold" 
-            color="white"
-            textShadow="0 1px 2px rgba(0,0,0,0.5)"
-          >
-            История заказов
-          </Text>
+          <VStack align="start" spacing={1}>
+            <Text 
+              fontSize="xl" 
+              fontWeight="bold" 
+              color="white"
+              textShadow="0 1px 2px rgba(0,0,0,0.5)"
+            >
+              История заказов
+            </Text>
+            <HStack spacing={2} color="green.300" fontSize="sm">
+              <Icon as={FiServer} />
+              <Text>Данные загружаются с сервера</Text>
+            </HStack>
+          </VStack>
           <Button
             leftIcon={<Icon as={FiRefreshCw} />}
             variant="outline"

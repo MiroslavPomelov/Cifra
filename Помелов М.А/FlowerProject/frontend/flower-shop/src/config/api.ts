@@ -18,8 +18,8 @@ export const API_CONFIG = {
   // Users 
   USERS: {
     BASE: '/users',
-    PROFILE: (id: number) => `/users/${id}/profile`,
-    UPDATE_PROFILE: (id: number) => `/users/${id}/profile`,
+    PROFILE: (id: number) => `/users/${id}`,
+    UPDATE_PROFILE: (id: number) => `/users/${id}`,
     ORDERS: (id: number) => `/users/${id}/orders`,
     WITH_FAVOURITES: (id: number) => `/users/${id}/with-favourites`,
     FAVOURITES: (id: number) => `/users/${id}/favourites`,

@@ -300,6 +300,11 @@ services:
       - ConnectionStrings__OrderDB=Host=orderdb;Port=5432;Database=orderdb;Username=order_user;Password=order_password
       - Redis__Host=redis
       - Redis__Port=6379
+      - Jwt__Key=uHadsdaHHHsjsasdsadasdidjadajdjadk3123131h
+      - Jwt__Issuer=flower-shop
+      - Jwt__Audience=flower-shop-users
+      - JWT_SECRET=uHadsdaHHHsjsasdsadasdidjadajdjadk3123131h
+      - ENV_TOKEN=ya29.asdgv_sadashldkjhasdiufrekjhkjhdaksjhduHOIUhiluGHiglUUU
     depends_on:
       orderdb:
         condition: service_healthy

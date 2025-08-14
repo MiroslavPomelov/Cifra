@@ -9,11 +9,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
+using order_service.Guards;
 
 namespace order_service.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    // [Authorize] // Отключено
+    // [ServiceFilter(typeof(ServiceAuthGuard))] // Отключено
     public class OrderController : ControllerBase
     {
         private readonly OrderDbContext _context;

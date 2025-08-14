@@ -113,7 +113,10 @@ export class AppController {
     delete headers['content-length'];
     delete headers['Content-Length'];
     
+    // Логируем заголовки для отладки
     this.logger.debug(`API-GATEWAY: ${serviceName} - ${method.toUpperCase()} ${url}`);
+    this.logger.debug(`API-GATEWAY: Authorization header: ${headers['authorization']}`);
+    this.logger.debug(`API-GATEWAY: All headers: ${JSON.stringify(headers, null, 2)}`);
     
     try {
       const response = await axios({

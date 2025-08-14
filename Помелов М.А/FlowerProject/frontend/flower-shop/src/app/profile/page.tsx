@@ -40,6 +40,16 @@ interface UserData {
   address?: string;
 }
 
+// Интерфейс для данных, возвращаемых API (с полем city)
+interface ApiUserData {
+  id: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  city?: string;
+}
+
 const ProfilePage: React.FC = () => {
   const router = useRouter();
   const toast = useToast();
@@ -104,37 +114,19 @@ const ProfilePage: React.FC = () => {
         firstName: payload.firstName || '',
         lastName: payload.lastName || '',
         phone: payload.phone || '',
-        address: payload.address || '',
+        address: payload.city || '', // В JWT может быть city, маппим в address
       };
 
-      // Если есть ID пользователя, пытаемся загрузить полный профиль через API
+      // Если есть ID пользователя, загружаем полный профиль через API
       if (user.id) {
-        try {
-          const token = localStorage.getItem('token');
-          if (token) {
-            const profileData = await apiService.getUserProfile(user.id, token);
-            // Обновляем данные из API
-            user.firstName = profileData.firstName;
-            user.lastName = profileData.lastName;
-            user.phone = profileData.phone;
-            user.address = profileData.address;
-          }
-        } catch (apiError) {
-          console.warn('Не удалось загрузить профиль через API, проверяем локальные данные:', apiError);
-          
-          // Проверяем локальные данные профиля
-          try {
-            const localProfile = localStorage.getItem('userProfile');
-            if (localProfile) {
-              const parsedProfile = JSON.parse(localProfile);
-              user.firstName = parsedProfile.firstName || user.firstName;
-              user.lastName = parsedProfile.lastName || user.lastName;
-              user.phone = parsedProfile.phone || user.phone;
-              user.address = parsedProfile.address || user.address;
-            }
-          } catch (localError) {
-            console.warn('Не удалось загрузить локальные данные профиля:', localError);
-          }
+        const token = localStorage.getItem('token');
+        if (token) {
+          const profileData = await apiService.getUserProfile(user.id, token);
+          // Обновляем данные из API
+          user.firstName = profileData.firstName;
+          user.lastName = profileData.lastName;
+          user.phone = profileData.phone;
+          user.address = profileData.city; // API возвращает city, маппим в address
         }
       }
       
@@ -142,19 +134,25 @@ const ProfilePage: React.FC = () => {
       setIsLoading(false);
     } catch (error) {
       console.error('Ошибка загрузки данных пользователя:', error);
-      setError('Не удалось загрузить данные пользователя');
+      setError('Не удалось загрузить данные пользователя. Проверьте подключение к интернету и попробуйте еще раз.');
       setIsLoading(false);
     }
   };
 
-  const handleProfileUpdate = async (updatedData: Partial<UserData>) => {
+  const handleProfileUpdate = async (updatedData: Partial<ApiUserData>) => {
     try {
+      // Преобразуем данные из API (city -> address) для локального состояния
+      const transformedData = {
+        ...updatedData,
+        address: updatedData.city, // API возвращает city, маппим в address
+      };
+      
       // Обновляем локальное состояние с данными, возвращенными из API
-      setUserData(prev => prev ? { ...prev, ...updatedData } : null);
+      setUserData(prev => prev ? { ...prev, ...transformedData } : null);
       
       toast({
         title: 'Профиль обновлен',
-        description: 'Ваши данные успешно сохранены',
+        description: 'Ваши данные успешно сохранены на сервере',
         status: 'success',
         duration: 3000,
         isClosable: true,

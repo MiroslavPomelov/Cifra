@@ -31,7 +31,7 @@ interface UserData {
 
 interface UserProfileFormProps {
   userData: UserData;
-  onUpdate: (data: Partial<UserData>) => Promise<void>;
+  onUpdate: (data: Partial<{ firstName: string; lastName: string; phone?: string; city?: string }>) => Promise<void>;
 }
 
 const UserProfileForm: React.FC<UserProfileFormProps> = ({ userData, onUpdate }) => {
@@ -108,70 +108,41 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ userData, onUpdate })
         throw new Error('Токен не найден');
       }
 
-      // Пытаемся обновить данные через API
-      try {
-        const updatedProfile = await apiService.updateUserProfile(
-          userData.id,
-          {
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            phone: formData.phone,
-            address: formData.address,
-          },
-          token
-        );
-
-        // Вызываем callback для обновления родительского компонента
-        await onUpdate(updatedProfile);
-        setIsEditing(false);
-      } catch (apiError) {
-        console.warn('API недоступен, сохраняем локально:', apiError);
-        
-        // Fallback: сохраняем данные локально
-        const localProfile = {
+      // Обновляем данные через API
+      const updatedProfile = await apiService.updateUserProfile(
+        userData.id,
+        {
           firstName: formData.firstName,
           lastName: formData.lastName,
           phone: formData.phone,
-          address: formData.address,
-        };
+          city: formData.address, // Преобразуем address в city для API
+        },
+        token
+      );
 
-        // Обновляем JWT токен с новыми данными (если возможно)
-        try {
-          const payload = parseJwt(token);
-          if (payload) {
-            const updatedPayload = {
-              ...payload,
-              firstName: formData.firstName,
-              lastName: formData.lastName,
-              phone: formData.phone,
-              address: formData.address,
-            };
-            
-            // В реальном приложении здесь нужно было бы обновить токен через API
-            // Пока просто сохраняем данные локально
-            localStorage.setItem('userProfile', JSON.stringify(localProfile));
-          }
-        } catch (jwtError) {
-          console.warn('Не удалось обновить JWT:', jwtError);
-        }
-
-        // Вызываем callback с локальными данными
-        await onUpdate(localProfile);
-        setIsEditing(false);
-
-        toast({
-          title: 'Данные сохранены локально',
-          description: 'API недоступен. Данные сохранены в браузере.',
-          status: 'warning',
-          duration: 4000,
-          isClosable: true,
-        });
-      }
+      // Вызываем callback для обновления родительского компонента
+      await onUpdate({
+        firstName: updatedProfile.firstName,
+        lastName: updatedProfile.lastName,
+        phone: updatedProfile.phone,
+        city: updatedProfile.city,
+      });
+      
+      setIsEditing(false);
+      
+      toast({
+        title: 'Профиль обновлен',
+        description: 'Ваши данные успешно сохранены на сервере',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      
     } catch (error) {
       console.error('Ошибка сохранения:', error);
       toast({
         title: 'Ошибка',
-        description: 'Не удалось сохранить изменения. Проверьте подключение к интернету.',
+        description: 'Не удалось сохранить изменения. Проверьте подключение к интернету и попробуйте еще раз.',
         status: 'error',
         duration: 3000,
         isClosable: true,

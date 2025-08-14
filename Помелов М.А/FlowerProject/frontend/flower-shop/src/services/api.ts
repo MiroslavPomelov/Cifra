@@ -71,7 +71,7 @@ export interface UserProfileData {
   firstName: string;
   lastName: string;
   phone?: string;
-  address?: string;
+  city?: string;
 }
 
 export interface UserOrder {
@@ -148,7 +148,7 @@ class ApiService {
   async updateProduct(id: number, data: Partial<CreateProductPayload>): Promise<Product> {
     try {
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-      const response = await axios.put(`${this.baseURL}/products/${id}`, data, {
+      const response = await axios.patch(`${this.baseURL}/products/${id}`, data, {
         headers: {
           Authorization: token ? `Bearer ${token}` : '',
         },
@@ -185,12 +185,87 @@ class ApiService {
     }
   }
 
+  async getAllShops(token: string): Promise<Shop[]> {
+    try {
+      const response = await axios.get(`${this.baseURL}/shops`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching shops:', error);
+      throw error;
+    }
+  }
+
+  async createShop(data: Partial<Shop>, token: string): Promise<Shop> {
+    try {
+      const response = await axios.post(`${this.baseURL}/shops`, data, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error creating shop:', error);
+      throw error;
+    }
+  }
+
   async getShop(id: number): Promise<Shop> {
     try {
       const response = await axios.get(`${this.baseURL}/shops/${id}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching shop:', error);
+      throw error;
+    }
+  }
+
+  async getShopById(shopId: number, token: string): Promise<Shop> {
+    try {
+      const response = await axios.get(`${this.baseURL}/shops/${shopId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching shop:', error);
+      throw error;
+    }
+  }
+
+  async updateShop(id: number, data: Partial<Shop>, token: string): Promise<Shop> {
+    try {
+      const response = await axios.patch(`${this.baseURL}/shops/${id}`, data, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error updating shop:', error);
+      throw error;
+    }
+  }
+
+  async deleteShop(id: number, token: string): Promise<{ message: string }> {
+    try {
+      await axios.delete(`${this.baseURL}/shops/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return { message: 'Shop deleted successfully' };
+    } catch (error) {
+      console.error('Error deleting shop:', error);
       throw error;
     }
   }
@@ -244,7 +319,7 @@ class ApiService {
   // User profile methods
   async getUserProfile(userId: number, token: string): Promise<UserProfileData> {
     try {
-      const response = await axios.get(`${this.baseURL}/users/${userId}/profile`, {
+      const response = await axios.get(`${this.baseURL}/users/${userId}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -259,7 +334,7 @@ class ApiService {
 
   async updateUserProfile(userId: number, data: UserProfileData, token: string): Promise<UserProfileData> {
     try {
-      const response = await axios.put(`${this.baseURL}/users/${userId}/profile`, data, {
+      const response = await axios.patch(`${this.baseURL}/users/${userId}`, data, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -336,12 +411,27 @@ class ApiService {
   // Get user orders
   async getUserOrders(userId: number, token: string): Promise<UserOrder[]> {
     try {
+      // Отладочная информация
+      console.log('🔍 API Service: getUserOrders');
+      console.log('URL:', `${this.baseURL}/order/user/${userId}`);
+      console.log('Token length:', token.length);
+      console.log('Token starts with:', token.substring(0, 20));
+      console.log('Token ends with:', token.substring(token.length - 20));
+      console.log('Token contains dots:', token.includes('.'));
+      console.log('Token parts count:', token.split('.').length);
+      
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      };
+      
+      console.log('📤 Headers:', headers);
+      
       const response = await axios.get(`${this.baseURL}/order/user/${userId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
+        headers,
       });
+      
+      console.log('✅ Response received:', response.status);
       
       // Преобразуем ответ от order-service в формат UserOrder
       return response.data.map((order: any) => ({
@@ -361,7 +451,45 @@ class ApiService {
         })),
       }));
     } catch (error) {
-      console.error('Error fetching user orders:', error);
+      console.error('❌ Error fetching user orders:', error);
+      throw error;
+    }
+  }
+
+  // Update order status
+  async updateOrderStatus(orderId: string, data: { status: string }, token: string): Promise<{ message: string }> {
+    try {
+      const response = await axios.put(`${this.baseURL}/order/${orderId}/status`, data, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      return {
+        message: 'Статус заказа обновлен успешно'
+      };
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      throw error;
+    }
+  }
+
+  // Delete order
+  async deleteOrder(orderId: string, token: string): Promise<{ message: string }> {
+    try {
+      await axios.delete(`${this.baseURL}/order/${orderId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      return {
+        message: 'Заказ удален успешно'
+      };
+    } catch (error) {
+      console.error('Error deleting order:', error);
       throw error;
     }
   }
@@ -412,6 +540,82 @@ class ApiService {
       return response.data;
     } catch (error) {
       console.error('Error validating card:', error);
+      throw error;
+    }
+  }
+
+  // Favourite products methods
+  async getFavouriteProducts(userId: number, token: string): Promise<any[]> {
+    try {
+      const response = await axios.get(`${this.baseURL}/users/${userId}/favourites`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching favourite products:', error);
+      throw error;
+    }
+  }
+
+  async addFavouriteProduct(userId: number, data: any, token: string): Promise<any> {
+    try {
+      const response = await axios.post(`${this.baseURL}/users/${userId}/favourites`, data, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error adding favourite product:', error);
+      throw error;
+    }
+  }
+
+  async updateFavouriteProduct(userId: number, favouriteId: number, data: any, token: string): Promise<any> {
+    try {
+      const response = await axios.patch(`${this.baseURL}/users/${userId}/favourites/${favouriteId}`, data, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error updating favourite product:', error);
+      throw error;
+    }
+  }
+
+  async removeFavouriteProduct(userId: number, favouriteId: number, token: string): Promise<{ message: string }> {
+    try {
+      await axios.delete(`${this.baseURL}/users/${userId}/favourites/${favouriteId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return { message: 'Product removed from favourites' };
+    } catch (error) {
+      console.error('Error removing favourite product:', error);
+      throw error;
+    }
+  }
+
+  async checkIfFavourite(userId: number, productId: number, token: string): Promise<{ isFavourite: boolean }> {
+    try {
+      const response = await axios.get(`${this.baseURL}/users/${userId}/favourites/check/${productId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error checking if product is favourite:', error);
       throw error;
     }
   }
