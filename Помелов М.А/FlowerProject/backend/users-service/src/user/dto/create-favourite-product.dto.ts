@@ -1,4 +1,5 @@
-import { IsNumber, IsString, IsOptional, IsDecimal } from 'class-validator';
+import { IsNumber, IsString, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateFavouriteProductDto {
     @IsNumber()
@@ -12,7 +13,8 @@ export class CreateFavouriteProductDto {
     productDescription?: string;
 
     @IsOptional()
-    @IsDecimal()
+    @Type(() => Number)
+    @IsNumber()
     productPrice?: number;
 
     @IsOptional()

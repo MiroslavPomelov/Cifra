@@ -216,19 +216,19 @@ export const useFavourites = () => {
       console.log('🔍 addToFavourites - favouriteData:', favouriteData);
       console.log('🔍 addToFavourites - API call starting...');
 
-      const result = await apiService.addFavouriteProduct(userId, favouriteData, token);
+      const created = await apiService.addFavouriteProduct(userId, favouriteData, token);
       
-      console.log('🔍 addToFavourites - API result:', result);
+      console.log('🔍 addToFavourites - API result:', created);
       
-      // Обновляем локальное состояние
+      // Обновляем локальное состояние, используя ID с сервера
       const newFavourite: FavouriteProduct = {
-        id: Date.now(), // Временный ID
-        productId: product.id,
-        productName: product.name,
-        productDescription: product.description || '',
-        productPrice: productPrice,
-        productImage: product.imageUrl || '',
-        addedDate: new Date().toISOString(),
+        id: created.id,
+        productId: created.productId ?? product.id,
+        productName: created.productName ?? product.name,
+        productDescription: created.productDescription ?? (product.description || ''),
+        productPrice: typeof created.productPrice === 'number' ? created.productPrice : productPrice,
+        productImage: created.productImage ?? (product.imageUrl || ''),
+        addedDate: created.addedDate ?? new Date().toISOString(),
       };
       
       setFavouriteProducts(prev => [...prev, newFavourite]);
@@ -243,8 +243,21 @@ export const useFavourites = () => {
       });
       
       return true;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Ошибка добавления в избранное:', error);
+      // Обрабатываем повторное добавление
+      const status = error?.response?.status;
+      if (status === 409) {
+        toast({
+          title: 'Уже в избранном',
+          description: 'Этот товар уже добавлен в избранное',
+          status: 'info',
+          duration: 2500,
+          isClosable: true,
+          position: 'top-right',
+        });
+        return true;
+      }
       toast({
         title: 'Ошибка',
         description: 'Не удалось добавить товар в избранное',

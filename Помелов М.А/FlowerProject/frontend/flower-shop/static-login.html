@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❃ Flower Shop - Вход / Регистрация</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        /* Анимированный фон */
+        .flower-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .flower {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .flower:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .flower:nth-child(2) {
+            top: 20%;
+            right: 15%;
+            animation-delay: 8s;
+        }
+
+        .flower:nth-child(3) {
+            bottom: 30%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        .flower:nth-child(4) {
+            bottom: 20%;
+            right: 10%;
+            animation-delay: 12s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+            25% { transform: translateY(-20px) rotate(90deg) scale(1.1); }
+            50% { transform: translateY(-40px) rotate(180deg) scale(0.9); }
+            75% { transform: translateY(-20px) rotate(270deg) scale(1.1); }
+        }
+
+        /* Падающие лепестки */
+        .petal {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.6), transparent);
+            border-radius: 50%;
+            animation: fall 15s infinite linear;
+        }
+
+        .petal:nth-child(5) { left: 10%; animation-delay: 0s; }
+        .petal:nth-child(6) { left: 20%; animation-delay: 2s; }
+        .petal:nth-child(7) { left: 30%; animation-delay: 4s; }
+        .petal:nth-child(8) { left: 40%; animation-delay: 6s; }
+        .petal:nth-child(9) { left: 50%; animation-delay: 8s; }
+        .petal:nth-child(10) { left: 60%; animation-delay: 10s; }
+        .petal:nth-child(11) { left: 70%; animation-delay: 12s; }
+        .petal:nth-child(12) { left: 80%; animation-delay: 14s; }
+
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Контейнер */
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 400px;
+            padding: 0 20px;
+        }
+
+        /* Форма */
+        .form-container {
+            background: rgba(255, 255, 255, 0.01);
+            backdrop-filter: blur(3.5px);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 1rem;
+            padding: 0.8px;
+            background: linear-gradient(49deg, #830202ff, #8b0f8fff, #48038dff, #fd75c4ff);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            z-index: 0;
+        }
+
+        .form-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Логотип */
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-text {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Переключатель режимов */
+        .mode-switcher {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            padding: 0.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            background: transparent;
+            color: white;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(45deg, #ec4899, #8b5cf6);
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+        }
+
+        /* Формы */
+        .form {
+            display: none;
+        }
+
+        .form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: white;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #ec4899;
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox {
+            width: 1.2rem;
+            height: 1.2rem;
+            accent-color: #ec4899;
+        }
+
+        .checkbox-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+        }
+
+        /* Кнопки */
+        .btn {
+            width: 100%;
+            padding: 0.875rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ec4899, #8b5cf6);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #db2777, #7c3aed);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin-top: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Сообщения */
+        .message {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .message.success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+        .message.warning {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #f59e0b;
+        }
+
+        /* Спиннер */
+        .spinner {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Демо данные */
+        .demo-info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: #3b82f6;
+            font-size: 0.875rem;
+        }
+
+        .demo-info h4 {
+            margin-bottom: 0.5rem;
+            color: #60a5fa;
+        }
+
+        .demo-info ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .demo-info li {
+            margin-bottom: 0.25rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .demo-info li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #60a5fa;
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .form-container {
+                padding: 1.5rem;
+            }
+
+            .logo-text {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Анимированный фон -->
+    <div class="flower-background">
+        <div class="flower">🌸</div>
+        <div class="flower">🌺</div>
+        <div class="flower">🌹</div>
+        <div class="flower">🌷</div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+    </div>
+
+    <!-- Основной контейнер -->
+    <div class="container">
+        <div class="form-container fade-in">
+            <div class="form-content">
+                <!-- Логотип -->
+                <div class="logo">
+                    <div class="logo-text">❃ Flower Shop</div>
+                </div>
+
+                <!-- Демо информация -->
+                <div class="demo-info">
+                    <h4>🎯 Демонстрационные данные:</h4>
+                    <ul>
+                        <li><strong>Пользователь:</strong> user@demo.com / password123</li>
+                        <li><strong>Магазин:</strong> shop@demo.com / password123</li>
+                        <li>Все формы работают в демо-режиме</li>
+                        <li>Данные сохраняются в localStorage</li>
+                    </ul>
+                </div>
+
+                <!-- Переключатель режимов -->
+                <div class="mode-switcher">
+                    <button class="mode-btn active" onclick="switchMode('user')">Пользователь</button>
+                    <button class="mode-btn" onclick="switchMode('shop')">Магазин</button>
+                </div>
+
+                <!-- Форма входа -->
+                <form id="loginForm" class="form active">
+                    <h2 style="text-align: center; margin-bottom: 1.5rem; color: white;">Вход в систему</h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="loginEmail" placeholder="Введите ваш email" value="user@demo.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Пароль</label>
+                        <div class="password-container">
+                            <input type="password" class="form-input" id="loginPassword" placeholder="Введите пароль" value="password123">
+                            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">👁️</button>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="handleLogin()">
+                        <span id="loginBtnText">Войти</span>
+                    </button>
+
+                    <button type="button" class="btn btn-secondary" onclick="switchToRegister()">
+                        Нет аккаунта? Зарегистрироваться
+                    </button>
+                </form>
+
+                <!-- Форма регистрации -->
+                <form id="registerForm" class="form">
+                    <h2 style="text-align: center; margin-bottom: 1.5rem; color: white;">Регистрация</h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="registerEmail" placeholder="Введите ваш email">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Пароль</label>
+                        <div class="password-container">
+                            <input type="password" class="form-input" id="registerPassword" placeholder="Введите пароль">
+                            <button type="button" class="password-toggle" onclick="togglePassword('registerPassword')">👁️</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Подтвердите пароль</label>
+                        <div class="password-container">
+                            <input type="password" class="form-input" id="confirmPassword" placeholder="Повторите пароль">
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">👁️</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Имя</label>
+                        <input type="text" class="form-input" id="firstName" placeholder="Введите ваше имя">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Фамилия</label>
+                        <input type="text" class="form-input" id="lastName" placeholder="Введите вашу фамилию">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Дата рождения</label>
+                        <input type="date" class="form-input" id="birthDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Телефон</label>
+                        <input type="tel" class="form-input" id="phone" placeholder="+7 (999) 123-45-67">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Город</label>
+                        <input type="text" class="form-input" id="city" placeholder="Введите ваш город">
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" class="checkbox" id="personalData" checked>
+                        <label class="checkbox-label" for="personalData">
+                            Я согласен на обработку персональных данных
+                        </label>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="handleRegister()">
+                        <span id="registerBtnText">Зарегистрироваться</span>
+                    </button>
+
+                    <button type="button" class="btn btn-secondary" onclick="switchToLogin()">
+                        Уже есть аккаунт? Войти
+                    </button>
+                </form>
+
+                <!-- Форма верификации -->
+                <form id="verifyForm" class="form">
+                    <h2 style="text-align: center; margin-bottom: 1.5rem; color: white;">Подтверждение email</h2>
+                    
+                    <div class="message success">
+                        Код подтверждения отправлен на ваш email. Проверьте почту и введите код.
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Код подтверждения</label>
+                        <input type="text" class="form-input" id="verifyCode" placeholder="Введите 6-значный код" maxlength="6">
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="handleVerify()">
+                        <span id="verifyBtnText">Подтвердить</span>
+                    </button>
+
+                    <button type="button" class="btn btn-secondary" onclick="resendCode()">
+                        Отправить код повторно
+                    </button>
+                </form>
+
+                <!-- Кнопка возврата на главную -->
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="static-home.html" style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem;">
+                        ← Вернуться на главную
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'user';
+        let currentForm = 'login';
+        let isLoading = false;
+
+        // Переключение между режимами пользователя и магазина
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // Обновляем активные кнопки
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Обновляем заголовки форм
+            const titles = document.querySelectorAll('.form h2');
+            if (mode === 'shop') {
+                titles[0].textContent = 'Вход для магазина';
+                titles[1].textContent = 'Регистрация магазина';
+                titles[2].textContent = 'Подтверждение магазина';
+            } else {
+                titles[0].textContent = 'Вход в систему';
+                titles[1].textContent = 'Регистрация';
+                titles[2].textContent = 'Подтверждение email';
+            }
+            
+            // Очищаем поля
+            clearForms();
+        }
+
+        // Переключение между формами
+        function switchToRegister() {
+            showForm('register');
+        }
+
+        function switchToLogin() {
+            showForm('login');
+        }
+
+        function showForm(formName) {
+            currentForm = formName;
+            
+            // Скрываем все формы
+            document.querySelectorAll('.form').forEach(form => {
+                form.classList.remove('active');
+            });
+            
+            // Показываем нужную форму
+            document.getElementById(formName + 'Form').classList.add('active');
+            
+            // Очищаем сообщения
+            clearMessages();
+        }
+
+        // Обработка входа
+        function handleLogin() {
+            if (isLoading) return;
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showMessage('Пожалуйста, заполните все поля', 'error');
+                return;
+            }
+            
+            setLoading(true, 'login');
+            
+            // Имитация запроса к серверу
+            setTimeout(() => {
+                if (email === 'user@demo.com' && password === 'password123') {
+                    showMessage('Успешный вход! Добро пожаловать в мир цветов!', 'success');
+                    
+                    // Сохраняем данные в localStorage
+                    localStorage.setItem('demo_user', JSON.stringify({
+                        email: email,
+                        role: currentMode,
+                        token: 'demo_token_' + Date.now()
+                    }));
+                    
+                    setTimeout(() => {
+                        window.location.href = 'static-home.html';
+                    }, 2000);
+                } else if (email === 'shop@demo.com' && password === 'password123') {
+                    showMessage('Успешный вход для магазина!', 'success');
+                    
+                    localStorage.setItem('demo_shop', JSON.stringify({
+                        email: email,
+                        role: 'shop',
+                        token: 'demo_shop_token_' + Date.now()
+                    }));
+                    
+                    setTimeout(() => {
+                        window.location.href = 'static-home.html';
+                    }, 2000);
+                } else {
+                    showMessage('Неверный email или пароль', 'error');
+                }
+                
+                setLoading(false, 'login');
+            }, 1500);
+        }
+
+        // Обработка регистрации
+        function handleRegister() {
+            if (isLoading) return;
+            
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const birthDate = document.getElementById('birthDate').value;
+            const phone = document.getElementById('phone').value;
+            const city = document.getElementById('city').value;
+            const personalData = document.getElementById('personalData').checked;
+            
+            if (!email || !password || !confirmPassword || !firstName || !lastName || !birthDate || !phone || !city) {
+                showMessage('Пожалуйста, заполните все обязательные поля', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showMessage('Пароли не совпадают', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage('Пароль должен содержать минимум 6 символов', 'error');
+                return;
+            }
+            
+            if (!personalData) {
+                showMessage('Необходимо согласие на обработку персональных данных', 'error');
+                return;
+            }
+            
+            setLoading(true, 'register');
+            
+            // Имитация отправки кода подтверждения
+            setTimeout(() => {
+                showMessage('Код подтверждения отправлен на ваш email!', 'success');
+                showForm('verify');
+                setLoading(false, 'register');
+            }, 1500);
+        }
+
+        // Обработка верификации
+        function handleVerify() {
+            if (isLoading) return;
+            
+            const code = document.getElementById('verifyCode').value;
+            
+            if (!code || code.length !== 6) {
+                showMessage('Введите 6-значный код подтверждения', 'error');
+                return;
+            }
+            
+            setLoading(true, 'verify');
+            
+            // Имитация проверки кода
+            setTimeout(() => {
+                if (code === '123456') {
+                    showMessage('Регистрация успешно завершена! Добро пожаловать!', 'success');
+                    
+                    // Сохраняем данные пользователя
+                    const userData = {
+                        email: document.getElementById('registerEmail').value,
+                        firstName: document.getElementById('firstName').value,
+                        lastName: document.getElementById('lastName').value,
+                        role: currentMode,
+                        token: 'demo_new_user_token_' + Date.now()
+                    };
+                    
+                    localStorage.setItem('demo_user', JSON.stringify(userData));
+                    
+                    setTimeout(() => {
+                        window.location.href = 'static-home.html';
+                    }, 2000);
+                } else {
+                    showMessage('Неверный код подтверждения', 'error');
+                }
+                
+                setLoading(false, 'verify');
+            }, 1500);
+        }
+
+        // Повторная отправка кода
+        function resendCode() {
+            showMessage('Код подтверждения отправлен повторно', 'success');
+        }
+
+        // Показать сообщение
+        function showMessage(text, type) {
+            clearMessages();
+            
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            
+            const activeForm = document.querySelector('.form.active');
+            activeForm.insertBefore(message, activeForm.firstChild);
+        }
+
+        // Очистить сообщения
+        function clearMessages() {
+            document.querySelectorAll('.message').forEach(msg => msg.remove());
+        }
+
+        // Установить состояние загрузки
+        function setLoading(loading, formType) {
+            isLoading = loading;
+            const btnText = document.getElementById(formType + 'BtnText');
+            const btn = btnText.parentElement;
+            
+            if (loading) {
+                btn.disabled = true;
+                btnText.innerHTML = '<span class="spinner"></span> Загрузка...';
+            } else {
+                btn.disabled = false;
+                if (formType === 'login') btnText.textContent = 'Войти';
+                else if (formType === 'register') btnText.textContent = 'Зарегистрироваться';
+                else if (formType === 'verify') btnText.textContent = 'Подтвердить';
+            }
+        }
+
+        // Переключение видимости пароля
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const toggle = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggle.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                toggle.textContent = '👁️';
+            }
+        }
+
+        // Очистка форм
+        function clearForms() {
+            document.querySelectorAll('.form-input').forEach(input => {
+                input.value = '';
+            });
+            document.getElementById('personalData').checked = true;
+            clearMessages();
+        }
+
+        // Проверка авторизации при загрузке
+        window.addEventListener('load', function() {
+            const user = localStorage.getItem('demo_user');
+            const shop = localStorage.getItem('demo_shop');
+            
+            if (user || shop) {
+                showMessage('Вы уже авторизованы! Перенаправляем на главную...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'static-home.html';
+                }, 2000);
+            }
+        });
+
+        // Обработка Enter в полях ввода
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                if (currentForm === 'login') {
+                    handleLogin();
+                } else if (currentForm === 'register') {
+                    handleRegister();
+                } else if (currentForm === 'verify') {
+                    handleVerify();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
