@@ -2,7 +2,7 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import OptimizedAuthForms from '../components/OptimizedAuthForms';
 
-// Кастомная тема для цветочного магазина
+// Кастом цветов для магаз
 const theme = extendTheme({
   colors: {
     brand: {

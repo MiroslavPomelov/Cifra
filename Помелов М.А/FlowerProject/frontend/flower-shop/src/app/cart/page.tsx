@@ -47,10 +47,8 @@ const CartPage: React.FC = () => {
   const { cartItems, updateQuantity, removeFromCart, clearCart, getTotalAmount } = useCart();
   const [loading, setLoading] = useState(false);
 
-  // Расчет общей суммы
   const totalAmount = getTotalAmount();
 
-  // Переход к оформлению заказа
   const proceedToCheckout = () => {
     if (cartItems.length === 0) {
       toast({
@@ -63,7 +61,6 @@ const CartPage: React.FC = () => {
       return;
     }
     
-    // Проверяем авторизацию пользователя
     const token = localStorage.getItem('token');
     if (!token) {
       toast({
@@ -73,18 +70,14 @@ const CartPage: React.FC = () => {
         duration: 4000,
         isClosable: true,
       });
-      
-      // Сохраняем текущую корзину и перенаправляем на страницу входа
       localStorage.setItem('pendingCheckout', 'true');
       router.push('/login');
       return;
     }
     
-    // Переход на страницу оформления заказа
     router.push('/checkout');
   };
 
-  // Добавление тестовых товаров (для демонстрации)
   const addSampleItems = () => {
     const sampleItems: CartItem[] = [
       {
@@ -126,7 +119,6 @@ const CartPage: React.FC = () => {
   return (
     <Box minH="100vh" bg="gray.50">
       <Container maxW="6xl" py={8}>
-        {/* Заголовок и навигация */}
         <VStack spacing={6} align="stretch">
           <HStack justify="space-between" align="center">
             <HStack spacing={4}>
@@ -152,8 +144,6 @@ const CartPage: React.FC = () => {
               🛒 Корзина покупок
             </Heading>
           </HStack>
-
-          {/* Демо-кнопка для добавления тестовых товаров */}
           {cartItems.length === 0 && (
             <Alert status="info" borderRadius="md">
               <AlertIcon />
@@ -174,10 +164,8 @@ const CartPage: React.FC = () => {
             </Alert>
           )}
 
-          {/* Содержимое корзины */}
           {cartItems.length > 0 ? (
             <HStack spacing={8} align="start">
-              {/* Список товаров */}
               <VStack spacing={4} flex={1} align="stretch">
                 <HStack justify="space-between" align="center">
                   <Text fontSize="lg" fontWeight="semibold" color="gray.700">
@@ -260,7 +248,6 @@ const CartPage: React.FC = () => {
                 ))}
               </VStack>
 
-              {/* Итого и оформление заказа */}
               <Card w="350px" position="sticky" top="20px">
                 <CardHeader>
                   <Text fontSize="lg" fontWeight="semibold" color="gray.700">

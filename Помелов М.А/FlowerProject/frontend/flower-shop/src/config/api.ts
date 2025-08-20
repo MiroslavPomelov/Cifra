@@ -2,19 +2,19 @@
 export const API_CONFIG = {
   // Это база
   BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:80',
-  
+
   // Auth 
   AUTH: {
     LOGIN: '/auth/login',
     REGISTRATION: '/auth/registration',
     VERIFY: '/auth/verify',
     VALIDATE_TOKEN: '/auth/validatetoken',
-    // Эндпоинты для магазинов
+    // magaz
     SHOP_LOGIN: '/auth/shops/login',
     SHOP_REGISTRATION: '/auth/shops/registration',
     SHOP_VERIFY: '/auth/shops/verify',
   },
-  
+
   // Users 
   USERS: {
     BASE: '/users',
@@ -25,23 +25,23 @@ export const API_CONFIG = {
     FAVOURITES: (id: number) => `/users/${id}/favourites`,
     FAVOURITES_CHECK: (userId: number, productId: number) => `/users/${userId}/favourites/check/${productId}`,
   },
-  
+
   // Shops 
   SHOPS: {
     BASE: '/shops',
   },
-  
+
   // Products 
   PRODUCTS: {
     BASE: '/products',
   },
-  
+
   // Payment 
   PAYMENT: {
     PROCESS: '/payment/process',
     STATUS: (id: string) => `/payment/status/${id}`,
   },
-  
+
   // Order 
   ORDER: {
     BASE: '/order',
@@ -58,10 +58,10 @@ export const getAuthHeaders = (token?: string) => {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
   };
-  
+
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
-  
+
   return headers;
 }; 

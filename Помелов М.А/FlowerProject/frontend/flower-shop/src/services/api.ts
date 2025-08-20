@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { API_CONFIG } from '../config/api';
 
-// Interfaces
+// Interfac
 export interface Product {
   id: number;
   name: string;
@@ -30,7 +30,7 @@ export interface ProductWithShop extends Product {
   shop: Shop;
 }
 
-// Shop registration interfaces
+// Shop registration interfac
 export interface ShopRegistrationData {
   email: string;
   password: string;
@@ -106,7 +106,6 @@ class ApiService {
     const response = await axios.post(`${this.baseURL}/shops/upload-image`, form, {
       headers: {
         'Authorization': `Bearer ${token}`,
-        // Не указываем Content-Type, пусть axios сам выставит boundary
       },
     });
     return response.data;
@@ -286,7 +285,6 @@ class ApiService {
   // Shop Authentication
   async registerShop(data: ShopRegistrationData): Promise<{ message: string }> {
     try {
-      // Отправляем только разрешённые полям DTO auth-service (email, password, name, address)
       const payload = {
         email: data.email,
         password: data.password,
@@ -303,7 +301,6 @@ class ApiService {
 
   async verifyShop(data: ShopVerificationData): Promise<AuthResponse> {
     try {
-      // Отправляем только разрешённые поля (email, password, name, address, code)
       const payload = {
         email: data.email,
         password: data.password,
@@ -329,7 +326,7 @@ class ApiService {
     }
   }
 
-  // User profile methods
+  // User profile 
   async getUserProfile(userId: number, token: string): Promise<UserProfileData> {
     try {
       const response = await axios.get(`${this.baseURL}/users/${userId}`, {
@@ -362,7 +359,7 @@ class ApiService {
 
 
 
-  // Create order method
+  // Create order
   async createOrder(orderData: {
     userId: number;
     items: Array<{
@@ -383,7 +380,6 @@ class ApiService {
     paymentMethod: string;
   }, token: string): Promise<{ orderId: string; message: string }> {
     try {
-      // Преобразуем данные для order-service
       const orderRequest = {
         userId: orderData.userId,
         shopId: orderData.items[0]?.shopId || 1,
@@ -424,7 +420,6 @@ class ApiService {
   // Get user orders
   async getUserOrders(userId: number, token: string): Promise<UserOrder[]> {
     try {
-      // Отладочная информация
       console.log('🔍 API Service: getUserOrders');
       console.log('URL:', `${this.baseURL}/order/user/${userId}`);
       console.log('Token length:', token.length);
@@ -454,7 +449,7 @@ class ApiService {
         totalAmount: order.totalAmount,
         orderDate: order.createdAt,
         deliveryAddress: order.deliveryAddress,
-        shopName: 'Цветочный магазин', // Можно получать из shop-service
+        shopName: 'Цветочный магазин', 
         items: order.orderItems.map((item: any) => ({
           id: item.productId,
           productName: item.productName,
@@ -469,7 +464,6 @@ class ApiService {
     }
   }
 
-  // Update order status
   async updateOrderStatus(orderId: string, data: { status: string }, token: string): Promise<{ message: string }> {
     try {
       const response = await axios.put(`${this.baseURL}/order/${orderId}/status`, data, {
@@ -488,7 +482,6 @@ class ApiService {
     }
   }
 
-  // Delete order
   async deleteOrder(orderId: string, token: string): Promise<{ message: string }> {
     try {
       await axios.delete(`${this.baseURL}/order/${orderId}`, {
@@ -557,7 +550,6 @@ class ApiService {
     }
   }
 
-  // Favourite products methods
   async getFavouriteProducts(userId: number, token: string): Promise<any[]> {
     try {
       console.log('🔍 API Service - getFavouriteProducts - URL:', `${this.baseURL}/users/${userId}/favourites`);
@@ -675,5 +667,4 @@ class ApiService {
   }
 }
 
-// Export singleton instance
 export const apiService = new ApiService();

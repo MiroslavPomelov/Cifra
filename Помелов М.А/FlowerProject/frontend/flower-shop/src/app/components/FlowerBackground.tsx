@@ -8,7 +8,7 @@ const FlowerBackground: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
   const [isReducedMotion, setIsReducedMotion] = useState(false);
 
-  // Проверяем предпочтения пользователя по анимации
+
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setIsReducedMotion(mediaQuery.matches);
@@ -19,27 +19,27 @@ const FlowerBackground: React.FC = () => {
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
-  // Оптимизированные цветы - меньше анимаций
+
   const flowers = useMemo(() => [
     { id: 1, emoji: '🌸', delay: 0, duration: 25, initialX: 0.1, initialY: 0.2, targetX: 0.8, targetY: 0.7 },
     { id: 2, emoji: '🌺', delay: 8, duration: 20, initialX: 0.8, initialY: 0.1, targetX: 0.2, targetY: 0.9 },
   ], []);
 
-  // Уменьшенное количество частиц для лучшей производительности
+
   const particles = useMemo(() =>
     Array.from({ length: 12 }).map((_, i) => ({
       id: i,
       initialX: Math.random(),
-      size: 8 + Math.random() * 6, // Уменьшенный размер
-      duration: 15 + Math.random() * 25, // Более быстрая анимация
+      size: 8 + Math.random() * 6, 
+      duration: 15 + Math.random() * 25, 
       delay: Math.random() * 10,
-      repeatDelay: 3 + Math.random() * 3, // Меньшая задержка
+      repeatDelay: 3 + Math.random() * 3, 
       hue: 330 + Math.random() * 30,
-      opacity: 0.15 + Math.random() * 0.2, // Меньшая прозрачность
-      initialRotate: Math.random() * 180, // Упрощенный поворот
+      opacity: 0.15 + Math.random() * 0.2, 
+      initialRotate: Math.random() * 180, 
     })), []);
 
-  // Throttled resize handler для лучшей производительности
+
   const updateDimensions = useCallback(() => {
     if (typeof window !== 'undefined') {
       setDimensions({
@@ -53,7 +53,7 @@ const FlowerBackground: React.FC = () => {
     setIsClient(true);
     updateDimensions();
     
-    // Throttled resize listener
+
     let timeoutId: NodeJS.Timeout;
     const handleResize = () => {
       clearTimeout(timeoutId);
@@ -71,7 +71,7 @@ const FlowerBackground: React.FC = () => {
     return null;
   }
 
-  // Если пользователь предпочитает уменьшенную анимацию, показываем статичный фон
+
   if (isReducedMotion) {
     return (
       <Box
@@ -125,7 +125,7 @@ const FlowerBackground: React.FC = () => {
             position: 'absolute',
             fontSize: '1.5rem',
             opacity: 0.15,
-            willChange: 'transform', // Оптимизация для GPU
+            willChange: 'transform', 
           }}
           initial={{
             x: flower.initialX * dimensions.width,
@@ -150,7 +150,6 @@ const FlowerBackground: React.FC = () => {
         </motion.div>
       ))}
 
-      {/* Падающие лепестки */}
       {particles.map((particle) => (
         <motion.div
           key={`particle-${particle.id}`}
@@ -162,7 +161,7 @@ const FlowerBackground: React.FC = () => {
             background: 'transparent',
             filter: `drop-shadow(0 0 1px hsl(${particle.hue}, 70%, 70%))`,
             zIndex: 0,
-            willChange: 'transform', // Оптимизация для GPU
+            willChange: 'transform', 
           }}
           initial={{
             x: particle.initialX * dimensions.width,
@@ -170,9 +169,9 @@ const FlowerBackground: React.FC = () => {
             rotate: particle.initialRotate,
           }}
           animate={{
-            x: particle.initialX * dimensions.width + Math.sin(particle.id * 50) * 30, // Упрощенное качание
+            x: particle.initialX * dimensions.width + Math.sin(particle.id * 50) * 30, 
             y: dimensions.height + particle.size,
-            rotate: particle.initialRotate + 180 * (particle.id % 2 ? 1 : -1), // Упрощенный поворот
+            rotate: particle.initialRotate + 180 * (particle.id % 2 ? 1 : -1), 
           }}
           transition={{
             duration: particle.duration,

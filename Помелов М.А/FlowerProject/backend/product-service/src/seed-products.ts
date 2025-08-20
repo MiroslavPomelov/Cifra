@@ -10,6 +10,9 @@ async function seedProducts() {
   const productService = app.get(ProductService);
   const productRepository = app.get<Repository<Product>>(getRepositoryToken(Product));
 
+  // Перейти в каталог
+  // px ts-node src/seed-products.ts 
+
   const products = [
     // Магазин 1 - Цветочный рай
     {
@@ -167,13 +170,13 @@ async function seedProducts() {
   for (const productData of products) {
     try {
       // Проверяем, существует ли продукт с таким именем в этом магазине
-      const existing = await productRepository.findOne({ 
-        where: { 
+      const existing = await productRepository.findOne({
+        where: {
           name: productData.name,
-          shopId: productData.shopId 
-        } 
+          shopId: productData.shopId
+        }
       });
-      
+
       if (existing) {
         console.log(`⏭️ Продукт "${productData.name}" уже существует в магазине ${productData.shopId}, пропускаем`);
         continue;

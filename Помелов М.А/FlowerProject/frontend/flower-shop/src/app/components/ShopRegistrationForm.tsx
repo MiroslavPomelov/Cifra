@@ -32,7 +32,6 @@ import { FaEye, FaEyeSlash, FaStore, FaHome } from 'react-icons/fa';
 import { apiService, ShopRegistrationData, ShopVerificationData } from '../../services/api';
 import { useRouter } from 'next/navigation';
 
-// Иконки для показа/скрытия пароля
 const ViewIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
@@ -133,7 +132,6 @@ const ShopRegistrationForm: React.FC<ShopRegistrationFormProps> = ({ isOpen, onC
         isClosable: true,
       });
       
-      // Автоматически входим в систему магазина
       try {
         const loginResponse = await apiService.loginShop({
           email: formData.email,
@@ -151,14 +149,12 @@ const ShopRegistrationForm: React.FC<ShopRegistrationFormProps> = ({ isOpen, onC
             isClosable: true,
           });
           
-          // Перенаправляем на главную страницу
           setTimeout(() => {
             window.location.href = '/';
           }, 2000);
         }
       } catch (loginError) {
         console.error('Ошибка автоматического входа магазина:', loginError);
-        // Если автоматический вход не удался, просто показываем успех
         setStep('success');
       }
       

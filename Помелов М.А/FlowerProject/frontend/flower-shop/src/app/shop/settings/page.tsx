@@ -22,7 +22,6 @@ const ShopSettingsPage: React.FC = () => {
     }
     const shopRaw = typeof window !== 'undefined' ? localStorage.getItem('shop') : null;
     const fallbackFromToken = () => {
-      // decode JWT to get shopId/email
       try {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -33,7 +32,6 @@ const ShopSettingsPage: React.FC = () => {
         if (id) {
           const minimal: any = { id, email, name: '', address: '', description: '', phone: '' };
           setShop(minimal);
-          // Try to fetch full shop profile
           fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:80'}/shops/${id}`, {
             headers: { Authorization: `Bearer ${token}` },
           }).then(async (r) => (r.ok ? r.json() : null)).then((data) => {
@@ -98,7 +96,6 @@ const ShopSettingsPage: React.FC = () => {
       setSaving(true);
       const payload: any = { ...form };
       if (logoUrl) payload.logoUrl = logoUrl;
-      // PATCH через gateway
       await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:80'}/shops/${shop.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },

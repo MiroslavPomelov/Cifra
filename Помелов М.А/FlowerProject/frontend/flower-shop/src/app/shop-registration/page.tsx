@@ -177,7 +177,6 @@ const ShopRegistrationPage: React.FC = () => {
               </VStack>
             </motion.div>
 
-            {/* Преимущества */}
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -274,7 +273,6 @@ const ShopRegistrationPage: React.FC = () => {
               </VStack>
             </motion.div>
 
-            {/* Призыв к действию */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}

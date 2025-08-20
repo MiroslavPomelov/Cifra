@@ -14,7 +14,6 @@ const AuthButton = () => {
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Glow эффект (теперь не выходит за границы) */}
       <motion.span
         className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent"
         initial={{ x: "-100%" }}

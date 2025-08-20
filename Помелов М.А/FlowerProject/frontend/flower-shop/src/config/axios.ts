@@ -4,13 +4,13 @@ import { API_CONFIG } from './api';
 // Создаем axios instance с базовой конфигурацией
 const apiClient: AxiosInstance = axios.create({
   baseURL: API_CONFIG.BASE_URL,
-  timeout: 30000, // 30 секунд таймаут
+  timeout: 30000, 
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request interceptor для добавления токена авторизации
+
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -24,21 +24,17 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Response interceptor для обработки ошибок
+
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
   },
   (error: AxiosError) => {
-    // Обработка различных типов ошибок
     if (error.response) {
-      // Сервер ответил с ошибкой (4xx, 5xx)
       console.error('API Error:', error.response.status, error.response.data);
     } else if (error.request) {
-      // Запрос был отправлен, но ответ не получен
       console.error('Network Error:', error.message);
     } else {
-      // Ошибка при настройке запроса
       console.error('Request Error:', error.message);
     }
     

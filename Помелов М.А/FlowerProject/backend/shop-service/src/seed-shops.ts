@@ -10,6 +10,9 @@ async function seedShops() {
   const app = await NestFactory.createApplicationContext(AppModule);
   const shopRepository = app.get<Repository<Shop>>(getRepositoryToken(Shop));
 
+   // Перейти в каталог
+  // npx ts-node src/seed-shops.ts 
+
   const shops = [
     {
       name: 'Цветочный рай',

@@ -29,7 +29,6 @@ const FavouritesPage: React.FC = () => {
   const { addToCart } = useCart();
   const toast = useToast();
 
-  // Проверка авторизации
   React.useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -44,7 +43,6 @@ const FavouritesPage: React.FC = () => {
     }
   }, [router, toast]);
 
-  // Обработка удаления из избранного
   const handleRemoveFromFavourites = async (productId: number) => {
     const success = await removeFromFavourites(productId);
     if (success) {
@@ -58,7 +56,6 @@ const FavouritesPage: React.FC = () => {
     }
   };
 
-  // Обработка добавления в корзину
   const handleAddToCart = (product: FavouriteProduct) => {
     const productData = {
       id: product.productId,
@@ -96,7 +93,6 @@ const FavouritesPage: React.FC = () => {
           transition={{ duration: 0.6 }}
         >
           <VStack spacing={8} align="stretch">
-            {/* Заголовок */}
             <Box textAlign="center">
               <Heading
                 as="h1"
@@ -113,7 +109,6 @@ const FavouritesPage: React.FC = () => {
               </Text>
             </Box>
 
-            {/* Кнопка возврата */}
             <Flex justify="center">
               <Button
                 variant="ghost"
@@ -126,7 +121,6 @@ const FavouritesPage: React.FC = () => {
               </Button>
             </Flex>
 
-            {/* Список избранных товаров */}
             {favouriteProducts.length === 0 ? (
               <Box textAlign="center" py={16}>
                 <Text color="gray.300" fontSize="xl" mb={4}>
@@ -176,7 +170,6 @@ const FavouritesPage: React.FC = () => {
                         zIndex: 0
                       }}
                     >
-                      {/* Кнопка удаления из избранного */}
                       <Flex justify="flex-end" mb={4} position="relative" zIndex={1}>
                         <IconButton
                           aria-label="Убрать из избранного"
@@ -194,7 +187,6 @@ const FavouritesPage: React.FC = () => {
                         />
                       </Flex>
 
-                      {/* Изображение продукта */}
                       <Box
                         position="relative"
                         mb={4}
@@ -225,7 +217,6 @@ const FavouritesPage: React.FC = () => {
                         )}
                       </Box>
 
-                      {/* Информация о продукте */}
                       <VStack spacing={4} align="stretch" position="relative" zIndex={1}>
                         <Text
                           fontSize="lg"
@@ -273,7 +264,6 @@ const FavouritesPage: React.FC = () => {
                           </Badge>
                         </HStack>
 
-                        {/* Кнопки действий */}
                         <HStack spacing={3}>
                           <Button
                             flex={1}
@@ -296,7 +286,6 @@ const FavouritesPage: React.FC = () => {
                         </HStack>
                       </VStack>
 
-                      {/* Фоновые эффекты */}
                       <motion.div
                         style={{
                           position: 'absolute',

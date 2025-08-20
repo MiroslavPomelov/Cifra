@@ -101,22 +101,18 @@ export class AppController {
     const method = req.method.toLowerCase();
     const contentType = (req.headers['content-type'] || '').toString();
     const isMultipart = contentType.includes('multipart/form-data');
-    // Для multipart пробрасываем исходный поток запроса, иначе используем распарсенное тело
     const data = (method !== 'get') ? (isMultipart ? (req as any) : req.body) : undefined;
     
     const headers = {
       ...req.headers,
-      // Не переопределяем Content-Type: важно для multipart/form-data
       'envservicetoken': process.env.ENV_TOKEN || 'ya29.asdgv_sadashldkjhasdiufrekjhkjhdaksjhduHOIUhiluGHiglUUU',
       'X-Gateway-Service': serviceName,
       'X-Gateway-Timestamp': new Date().toISOString(),
     } as any;
     
-    // Удаляем content-length для корректной работы
     delete headers['content-length'];
     delete headers['Content-Length'];
     
-    // Логируем заголовки для отладки
     this.logger.debug(`API-GATEWAY: ${serviceName} - ${method.toUpperCase()} ${url}`);
     this.logger.debug(`API-GATEWAY: Authorization header: ${headers['authorization']}`);
     this.logger.debug(`API-GATEWAY: All headers: ${JSON.stringify(headers, null, 2)}`);
@@ -127,11 +123,10 @@ export class AppController {
         url,
         data,
         headers,
-        timeout: 30000, // 30 секунд таймаут
-        validateStatus: () => true, // Принимаем все статусы для обработки ошибок
+        timeout: 30000,
+        validateStatus: () => true, 
         maxContentLength: Infinity,
-        maxBodyLength: Infinity,
-        // Для multipart важно не трансформировать тело и не декомпресировать
+        maxBodyLength: Infinity, 
         ...(isMultipart ? { responseType: 'json', transformRequest: [(d) => d], decompress: false } : {}),
       });
       
@@ -141,7 +136,6 @@ export class AppController {
       this.logger.error(`API-GATEWAY: ${serviceName} - Error: ${error.message}`);
       
       if (error.response) {
-        // Сервер ответил с ошибкой
         const backendData = error.response.data;
         if (backendData && (backendData.message || backendData.error)) {
           res.status(error.response.status).json(backendData);
@@ -153,14 +147,12 @@ export class AppController {
           });
         }
       } else if (error.request) {
-        // Запрос был отправлен, но ответ не получен
         res.status(503).json({
           message: `${serviceName} service unavailable`,
           error: 'No response from service',
           timestamp: new Date().toISOString(),
         });
       } else {
-        // Ошибка при настройке запроса
         res.status(500).json({
           message: 'Internal gateway error',
           error: error.message,

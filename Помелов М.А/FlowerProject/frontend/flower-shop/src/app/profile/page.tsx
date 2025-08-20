@@ -40,7 +40,6 @@ interface UserData {
   address?: string;
 }
 
-// Интерфейс для данных, возвращаемых API (с полем city)
 interface ApiUserData {
   id: number;
   email: string;
@@ -57,7 +56,6 @@ const ProfilePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Цвета для цветочной темы (как в форме входа)
   const primaryColor = 'pink.500';
   const secondaryColor = 'purple.500';
   const borderColor = useColorModeValue('pink.200', 'pink.600');
@@ -74,14 +72,14 @@ const ProfilePage: React.FC = () => {
         return;
       }
 
-      // Декодируем JWT для получения данных пользователя
+
       const payload = parseJwt(token);
       if (!payload || !payload.sub) {
         router.push('/login');
         return;
       }
 
-      // Загружаем данные пользователя
+
       await loadUserData(payload);
     } catch (error) {
       console.error('Ошибка проверки авторизации:', error);
@@ -107,26 +105,24 @@ const ProfilePage: React.FC = () => {
 
   const loadUserData = async (payload: any) => {
     try {
-      // Сначала создаем базовый объект с данными из JWT
       const user: UserData = {
         id: payload.sub || 0,
         email: payload.email || '',
         firstName: payload.firstName || '',
         lastName: payload.lastName || '',
         phone: payload.phone || '',
-        address: payload.city || '', // В JWT может быть city, маппим в address
+        address: payload.city || '', 
       };
 
-      // Если есть ID пользователя, загружаем полный профиль через API
       if (user.id) {
         const token = localStorage.getItem('token');
         if (token) {
           const profileData = await apiService.getUserProfile(user.id, token);
-          // Обновляем данные из API
+
           user.firstName = profileData.firstName;
           user.lastName = profileData.lastName;
           user.phone = profileData.phone;
-          user.address = profileData.city; // API возвращает city, маппим в address
+          user.address = profileData.city; 
         }
       }
       
@@ -141,13 +137,12 @@ const ProfilePage: React.FC = () => {
 
   const handleProfileUpdate = async (updatedData: Partial<ApiUserData>) => {
     try {
-      // Преобразуем данные из API (city -> address) для локального состояния
+
       const transformedData = {
         ...updatedData,
-        address: updatedData.city, // API возвращает city, маппим в address
+        address: updatedData.city, 
       };
-      
-      // Обновляем локальное состояние с данными, возвращенными из API
+
       setUserData(prev => prev ? { ...prev, ...transformedData } : null);
       
       toast({
@@ -233,7 +228,6 @@ const ProfilePage: React.FC = () => {
     >
       <FlowerBackground />
 
-      {/* Glow эффекты как в форме входа */}
       <motion.div
         style={{
           position: 'absolute',
@@ -310,7 +304,6 @@ const ProfilePage: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          {/* Заголовок профиля */}
           <Flex direction="column" align="center" mb={8}>
             <motion.div
               initial={{ scale: 0 }}
@@ -367,7 +360,6 @@ const ProfilePage: React.FC = () => {
             </Badge>
           </Flex>
 
-          {/* Основной контент профиля */}
           <Box
             bg="rgba(255, 255, 255, 0.01)"
             backdropFilter="blur(3.5px)"
@@ -392,7 +384,6 @@ const ProfilePage: React.FC = () => {
               zIndex: 0
             }}
           >
-            {/* Контейнер для содержимого */}
             <Box position="relative" zIndex={1}>
               {/* Информация о пользователе */}
               <VStack spacing={6} mb={8}>
@@ -424,7 +415,6 @@ const ProfilePage: React.FC = () => {
                 </VStack>
               </VStack>
 
-              {/* Табы для навигации */}
               <Tabs variant="enclosed" colorScheme="pink">
                 <TabList 
                   bg="rgba(255, 255, 255, 0.05)"

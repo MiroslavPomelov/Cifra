@@ -114,7 +114,6 @@ const AuthForms: React.FC = () => {
   const secondaryColor = 'purple.500';
   const accentColor = 'rose.400';
 
-  // Оптимизированные обработчики изменения полей
   const handleLoginEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setLoginData(prev => ({ ...prev, email: e.target.value }));
   }, []);
@@ -251,10 +250,10 @@ const AuthForms: React.FC = () => {
         isClosable: true,
       });
       
-      // Сохраняем токен
+
       localStorage.setItem('token', response.data.accessToken);
       
-      // Автоматически входим в систему
+
       try {
         const loginResponse = await api.post<AuthResponse>(API_CONFIG.AUTH.LOGIN, {
           email: verifyData.email,
@@ -272,14 +271,13 @@ const AuthForms: React.FC = () => {
             isClosable: true,
           });
           
-          // Перенаправляем на главную страницу
+
           setTimeout(() => {
             window.location.href = '/';
           }, 2000);
         }
       } catch (loginError) {
         console.error('Ошибка автоматического входа:', loginError);
-        // Если автоматический вход не удался, просто закрываем форму
         setIsVerifying(false);
         setIsLogin(true);
       }
@@ -689,7 +687,6 @@ const AuthForms: React.FC = () => {
       overflow="hidden"
     >
       <FlowerBackground />
-      {/* Glow эффекты */}
       <motion.div
         variants={glowVariants}
         initial="initial"
@@ -793,7 +790,6 @@ const AuthForms: React.FC = () => {
             position="relative"
             overflow="hidden"
           >
-            {/* Дополнительный glow эффект для формы */}
             <motion.div
               style={{
                 position: 'absolute',

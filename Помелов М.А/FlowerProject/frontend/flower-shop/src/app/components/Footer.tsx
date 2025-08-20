@@ -24,7 +24,6 @@ const Footer: React.FC = () => {
       position="relative"
       overflow="hidden"
     >
-      {/* Фоновый эффект */}
       <motion.div
         style={{
           position: 'absolute',
@@ -50,7 +49,6 @@ const Footer: React.FC = () => {
 
       <Container maxW="7xl" position="relative" zIndex={1}>
         <VStack spacing={8}>
-          {/* Основная информация */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -81,7 +79,6 @@ const Footer: React.FC = () => {
 
           <Divider borderColor="rgba(255, 255, 255, 0.1)" />
 
-          {/* Контактная информация */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -116,7 +113,6 @@ const Footer: React.FC = () => {
 
           <Divider borderColor="rgba(255, 255, 255, 0.1)" />
 
-          {/* Нижняя часть */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}

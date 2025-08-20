@@ -75,9 +75,7 @@ const CheckoutPage: React.FC = () => {
     paymentMethod: 'card',
   });
 
-  // Загрузка корзины из localStorage
   useEffect(() => {
-    // Проверяем авторизацию пользователя
     const token = localStorage.getItem('token');
     if (!token) {
       toast({
@@ -196,10 +194,8 @@ const CheckoutPage: React.FC = () => {
         paymentMethod: form.paymentMethod,
       };
 
-      // Создаем заказ локально
       const localOrder = createLocalOrder(orderData);
       
-      // Пытаемся создать заказ через API
       try {
         const result = await apiService.createOrder(orderData, token);
         toast({
@@ -212,18 +208,16 @@ const CheckoutPage: React.FC = () => {
       } catch (apiError) {
         toast({
           title: 'Заказ создан!',
-          description: `Заказ №${localOrder.orderNumber} сохранен локально. В реальном приложении он будет отправлен на сервер.`,
+          description: `Заказ №${(await localOrder).orderNumber} сохранен локально. В реальном приложении он будет отправлен на сервер.`,
           status: 'info',
           duration: 5000,
           isClosable: true,
         });
       }
       
-      // Очищаем корзину после успешного заказа
       localStorage.removeItem('cart');
       window.dispatchEvent(new Event('cartUpdated'));
       
-      // Перенаправляем на профиль для просмотра заказа
       setTimeout(() => {
         router.push('/profile');
       }, 2000);
@@ -242,15 +236,11 @@ const CheckoutPage: React.FC = () => {
     }
   };
 
-  // Обработка успешной оплаты
   const handlePaymentSuccess = async (paymentId: string) => {
     setPaymentId(paymentId);
-    
-    // После успешной оплаты создаем заказ
     await createOrder();
   };
 
-  // Обработка ошибки оплаты
   const handlePaymentError = (error: string) => {
     toast({
       title: 'Ошибка оплаты',
@@ -261,7 +251,6 @@ const CheckoutPage: React.FC = () => {
     });
   };
 
-  // Функция для декодирования JWT
   const parseJwt = (token: string): any | null => {
     try {
       const base64Url = token.split('.')[1];
@@ -290,7 +279,6 @@ const CheckoutPage: React.FC = () => {
     <Box minH="100vh" bg="gray.50">
       <Container maxW="6xl" py={8}>
         <VStack spacing={8} align="stretch">
-          {/* Заголовок и навигация */}
           <HStack justify="space-between" align="center">
             <HStack spacing={4}>
               <Button
@@ -317,7 +305,6 @@ const CheckoutPage: React.FC = () => {
           </HStack>
 
                      <HStack spacing={8} align="start">
-             {/* Форма оформления заказа или оплаты */}
              <VStack spacing={6} flex={1} align="stretch">
                               {!paymentStep ? (
                  <>
@@ -459,7 +446,6 @@ const CheckoutPage: React.FC = () => {
                )}
             </VStack>
 
-            {/* Сводка заказа */}
             <Card w="400px" position="sticky" top="20px">
               <CardHeader>
                 <Heading size="md" color="gray.700">
@@ -468,7 +454,6 @@ const CheckoutPage: React.FC = () => {
               </CardHeader>
               <CardBody>
                 <VStack spacing={4} align="stretch">
-                  {/* Товары */}
                   <VStack spacing={3} align="stretch">
                     <Text fontWeight="semibold" color="gray.700">
                       Товары в заказе:
@@ -502,7 +487,6 @@ const CheckoutPage: React.FC = () => {
 
                   <Divider />
 
-                  {/* Расчет стоимости */}
                   <VStack spacing={2} align="stretch">
                     <HStack justify="space-between">
                       <Text color="gray.600">Товары:</Text>
@@ -526,7 +510,6 @@ const CheckoutPage: React.FC = () => {
                     </HStack>
                   </VStack>
 
-                                     {/* Кнопка оформления */}
                    <Button
                      leftIcon={<FaCreditCard />}
                      colorScheme="pink"

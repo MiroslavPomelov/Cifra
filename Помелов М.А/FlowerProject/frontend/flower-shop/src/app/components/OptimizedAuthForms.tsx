@@ -149,7 +149,6 @@ const OptimizedAuthForms: React.FC = () => {
     personalData: true
   });
 
-  // Оптимизированные обработчики
   const handleLoginEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setLoginData(prev => ({ ...prev, email: e.target.value }));
   }, []);
@@ -182,7 +181,6 @@ const OptimizedAuthForms: React.FC = () => {
   const handleLogin = useCallback(async () => {
     setIsLoading(true);
     try {
-      // Выбираем правильный эндпоинт в зависимости от режима
       const endpoint = isShopMode ? API_CONFIG.AUTH.SHOP_LOGIN : API_CONFIG.AUTH.LOGIN;
       const response = await api.post<AuthResponse>(endpoint, loginData);
       
@@ -196,17 +194,15 @@ const OptimizedAuthForms: React.FC = () => {
       
       localStorage.setItem('token', response.data.accessToken);
       
-      // Если это магазин, сохраняем информацию о роли
+
       if (isShopMode) {
         localStorage.setItem('userRole', 'shop');
-        // Перенаправляем на панель магазина
         setTimeout(() => {
           window.location.href = '/shop/dashboard';
         }, 2000);
       } else {
         localStorage.setItem('userRole', 'user');
-        
-        // Проверяем, нужно ли перенаправить на оформление заказа
+
         const pendingCheckout = localStorage.getItem('pendingCheckout');
         if (pendingCheckout === 'true') {
           localStorage.removeItem('pendingCheckout');
@@ -221,7 +217,6 @@ const OptimizedAuthForms: React.FC = () => {
             window.location.href = '/checkout';
           }, 2000);
         } else {
-          // Перенаправляем на главную страницу
           setTimeout(() => {
             window.location.href = '/';
           }, 2000);
@@ -245,10 +240,8 @@ const OptimizedAuthForms: React.FC = () => {
   const handleRegister = useCallback(async () => {
     setIsLoading(true);
     try {
-      // Исключаем confirmPassword из данных, отправляемых на сервер
       const { confirmPassword, ...dataWithoutConfirm } = registerData;
       
-      // Выбираем правильный эндпоинт в зависимости от режима
       const endpoint = isShopMode ? API_CONFIG.AUTH.SHOP_REGISTRATION : API_CONFIG.AUTH.REGISTRATION;
       await api.post(endpoint, dataWithoutConfirm);
       
@@ -264,7 +257,7 @@ const OptimizedAuthForms: React.FC = () => {
       setVerifyData({
         ...dataWithoutConfirm,
         code: '',
-        personalData: true // Устанавливаем true для верификации
+        personalData: true 
       });
     } catch (error: unknown) {
       const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Не удалось отправить код';
@@ -283,7 +276,6 @@ const OptimizedAuthForms: React.FC = () => {
   const handleVerify = useCallback(async () => {
     setIsLoading(true);
     try {
-      // Выбираем правильный эндпоинт в зависимости от режима
       const endpoint = isShopMode ? API_CONFIG.AUTH.SHOP_VERIFY : API_CONFIG.AUTH.VERIFY;
       const response = await api.post<AuthResponse>(endpoint, verifyData);
       
@@ -295,10 +287,8 @@ const OptimizedAuthForms: React.FC = () => {
         isClosable: true,
       });
       
-      // Сохраняем токен
       localStorage.setItem('token', response.data.accessToken);
       
-      // Автоматически входим в систему
       try {
         const loginEndpoint = isShopMode ? API_CONFIG.AUTH.SHOP_LOGIN : API_CONFIG.AUTH.LOGIN;
         const loginResponse = await api.post<AuthResponse>(loginEndpoint, {
@@ -319,14 +309,12 @@ const OptimizedAuthForms: React.FC = () => {
               isClosable: true,
             });
             
-            // Перенаправляем на панель магазина
             setTimeout(() => {
               window.location.href = '/shop/dashboard';
             }, 2000);
           } else {
             localStorage.setItem('userRole', 'user');
-            
-            // Проверяем, нужно ли перенаправить на оформление заказа
+          
             const pendingCheckout = localStorage.getItem('pendingCheckout');
             if (pendingCheckout === 'true') {
               localStorage.removeItem('pendingCheckout');
@@ -349,7 +337,6 @@ const OptimizedAuthForms: React.FC = () => {
                 isClosable: true,
               });
               
-              // Перенаправляем на главную страницу
               setTimeout(() => {
                 window.location.href = '/';
               }, 2000);
@@ -358,7 +345,6 @@ const OptimizedAuthForms: React.FC = () => {
         }
       } catch (loginError) {
         console.error('Ошибка автоматического входа:', loginError);
-        // Если автоматический вход не удался, просто закрываем форму
         setIsVerifying(false);
         setIsLogin(true);
       }
@@ -385,7 +371,6 @@ const OptimizedAuthForms: React.FC = () => {
     setIsRegistering(true);
   }, []);
 
-  // Мемоизированные компоненты форм
   const LoginForm = useMemo(() => (
     <motion.div
       variants={containerVariants}
@@ -399,7 +384,6 @@ const OptimizedAuthForms: React.FC = () => {
           </Heading>
         </motion.div>
 
-        {/* Переключатель режимов */}
         <motion.div variants={itemVariants}>
           <HStack spacing={4} justify="center">
             <Button
@@ -516,7 +500,7 @@ const OptimizedAuthForms: React.FC = () => {
               color={primaryColor}
               onClick={() => {
                 setIsLogin(false);
-                setIsShopMode(isShopMode); // Сохраняем текущий режим
+                setIsShopMode(isShopMode); 
               }}
               _hover={{ color: secondaryColor }}
             >
@@ -544,7 +528,6 @@ const OptimizedAuthForms: React.FC = () => {
           </Text>
         </motion.div>
 
-        {/* Переключатель режимов */}
         <motion.div variants={itemVariants}>
           <HStack spacing={4} justify="center">
             <Button
@@ -672,7 +655,6 @@ const OptimizedAuthForms: React.FC = () => {
           </FormControl>
         </motion.div>
 
-        {/* Показываем дополнительные поля только для пользователей */}
         {!isShopMode && (
           <>
             <HStack spacing={4}>
@@ -746,7 +728,6 @@ const OptimizedAuthForms: React.FC = () => {
           </>
         )}
 
-        {/* Показываем поля для магазина */}
         {isShopMode && (
           <>
             <motion.div variants={itemVariants}>
@@ -837,7 +818,7 @@ const OptimizedAuthForms: React.FC = () => {
               color={primaryColor}
               onClick={() => {
                 setIsLogin(true);
-                setIsShopMode(isShopMode); // Сохраняем текущий режим
+                setIsShopMode(isShopMode); 
               }}
               _hover={{ color: secondaryColor }}
             >
@@ -921,7 +902,7 @@ const OptimizedAuthForms: React.FC = () => {
               onClick={() => {
                 setIsVerifying(false);
                 setIsRegistering(true);
-                setIsShopMode(isShopMode); // Сохраняем текущий режим
+                setIsShopMode(isShopMode); 
               }}
               _hover={{ color: secondaryColor }}
             >
@@ -943,7 +924,6 @@ const OptimizedAuthForms: React.FC = () => {
     >
       <FlowerBackground />
 
-      {/* Glow эффекты */}
       <motion.div
         variants={glowVariants}
         initial="initial"
@@ -976,7 +956,6 @@ const OptimizedAuthForms: React.FC = () => {
       />
 
       <Container maxW="lg" position="relative" zIndex={1}>
-        {/* Иконка дома в левом углу */}
         <Box position="absolute" top={4} left={4} zIndex={2}>
           <IconButton
             aria-label="На главную"
@@ -1091,7 +1070,6 @@ const OptimizedAuthForms: React.FC = () => {
               zIndex: 0
             }}
           >
-            {/* Контейнер для содержимого формы */}
             <Box position="relative" zIndex={1}>
               {isLogin && !isVerifying && LoginForm}
               {!isLogin && !isVerifying && RegisterForm}

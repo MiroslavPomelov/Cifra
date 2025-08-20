@@ -15,7 +15,6 @@ import { motion } from 'framer-motion';
 const Hero: React.FC = () => {
   const [isReducedMotion, setIsReducedMotion] = useState(false);
 
-  // Проверяем предпочтения пользователя по анимации
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setIsReducedMotion(mediaQuery.matches);
@@ -52,7 +51,6 @@ const Hero: React.FC = () => {
       overflow="hidden"
       pt={{ base: "80px", md: "100px" }}
     >
-      {/* Упрощенные фоновые эффекты */}
       {!isReducedMotion && (
         <motion.div
           style={{
@@ -85,7 +83,6 @@ const Hero: React.FC = () => {
           justify="space-between"
           gap={12}
         >
-          {/* Левая колонка - контент */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
@@ -212,7 +209,6 @@ const Hero: React.FC = () => {
             </VStack>
           </motion.div>
 
-          {/* Правая колонка - визуальные элементы */}
           <motion.div
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
@@ -223,7 +219,6 @@ const Hero: React.FC = () => {
               position="relative"
               display={{ base: 'none', lg: 'block' }}
             >
-              {/* Упрощенные анимированные цветы */}
               {!isReducedMotion ? (
                 <>
                   <motion.div

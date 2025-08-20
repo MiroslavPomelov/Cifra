@@ -54,7 +54,6 @@ const ShopDashboardPage: React.FC = () => {
   const [uploading, setUploading] = useState(false);
   const router = useRouter();
 
-  // Инициализация магазина из localStorage и загрузка товаров
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     const shopRaw = typeof window !== 'undefined' ? localStorage.getItem('shop') : null;
@@ -67,7 +66,6 @@ const ShopDashboardPage: React.FC = () => {
     } else {
       const payload = token ? parseJwt(token) : null;
       if (payload?.sub) {
-        // минимальная инициализация
         setShop({ id: payload.sub, name: 'Магазин', description: null, email: payload.email, address: '', phone: '', isActive: true, createdAt: '', updatedAt: '' } as any);
       }
     }

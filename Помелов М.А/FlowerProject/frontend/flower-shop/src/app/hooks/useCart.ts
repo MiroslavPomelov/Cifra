@@ -16,7 +16,6 @@ export const useCart = () => {
   const [cartItemCount, setCartItemCount] = useState(0);
   const toast = useToast();
 
-  // Загрузка корзины из localStorage
   const loadCart = useCallback(() => {
     try {
       const savedCart = localStorage.getItem('cart');
@@ -51,10 +50,8 @@ export const useCart = () => {
       const existingItemIndex = currentCart.findIndex((item: CartItem) => item.id === product.id);
 
       if (existingItemIndex !== -1) {
-        // Если товар уже есть, увеличиваем количество
         currentCart[existingItemIndex].quantity += 1;
       } else {
-        // Если товара нет, добавляем новый
         const newItem: CartItem = {
           id: product.id,
           name: product.name,
@@ -92,7 +89,6 @@ export const useCart = () => {
     }
   }, [saveCart, toast]);
 
-  // Обновление количества товара
   const updateQuantity = useCallback((itemId: number, newQuantity: number) => {
     if (newQuantity <= 0) {
       removeFromCart(itemId);
@@ -109,7 +105,7 @@ export const useCart = () => {
     setCartItemCount(totalCount);
   }, [cartItems, saveCart]);
 
-  // Удаление товара из корзины
+
   const removeFromCart = useCallback((itemId: number) => {
     const updatedItems = cartItems.filter(item => item.id !== itemId);
     setCartItems(updatedItems);
@@ -143,23 +139,23 @@ export const useCart = () => {
     });
   }, [toast]);
 
-  // Расчет общей суммы
+
   const getTotalAmount = useCallback(() => {
     return cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   }, [cartItems]);
 
-  // Инициализация при монтировании
+
   useEffect(() => {
     loadCart();
 
-    // Слушаем изменения в localStorage
+
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'cart') {
         loadCart();
       }
     };
 
-    // Слушаем события обновления корзины
+
     const handleCartUpdate = () => {
       loadCart();
     };

@@ -53,12 +53,10 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   const handleInputChange = (field: keyof PaymentFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     
-    // Очищаем ошибку при вводе
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }));
     }
 
-    // Определяем тип карты
     if (field === 'cardNumber' && value.length >= 4) {
       const type = determineCardType(value);
       setCardType(type);
@@ -76,26 +74,22 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   const validateForm = (): boolean => {
     const newErrors: Partial<PaymentFormData> = {};
 
-    // Валидация номера карты
     if (!formData.cardNumber) {
       newErrors.cardNumber = 'Номер карты обязателен';
     } else if (formData.cardNumber.length < 13 || formData.cardNumber.length > 19) {
       newErrors.cardNumber = 'Неверная длина номера карты';
     }
 
-    // Валидация имени держателя
     if (!formData.cardHolder) {
       newErrors.cardHolder = 'Имя держателя карты обязательно';
     }
 
-    // Валидация срока действия
     if (!formData.expiry) {
       newErrors.expiry = 'Срок действия обязателен';
     } else if (!/^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(formData.expiry)) {
       newErrors.expiry = 'Формат: MM/YY';
     }
 
-    // Валидация CVC
     if (!formData.cvc) {
       newErrors.cvc = 'CVC код обязателен';
     } else if (formData.cvc.length < 3 || formData.cvc.length > 4) {
@@ -168,7 +162,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
         expiry: formData.expiry,
         cvc: formData.cvc,
         description: `Оплата заказа на сумму ${amount} ₽`,
-        email: 'customer@example.com', // Можно получать из профиля пользователя
+        email: 'customer@example.com', 
       };
 
       const result = await apiService.createPayment(paymentData, token);
@@ -249,7 +243,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
 
           <form onSubmit={handleSubmit}>
             <VStack spacing={4} align="stretch">
-              {/* Номер карты */}
               <FormControl isInvalid={!!errors.cardNumber}>
                 <FormLabel>Номер карты</FormLabel>
                 <Input
@@ -266,7 +259,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                 <FormErrorMessage>{errors.cardNumber}</FormErrorMessage>
               </FormControl>
 
-              {/* Имя держателя */}
               <FormControl isInvalid={!!errors.cardHolder}>
                 <FormLabel>Имя держателя карты</FormLabel>
                 <Input
@@ -278,7 +270,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               </FormControl>
 
               <HStack spacing={4}>
-                {/* Срок действия */}
                 <FormControl isInvalid={!!errors.expiry}>
                   <FormLabel>Срок действия</FormLabel>
                   <Input
@@ -290,7 +281,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                   <FormErrorMessage>{errors.expiry}</FormErrorMessage>
                 </FormControl>
 
-                {/* CVC */}
                 <FormControl isInvalid={!!errors.cvc}>
                   <FormLabel>CVC</FormLabel>
                   <Input
@@ -303,7 +293,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                 </FormControl>
               </HStack>
 
-              {/* Кнопки */}
               <VStack spacing={3} pt={4}>
                 <Button
                   type="button"
@@ -334,7 +323,6 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             </VStack>
           </form>
 
-          {/* Информация о безопасности */}
           <Box p={4} bg="gray.50" borderRadius="md">
             <Text fontSize="sm" color="gray.600" textAlign="center">
               <FaLock style={{ display: 'inline', marginRight: '4px' }} />

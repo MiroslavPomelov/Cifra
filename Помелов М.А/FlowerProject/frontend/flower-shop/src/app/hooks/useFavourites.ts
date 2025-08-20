@@ -19,7 +19,7 @@ export const useFavourites = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const toast = useToast();
 
-  // Получение ID пользователя из токена
+
   const getUserId = useCallback((): number | null => {
     try {
       const token = localStorage.getItem('token');
@@ -27,7 +27,7 @@ export const useFavourites = () => {
       
       console.log('🔍 getUserId - token:', token.substring(0, 50) + '...');
       
-      // Проверяем формат JWT токена
+
       const parts = token.split('.');
       if (parts.length !== 3) {
         console.error('❌ getUserId - Неверный формат JWT токена:', parts.length, 'частей');
@@ -37,7 +37,7 @@ export const useFavourites = () => {
       const payload = JSON.parse(atob(parts[1]));
       console.log('🔍 getUserId - payload:', payload);
       
-      // Проверяем время истечения токена
+
       if (payload.exp) {
         const now = Math.floor(Date.now() / 1000);
         const expiresAt = payload.exp;
@@ -47,7 +47,7 @@ export const useFavourites = () => {
         
         if (now > expiresAt) {
           console.error('❌ getUserId - Токен истек!');
-          // Удаляем истекший токен
+
           localStorage.removeItem('token');
           return null;
         }
@@ -63,13 +63,13 @@ export const useFavourites = () => {
     }
   }, []);
 
-  // Получение токена
+
   const getToken = useCallback((): string | null => {
     const token = localStorage.getItem('token');
     console.log('🔍 getToken - token exists:', !!token, 'length:', token?.length);
     
     if (token) {
-      // Проверяем, не истек ли токен
+
       try {
         const parts = token.split('.');
         if (parts.length === 3) {
@@ -98,7 +98,7 @@ export const useFavourites = () => {
     return token;
   }, []);
 
-  // Загрузка избранных товаров
+
   const loadFavourites = useCallback(async () => {
     const userId = getUserId();
     const token = getToken();
@@ -140,7 +140,6 @@ export const useFavourites = () => {
 //     window.location.href = '/login';
 //   }, []);
 
-  // Добавление товара в избранное
   const addToFavourites = useCallback(async (product: any) => {
     const userId = getUserId();
     const token = getToken();
@@ -149,7 +148,6 @@ export const useFavourites = () => {
     console.log('🔍 addToFavourites - token length:', token?.length);
     console.log('🔍 addToFavourites - product:', product);
     
-    // Проверяем роль пользователя
     const userRole = localStorage.getItem('userRole');
     console.log('🔍 addToFavourites - userRole:', userRole);
     
@@ -179,7 +177,6 @@ export const useFavourites = () => {
     }
 
     try {
-      // Проверяем, что у продукта есть все необходимые поля
       if (!product.id || !product.name || !product.price) {
         console.error('❌ addToFavourites - Неполные данные продукта:', product);
         toast({
@@ -220,7 +217,6 @@ export const useFavourites = () => {
       
       console.log('🔍 addToFavourites - API result:', created);
       
-      // Обновляем локальное состояние, используя ID с сервера
       const newFavourite: FavouriteProduct = {
         id: created.id,
         productId: created.productId ?? product.id,
@@ -245,7 +241,6 @@ export const useFavourites = () => {
       return true;
     } catch (error: any) {
       console.error('Ошибка добавления в избранное:', error);
-      // Обрабатываем повторное добавление
       const status = error?.response?.status;
       if (status === 409) {
         toast({
@@ -269,7 +264,6 @@ export const useFavourites = () => {
     }
   }, [getUserId, getToken, toast]);
 
-  // Удаление товара из избранного
   const removeFromFavourites = useCallback(async (productId: number) => {
     const userId = getUserId();
     const token = getToken();
@@ -284,7 +278,6 @@ export const useFavourites = () => {
     }
 
     try {
-      // Находим ID записи в избранном
       const favouriteItem = favouriteProducts.find(item => item.productId === productId);
       console.log('🔍 removeFromFavourites - найденный favouriteItem:', favouriteItem);
       
@@ -296,7 +289,6 @@ export const useFavourites = () => {
       console.log('🔍 removeFromFavourites - Удаляем из API...');
       await apiService.removeFavouriteProduct(userId, favouriteItem.id, token);
       
-      // Обновляем локальное состояние
       setFavouriteProducts(prev => prev.filter(item => item.productId !== productId));
       
       toast({
@@ -321,14 +313,12 @@ export const useFavourites = () => {
     }
   }, [getUserId, getToken, favouriteProducts, toast]);
 
-  // Проверка, находится ли товар в избранном
   const isFavourite = useCallback((productId: number): boolean => {
     const result = favouriteProducts.some(item => item.productId === productId);
     console.log('🔍 isFavourite - productId:', productId, 'result:', result, 'total favourites:', favouriteProducts.length);
     return result;
   }, [favouriteProducts]);
 
-  // Переключение состояния избранного
   const toggleFavourite = useCallback(async (product: any) => {
     console.log('🔍 toggleFavourite - product:', product);
     const currentlyFavourite = isFavourite(product.id);
@@ -343,7 +333,6 @@ export const useFavourites = () => {
     }
   }, [isFavourite, addToFavourites, removeFromFavourites]);
 
-  // Инициализация при монтировании
   useEffect(() => {
     console.log('🔍 useFavourites - useEffect triggered, загружаем избранное...');
     loadFavourites();
