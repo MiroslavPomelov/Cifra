@@ -99,6 +99,19 @@ class ApiService {
     this.baseURL = API_CONFIG.BASE_URL;
   }
 
+  // Shop Images
+  async uploadShopImage(file: File, token: string): Promise<{ url: string }> {
+    const form = new FormData();
+    form.append('file', file);
+    const response = await axios.post(`${this.baseURL}/shops/upload-image`, form, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        // Не указываем Content-Type, пусть axios сам выставит boundary
+      },
+    });
+    return response.data;
+  }
+
   // Products
   async getProducts(): Promise<Product[]> {
     try {

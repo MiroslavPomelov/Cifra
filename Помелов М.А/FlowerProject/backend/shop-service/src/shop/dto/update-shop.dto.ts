@@ -13,4 +13,29 @@ export class UpdateShopDto extends PartialType(CreateShopDto) {
   @MinLength(6)
   @MaxLength(100)
   password?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(100)
+  name?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(100)
+  address?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(255)
+  description?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(20)
+  phone?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(255)
+  logoUrl?: string;
 } 

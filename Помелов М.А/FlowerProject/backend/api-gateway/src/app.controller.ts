@@ -99,15 +99,18 @@ export class AppController {
   ) {
     const url = `${targetUrl}${req.url}`;
     const method = req.method.toLowerCase();
-    const data = (method !== 'get' && req.body) ? req.body : undefined;
+    const contentType = (req.headers['content-type'] || '').toString();
+    const isMultipart = contentType.includes('multipart/form-data');
+    // Для multipart пробрасываем исходный поток запроса, иначе используем распарсенное тело
+    const data = (method !== 'get') ? (isMultipart ? (req as any) : req.body) : undefined;
     
     const headers = {
       ...req.headers,
-      'Content-Type': 'application/json',
+      // Не переопределяем Content-Type: важно для multipart/form-data
       'envservicetoken': process.env.ENV_TOKEN || 'ya29.asdgv_sadashldkjhasdiufrekjhkjhdaksjhduHOIUhiluGHiglUUU',
       'X-Gateway-Service': serviceName,
       'X-Gateway-Timestamp': new Date().toISOString(),
-    };
+    } as any;
     
     // Удаляем content-length для корректной работы
     delete headers['content-length'];
@@ -126,6 +129,10 @@ export class AppController {
         headers,
         timeout: 30000, // 30 секунд таймаут
         validateStatus: () => true, // Принимаем все статусы для обработки ошибок
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
+        // Для multipart важно не трансформировать тело и не декомпресировать
+        ...(isMultipart ? { responseType: 'json', transformRequest: [(d) => d], decompress: false } : {}),
       });
       
       this.logger.debug(`API-GATEWAY: ${serviceName} - Success (${response.status})`);

@@ -51,6 +51,7 @@ const ShopDashboardPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [form, setForm] = useState<CreateProductPayload>({ name: '', description: '', price: 0, imageUrl: '' });
+  const [uploading, setUploading] = useState(false);
   const router = useRouter();
 
   // Инициализация магазина из localStorage и загрузка товаров
@@ -170,6 +171,33 @@ const ShopDashboardPage: React.FC = () => {
                   <FormLabel color="gray.300">Ссылка на изображение</FormLabel>
                   <Input value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} placeholder="https://..." color="white" />
                 </FormControl>
+              </HStack>
+              <HStack>
+                <FormControl>
+                  <FormLabel color="gray.300">Загрузка изображения (в nginx-service)</FormLabel>
+                  <Input type="file" accept="image/*" color="white" onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+                    if (!token) {
+                      toast({ title: 'Нет токена', status: 'warning' });
+                      return;
+                    }
+                    try {
+                      setUploading(true);
+                      const { url } = await apiService.uploadShopImage(file, token);
+                      setForm((prev) => ({ ...prev, imageUrl: url }));
+                      toast({ title: 'Изображение загружено', description: 'URL подставлен в поле', status: 'success' });
+                    } catch (err: any) {
+                      toast({ title: 'Ошибка загрузки', description: err?.response?.data?.message || err.message, status: 'error' });
+                    } finally {
+                      setUploading(false);
+                    }
+                  }} />
+                </FormControl>
+                <Button isLoading={uploading} variant="outline" colorScheme="pink" onClick={() => {}}>
+                  Загрузить
+                </Button>
               </HStack>
               <HStack>
                 <Button leftIcon={<FaPlus />} onClick={handleCreate} isLoading={loading} colorScheme="pink">

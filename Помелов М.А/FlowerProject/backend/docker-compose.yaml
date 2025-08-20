@@ -112,6 +112,8 @@ services:
       REDIS_PORT: 6379
     networks:
       - app_network
+    volumes:
+      - ./nginx-service/uploads:/usr/share/nginx/images
     depends_on:
       shopdb:
         condition: service_healthy
@@ -220,6 +222,8 @@ services:
       - "8080:80"
     networks:
       - app_network
+    volumes:
+      - ./nginx-service/uploads:/usr/share/nginx/images
     depends_on:
       - api-gateway
 

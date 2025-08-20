@@ -295,6 +295,23 @@ const Header: React.FC = () => {
                     borderRadius="12px"
                     py={2}
                   >
+                    {authRole === 'shop' && (
+                      <MenuItem 
+                        onClick={() => router.push('/shop/settings')} 
+                        _hover={{ 
+                          bg: 'rgba(236, 72, 153, 0.1)', 
+                          color: 'pink.600',
+                          transform: 'translateX(4px)'
+                        }} 
+                        color="gray.700"
+                        fontWeight="medium"
+                        transition="all 0.2s ease"
+                        px={4}
+                        py={3}
+                      >
+                        Настройки магазина
+                      </MenuItem>
+                    )}
                     <MenuItem 
                       onClick={handleProfile} 
                       _hover={{ 

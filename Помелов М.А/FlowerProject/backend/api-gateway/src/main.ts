@@ -22,12 +22,12 @@ function dynamicBodyParser(req, res, next) {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
-  // Отключил парсинг body для прокси маршрутов
-  app.use('/auth/*', bodyParser.raw({ type: '*/*' }));
-  app.use('/users/*', bodyParser.raw({ type: '*/*' }));
-  app.use('/shops/*', bodyParser.raw({ type: '*/*' }));
-  app.use('/payment/*', bodyParser.raw({ type: '*/*' }));
-  app.use('/order/*', bodyParser.raw({ type: '*/*' }));
+  // Отключаем парсинг для multipart, но разрешаем json/urlencoded
+  app.use('/auth/*', dynamicBodyParser);
+  app.use('/users/*', dynamicBodyParser);
+  app.use('/shops/*', dynamicBodyParser);
+  app.use('/payment/*', dynamicBodyParser);
+  app.use('/order/*', dynamicBodyParser);
   app.use('/products/*', dynamicBodyParser);
   // Удалить потом
   app.use('/products/*', (req, res, next) => {

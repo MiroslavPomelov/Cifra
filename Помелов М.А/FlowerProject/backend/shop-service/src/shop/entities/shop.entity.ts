@@ -23,6 +23,9 @@ export class Shop {
   @Column({ length: 20, nullable: true })
   phone: string;
 
+  @Column({ length: 255, nullable: true })
+  logoUrl: string;
+
   @Column({ default: true })
   isActive: boolean;
 

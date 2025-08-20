@@ -11,6 +11,7 @@ import {
   useColorModeValue,
   IconButton,
   Tooltip,
+  Image,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
@@ -188,17 +189,30 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           height="150px"
           flex="0 0 auto"
           zIndex={1}
+          overflow="hidden"
+          borderRadius="lg"
         >
-          <motion.div
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            transition={{ duration: 0.3 }}
-            style={{
-              fontSize: '6rem',
-              filter: 'drop-shadow(0 8px 16px rgba(236, 72, 153, 0.3))',
-            }}
-          >
-            {emoji}
-          </motion.div>
+          {product.imageUrl ? (
+            <Image
+              src={product.imageUrl}
+              alt={product.name}
+              maxH="100%"
+              maxW="100%"
+              objectFit="cover"
+              fallback={<Box fontSize="6rem">{emoji}</Box>}
+            />
+          ) : (
+            <motion.div
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              transition={{ duration: 0.3 }}
+              style={{
+                fontSize: '6rem',
+                filter: 'drop-shadow(0 8px 16px rgba(236, 72, 153, 0.3))',
+              }}
+            >
+              {emoji}
+            </motion.div>
+          )}
         </Box>
 
         {/* Информация о продукте */}
