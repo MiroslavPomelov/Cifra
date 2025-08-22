@@ -47,28 +47,32 @@ const Hero: React.FC = () => {
   const [hibiscusDataUrl, setHibiscusDataUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    const renderEmoji = (emoji: string, px: number): string | null => {
+    const renderEmoji = (emoji: string, cssPx: number): string | null => {
       try {
+        const dpr = Math.max(window.devicePixelRatio || 1, 1);
         const canvas = document.createElement('canvas');
-        const size = px;
-        canvas.width = size;
-        canvas.height = size;
+        const width = Math.ceil(cssPx * dpr);
+        const height = Math.ceil(cssPx * dpr);
+        canvas.width = width;
+        canvas.height = height;
         const ctx = canvas.getContext('2d');
         if (!ctx) return null;
-        ctx.clearRect(0, 0, size, size);
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, cssPx, cssPx);
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.font = `${Math.floor(size * 0.8)}px system-ui, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif`;
-        ctx.fillText(emoji, size / 2, size / 2);
+        ctx.font = `${Math.floor(cssPx * 0.8)}px system-ui, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif`;
+        ctx.fillText(emoji, cssPx / 2, cssPx / 2);
         return canvas.toDataURL('image/png');
       } catch {
         return null;
       }
     };
 
+    // CSS размеры (в пикселях): 8rem ≈ 128px, 3.5rem ≈ 56px
     setBouquetDataUrl(renderEmoji('💐', 128));
-    setBlossomDataUrl(renderEmoji('🌸', 96));
-    setHibiscusDataUrl(renderEmoji('🌺', 80));
+    setBlossomDataUrl(renderEmoji('🌸', 64));
+    setHibiscusDataUrl(renderEmoji('🌺', 56));
   }, []);
 
   
