@@ -12,6 +12,7 @@ async function seedProducts() {
 
   // Перейти в каталог
   // px ts-node src/seed-products.ts 
+  // npm run seed.
 
   const products = [
     // Магазин 1 - Цветочный рай

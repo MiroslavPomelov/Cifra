@@ -42,6 +42,37 @@ const Hero: React.FC = () => {
     visible: { opacity: 1, y: 0 },
   };
 
+  const [bouquetDataUrl, setBouquetDataUrl] = useState<string | null>(null);
+  const [blossomDataUrl, setBlossomDataUrl] = useState<string | null>(null);
+  const [hibiscusDataUrl, setHibiscusDataUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const renderEmoji = (emoji: string, px: number): string | null => {
+      try {
+        const canvas = document.createElement('canvas');
+        const size = px;
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return null;
+        ctx.clearRect(0, 0, size, size);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = `${Math.floor(size * 0.8)}px system-ui, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif`;
+        ctx.fillText(emoji, size / 2, size / 2);
+        return canvas.toDataURL('image/png');
+      } catch {
+        return null;
+      }
+    };
+
+    setBouquetDataUrl(renderEmoji('💐', 128));
+    setBlossomDataUrl(renderEmoji('🌸', 96));
+    setHibiscusDataUrl(renderEmoji('🌺', 80));
+  }, []);
+
+  
+
   return (
     <Box
       minH="100vh"
@@ -226,7 +257,8 @@ const Hero: React.FC = () => {
                       position: 'absolute',
                       top: '15%',
                       right: '25%',
-                      fontSize: '3rem',
+                      width: '4rem',
+                      height: '4rem',
                       willChange: 'transform',
                     }}
                     animate={{
@@ -239,7 +271,11 @@ const Hero: React.FC = () => {
                       ease: "easeInOut",
                     }}
                   >
-                    🌸
+                    {blossomDataUrl ? (
+                      <Box as="img" src={blossomDataUrl} alt="blossom" w="4rem" h="4rem" />
+                    ) : (
+                      '🌸'
+                    )}
                   </motion.div>
 
                   <motion.div
@@ -247,7 +283,8 @@ const Hero: React.FC = () => {
                       position: 'absolute',
                       bottom: '20%',
                       right: '15%',
-                      fontSize: '2.5rem',
+                      width: '3.5rem',
+                      height: '3.5rem',
                       willChange: 'transform',
                     }}
                     animate={{
@@ -261,7 +298,11 @@ const Hero: React.FC = () => {
                       delay: 2,
                     }}
                   >
-                    🌺
+                    {hibiscusDataUrl ? (
+                      <Box as="img" src={hibiscusDataUrl} alt="hibiscus" w="3.5rem" h="3.5rem" />
+                    ) : (
+                      '🌺'
+                    )}
                   </motion.div>
                 </>
               ) : (
@@ -270,19 +311,29 @@ const Hero: React.FC = () => {
                     position="absolute"
                     top="15%"
                     right="25%"
-                    fontSize="3rem"
+                    w="4rem"
+                    h="4rem"
                     opacity={0.3}
                   >
-                    🌸
+                    {blossomDataUrl ? (
+                      <Box as="img" src={blossomDataUrl} alt="blossom" w="4rem" h="4rem" />
+                    ) : (
+                      '🌸'
+                    )}
                   </Box>
                   <Box
                     position="absolute"
                     bottom="20%"
                     right="15%"
-                    fontSize="2.5rem"
+                    w="3.5rem"
+                    h="3.5rem"
                     opacity={0.2}
                   >
-                    🌺
+                    {hibiscusDataUrl ? (
+                      <Box as="img" src={hibiscusDataUrl} alt="hibiscus" w="3.5rem" h="3.5rem" />
+                    ) : (
+                      '🌺'
+                    )}
                   </Box>
                 </>
               )}
@@ -309,20 +360,29 @@ const Hero: React.FC = () => {
                       ease: "easeInOut",
                     }}
                     style={{
-                      fontSize: '6rem',
-                      filter: 'drop-shadow(0 8px 16px rgba(236, 72, 153, 0.2))',
                       willChange: 'transform',
                     }}
                   >
-                    💐
+                    <Box
+                      as="img"
+                      src={bouquetDataUrl || ''}
+                      alt="bouquet"
+                      width="8rem"
+                      height="8rem"
+                      style={{ filter: 'drop-shadow(0 8px 16px rgba(236, 72, 153, 0.2))' }}
+                      onError={(e: any) => { e.currentTarget.style.display = 'none'; e.currentTarget.parentElement.innerText = '💐'; }}
+                    />
                   </motion.div>
                 ) : (
                   <Box
-                    fontSize="6rem"
-                    filter="drop-shadow(0 8px 16px rgba(236, 72, 153, 0.2))"
-                  >
-                    💐
-                  </Box>
+                    as="img"
+                    src={bouquetDataUrl || ''}
+                    alt="bouquet"
+                    width="8rem"
+                    height="8rem"
+                    style={{ filter: 'drop-shadow(0 8px 16px rgba(236, 72, 153, 0.2))' }}
+                    onError={(e: any) => { e.currentTarget.style.display = 'none'; (e.currentTarget.parentElement as HTMLElement).innerText = '💐'; }}
+                  />
                 )}
               </Box>
             </Box>
