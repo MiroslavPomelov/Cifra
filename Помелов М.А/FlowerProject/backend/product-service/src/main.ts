@@ -7,7 +7,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
 
-  // Логирование уже распарсенного тела запроса
   app.use((req, res, next) => {
     if (req.originalUrl.startsWith('/products') && req.method === 'POST') {
       console.log('PARSED BODY:', req.body);
