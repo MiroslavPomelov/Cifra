@@ -74,7 +74,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         border="1px solid rgba(255, 255, 255, 0.1)"
         position="relative"
         overflow="hidden"
-        height="480px"
+        minH="500px"
         display="flex"
         flexDirection="column"
         _before={{
