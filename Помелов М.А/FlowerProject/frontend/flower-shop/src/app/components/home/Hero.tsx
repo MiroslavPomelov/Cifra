@@ -69,13 +69,12 @@ const Hero: React.FC = () => {
       }
     };
 
-    // CSS размеры (в пикселях): 8rem ≈ 128px, 3.5rem ≈ 56px
     setBouquetDataUrl(renderEmoji('💐', 128));
     setBlossomDataUrl(renderEmoji('🌸', 64));
     setHibiscusDataUrl(renderEmoji('🌺', 56));
   }, []);
 
-  
+
 
   return (
     <Box
@@ -276,7 +275,7 @@ const Hero: React.FC = () => {
                     }}
                   >
                     {blossomDataUrl ? (
-                      <Box as="img" src={blossomDataUrl} alt="blossom" w="4rem" h="4rem" />
+                      <Box as="img" src={"cherry-blossom-microsoft.png"} alt="blossom" w="4rem" h="4rem" />
                     ) : (
                       '🌸'
                     )}
@@ -303,7 +302,7 @@ const Hero: React.FC = () => {
                     }}
                   >
                     {hibiscusDataUrl ? (
-                      <Box as="img" src={hibiscusDataUrl} alt="hibiscus" w="3.5rem" h="3.5rem" />
+                      <Box as="img" src={"hibiscus-microsoft.png"} alt="hibiscus" w="3.5rem" h="3.5rem" />
                     ) : (
                       '🌺'
                     )}
@@ -320,7 +319,7 @@ const Hero: React.FC = () => {
                     opacity={0.3}
                   >
                     {blossomDataUrl ? (
-                      <Box as="img" src={blossomDataUrl} alt="blossom" w="4rem" h="4rem" />
+                      <Box as="img" src={"cherry-blossom-microsoft.png"} alt="blossom" w="4rem" h="4rem" />
                     ) : (
                       '🌸'
                     )}
@@ -334,7 +333,7 @@ const Hero: React.FC = () => {
                     opacity={0.2}
                   >
                     {hibiscusDataUrl ? (
-                      <Box as="img" src={hibiscusDataUrl} alt="hibiscus" w="3.5rem" h="3.5rem" />
+                      <Box as="img" src={"hibiscusDataUrl"} alt="hibiscus" w="3.5rem" h="3.5rem" />
                     ) : (
                       '🌺'
                     )}
@@ -342,7 +341,7 @@ const Hero: React.FC = () => {
                 </>
               )}
 
-              {/* Центральный элемент */}
+              {/* Центровой */}
               <Box
                 w="300px"
                 h="300px"
@@ -369,7 +368,7 @@ const Hero: React.FC = () => {
                   >
                     <Box
                       as="img"
-                      src={bouquetDataUrl || ''}
+                      src={"bouquet-microsoft.png"}
                       alt="bouquet"
                       width="8rem"
                       height="8rem"

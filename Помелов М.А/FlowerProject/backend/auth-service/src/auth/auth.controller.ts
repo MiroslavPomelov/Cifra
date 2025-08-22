@@ -16,11 +16,7 @@ export class AuthController {
     return this.authService.login(signin);
   }
 
-  /**
-   * Регистрация пользователя: отправляет код подтверждения на email.
-   * На этом этапе пользователь НЕ создаётся в системе.
-   * Тело запроса: все поля пользователя (email, password, firstName, lastName, birthDate, phone, city, personalData)
-   */
+ 
   @Post('registration')
   async signup(@Body() signup: SignupDto) {
     return this.authService.registration(signup);

@@ -10,7 +10,7 @@ async function seedProducts() {
   const productService = app.get(ProductService);
   const productRepository = app.get<Repository<Product>>(getRepositoryToken(Product));
 
-  // Перейти в каталог
+  // Перейти в каталог продуктов моих
   // px ts-node src/seed-products.ts 
   // npm run seed.
 
