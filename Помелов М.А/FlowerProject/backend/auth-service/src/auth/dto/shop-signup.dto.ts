@@ -20,5 +20,15 @@ export class ShopSignupDto {
 
   @IsString()
   @IsOptional()
+  @MaxLength(255)
+  description?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(20)
+  phone?: string;
+
+  @IsString()
+  @IsOptional()
   code?: string;
 } 

@@ -5,10 +5,12 @@ import { ProductModule } from './product/product.module';
 import { AppController } from './app.controller';
 import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: 'deploy/environments/dev.env' }),
+    MulterModule.register({ dest: './uploads' }),
     CacheModule.registerAsync({
       isGlobal: true,
       useFactory: () => ({

@@ -183,7 +183,7 @@ const ShopDashboardPage: React.FC = () => {
                     }
                     try {
                       setUploading(true);
-                      const { url } = await apiService.uploadShopImage(file, token);
+                      const { url } = await apiService.uploadProductImage(file, token);
                       setForm((prev) => ({ ...prev, imageUrl: url }));
                       toast({ title: 'Изображение загружено', description: 'URL подставлен в поле', status: 'success' });
                     } catch (err: any) {

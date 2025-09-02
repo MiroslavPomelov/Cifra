@@ -18,7 +18,7 @@ const AboutSection: React.FC = () => {
       id: 1,
       icon: '🌱',
       title: 'Свежие цветы',
-      description: 'Мы работаем только с проверенными поставщиками и гарантируем свежесть каждого цветка',
+      description: 'Мы работаем только с проверенными поставщиками и гарантируем качество цветка',
     },
     {
       id: 2,
@@ -324,11 +324,13 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ feature }) => {
         bg="rgba(255, 255, 255, 0.05)"
         backdropFilter="blur(10px)"
         borderRadius="xl"
+        width="300px"
+        height="250px"
         p={6}
         border="1px solid rgba(255, 255, 255, 0.1)"
         position="relative"
         overflow="hidden"
-        height="100%"
+        // height="100%"
         _before={{
           content: '""',
           position: 'absolute',

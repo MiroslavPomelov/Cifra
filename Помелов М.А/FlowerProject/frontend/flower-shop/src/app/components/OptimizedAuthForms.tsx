@@ -137,6 +137,16 @@ const OptimizedAuthForms: React.FC = () => {
     personalData: false
   });
 
+  // Отдельное состояние для данных магазина
+  const [shopRegisterData, setShopRegisterData] = useState({
+    email: '',
+    password: '',
+    name: '',
+    address: '',
+    description: '',
+    phone: ''
+  });
+
   const [verifyData, setVerifyData] = useState<VerifyFormData>({
     email: '',
     code: '',
@@ -147,6 +157,17 @@ const OptimizedAuthForms: React.FC = () => {
     phone: '',
     city: '',
     personalData: true
+  });
+
+  // Отдельное состояние для верификации магазина
+  const [shopVerifyData, setShopVerifyData] = useState({
+    email: '',
+    code: '',
+    password: '',
+    name: '',
+    address: '',
+    description: '',
+    phone: ''
   });
 
   const handleLoginEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -162,12 +183,48 @@ const OptimizedAuthForms: React.FC = () => {
   ) => {
     const value = field === 'personalData' ? (e.target as HTMLInputElement).checked : e.target.value;
     setRegisterData(prev => ({ ...prev, [field]: value }));
+    
+    // Если это режим магазина и изменились email или password, копируем их в shopRegisterData
+    if (isShopMode && (field === 'email' || field === 'password')) {
+      setShopRegisterData(prev => ({ ...prev, [field]: value }));
+    }
+  }, [isShopMode]);
+
+  // Синхронизация данных при переключении режима
+  const syncDataOnModeChange = useCallback((newIsShopMode: boolean) => {
+    if (newIsShopMode) {
+      // Переключаемся в режим магазина - копируем email и password
+      setShopRegisterData(prev => ({
+        ...prev,
+        email: registerData.email,
+        password: registerData.password
+      }));
+    } else {
+      // Переключаемся в режим пользователя - копируем email и password
+      setRegisterData(prev => ({
+        ...prev,
+        email: shopRegisterData.email,
+        password: shopRegisterData.password
+      }));
+    }
+  }, [registerData.email, registerData.password, shopRegisterData.email, shopRegisterData.password]);
+
+  const handleShopRegisterFieldChange = useCallback((field: keyof typeof shopRegisterData) => (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setShopRegisterData(prev => ({ ...prev, [field]: e.target.value }));
   }, []);
 
   const handleVerifyFieldChange = useCallback((field: keyof VerifyFormData) => (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setVerifyData(prev => ({ ...prev, [field]: e.target.value }));
+  }, []);
+
+  const handleShopVerifyFieldChange = useCallback((field: keyof typeof shopVerifyData) => (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setShopVerifyData(prev => ({ ...prev, [field]: e.target.value }));
   }, []);
 
   const handlePersonalDataChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -240,10 +297,45 @@ const OptimizedAuthForms: React.FC = () => {
   const handleRegister = useCallback(async () => {
     setIsLoading(true);
     try {
-      const { confirmPassword, ...dataWithoutConfirm } = registerData;
-      
-      const endpoint = isShopMode ? API_CONFIG.AUTH.SHOP_REGISTRATION : API_CONFIG.AUTH.REGISTRATION;
-      await api.post(endpoint, dataWithoutConfirm);
+      if (isShopMode) {
+        // Для магазина используем данные магазина
+        const shopData: any = {
+          email: shopRegisterData.email,
+          password: shopRegisterData.password,
+          name: shopRegisterData.name,
+          address: shopRegisterData.address,
+        };
+        
+        // Добавляем опциональные поля только если они не пустые и не undefined
+        if (shopRegisterData.description && shopRegisterData.description.trim() !== '') {
+          shopData.description = shopRegisterData.description.trim();
+        }
+        if (shopRegisterData.phone && shopRegisterData.phone.trim() !== '') {
+          shopData.phone = shopRegisterData.phone.trim();
+        }
+        
+        console.log('Отправляем данные для регистрации магазина:', shopData);
+        await api.post(API_CONFIG.AUTH.SHOP_REGISTRATION, shopData);
+        
+        // Обновляем данные для верификации
+        setShopVerifyData({
+          ...shopData,
+          code: ''
+        });
+        
+
+      } else {
+        // Для пользователя используем обычные данные
+        const { confirmPassword, ...dataWithoutConfirm } = registerData;
+        await api.post(API_CONFIG.AUTH.REGISTRATION, dataWithoutConfirm);
+        
+        // Обновляем данные для верификации
+        setVerifyData({
+          ...dataWithoutConfirm,
+          code: '',
+          personalData: true 
+        });
+      }
       
       toast({
         title: 'Код подтверждения отправлен!',
@@ -254,11 +346,6 @@ const OptimizedAuthForms: React.FC = () => {
       });
       setIsRegistering(false);
       setIsVerifying(true);
-      setVerifyData({
-        ...dataWithoutConfirm,
-        code: '',
-        personalData: true 
-      });
     } catch (error: unknown) {
       const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Не удалось отправить код';
       toast({
@@ -271,36 +358,52 @@ const OptimizedAuthForms: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [registerData, toast, isShopMode]);
+  }, [registerData, shopRegisterData, toast, isShopMode]);
 
   const handleVerify = useCallback(async () => {
     setIsLoading(true);
     try {
-      const endpoint = isShopMode ? API_CONFIG.AUTH.SHOP_VERIFY : API_CONFIG.AUTH.VERIFY;
-      const response = await api.post<AuthResponse>(endpoint, verifyData);
-      
-      toast({
-        title: 'Регистрация завершена!',
-        description: isShopMode ? 'Магазин успешно зарегистрирован!' : 'Добро пожаловать в мир цветов!',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
-      
-      localStorage.setItem('token', response.data.accessToken);
-      
-      try {
-        const loginEndpoint = isShopMode ? API_CONFIG.AUTH.SHOP_LOGIN : API_CONFIG.AUTH.LOGIN;
-        const loginResponse = await api.post<AuthResponse>(loginEndpoint, {
-          email: verifyData.email,
-          password: verifyData.password
+      if (isShopMode) {
+        // Для магазина используем данные магазина
+        const verifyData: any = {
+          email: shopVerifyData.email,
+          password: shopVerifyData.password,
+          name: shopVerifyData.name,
+          address: shopVerifyData.address,
+          code: shopVerifyData.code,
+        };
+        
+        // Добавляем опциональные поля только если они не пустые и не undefined
+        if (shopVerifyData.description && shopVerifyData.description.trim() !== '') {
+          verifyData.description = shopVerifyData.description.trim();
+        }
+        if (shopVerifyData.phone && shopVerifyData.phone.trim() !== '') {
+          verifyData.phone = shopVerifyData.phone.trim();
+        }
+        
+        console.log('Отправляем данные для верификации магазина:', verifyData);
+        const response = await api.post<AuthResponse>(API_CONFIG.AUTH.SHOP_VERIFY, verifyData);
+        
+        toast({
+          title: 'Регистрация завершена!',
+          description: 'Магазин успешно зарегистрирован!',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
         });
         
-        if (loginResponse.data.accessToken) {
-          localStorage.setItem('token', loginResponse.data.accessToken);
+        localStorage.setItem('token', response.data.accessToken);
+        
+        try {
+          const loginResponse = await api.post<AuthResponse>(API_CONFIG.AUTH.SHOP_LOGIN, {
+            email: shopVerifyData.email,
+            password: shopVerifyData.password
+          });
           
-          if (isShopMode) {
+          if (loginResponse.data.accessToken) {
+            localStorage.setItem('token', loginResponse.data.accessToken);
             localStorage.setItem('userRole', 'shop');
+            
             toast({
               title: 'Автоматический вход выполнен!',
               description: 'Перенаправляем в панель управления...',
@@ -312,16 +415,53 @@ const OptimizedAuthForms: React.FC = () => {
             setTimeout(() => {
               window.location.href = '/shop/dashboard';
             }, 2000);
-          } else {
-            localStorage.setItem('userRole', 'user');
+          }
+        } catch (loginError) {
+          console.error('Ошибка автоматического входа магазина:', loginError);
+          // Если автоматический вход не удался, просто перенаправляем
+          setTimeout(() => {
+            window.location.href = '/shop/dashboard';
+          }, 2000);
+        }
+      } else {
+        // Для пользователя используем обычные данные
+        const response = await api.post<AuthResponse>(API_CONFIG.AUTH.VERIFY, verifyData);
+        
+        toast({
+          title: 'Регистрация завершена!',
+          description: 'Добро пожаловать в мир цветов!',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+        
+        localStorage.setItem('token', response.data.accessToken);
+        
+        try {
+          const loginResponse = await api.post<AuthResponse>(API_CONFIG.AUTH.LOGIN, {
+            email: verifyData.email,
+            password: verifyData.password
+          });
           
+          if (loginResponse.data.accessToken) {
+            localStorage.setItem('token', loginResponse.data.accessToken);
+            localStorage.setItem('userRole', 'user');
+            
+            toast({
+              title: 'Автоматический вход выполнен!',
+              description: 'Перенаправляем на главную страницу...',
+              status: 'success',
+              duration: 2000,
+              isClosable: true,
+            });
+            
             const pendingCheckout = localStorage.getItem('pendingCheckout');
             if (pendingCheckout === 'true') {
               localStorage.removeItem('pendingCheckout');
               toast({
-                title: 'Автоматический вход выполнен!',
-                description: 'Продолжаем оформление заказа...',
-                status: 'success',
+                title: 'Продолжаем оформление заказа',
+                description: 'Теперь вы можете оформить заказ',
+                status: 'info',
                 duration: 2000,
                 isClosable: true,
               });
@@ -329,29 +469,21 @@ const OptimizedAuthForms: React.FC = () => {
                 window.location.href = '/checkout';
               }, 2000);
             } else {
-              toast({
-                title: 'Автоматический вход выполнен!',
-                description: 'Перенаправляем на главную страницу...',
-                status: 'success',
-                duration: 2000,
-                isClosable: true,
-              });
-              
               setTimeout(() => {
                 window.location.href = '/';
               }, 2000);
             }
           }
+        } catch (loginError) {
+          console.error('Ошибка автоматического входа:', loginError);
+          // Если автоматический вход не удался, просто перенаправляем
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 2000);
         }
-      } catch (loginError) {
-        console.error('Ошибка автоматического входа:', loginError);
-        setIsVerifying(false);
-        setIsLogin(true);
       }
-      
-      setIsVerifying(false);
     } catch (error: unknown) {
-      const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Неверный код подтверждения';
+      const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Ошибка при верификации';
       toast({
         title: 'Ошибка верификации',
         description: errorMessage,
@@ -362,7 +494,7 @@ const OptimizedAuthForms: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [verifyData, toast, isShopMode]);
+  }, [verifyData, shopVerifyData, toast, isShopMode]);
 
   const switchToRegister = useCallback(() => setIsLogin(false), []);
   const switchToLogin = useCallback(() => setIsLogin(true), []);
@@ -390,7 +522,10 @@ const OptimizedAuthForms: React.FC = () => {
               size="sm"
               variant={!isShopMode ? "solid" : "outline"}
               colorScheme="pink"
-              onClick={() => setIsShopMode(false)}
+              onClick={() => {
+                syncDataOnModeChange(false);
+                setIsShopMode(false);
+              }}
               _hover={{
                 transform: 'translateY(-2px)',
                 boxShadow: '0 4px 12px rgba(236, 72, 153, 0.3)',
@@ -403,7 +538,10 @@ const OptimizedAuthForms: React.FC = () => {
               size="sm"
               variant={isShopMode ? "solid" : "outline"}
               colorScheme="purple"
-              onClick={() => setIsShopMode(true)}
+              onClick={() => {
+                syncDataOnModeChange(true);
+                setIsShopMode(true);
+              }}
               _hover={{
                 transform: 'translateY(-2px)',
                 boxShadow: '0 4px 12px rgba(147, 51, 234, 0.3)',
@@ -510,7 +648,7 @@ const OptimizedAuthForms: React.FC = () => {
         </motion.div>
       </VStack>
     </motion.div>
-  ), [loginData, showPassword, isLoading, handleLogin, handleLoginEmailChange, handleLoginPasswordChange, togglePasswordVisibility, switchToRegister, primaryColor, secondaryColor, borderColor, isShopMode]);
+  ), [loginData, showPassword, isLoading, handleLogin, handleLoginEmailChange, handleLoginPasswordChange, togglePasswordVisibility, switchToRegister, primaryColor, secondaryColor, borderColor, isShopMode, syncDataOnModeChange]);
 
   const RegisterForm = useMemo(() => (
     <motion.div
@@ -534,7 +672,10 @@ const OptimizedAuthForms: React.FC = () => {
               size="sm"
               variant={!isShopMode ? "solid" : "outline"}
               colorScheme="pink"
-              onClick={() => setIsShopMode(false)}
+              onClick={() => {
+                syncDataOnModeChange(false);
+                setIsShopMode(false);
+              }}
               _hover={{
                 transform: 'translateY(-2px)',
                 boxShadow: '0 4px 12px rgba(236, 72, 153, 0.3)',
@@ -547,7 +688,10 @@ const OptimizedAuthForms: React.FC = () => {
               size="sm"
               variant={isShopMode ? "solid" : "outline"}
               colorScheme="purple"
-              onClick={() => setIsShopMode(true)}
+              onClick={() => {
+                syncDataOnModeChange(true);
+                setIsShopMode(true);
+              }}
               _hover={{
                 transform: 'translateY(-2px)',
                 boxShadow: '0 4px 12px rgba(147, 51, 234, 0.3)',
@@ -567,8 +711,8 @@ const OptimizedAuthForms: React.FC = () => {
               </FormLabel>
               <Input
                 color={fonColorForm}
-                value={registerData.firstName}
-                onChange={handleRegisterFieldChange('firstName')}
+                value={isShopMode ? shopRegisterData.name : registerData.firstName}
+                onChange={isShopMode ? handleShopRegisterFieldChange('name') : handleRegisterFieldChange('firstName')}
                 placeholder={isShopMode ? "Цветочный рай" : "Иван"}
                 borderColor={borderColor}
                 bg="rgba(255, 255, 255, 0.1)"
@@ -587,8 +731,8 @@ const OptimizedAuthForms: React.FC = () => {
               </FormLabel>
               <Input
               color={fonColorForm}
-                value={registerData.lastName}
-                onChange={handleRegisterFieldChange('lastName')}
+                value={isShopMode ? shopRegisterData.description : registerData.lastName}
+                onChange={isShopMode ? handleShopRegisterFieldChange('description') : handleRegisterFieldChange('lastName')}
                 placeholder={isShopMode ? "Краткое описание магазина" : "Иванов"}
                 borderColor={borderColor}
                 bg="rgba(255, 255, 255, 0.1)"
@@ -608,8 +752,8 @@ const OptimizedAuthForms: React.FC = () => {
             <Input
               color={fonColorForm}
               type="email"
-              value={registerData.email}
-              onChange={handleRegisterFieldChange('email')}
+              value={isShopMode ? shopRegisterData.email : registerData.email}
+              onChange={isShopMode ? handleShopRegisterFieldChange('email') : handleRegisterFieldChange('email')}
               placeholder="your@email.com"
               borderColor={borderColor}
               bg="rgba(255, 255, 255, 0.1)"
@@ -629,8 +773,8 @@ const OptimizedAuthForms: React.FC = () => {
               <Input
                 color={fonColorForm}
                 type={showPassword ? 'text' : 'password'}
-                value={registerData.password}
-                onChange={handleRegisterFieldChange('password')}
+                value={isShopMode ? shopRegisterData.password : registerData.password}
+                onChange={isShopMode ? handleShopRegisterFieldChange('password') : handleRegisterFieldChange('password')}
                 placeholder="Минимум 6 символов"
                 borderColor={borderColor}
                 bg="rgba(255, 255, 255, 0.1)"
@@ -654,6 +798,48 @@ const OptimizedAuthForms: React.FC = () => {
             </InputGroup>
           </FormControl>
         </motion.div>
+
+        {isShopMode && (
+          <>
+            <motion.div variants={itemVariants}>
+              <FormControl isRequired>
+                <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Адрес магазина</FormLabel>
+                <Input
+                  color={fonColorForm}
+                  value={shopRegisterData.address}
+                  onChange={handleShopRegisterFieldChange('address')}
+                  placeholder="ул. Пушкина, д. 10, Москва"
+                  borderColor={borderColor}
+                  bg="rgba(255, 255, 255, 0.1)"
+                  _focus={{
+                    borderColor: primaryColor,
+                    boxShadow: `0 0 0 1px ${primaryColor}`,
+                    bg: "rgba(255, 255, 255, 0.15)",
+                  }}
+                />
+              </FormControl>
+            </motion.div>
+
+            <motion.div variants={itemVariants}>
+              <FormControl>
+                <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Телефон магазина</FormLabel>
+                <Input
+                  color={fonColorForm}
+                  value={shopRegisterData.phone}
+                  onChange={handleShopRegisterFieldChange('phone')}
+                  placeholder="+7 (999) 123-45-67"
+                  borderColor={borderColor}
+                  bg="rgba(255, 255, 255, 0.1)"
+                  _focus={{
+                    borderColor: primaryColor,
+                    boxShadow: `0 0 0 1px ${primaryColor}`,
+                    bg: "rgba(255, 255, 255, 0.15)",
+                  }}
+                />
+              </FormControl>
+            </motion.div>
+          </>
+        )}
 
         {!isShopMode && (
           <>
@@ -728,48 +914,6 @@ const OptimizedAuthForms: React.FC = () => {
           </>
         )}
 
-        {isShopMode && (
-          <>
-            <motion.div variants={itemVariants}>
-              <FormControl isRequired>
-                <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Адрес магазина</FormLabel>
-                <Input
-                  color={fonColorForm}
-                  value={registerData.city}
-                  onChange={handleRegisterFieldChange('city')}
-                  placeholder="г. Москва, ул. Цветочная, 15"
-                  borderColor={borderColor}
-                  bg="rgba(255, 255, 255, 0.1)"
-                  _focus={{
-                    borderColor: primaryColor,
-                    boxShadow: `0 0 0 1px ${primaryColor}`,
-                    bg: "rgba(255, 255, 255, 0.15)",
-                  }}
-                />
-              </FormControl>
-            </motion.div>
-
-            <motion.div variants={itemVariants}>
-              <FormControl isRequired>
-                <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Телефон магазина</FormLabel>
-                <Input
-                  color={fonColorForm}
-                  value={registerData.phone}
-                  onChange={handleRegisterFieldChange('phone')}
-                  placeholder="+7 (495) 123-45-67"
-                  borderColor={borderColor}
-                  bg="rgba(255, 255, 255, 0.1)"
-                  _focus={{
-                    borderColor: primaryColor,
-                    boxShadow: `0 0 0 1px ${primaryColor}`,
-                    bg: "rgba(255, 255, 255, 0.15)",
-                  }}
-                />
-              </FormControl>
-            </motion.div>
-          </>
-        )}
-
         <motion.div variants={itemVariants}>
           <Checkbox
             isChecked={Boolean(registerData.personalData)}
@@ -828,7 +972,7 @@ const OptimizedAuthForms: React.FC = () => {
         </motion.div>
       </VStack>
     </motion.div>
-  ), [registerData, showPassword, isLoading, handleRegister, handleRegisterFieldChange, handlePersonalDataChange, togglePasswordVisibility, switchToLogin, primaryColor, secondaryColor, borderColor, isShopMode]);
+  ), [registerData, shopRegisterData, showPassword, isLoading, handleRegister, handleRegisterFieldChange, handleShopRegisterFieldChange, handlePersonalDataChange, togglePasswordVisibility, switchToLogin, primaryColor, secondaryColor, borderColor, isShopMode, syncDataOnModeChange]);
 
   const VerifyForm = useMemo(() => (
     <motion.div
@@ -842,7 +986,7 @@ const OptimizedAuthForms: React.FC = () => {
             {isShopMode ? 'Подтверждение email магазина' : 'Подтверждение email'}
           </Heading>
           <Text textAlign="center" color="gray.300" fontSize="sm">
-            Введите код, отправленный на {verifyData.email}
+            Введите код, отправленный на {isShopMode ? shopVerifyData.email : verifyData.email}
           </Text>
         </motion.div>
 
@@ -851,8 +995,8 @@ const OptimizedAuthForms: React.FC = () => {
             <FormLabel color="white" fontWeight="semibold" textShadow="0 1px 2px rgba(0,0,0,0.5)">Код подтверждения</FormLabel>
             <Input
               color={fonColorForm}
-              value={verifyData.code}
-              onChange={handleVerifyFieldChange('code')}
+              value={isShopMode ? shopVerifyData.code : verifyData.code}
+              onChange={isShopMode ? handleShopVerifyFieldChange('code') : handleVerifyFieldChange('code')}
               placeholder="123456"
               maxLength={6}
               textAlign="center"
@@ -912,7 +1056,7 @@ const OptimizedAuthForms: React.FC = () => {
         </motion.div>
       </VStack>
     </motion.div>
-  ), [verifyData, isLoading, handleVerify, handleVerifyFieldChange, primaryColor, secondaryColor, borderColor, isShopMode]);
+  ), [verifyData, shopVerifyData, isLoading, handleVerify, handleVerifyFieldChange, handleShopVerifyFieldChange, primaryColor, secondaryColor, borderColor, isShopMode]);
 
   return (
     <Box

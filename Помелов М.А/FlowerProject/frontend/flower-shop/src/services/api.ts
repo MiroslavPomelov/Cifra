@@ -111,6 +111,18 @@ class ApiService {
     return response.data;
   }
 
+  // Product Images
+  async uploadProductImage(file: File, token: string): Promise<{ url: string }> {
+    const form = new FormData();
+    form.append('file', file);
+    const response = await axios.post(`${this.baseURL}/products/upload-image`, form, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  }
+
   // Products
   async getProducts(): Promise<Product[]> {
     try {
