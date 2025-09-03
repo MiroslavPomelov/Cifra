@@ -304,9 +304,7 @@ const Footer: React.FC = () => {
               transition={{ delay: 0.5 }}
             >
               <VStack align={{ base: 'center', md: 'start' }} spacing={2}>
-                <Text color="gray.400" fontSize="sm">
-                  © 2025 Flower Shop. Все права защищены.
-                </Text>
+                
 
                 <HStack spacing={1} align="baseline">
                   <Text color="gray.400" fontSize="sm">
@@ -339,6 +337,10 @@ const Footer: React.FC = () => {
                       {link.name}
                     </Text>
                   ))}
+
+                  <Text color="gray.400" fontSize="sm">
+                  © 2025 Flower Shop. Все права защищены.
+                </Text>
                 </HStack>
               </VStack>
             </motion.div>
@@ -350,9 +352,7 @@ const Footer: React.FC = () => {
               transition={{ delay: 0.6 }}
             >
               <VStack align={{ base: 'center', md: 'end' }} spacing={4}>
-                <Text color="gray.400" fontSize="sm" textAlign={{ base: 'center', md: 'right' }}>
-                  Следите за нами в социальных сетях
-                </Text>
+                
 
                 <HStack
                   spacing={2}
@@ -399,6 +399,10 @@ const Footer: React.FC = () => {
                     </motion.div>
                   ))}
                 </HStack>
+
+                <Text color="gray.400" fontSize="sm" textAlign={{ base: 'center', md: 'right' }}>
+                  Следите за нами в социальных сетях
+                </Text>
               </VStack>
             </motion.div>
           </SimpleGrid>
