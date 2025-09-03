@@ -11,6 +11,7 @@ import {
   Badge,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 const Hero: React.FC = () => {
   const [isReducedMotion, setIsReducedMotion] = useState(false);
@@ -135,7 +136,16 @@ const Hero: React.FC = () => {
                   fontWeight="semibold"
                   letterSpacing="wide"
                 >
-                  ✨ Добро пожаловать в мир цветов
+                  <Box
+                    as="img"
+                    src="/2728.png"
+                    alt="Цветок"
+                    w="20px"
+                    h="20px"
+                    display="inline-block"
+                    verticalAlign="middle"
+                  />
+                   &nbsp; Добро пожаловать в мир цветов
                 </Badge>
               </motion.div>
 

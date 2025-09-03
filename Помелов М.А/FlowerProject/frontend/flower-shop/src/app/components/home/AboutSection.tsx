@@ -16,27 +16,31 @@ const AboutSection: React.FC = () => {
   const features = [
     {
       id: 1,
-      icon: '🌱',
+      icon: '/1f331.png', // Добавьте слеш в начале
       title: 'Свежие цветы',
       description: 'Мы работаем только с проверенными поставщиками и гарантируем качество цветка',
+      type: 'image' // Добавляем тип для区分 изображений и эмодзи
     },
     {
       id: 2,
-      icon: '🚚',
+      icon: '1f69a.png',
       title: 'Быстрая доставка',
       description: 'Доставляем букеты в день заказа по всему городу',
+      type: 'image'
     },
     {
       id: 3,
-      icon: '💝',
+      icon: '1f49d.png',
       title: 'Подарочная упаковка',
       description: 'Каждый букет упаковываем в красивую подарочную бумагу',
+      type: 'image'
     },
     {
       id: 4,
-      icon: '🎨',
+      icon: '1f3a8.png',
       title: 'Индивидуальный подход',
       description: 'Создаем уникальные композиции по вашим пожеланиям',
+      type: 'image'
     },
   ];
 
@@ -105,9 +109,18 @@ const AboutSection: React.FC = () => {
                   fontWeight="semibold"
                   letterSpacing="wide"
                 >
-                  🌸 О нас
+                  <Box
+                    as="img"
+                    src="1f340.png"
+                    alt="Цветок"
+                    w="20px"
+                    h="20px"
+                    display="inline-block"
+                    verticalAlign="middle"
+                  />
+                  &nbsp; О нас
                 </Badge>
-                
+
                 <Text
                   fontSize={{ base: '3xl', md: '4xl', lg: '5xl' }}
                   fontWeight="bold"
@@ -125,15 +138,15 @@ const AboutSection: React.FC = () => {
                     красоту каждый день
                   </Text>
                 </Text>
-                
+
                 <Text
                   fontSize={{ base: 'lg', md: 'xl' }}
                   color="gray.300"
                   maxW="800px"
                   lineHeight="1.6"
                 >
-                  Flower Shop — это место, где рождаются самые красивые букеты. 
-                  Мы влюблены в цветы и хотим поделиться этой любовью с вами. 
+                  Flower Shop — это место, где рождаются самые красивые букеты.
+                  Мы влюблены в цветы и хотим поделиться этой любовью с вами.
                   Каждый наш букет — это произведение искусства, созданное с душой и вниманием к деталям.
                 </Text>
               </VStack>
@@ -174,9 +187,17 @@ const AboutSection: React.FC = () => {
                       filter: 'drop-shadow(0 15px 30px rgba(236, 72, 153, 0.4))',
                     }}
                   >
-                    🌸
+                    <Box
+                      as="img"
+                      src="cherry-blossom-microsoft.png"
+                      alt="Цветок"
+                      w="200px"
+                      h="200px"
+                      display="inline-block"
+                      verticalAlign="middle"
+                    />
                   </motion.div>
-                  
+
                   {/* Дополнительные цветы */}
                   <motion.div
                     style={{
@@ -196,9 +217,17 @@ const AboutSection: React.FC = () => {
                       delay: 1,
                     }}
                   >
-                    🌹
+                    <Box
+                      as="img"
+                      src="1f33900.png"
+                      alt="Цветок"
+                      w="60px"
+                      h="60px"
+                      display="inline-block"
+                      verticalAlign="middle"
+                    />
                   </motion.div>
-                  
+
                   <motion.div
                     style={{
                       position: 'absolute',
@@ -217,7 +246,15 @@ const AboutSection: React.FC = () => {
                       delay: 2,
                     }}
                   >
-                    🌺
+                    <Box
+                      as="img"
+                      src="hibiscus-microsoft.png"
+                      alt="Цветок"
+                      w="60px"
+                      h="60px"
+                      display="inline-block"
+                      verticalAlign="middle"
+                    />
                   </motion.div>
                 </Box>
               </motion.div>
@@ -233,8 +270,8 @@ const AboutSection: React.FC = () => {
                     color="gray.300"
                     lineHeight="1.8"
                   >
-                    Наша миссия — дарить радость и красоту через цветы. 
-                    Мы верим, что каждый букет может рассказать историю, 
+                    Наша миссия — дарить радость и красоту через цветы.
+                    Мы верим, что каждый букет может рассказать историю,
                     передать эмоции и создать незабываемые моменты.
                   </Text>
 
@@ -243,8 +280,8 @@ const AboutSection: React.FC = () => {
                     color="gray.300"
                     lineHeight="1.8"
                   >
-                    Мы гордимся тем, что помогаем нашим клиентам выражать 
-                    свои чувства через искусство флористики. Каждый заказ 
+                    Мы гордимся тем, что помогаем нашим клиентам выражать
+                    свои чувства через искусство флористики. Каждый заказ
                     для нас — это возможность создать что-то особенное.
                   </Text>
 
@@ -308,6 +345,7 @@ interface Feature {
   icon: string;
   title: string;
   description: string;
+  type?: string;
 }
 
 interface FeatureCardProps {
@@ -316,94 +354,54 @@ interface FeatureCardProps {
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ feature }) => {
   return (
-    <motion.div
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.3 }}
+    <Box
+      p={6}
+      borderRadius="xl"
+      bg="rgba(0, 0, 0, 0.23)"
+      border="1px solid"
+      borderColor="rgba(20, 8, 8, 0.1)"
+      backdropFilter="blur(10px)"
+      height="full"
+      textAlign="center"
+      transition="all 0.3s"
+      _hover={{
+        transform: 'translateY(-5px)',
+        borderColor: 'pink.400',
+      }}
     >
-      <Box
-        bg="rgba(255, 255, 255, 0.05)"
-        backdropFilter="blur(10px)"
-        borderRadius="xl"
-        width="300px"
-        height="250px"
-        p={6}
-        border="1px solid rgba(255, 255, 255, 0.1)"
-        position="relative"
-        overflow="hidden"
-        // height="100%"
-        _before={{
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          borderRadius: 'xl',
-          padding: '1px',
-          background: 'linear-gradient(45deg, rgba(236, 72, 153, 0.2), rgba(147, 51, 234, 0.2))',
-          WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-          WebkitMaskComposite: 'xor',
-          maskComposite: 'exclude',
-          zIndex: 0
-        }}
-      >
-        <VStack spacing={4} align="center" position="relative" zIndex={1}>
-          <motion.div
-            whileHover={{ scale: 1.2, rotate: 10 }}
-            transition={{ duration: 0.3 }}
-            style={{
-              fontSize: '3rem',
-              filter: 'drop-shadow(0 8px 16px rgba(236, 72, 153, 0.3))',
-            }}
+      <VStack spacing={4}>
+        {feature.type === 'image' ? (
+          // Для изображений
+          <Box
+            as="img"
+            src={feature.icon}
+            alt={feature.title}
+            w="70px"
+            h="70px"
+            objectFit="contain"
+            mx="auto"
+            borderRadius="lg"
+            p={2}
+          />
+        ) : (
+          // Для эмодзи
+          <Box
+            fontSize="3rem"
+            filter="drop-shadow(0 4px 8px rgba(236, 72, 153, 0.3))"
           >
             {feature.icon}
-          </motion.div>
+          </Box>
+        )}
 
-          <Text
-            fontSize="lg"
-            fontWeight="bold"
-            color="white"
-            textAlign="center"
-          >
-            {feature.title}
-          </Text>
+        <Text fontSize="lg" fontWeight="bold" color="white">
+          {feature.title}
+        </Text>
 
-          <Text
-            fontSize="sm"
-            color="gray.300"
-            textAlign="center"
-            lineHeight="1.6"
-          >
-            {feature.description}
-          </Text>
-        </VStack>
-
-        {/* Фоновые эффекты */}
-        <motion.div
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            width: '100px',
-            height: '100px',
-            background: 'radial-gradient(circle, rgba(236, 72, 153, 0.1), transparent)',
-            borderRadius: '50%',
-            filter: 'blur(20px)',
-            transform: 'translate(-50%, -50%)',
-            zIndex: 0,
-          }}
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.2, 0.5, 0.2],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      </Box>
-    </motion.div>
+        <Text fontSize="sm" color="gray.300" lineHeight="1.5">
+          {feature.description}
+        </Text>
+      </VStack>
+    </Box>
   );
 };
 
