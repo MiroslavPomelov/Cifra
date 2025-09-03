@@ -144,7 +144,7 @@ export class UserService {
       await this.clearUserCache(id);
       await this.clearUsersCache();
 
-      return this.findOne(id); // Вернет обновленного пользователя с кэшированием
+      return this.findOne(id); 
     } catch (error) {
       this.logger.error(`Error updating user ${id}: ${error.message}`);
       throw error;
