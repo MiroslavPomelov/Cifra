@@ -34,8 +34,12 @@ export const useOrders = (userId: number) => {
   const [error, setError] = useState<string | null>(null);
   const loadingRef = useRef(false);
 
-
   const loadOrdersFromAPI = useCallback(async () => {
+    // Для гостевых заказов (userId = 0) не загружаем из API
+    if (userId === 0) {
+      setIsLoading(false);
+      return;
+    }
 
     if (loadingRef.current) {
       console.log('🚫 Запрос уже выполняется, пропускаем');
@@ -89,7 +93,9 @@ export const useOrders = (userId: number) => {
 
   const loadOrdersFromLocal = () => {
     try {
-      const savedOrders = localStorage.getItem(`orders_${userId}`);
+      // Для гостевых заказов загружаем из специального ключа
+      const key = userId === 0 ? 'guest_orders' : `orders_${userId}`;
+      const savedOrders = localStorage.getItem(key);
       if (savedOrders) {
         const parsedOrders = JSON.parse(savedOrders);
         setOrders(parsedOrders);
@@ -109,7 +115,9 @@ export const useOrders = (userId: number) => {
 
   const saveOrdersToLocal = (newOrders: UserOrder[]) => {
     try {
-      localStorage.setItem(`orders_${userId}`, JSON.stringify(newOrders));
+      // Для гостевых заказов сохраняем в специальный ключ
+      const key = userId === 0 ? 'guest_orders' : `orders_${userId}`;
+      localStorage.setItem(key, JSON.stringify(newOrders));
     } catch (error) {
       console.warn('Не удалось сохранить заказы в localStorage:', error);
     }
@@ -119,6 +127,15 @@ export const useOrders = (userId: number) => {
   const addOrder = async (order: UserOrder) => {
     try {
       const token = localStorage.getItem('token');
+      
+      // Для гостевых заказов (userId = 0) создаем только локальный заказ
+      if (userId === 0) {
+        const newOrders = [order, ...orders];
+        setOrders(newOrders);
+        saveOrdersToLocal(newOrders);
+        return;
+      }
+      
       if (token) {
         await apiService.createOrder({
           userId: userId,
@@ -248,6 +265,13 @@ export const useOrders = (userId: number) => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    
+    // Для гостевых заказов (userId = 0) загружаем только из localStorage
+    if (userId === 0) {
+      loadOrdersFromLocal();
+      return;
+    }
+    
     if (token) {
       loadOrdersFromAPI();
     } else {

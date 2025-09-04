@@ -61,20 +61,17 @@ const CartPage: React.FC = () => {
       return;
     }
     
+    // Разрешаем гостевые заказы без авторизации
     const token = localStorage.getItem('token');
     if (!token) {
-      toast({
-        title: 'Требуется авторизация',
-        description: 'Для оформления заказа необходимо войти в систему',
-        status: 'warning',
-        duration: 4000,
-        isClosable: true,
-      });
-      localStorage.setItem('pendingCheckout', 'true');
-      router.push('/login');
+      // Для гостей сохраняем флаг и перенаправляем на оформление заказа
+      localStorage.setItem('isGuestCheckout', 'true');
+      router.push('/checkout');
       return;
     }
     
+    // Для авторизованных пользователей
+    localStorage.removeItem('isGuestCheckout');
     router.push('/checkout');
   };
 
@@ -144,6 +141,20 @@ const CartPage: React.FC = () => {
               🛒 Корзина покупок
             </Heading>
           </HStack>
+          
+          {/* Информация о гостевом заказе */}
+          {!localStorage.getItem('token') && cartItems.length > 0 && (
+            <Alert status="info" borderRadius="md">
+              <AlertIcon />
+              <Box>
+                <Text fontWeight="semibold">Хотите оформить заказ без регистрации?</Text>
+                <Text fontSize="sm">
+                  Вы можете оформить заказ как гость, указав только контактные данные для доставки.
+                </Text>
+              </Box>
+            </Alert>
+          )}
+          
           {cartItems.length === 0 && (
             <Alert status="info" borderRadius="md">
               <AlertIcon />
@@ -286,8 +297,24 @@ const CartPage: React.FC = () => {
                       onClick={proceedToCheckout}
                       width="100%"
                     >
-                      Оформить заказ
+                      {!localStorage.getItem('token') 
+                        ? 'Оформить гостевой заказ' 
+                        : 'Оформить заказ'
+                      }
                     </Button>
+                    
+                    {/* Кнопка для просмотра гостевых заказов */}
+                    {!localStorage.getItem('token') && (
+                      <Button
+                        variant="outline"
+                        colorScheme="purple"
+                        size="md"
+                        onClick={() => router.push('/guest-orders')}
+                        width="100%"
+                      >
+                        Мои гостевые заказы
+                      </Button>
+                    )}
                   </VStack>
                 </CardBody>
               </Card>

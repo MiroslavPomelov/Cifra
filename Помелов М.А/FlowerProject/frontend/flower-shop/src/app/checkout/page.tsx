@@ -61,7 +61,9 @@ const CheckoutPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [userId, setUserId] = useState<number | null>(null);
-  const { createOrder: createLocalOrder } = useOrders(userId || 0);
+  const { createOrder: createLocalOrder } = useOrders(
+    localStorage.getItem('isGuestCheckout') === 'true' ? 0 : (userId || 0)
+  );
   const [paymentStep, setPaymentStep] = useState(false);
   const [paymentId, setPaymentId] = useState<string | null>(null);
   const [form, setForm] = useState<CheckoutForm>({
@@ -77,7 +79,10 @@ const CheckoutPage: React.FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (!token) {
+    const isGuestCheckout = localStorage.getItem('isGuestCheckout') === 'true';
+    
+    // Если это гость, не проверяем токен
+    if (!token && !isGuestCheckout) {
       toast({
         title: 'Требуется авторизация',
         description: 'Для оформления заказа необходимо войти в систему',
@@ -89,10 +94,12 @@ const CheckoutPage: React.FC = () => {
       return;
     }
 
-    // Декодируем JWT для получения ID пользователя
-    const payload = parseJwt(token);
-    if (payload && payload.sub) {
-      setUserId(payload.sub);
+    // Для авторизованных пользователей декодируем JWT
+    if (token && !isGuestCheckout) {
+      const payload = parseJwt(token);
+      if (payload && payload.sub) {
+        setUserId(payload.sub);
+      }
     }
 
     const savedCart = localStorage.getItem('cart');
@@ -163,19 +170,16 @@ const CheckoutPage: React.FC = () => {
     
     try {
       const token = localStorage.getItem('token');
-      if (!token) {
+      const isGuestCheckout = localStorage.getItem('isGuestCheckout') === 'true';
+      
+      // Для гостевых заказов не требуем токен
+      if (!token && !isGuestCheckout) {
         throw new Error('Токен не найден');
-      }
-
-      // Декодируем JWT для получения ID пользователя
-      const payload = parseJwt(token);
-      if (!payload || !payload.sub) {
-        throw new Error('Неверный токен');
       }
 
       // Подготавливаем данные заказа
       const orderData = {
-        userId: payload.sub,
+        userId: userId || 0, // Для гостей userId = 0
         items: cartItems.map(item => ({
           productId: item.id,
           productName: item.name,
@@ -192,34 +196,54 @@ const CheckoutPage: React.FC = () => {
         deliveryNotes: form.deliveryNotes,
         deliveryMethod: form.deliveryMethod,
         paymentMethod: form.paymentMethod,
+        isGuest: isGuestCheckout,
       };
 
-      const localOrder = createLocalOrder(orderData);
-      
-      try {
-        const result = await apiService.createOrder(orderData, token);
+      // Для гостевых заказов создаем локальный заказ
+      if (isGuestCheckout) {
+        const localOrder = await createLocalOrder(orderData);
         toast({
           title: 'Заказ оформлен успешно!',
-          description: `Заказ №${result.orderId} создан. Мы свяжемся с вами в ближайшее время.`,
+          description: `Заказ №${localOrder.orderNumber} создан. Мы свяжемся с вами в ближайшее время.`,
           status: 'success',
           duration: 5000,
           isClosable: true,
         });
-      } catch (apiError) {
-        toast({
-          title: 'Заказ создан!',
-          description: `Заказ №${(await localOrder).orderNumber} сохранен локально. В реальном приложении он будет отправлен на сервер.`,
-          status: 'info',
-          duration: 5000,
-          isClosable: true,
-        });
+      } else {
+        // Для авторизованных пользователей пытаемся создать заказ через API
+        try {
+          const result = await apiService.createOrder(orderData, token!);
+          toast({
+            title: 'Заказ оформлен успешно!',
+            description: `Заказ №${result.orderId} создан. Мы свяжемся с вами в ближайшее время.`,
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+          });
+        } catch (apiError) {
+          // Если API недоступен, создаем локальный заказ
+          const localOrder = await createLocalOrder(orderData);
+          toast({
+            title: 'Заказ создан!',
+            description: `Заказ №${localOrder.orderNumber} сохранен локально. В реальном приложении он будет отправлен на сервер.`,
+            status: 'info',
+            duration: 5000,
+            isClosable: true,
+          });
+        }
       }
       
+      // Очищаем корзину и флаги
       localStorage.removeItem('cart');
+      localStorage.removeItem('isGuestCheckout');
       window.dispatchEvent(new Event('cartUpdated'));
       
       setTimeout(() => {
-        router.push('/profile');
+        if (isGuestCheckout) {
+          router.push('/');
+        } else {
+          router.push('/profile');
+        }
       }, 2000);
       
     } catch (error) {
@@ -279,6 +303,19 @@ const CheckoutPage: React.FC = () => {
     <Box minH="100vh" bg="gray.50">
       <Container maxW="6xl" py={8}>
         <VStack spacing={8} align="stretch">
+          {/* Информационное сообщение для гостей */}
+          {localStorage.getItem('isGuestCheckout') === 'true' && (
+            <Alert status="info" borderRadius="md">
+              <AlertIcon />
+              <Box>
+                <Text fontWeight="semibold">Гостевой заказ</Text>
+                <Text fontSize="sm">
+                  Вы оформляете заказ как гость. После оформления вы получите подтверждение на указанный email.
+                </Text>
+              </Box>
+            </Alert>
+          )}
+          
           <HStack justify="space-between" align="center">
             <HStack spacing={4}>
               <Button
@@ -300,7 +337,10 @@ const CheckoutPage: React.FC = () => {
             </HStack>
             
             <Heading size="lg" color="gray.700">
-              💳 Оформление заказа
+              {localStorage.getItem('isGuestCheckout') === 'true' 
+                ? '🛒 Гостевой заказ' 
+                : '💳 Оформление заказа'
+              }
             </Heading>
           </HStack>
 
@@ -312,7 +352,10 @@ const CheckoutPage: React.FC = () => {
                      <CardHeader>
                        <Heading size="md" color="gray.700">
                          <FaUser style={{ display: 'inline', marginRight: '8px' }} />
-                         Контактная информация
+                         {localStorage.getItem('isGuestCheckout') === 'true' 
+                           ? 'Контактная информация (для доставки)' 
+                           : 'Контактная информация'
+                         }
                        </Heading>
                      </CardHeader>
                      <CardBody>
@@ -449,7 +492,10 @@ const CheckoutPage: React.FC = () => {
             <Card w="400px" position="sticky" top="20px">
               <CardHeader>
                 <Heading size="md" color="gray.700">
-                  📋 Сводка заказа
+                  {localStorage.getItem('isGuestCheckout') === 'true' 
+                    ? '📋 Сводка гостевого заказа' 
+                    : '📋 Сводка заказа'
+                  }
                 </Heading>
               </CardHeader>
               <CardBody>
@@ -519,11 +565,20 @@ const CheckoutPage: React.FC = () => {
                      loadingText="Оформляем заказ..."
                      width="100%"
                    >
-                     {paymentStep ? 'Вернуться к форме' : 'Перейти к оплате'}
+                     {paymentStep 
+                       ? 'Вернуться к форме' 
+                       : (localStorage.getItem('isGuestCheckout') === 'true' 
+                           ? 'Оформить гостевой заказ' 
+                           : 'Перейти к оплате'
+                         )
+                     }
                    </Button>
 
                   <Text fontSize="xs" color="gray.500" textAlign="center">
-                    Нажимая кнопку, вы соглашаетесь с условиями покупки
+                    {localStorage.getItem('isGuestCheckout') === 'true'
+                      ? 'Нажимая кнопку, вы соглашаетесь с условиями покупки и даете согласие на обработку персональных данных'
+                      : 'Нажимая кнопку, вы соглашаетесь с условиями покупки'
+                    }
                   </Text>
                 </VStack>
               </CardBody>

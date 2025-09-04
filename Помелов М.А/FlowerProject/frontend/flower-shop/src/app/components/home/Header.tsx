@@ -370,6 +370,17 @@ const Header: React.FC = () => {
                     color="white"
                     _hover={{ bg: 'rgba(255, 255, 255, 0.1)', color: 'pink.300' }}
                     transition="all 0.3s ease"
+                    onClick={() => router.push('/guest-orders')}
+                  >
+                    Мои заказы
+                  </Button>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05 }}>
+                  <Button
+                    variant="ghost"
+                    color="white"
+                    _hover={{ bg: 'rgba(255, 255, 255, 0.1)', color: 'pink.300' }}
+                    transition="all 0.3s ease"
                     onClick={() => router.push('/login')}
                   >
                     Войти
@@ -609,6 +620,17 @@ const Header: React.FC = () => {
                     </>
                   ) : (
                     <>
+                      <Button
+                        variant="ghost"
+                        color="white"
+                        _hover={{ bg: 'rgba(255, 255, 255, 0.1)' }}
+                        onClick={() => {
+                          router.push('/guest-orders');
+                          onClose();
+                        }}
+                      >
+                        Мои заказы
+                      </Button>
                       <Button
                         variant="ghost"
                         color="white"
