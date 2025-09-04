@@ -120,6 +120,37 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ userData, onUpdate })
         token
       );
 
+      // Обновляем JWT токен с новыми данными
+      const payload = parseJwt(token);
+      if (payload) {
+        const newPayload = {
+          ...payload,
+          firstName: updatedProfile.firstName,
+          lastName: updatedProfile.lastName,
+          phone: updatedProfile.phone,
+          city: updatedProfile.city,
+        };
+        
+        // Создаем новый токен (в реальном приложении это должен делать сервер)
+        // Пока что обновляем localStorage с новыми данными
+        localStorage.setItem('userProfile', JSON.stringify({
+          firstName: updatedProfile.firstName,
+          lastName: updatedProfile.lastName,
+          phone: updatedProfile.phone,
+          city: updatedProfile.city,
+        }));
+        
+        // Уведомляем Header об изменениях
+        window.dispatchEvent(new CustomEvent('userProfileUpdated', {
+          detail: {
+            firstName: updatedProfile.firstName,
+            lastName: updatedProfile.lastName,
+            phone: updatedProfile.phone,
+            city: updatedProfile.city,
+          }
+        }));
+      }
+
       // Вызываем callback для обновления родительского компонента
       await onUpdate({
         firstName: updatedProfile.firstName,

@@ -42,6 +42,7 @@ const Header: React.FC = () => {
       localStorage.removeItem('token');
       localStorage.removeItem('shop');
       localStorage.removeItem('userRole'); // Очищаем роль пользователя
+      localStorage.removeItem('userProfile'); // Очищаем данные профиля
     } catch {}
     setAuthName(null);
     setAuthEmail(null);
@@ -118,8 +119,22 @@ const Header: React.FC = () => {
         }
       } else {
         setAuthRole('user');
-        const firstName: string | undefined = payload.firstName;
-        const lastName: string | undefined = payload.lastName;
+        
+        // Проверяем, есть ли обновленные данные профиля в localStorage
+        const userProfileRaw = localStorage.getItem('userProfile');
+        let firstName: string | undefined = payload.firstName;
+        let lastName: string | undefined = payload.lastName;
+        
+        if (userProfileRaw) {
+          try {
+            const userProfile = JSON.parse(userProfileRaw);
+            firstName = userProfile.firstName || firstName;
+            lastName = userProfile.lastName || lastName;
+          } catch (error) {
+            console.error('Error parsing userProfile from localStorage:', error);
+          }
+        }
+        
         const fullName = [firstName, lastName].filter(Boolean).join(' ').trim();
         setAuthName(fullName || email?.split('@')[0] || 'Пользователь');
       }
@@ -133,9 +148,9 @@ const Header: React.FC = () => {
     // Слушаем изменения в localStorage для обновления данных пользователя
     const handleStorageChange = (e: StorageEvent) => {
       console.log('Header: Storage event:', e);
-      // Слушаем изменения роли пользователя
-      if (e.key === 'userRole' || e.key === 'token') {
-        console.log('Header: Обнаружено изменение роли пользователя');
+      // Слушаем изменения роли пользователя или профиля
+      if (e.key === 'userRole' || e.key === 'token' || e.key === 'userProfile') {
+        console.log('Header: Обнаружено изменение данных пользователя');
         // Перезагружаем данные пользователя
         const token = localStorage.getItem('token');
         if (token) {
@@ -159,8 +174,22 @@ const Header: React.FC = () => {
               }
             } else {
               setAuthRole('user');
-              const firstName: string | undefined = payload.firstName;
-              const lastName: string | undefined = payload.lastName;
+              
+              // Проверяем, есть ли обновленные данные профиля в localStorage
+              const userProfileRaw = localStorage.getItem('userProfile');
+              let firstName: string | undefined = payload.firstName;
+              let lastName: string | undefined = payload.lastName;
+              
+              if (userProfileRaw) {
+                try {
+                  const userProfile = JSON.parse(userProfileRaw);
+                  firstName = userProfile.firstName || firstName;
+                  lastName = userProfile.lastName || lastName;
+                } catch (error) {
+                  console.error('Error parsing userProfile from localStorage:', error);
+                }
+              }
+              
               const fullName = [firstName, lastName].filter(Boolean).join(' ').trim();
               setAuthName(fullName || email?.split('@')[0] || 'Пользователь');
             }
@@ -175,10 +204,28 @@ const Header: React.FC = () => {
       }
     };
 
+    // Слушаем события обновления профиля пользователя
+    const handleProfileUpdate = (e: CustomEvent) => {
+      console.log('Header: Profile update event:', e.detail);
+      const { firstName, lastName } = e.detail;
+      
+      // Обновляем данные в localStorage
+      localStorage.setItem('userProfile', JSON.stringify({
+        firstName,
+        lastName,
+        ...e.detail
+      }));
+      
+      const fullName = [firstName, lastName].filter(Boolean).join(' ').trim();
+      setAuthName(fullName || 'Пользователь');
+    };
+
     window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('userProfileUpdated', handleProfileUpdate as EventListener);
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('userProfileUpdated', handleProfileUpdate as EventListener);
     };
   }, []);
 
