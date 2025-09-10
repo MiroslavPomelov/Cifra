@@ -335,7 +335,8 @@ const Header: React.FC = () => {
                     </HStack>
                   </MenuButton>
                   <MenuList 
-                    bg="rgba(255, 255, 255, 0.95)" 
+                    // bg="rgba(255, 255, 255, 0.95)"
+                    color="gray.700"
                     border="1px solid rgba(236, 72, 153, 0.2)" 
                     backdropFilter="blur(10px)"
                     boxShadow="0 8px 32px rgba(0, 0, 0, 0.1)"
@@ -350,7 +351,7 @@ const Header: React.FC = () => {
                           color: 'pink.600',
                           transform: 'translateX(4px)'
                         }} 
-                        color="gray.700"
+                        color="gray.200"
                         fontWeight="medium"
                         transition="all 0.2s ease"
                         px={4}
@@ -366,7 +367,7 @@ const Header: React.FC = () => {
                         color: 'pink.600',
                         transform: 'translateX(4px)'
                       }} 
-                      color="gray.700"
+                      color="gray.200"
                       fontWeight="medium"
                       transition="all 0.2s ease"
                       px={4}
@@ -398,7 +399,7 @@ const Header: React.FC = () => {
                         color: 'pink.600',
                         transform: 'translateX(4px)'
                       }} 
-                      color="gray.700"
+                      color="gray.200"
                       fontWeight="medium"
                       transition="all 0.2s ease"
                       px={4}
