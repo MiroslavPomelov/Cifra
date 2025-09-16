@@ -23,6 +23,7 @@ import {
   NumberInputField,
   IconButton,
   Badge,
+  Image,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { apiService, CreateProductPayload, Product, Shop } from '../../../services/api';
@@ -158,17 +159,32 @@ const ShopDashboardPage: React.FC = () => {
                 <FormLabel color="gray.300">Описание</FormLabel>
                 <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Описание товара" color="white" />
               </FormControl>
-              <HStack>
+              <HStack spacing={6}>
                 <FormControl isRequired>
                   <FormLabel color="gray.300">Цена (₽)</FormLabel>
                   <NumberInput min={0} precision={2} value={form.price} onChange={(_, v) => setForm({ ...form, price: Number.isFinite(v) ? v : 0 })}>
                     <NumberInputField color="white" />
                   </NumberInput>
                 </FormControl>
-                <FormControl>
+                <FormControl flex={1}>
                   <FormLabel color="gray.300">Ссылка на изображение</FormLabel>
                   <Input value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} placeholder="https://..." color="white" />
                 </FormControl>
+                {form.imageUrl && (
+                  <Box>
+                    <FormLabel color="gray.300">Предварительный просмотр</FormLabel>
+                    <Image
+                      src={form.imageUrl}
+                      alt="Предварительный просмотр"
+                      boxSize="100px"
+                      objectFit="cover"
+                      borderRadius="md"
+                      border="2px solid"
+                      borderColor="pink.400"
+                      fallbackSrc="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjMzMzMzMzIi8+CjxwYXRoIGQ9Ik0yMCAyMEg4MFY4MEgyMFYyMFoiIGZpbGw9IiM2NjY2NjYiLz4KPHBhdGggZD0iTTMwIDMwSDcwVjcwSDMwVjMwWiIgZmlsbD0iIzk5OTk5OSIvPgo8L3N2Zz4K"
+                    />
+                  </Box>
+                )}
               </HStack>
               <HStack>
                 <FormControl>
@@ -214,6 +230,7 @@ const ShopDashboardPage: React.FC = () => {
               <Thead>
                 <Tr>
                   <Th color="gray.300">ID</Th>
+                  <Th color="gray.300">Изображение</Th>
                   <Th color="gray.300">Название</Th>
                   <Th color="gray.300">Цена</Th>
                   <Th color="gray.300">Создан</Th>
@@ -224,6 +241,31 @@ const ShopDashboardPage: React.FC = () => {
                 {products.map((p) => (
                   <Tr key={p.id}>
                     <Td color="gray.300">{p.id}</Td>
+                    <Td>
+                      {p.imageUrl ? (
+                        <Image
+                          src={p.imageUrl}
+                          alt={p.name}
+                          boxSize="60px"
+                          objectFit="cover"
+                          borderRadius="md"
+                          fallbackSrc="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBmaWxsPSIjMzMzMzMzIi8+CjxwYXRoIGQ9Ik0yMCAyMEg0MFY0MEgyMFYyMFoiIGZpbGw9IiM2NjY2NjYiLz4KPHBhdGggZD0iTTI1IDI1SDM1VjM1SDI1VjI1WiIgZmlsbD0iIzk5OTk5OSIvPgo8L3N2Zz4K"
+                        />
+                      ) : (
+                        <Box
+                          boxSize="60px"
+                          bg="gray.700"
+                          borderRadius="md"
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                          color="gray.400"
+                          fontSize="sm"
+                        >
+                          Нет фото
+                        </Box>
+                      )}
+                    </Td>
                     <Td color="gray.200">{p.name}</Td>
                     <Td color="gray.200">{Number(p.price).toLocaleString()} ₽</Td>
                     <Td color="gray.500">{new Date(p.createdAt).toLocaleString()}</Td>

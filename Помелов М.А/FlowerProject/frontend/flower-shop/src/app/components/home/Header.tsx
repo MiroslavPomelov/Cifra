@@ -321,7 +321,26 @@ const Header: React.FC = () => {
               <>
                 {/* Профиль для авторизованных пользователей */}
                 <Menu placement="bottom-end" autoSelect={false}>
-                  <MenuButton as={Button} variant="ghost" p={0} _hover={{ bg: 'rgba(255,255,255,0.06)' }}>
+                  <MenuButton 
+                    as={Button} 
+                    variant="ghost" 
+                    p={0} 
+                    _hover={{ 
+                      bg: 'rgba(255, 255, 255, 0.08)',
+                      transform: 'scale(1.02)',
+                      transition: 'all 0.2s ease'
+                    }}
+                    _focus={{ 
+                      bg: 'rgba(255, 255, 255, 0.08)', 
+                      boxShadow: '0 0 0 2px rgba(255, 255, 255, 0.2)',
+                      outline: 'none'
+                    }}
+                    _active={{ 
+                      bg: 'rgba(255, 255, 255, 0.12)',
+                      transform: 'scale(0.98)'
+                    }}
+                    transition="all 0.2s ease"
+                  >
                     <HStack spacing={3} color="white" px={3} py={1.5}>
                       <Avatar name={authName} size="sm" bg="pink.400" color="white" />
                       <VStack spacing={0} align="start">
@@ -335,11 +354,11 @@ const Header: React.FC = () => {
                     </HStack>
                   </MenuButton>
                   <MenuList 
-                    // bg="rgba(255, 255, 255, 0.95)"
-                    color="gray.700"
-                    border="1px solid rgba(236, 72, 153, 0.2)" 
+                    bg="rgba(0, 0, 0, 0.9)"
+                    color="white"
+                    border="1px solid rgba(236, 72, 153, 0.3)" 
                     backdropFilter="blur(10px)"
-                    boxShadow="0 8px 32px rgba(0, 0, 0, 0.1)"
+                    boxShadow="0 8px 32px rgba(0, 0, 0, 0.5)"
                     borderRadius="12px"
                     py={2}
                   >
@@ -348,14 +367,16 @@ const Header: React.FC = () => {
                         onClick={() => router.push('/shop/settings')} 
                         _hover={{ 
                           bg: 'rgba(236, 72, 153, 0.1)', 
-                          color: 'pink.600',
+                          color: 'pink.300',
                           transform: 'translateX(4px)'
                         }} 
-                        color="gray.200"
+                        color="white !important"
+                        bg="transparent"
                         fontWeight="medium"
                         transition="all 0.2s ease"
                         px={4}
                         py={3}
+                        _focus={{ bg: 'rgba(236, 72, 153, 0.1)', color: 'white' }}
                       >
                         Настройки магазина
                       </MenuItem>
@@ -364,14 +385,16 @@ const Header: React.FC = () => {
                       onClick={handleProfile} 
                       _hover={{ 
                         bg: 'rgba(236, 72, 153, 0.1)', 
-                        color: 'pink.600',
+                        color: 'pink.300',
                         transform: 'translateX(4px)'
                       }} 
-                      color="gray.200"
+                      color="white !important"
+                      bg="transparent"
                       fontWeight="medium"
                       transition="all 0.2s ease"
                       px={4}
                       py={3}
+                      _focus={{ bg: 'rgba(236, 72, 153, 0.1)', color: 'white' }}
                     >
                       Профиль
                     </MenuItem>
@@ -380,14 +403,16 @@ const Header: React.FC = () => {
                         onClick={() => router.push('/favourites')} 
                         _hover={{ 
                           bg: 'rgba(236, 72, 153, 0.1)', 
-                          color: 'pink.600',
+                          color: 'pink.300',
                           transform: 'translateX(4px)'
                         }} 
-                        color="gray.700"
+                        color="white !important"
+                        bg="transparent"
                         fontWeight="medium"
                         transition="all 0.2s ease"
                         px={4}
                         py={3}
+                        _focus={{ bg: 'rgba(236, 72, 153, 0.1)', color: 'white' }}
                       >
                         Избранное
                       </MenuItem>
@@ -396,14 +421,16 @@ const Header: React.FC = () => {
                       onClick={handleLogout} 
                       _hover={{ 
                         bg: 'rgba(236, 72, 153, 0.1)', 
-                        color: 'pink.600',
+                        color: 'pink.300',
                         transform: 'translateX(4px)'
                       }} 
-                      color="gray.200"
+                      color="white !important"
+                      bg="transparent"
                       fontWeight="medium"
                       transition="all 0.2s ease"
                       px={4}
                       py={3}
+                      _focus={{ bg: 'rgba(236, 72, 153, 0.1)', color: 'white' }}
                     >
                       Выйти
                     </MenuItem>
@@ -454,7 +481,26 @@ const Header: React.FC = () => {
 
             {/* Корзина - доступна всем пользователям */}
             <Menu placement="bottom-end" autoSelect={false}>
-              <MenuButton as={IconButton} variant="ghost" p={0} _hover={{ bg: 'rgba(255,255,255,0.06)' }}>
+              <MenuButton 
+                as={IconButton} 
+                variant="ghost" 
+                p={0} 
+                _hover={{ 
+                  bg: 'rgba(255, 255, 255, 0.08)',
+                  transform: 'scale(1.05)',
+                  transition: 'all 0.2s ease'
+                }}
+                _focus={{ 
+                  bg: 'rgba(255, 255, 255, 0.08)', 
+                  boxShadow: '0 0 0 2px rgba(255, 255, 255, 0.2)',
+                  outline: 'none'
+                }}
+                _active={{ 
+                  bg: 'rgba(255, 255, 255, 0.12)',
+                  transform: 'scale(0.98)'
+                }}
+                transition="all 0.2s ease"
+              >
                 <Box position="relative">
                   <FaShoppingCart size={20} color="white" />
                   <Badge
@@ -475,22 +521,23 @@ const Header: React.FC = () => {
                 </Box>
               </MenuButton>
               <MenuList 
-                bg="rgba(255, 255, 255, 0.95)" 
-                border="1px solid rgba(236, 72, 153, 0.2)" 
+                bg="rgba(0, 0, 0, 0.9)" 
+                color="white"
+                border="1px solid rgba(236, 72, 153, 0.3)" 
                 backdropFilter="blur(10px)"
-                boxShadow="0 8px 32px rgba(0, 0, 0, 0.1)"
+                boxShadow="0 8px 32px rgba(0, 0, 0, 0.5)"
                 borderRadius="12px"
                 py={2}
                 minW="300px"
               >
                 {cartItems.length === 0 ? (
                   <Box px={4} py={6} textAlign="center">
-                    <Text color="gray.500" fontSize="sm">Корзина пуста</Text>
+                    <Text color="gray.300" fontSize="sm">Корзина пуста</Text>
                   </Box>
                 ) : (
                   <>
                     <Box px={4} py={2}>
-                      <Text fontSize="sm" fontWeight="semibold" color="gray.700">
+                      <Text fontSize="sm" fontWeight="semibold" color="white">
                         Товары в корзине ({cartItemCount})
                       </Text>
                     </Box>
@@ -500,10 +547,10 @@ const Header: React.FC = () => {
                         <Box key={item.id || index} px={4} py={2}>
                           <HStack justify="space-between" align="start">
                             <VStack align="start" spacing={1} flex={1}>
-                              <Text fontSize="sm" fontWeight="medium" color="gray.700" noOfLines={2}>
+                              <Text fontSize="sm" fontWeight="medium" color="white" noOfLines={2}>
                                 {item.name}
                               </Text>
-                              <Text fontSize="xs" color="gray.500">
+                              <Text fontSize="xs" color="gray.300">
                                 {item.quantity} шт. × {item.price} ₽
                               </Text>
                             </VStack>
@@ -513,7 +560,7 @@ const Header: React.FC = () => {
                               size="sm"
                               variant="ghost"
                               color="red.400"
-                              _hover={{ bg: 'red.50' }}
+                              _hover={{ bg: 'rgba(239, 68, 68, 0.1)' }}
                               onClick={() => removeFromCart(item.id)}
                             />
                           </HStack>
@@ -528,7 +575,7 @@ const Header: React.FC = () => {
                           size="sm"
                           variant="ghost"
                           color="red.500"
-                          _hover={{ bg: 'red.50' }}
+                          _hover={{ bg: 'rgba(239, 68, 68, 0.1)' }}
                           onClick={clearCart}
                           leftIcon={<FaTrash />}
                         >

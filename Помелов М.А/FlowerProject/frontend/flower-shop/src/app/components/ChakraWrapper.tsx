@@ -53,6 +53,65 @@ const theme = extendTheme({
       },
     },
   },
+  components: {
+    MenuItem: {
+      baseStyle: {
+        color: 'white',
+        bg: 'transparent',
+        _hover: {
+          bg: 'rgba(236, 72, 153, 0.1)',
+          color: 'pink.300',
+        },
+        _focus: {
+          bg: 'rgba(236, 72, 153, 0.1)',
+          color: 'white',
+        },
+      },
+    },
+    MenuList: {
+      baseStyle: {
+        bg: 'rgba(0, 0, 0, 0.9)',
+        color: 'white',
+        border: '1px solid rgba(236, 72, 153, 0.3)',
+        backdropFilter: 'blur(10px)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
+      },
+    },
+    MenuButton: {
+      baseStyle: {
+        _hover: {
+          bg: 'rgba(255, 255, 255, 0.08)',
+          transform: 'scale(1.02)',
+          transition: 'all 0.2s ease',
+        },
+        _focus: {
+          bg: 'rgba(255, 255, 255, 0.08)',
+          boxShadow: '0 0 0 2px rgba(255, 255, 255, 0.2)',
+          outline: 'none',
+        },
+        _active: {
+          bg: 'rgba(255, 255, 255, 0.12)',
+          transform: 'scale(0.98)',
+        },
+        transition: 'all 0.2s ease',
+      },
+    },
+    Select: {
+      baseStyle: {
+        bg: 'rgba(255, 255, 255, 0.1)',
+        color: 'white',
+        borderColor: 'rgba(255, 255, 255, 0.2)',
+        _focus: {
+          borderColor: 'pink.400',
+          boxShadow: '0 0 0 1px pink.400',
+          bg: 'rgba(255, 255, 255, 0.15)',
+        },
+        _hover: {
+          bg: 'rgba(255, 255, 255, 0.15)',
+        },
+      },
+    },
+  },
 });
 
 interface ChakraWrapperProps {

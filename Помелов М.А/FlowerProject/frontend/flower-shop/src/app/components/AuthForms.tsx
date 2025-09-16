@@ -529,21 +529,27 @@ const AuthForms: React.FC = () => {
               onChange={(e) => setRegisterData({...registerData, city: e.target.value})}
               placeholder="Выберите город"
               borderColor={borderColor}
+              bg="rgba(255, 255, 255, 0.1)"
+              color="white"
               _focus={{
                 borderColor: primaryColor,
                 boxShadow: `0 0 0 1px ${primaryColor}`,
+                bg: "rgba(255, 255, 255, 0.15)",
+              }}
+              _hover={{
+                bg: "rgba(255, 255, 255, 0.15)",
               }}
             >
-              <option value="Москва">Москва</option>
-              <option value="Санкт-Петербург">Санкт-Петербург</option>
-              <option value="Новосибирск">Новосибирск</option>
-              <option value="Екатеринбург">Екатеринбург</option>
-              <option value="Казань">Казань</option>
-              <option value="Нижний Новгород">Нижний Новгород</option>
-              <option value="Челябинск">Челябинск</option>
-              <option value="Самара">Самара</option>
-              <option value="Уфа">Уфа</option>
-              <option value="Ростов-на-Дону">Ростов-на-Дону</option>
+              <option value="Москва" style={{ backgroundColor: '#1a1a1a', color: 'white' }}>Москва</option>
+              <option value="Санкт-Петербург" style={{ backgroundColor: '#1a1a1a', color: 'white' }}>Санкт-Петербург</option>
+              <option value="Новосибирск" style={{ backgroundColor: '#1a1a1a', color: 'white' }}>Новосибирск</option>
+              <option value="Екатеринбург" style={{ backgroundColor: '#1a1a1a', color: 'white' }}>Екатеринбург</option>
+              <option value="Казань" style={{ backgroundColor: '#1a1a1a', color: 'white' }}>Казань</option>
+              <option value="Нижний Новгород" style={{ backgroundColor: '#1a1a1a', color: 'white' }}>Нижний Новгород</option>
+              <option value="Челябинск" style={{ backgroundColor: '#1a1a1a', color: 'white' }}>Челябинск</option>
+              <option value="Самара" style={{ backgroundColor: '#1a1a1a', color: 'white' }}>Самара</option>
+              <option value="Уфа" style={{ backgroundColor: '#1a1a1a', color: 'white' }}>Уфа</option>
+              <option value="Ростов-на-Дону" style={{ backgroundColor: '#1a1a1a', color: 'white' }}>Ростов-на-Дону</option>
             </Select>
           </FormControl>
         </motion.div>
