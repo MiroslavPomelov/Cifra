@@ -13,6 +13,9 @@ async function seedShops() {
    // Перейти в каталог
   // npx ts-node src/seed-shops.ts 
 
+  // docker exec -it shop-service npx ts-node src/seed-shops.ts
+  // docker exec -it product-service npx ts-node src/seed-products.ts
+
   const shops = [
     {
       name: 'Цветочный рай',
@@ -21,6 +24,7 @@ async function seedShops() {
       password: 'password123',
       address: 'ул. Цветочная, 15, Москва',
       phone: '+7 (495) 123-45-67',
+      logoUrl: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200',
     },
     {
       name: 'Букет-Сервис',
@@ -29,6 +33,7 @@ async function seedShops() {
       password: 'password123',
       address: 'пр. Мира, 42, Санкт-Петербург',
       phone: '+7 (812) 987-65-43',
+      logoUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=200',
     },
     {
       name: 'Розарий',
@@ -37,6 +42,7 @@ async function seedShops() {
       password: 'password123',
       address: 'ул. Садовая, 8, Казань',
       phone: '+7 (843) 456-78-90',
+      logoUrl: 'https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=200',
     },
     {
       name: 'Весенние цветы',
@@ -45,6 +51,7 @@ async function seedShops() {
       password: 'password123',
       address: 'ул. Весенняя, 25, Екатеринбург',
       phone: '+7 (343) 234-56-78',
+      logoUrl: 'https://images.unsplash.com/photo-1520637836862-4d197d17c5a2?w=200',
     },
     {
       name: 'Экзотика',
@@ -53,6 +60,7 @@ async function seedShops() {
       password: 'password123',
       address: 'ул. Тропическая, 12, Сочи',
       phone: '+7 (862) 345-67-89',
+      logoUrl: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=200',
     },
   ];
 
@@ -78,6 +86,7 @@ async function seedShops() {
         password_hash: hashedPassword,
         address: shopData.address,
         phone: shopData.phone,
+        logoUrl: shopData.logoUrl,
         isActive: true,
       });
       

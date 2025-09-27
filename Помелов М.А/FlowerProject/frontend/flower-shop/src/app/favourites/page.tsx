@@ -37,6 +37,17 @@ const FavouritesPage: React.FC = () => {
   const secondaryColor = 'purple.500';
   const borderColor = useColorModeValue('pink.200', 'pink.600');
 
+  // Определяем эмодзи на основе названия продукта
+  const getEmoji = (productName: string) => {
+    const name = productName.toLowerCase();
+    if (name.includes('роза') || name.includes('роз')) return '🌹';
+    if (name.includes('тюльпан')) return '🌷';
+    if (name.includes('орхидея') || name.includes('орхид')) return '🌺';
+    if (name.includes('подсолнух') || name.includes('нарцисс')) return '🌻';
+    if (name.includes('пион')) return '🌸';
+    return '🌸';
+  };
+
   React.useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -350,13 +361,16 @@ const FavouritesPage: React.FC = () => {
                             borderColor="rgba(236, 72, 153, 0.2)"
                           />
                         ) : (
-                          <Box
-                            fontSize="4rem"
-                            color="pink.300"
-                            filter="drop-shadow(0 4px 8px rgba(236, 72, 153, 0.3))"
+                          <motion.div
+                            whileHover={{ scale: 1.1, rotate: 5 }}
+                            transition={{ duration: 0.3 }}
+                            style={{
+                              fontSize: '4rem',
+                              filter: 'drop-shadow(0 8px 16px rgba(236, 72, 153, 0.3))',
+                            }}
                           >
-                            🌸
-                          </Box>
+                            {getEmoji(product.productName)}
+                          </motion.div>
                         )}
                       </Box>
 
